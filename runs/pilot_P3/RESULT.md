@@ -32,7 +32,7 @@ Best learner per fold: LightGBM in 3 of 5 folds (ISU W4), 5 of 5 (SNL). Re-scori
 inner partition (selection-bias check) moves the ratio by 0.00 / +0.06 / -0.01 / +0.03 (ISU W4, ISU W6, SNL W100, SNL W200).
 
 **Margin to carry forward (rule of section 6, computed on training conditions only):** replicate floor, median over
-training conditions, mean of the five outer training folds: **ISU W4 5.75 pp** (folds 5.10-6.09; 49-50 multi-replicate
+training conditions, mean of the five outer training folds: **ISU W4 5.75 pp** (folds 5.10-6.09; 48-50 multi-replicate
 conditions per fold), **SNL W100 2.62 pp** (folds 2.39-2.76; 15-17 conditions per fold). These are pilot values; the
 confirmatory margin must be recomputed with the frozen window and forecast set.
 

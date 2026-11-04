@@ -37,9 +37,13 @@ def probe_rectangle_ah(path, step):
 
 
 # ---------------------------------------------------------------- probed files (go criterion of P0)
-@pytest.mark.parametrize("name,expected", [("TP_k03_01_02_CU.csv", 4.878), ("TP_z18_01_03_CU.csv", 4.822)])
+# The probed files are pinned to the zip they came from (P0_cells.tsv): serial names repeat across the two
+# stages, so a bare file-name search can pick the other stage's same-named file.
+@pytest.mark.parametrize("name,expected", [("TP_k03_01__f47627626/TP_k03_01_02_CU.csv", 4.878),
+                                           ("TP_z18_01__f47632630/TP_z18_01_03_CU.csv", 4.822)])
 def test_probed_file_capacity_matches_probe(name, expected):
-    path = _find(name)
+    path = os.path.join(RAW, *name.split("/"))
+    path = path if os.path.exists(path) else None
     if path is None:
         pytest.skip(f"{name} not present")
     res = S.analyse_capacity_csv(path)

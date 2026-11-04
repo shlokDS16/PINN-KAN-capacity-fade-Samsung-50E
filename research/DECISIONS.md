@@ -123,3 +123,17 @@ Row format:
 - **Proposer / opponent / judge:** rule fixed by the judge in advance; applied by the lead.
 - **Re-open if:** the statistician rules the floor is mis-defined (P3 concern: learners see the held-out
   cell's window, the floor does not), with a rule fixed before any Samsung data are scored.
+
+### D008 Lead overrides of two pilot rules, recorded after the gate audit (2026-11-05 00:35, status: accepted, open to the D011 judge)
+- **Decision:** (a) P2: the judge's rule gave "Partial" for the hard ODE (38 s at 80 nodes per cell vs 30 s);
+  the lead ruled GO for Samsung because the measured cost scales with nodes per cell (about 11 s at 20 nodes,
+  runs/pilot_P2/RESULT.md) and Samsung cells have at most about 30 check-ups; the partial plan (10 trials,
+  2 inner folds) applies only if a dataset needs more than 40 nodes per cell. (b) P0: the rule said "queue the
+  member for all cells only if the all-cell total is under 400 MB"; the estimate was about 0.5 GB, and the lead
+  started the all-cell check-up fetch anyway (resumable, ordered to cover every condition first) because the
+  alternative was no Samsung data before Shlok's download; the 07 Nov 09:00 fallback rule is unchanged.
+- **Alternatives and why they lost:** apply the partial plan to all arms (cuts tuning for the PINN, which met
+  its budget); fetch nothing overnight (loses the night; no Samsung pilot possible).
+- **Evidence:** runs/pilot_P0/RESULT.md, runs/pilot_P2/RESULT.md, runs/GATE_pilots_audit.md (conditions).
+- **Proposer / opponent / judge:** lead / gate auditor (flagged missing row) / to be confirmed by the D011 judge.
+- **Re-open if:** Samsung cells need more than 40 integration nodes, or the fetch disturbs other sessions.

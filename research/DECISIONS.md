@@ -240,3 +240,45 @@ Row format:
   with PREREG_v3; a window-information reference arm) are accepted as freeze conditions.
 - **Evidence:** debates/D015_redteam_v3/01_redteam.md.
 - **Proposer / opponent / judge:** red team (attack) / lead records / D016 judge and Shlok decide.
+
+### D016 Roles of the PINN and the KAN: Design R2 and the closed outcome table (2026-11-05, status: revised; awaits Shlok's approval of the table)
+- **Decision:** debates/D016_roles/02_judge.md, verdict REVISE of Design R. The confirmatory question becomes data efficiency on the unchanged
+  Test B (n = 40): grid m in {8, 16, 32} training cycling conditions (nested, temperature-constrained max-min subsets from identifiers) x
+  k in {0, 2, k_full} check-ups; storage cells kept in every cell (titles say "few cycling tests").
+  - PINN role, chain P: P1 = A1 vs best data-only learner D* (A9, GP, LightGBM, with physics features and storage-row options) at
+    g1 = (8, 2); then P2 = A1 vs A9 (attribution to the law in the same network); then P3 = the advantage is larger at g1 than at g4.
+  - KAN role, chain K: K1 = extracted closed-form law A15 is non-inferior to A1 at g4; then K2 = A15 vs G15 (the same frozen
+    symbolic library applied to the additive GAM).
+  - Primary error control: a Bonferroni-based graph, family-wise 0.025 (weights 1/2, 1/2); reverse-S findings are reported as safety
+    findings.
+  - Secondary Holm family: Q-H (soft vs hard ODE), Q-A10 (dataset authors' model) and Q-T (storage on/off).
+  - Matched ladder A9 -> GAM law -> A1, plus A2, estimated at all 9 cells with simultaneous exact intervals; a full 2 x 2 factorial is
+    rejected (no stress map exists without the law).
+  - Closed table: 3 P states x 3 K states give titles T1-T8, modifier M1 (hard ODE better at g1), modifier M2 (A10 better at g1:
+    T9a/T9b) and the ISU fallback; one claim sentence per cell; automatic tier downgrade by the lab, lab-indicator (incl. A10, D*),
+    retain-all and random-subset rows; mean/worst-case rule.
+  - Struck: H3, the G2 KAN "win", H7 beyond the G0 pipeline check, A3/A5/A7 on the grid.
+- **Alternatives and why they lost:** Design R as written: its fixed sequence erases evidence at g2-g4, its family comparator cannot be
+  attributed to a component, and its KAN thresholds of 4 of 5 are arbitrary and internal. Full 2 x 2 factorial: undefined without a law,
+  and costly. P1 vs A9 as the headline: a low bar (D015 F5). P1 vs A10: A10 is physics, not data. A KAN accuracy race vs GAMs: P4 gap
+  of 0.0-0.1 pp, cannot be won. Misspecification dose-response: reads as a straw man. Keeping PREREG_v3: F1.
+- **Evidence:** debates/D016_roles/01_proposal.md, 02_judge.md; debates/codex_panel/turn04_response.md; debates/D015_redteam_v3/01_redteam.md;
+  runs/pilot_P3-P5/RESULT.md; runs/prereg/STATS_RULING.md section 7; PREREG_v3 sections 9, 11, 16.
+- **Proposer / opponent / judge:** method-architect (Design R) / Codex panel turn 4 (REVISE) / D016 judge.
+- **Freeze conditions added:**
+  - the statistician's items (a)-(f): size under fold- and lab-shared effects with a pre-set fallback, power of P1/P3/K1/K2, graph
+    check, interval existence;
+  - PREREG_v4, with code, README and draft aligned;
+  - a novelty re-check of the data-efficiency framing;
+  - the new code with its limiting-case tests;
+  - the P6 ISU reading told to Shlok;
+  - Shlok's approval row for the table.
+
+  FB-1 to FB-6 and FB-8 to FB-10 are unchanged.
+- **Re-open if:**
+  - P6 shows data-only learners ahead at the smallest m on most ISU sides (Shlok may stop);
+  - the size simulation fails without an accepted fallback;
+  - Zhang, Hallinger or Stroebl JES 142 contain a data-efficiency study of learned laws on this dataset;
+  - the extraction is not ready by the freeze (chain K struck, K state fixed at K=, its weight goes to P);
+  - k_full < 2;
+  - Shlok changes the table.

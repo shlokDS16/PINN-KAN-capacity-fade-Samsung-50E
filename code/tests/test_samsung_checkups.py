@@ -236,6 +236,24 @@ def test_outlier_rule_catches_isolated_spike_after_normal_points():
     assert not S.flag_outliers(x, base, valid)[0]                   # first point is never tested
 
 
+def test_outlier_rule_tolerates_knee_after_long_gap_and_replicate_cases():
+    """Both check-ups flagged by the per-check-up allowance were genuine (lead review of 2026-11-05)."""
+    # TP_z02_01_s2: day 106 follows a 42-day gap after gaps of 7-21 days (a knee)
+    x = np.array([22.0, 29.0, 50.0, 64.0, 106.0])
+    q = np.array([4.767428, 4.703100, 4.585938, 4.521676, 4.178533])
+    assert not S.flag_outliers(x, q, np.ones(5, bool)).any()
+    # TP_z02_02_s2: day 64 after an invalid check-up (no date) in between; it matches its replicate above
+    x2 = np.array([22.0, 29.0, np.nan, 64.0])
+    q2 = np.array([4.762287, 4.698643, 4.588323, 4.516974])
+    assert not S.flag_outliers(x2, q2, np.array([True, True, False, True])).any()
+    # no valid dates among the preceding points: rises only
+    xn = np.array([np.nan, np.nan, 3.0, 4.0])
+    assert not S.flag_outliers(xn, np.array([4.9, 4.8, 4.0, 3.5]), np.ones(4, bool)).any()
+    assert S.flag_outliers(xn, np.array([4.9, 4.8, 5.2, 3.5]), np.ones(4, bool))[2]
+    # a drop far beyond three times the latest rate is still caught
+    assert S.flag_outliers(np.array([0.0, 7.0, 14.0]), np.array([4.9, 4.88, 4.40]), np.ones(3, bool))[2]
+
+
 def test_trapezoid_rule():
     t = np.array([0.0, 10.0, 20.0])
     assert S.trapz(np.array([1.0, 1.0, 1.0]), t) == pytest.approx(20.0)

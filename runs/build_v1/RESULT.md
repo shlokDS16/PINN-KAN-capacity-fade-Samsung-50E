@@ -143,3 +143,61 @@ Tests: `code/tests/test_pk_negcontrol.py` (34 tests) and adapted older tests. **
 
 `controls.json` now holds `negative.nc1` (gate) and `negative.nc2` (interpretive); `code/figures/table2.py` Part B was changed to read them (two rows replace the three draft rows; the file is the figure owner's, one small edit). Demo (`build_v1_fig_analysis_SYNTHETIC`, synthetic G2, 8 held-out conditions): NC-1 passed (10,296 rows, max abs diff 0); NC-2 not passed (5 of 8 positive, median L = 0.43, p = 0.36), which at n = 8 is the test's power limit and not a finding. All 11 figure and table scripts run on these outputs.
 Superseded demo runs kept on disk: `build_v1_fig_synth_B2` and `_NEG` (before invariance.json and the new controls).
+
+
+## 7. Build for the freeze candidate PREREG_v3 (2026-11-05; commit prefix "build:")
+
+Scope: the items that PREREG_v3 17.4 lists as "not built". CPU only (`CUDA_VISIBLE_DEVICES=-1`), one thread, synthetic data and unit-test fixtures only; no Samsung score, no outer test fold, **no `runs/prereg/FROZEN`, no `SCORED.jsonl`**. No new run directory was created (all new tests write to temporary directories); the H7 batch was not launched.
+Tests: new files `code/tests/test_pk_build2_data.py` (24 tests) and `code/tests/test_pk_build2_stats.py` (27 tests); `test_pk_review_fixes.py` changed in one place (the default prereg file of `build_freeze_payload` is now v3). `code/data/samsung_checkups.py` and its tests were not touched. Full-suite result: last line of this section.
+
+### 7.1 What was built
+
+| item (PREREG_v3) | code | test | status |
+|---|---|---|---|
+| `guard.PREREG_DEFAULT` = `runs/prereg/PREREG_v3.md` (18.3) | `guard.py` | `test_guard_default_is_prereg_v3`, `test_m2_build_freeze_payload_*` | done |
+| consecutive-file incident drops (3.3(4), 17.4) | `data.INCIDENT_CONSECUTIVE_DROPS`, `consecutive_drop_mask`, applied inside `drop_incidents`; `INCIDENT_CONSECUTIVE_DROPS_IMPLEMENTED = True`; count in `Cell.meta["n_consecutive_incident_rows_dropped"]` | rule, prefix-not-substring, loader | done as written in the prereg text (7.3 item 2) |
+| ZYK throughput branch (5, FB-5) | `pinnkan/zyk.py`: `read_zyk_segment` (EFC = discharged Ah / 4.9 Ah, trapezoid on `c_cur`, hours above 24 parsed, gap and imbalance flags), `build_zyk_table` (files named by the member list but absent become incomplete rows), `attach_zyk_cumulative` (sum of complete segments before each check-up, on the UNFILTERED rows; an interval with a missing or gapped segment takes the designed throughput, 3.3(4)), `load_zyk_table`, `validate_throughput` (5 % median / 10 % last-check-up rule with DoD x laboratory coverage), `validate_from_root`, CLI `python -P -m pinnkan.zyk --build / --validate`; `load_split(throughput="zyk", throughput_fallback="none" or "analytic")`; config keys of the same names | segment arithmetic on a synthetic ZYK-format file (4.9 A for 0.5 h = 0.5 EFC), gap and unreadable file, member-list absence, cumulative sum, fallback, `ZykDataMissing`, loader end to end, unfiltered-row rule, validation accept / reject / coverage, `validate_from_root` | built against the documented format only; **no ZYK file is on disk** (one `_meta.txt`); the analytic path is unchanged and stays the default |
+| H3 assembly in `stats_step` (2, 9.7) | `Builder.h3`: comparator = inner-CV-best of {A4, A5} per fold; win = tier S at the Holm level of H1b AND the H7 gate G2 passes; worse = reverse tier S (0.025); tie = TOST at +-ln 1.10 (0.025); else unresolved; `win_blocked_by_g2` reported; Test B only; `run_stats(h7_run=...)` supplies the gate | win / blocked / worse / tie / unresolved, Test B only | done (7.3 item 3) |
+| H7: Kendall tau | `h7.variance_importance` (first-order index by 10 equal-count bins), `kendall_importance` (tau-b, NaN for a constant vector); per draw in `kendall_tau`, `importance` | known-function recovery, tau = 1 on identity | diagnostic (the prereg gives it no threshold) |
+| H7: thresholds | `h7.verdicts`: pass 0.15 / fail 0.30 per arm and generator; structured <= 0.67 x free-G median AND paired one-sided Wilcoxon p < 0.05 (A1, A2, A4; G1, G2) with "generic structured only if the GAM also meets it"; G2 validity (median additive floor > 0.15) and `passes`; G0 KAN not above GAM by more than 10 % | constructed draws | done |
+| H7: 20-draw batch driver | `h7.run_h7` is resumable (per-unit `draws/<gen>_<draw>.json/.npz`), shardable (`shard=(k, n)`), `arms_by_gen="batch"` (A11, A12 added on G0), `aggregate`; `mode: h7` accepts `shard`, `arms_by_gen`, `resume`; configs `runs/build_v1/configs/h7_batch_shard{0,1,2}of3.json` (3 generators x 20 draws, 8 trials x 2 inner folds, design 40 + 19 conditions x 3 replicates) | resume, shard, aggregation, `mode: h7` on one directory | built, **not launched** (about 6 CPU-h; launch at the candidate frozen commit) |
+| H7: G1 hard vs soft | `h7.hard_vs_soft`: paired over draws, L = ln(RMSE A2 / RMSE A1), exact sign tests as H2, Wilcoxon (descriptive) | constructed draws | done |
+| H7: positive control P1 | `h7.p1_positive_control`: A1 and A2 recover G0 (median nRMSE <= 0.15) and BOTH beat A11 and A12 on forecast RMSE (paired one-sided Wilcoxon p < 0.05); `None` when the learners are not in the run; `controls.json` `positive.P1_passed` | pass, fail, not evaluated | done |
+| gate G aggregation (11, row G) | `stats_step.gate_g` -> `controls.json["gate_G"]` (NC-1 or P1-P3 failing trips; `not_evaluated` is neither tripped nor cleared); P3 now `P3_passed` (exact sign test at 0.025, margin 0) | tripped / pending cases | done |
+| 11a items 1, 2, 4, 5 | `pinnkan/physval.py` (`physval_11a`, `--physval`): E(SOC) fold x seed envelope, storage laboratory composition (design metadata), SOC turning above 80 % per temperature and member, superposition summary, cyclic effect directions; the run writer now stores per-member arrays under `stress_functions.json["members"]` (figure keys unchanged) | constructed files, end to end on a synthetic run | done except the A10 comparisons (7.2) |
+| 9.8 rows (a)-(e), (j) | `pinnkan/stats_ext.py` -> `analysis/sensitivity_<test>.json`: lab-stratified bootstrap and post-stratified mean, per-lab and per-stage differences with n, leave-one-lab-out, two-stage bootstrap (needs the new `cell_scores.json`), margin sensitivities (log and pp scale); the confirmatory run now writes `cell_scores.json` and `condition_meta.json` (identifiers of scored cells only) | content, unavailable case, leave-one-out arithmetic, reproducible streams | done; (e) was already in the contrasts |
+| 9.8 rows (i), (k), (l), (m) as run options | `include_at` (AT joins the forecast set), `include_storage_0406`, `min_fc_points` (scored cells only), `law_overrides` {tau, Y0, gamma} (A2 only) and {delta_scope: "total"} (A1 only) via `law.overrides` (restored on exit; `hard.py` reads TAU at call time); (h) and (k) existed | loader flags, scope arithmetic, A2-only refusal, a run with overrides differs from the base run, a fit with a two-point cell | done |
+| synthetic generator | `G2p` (pilot-grid lower values H 0.8, P 0.5) for the pilot-strength sensitivity of 13; seed 18 of the 40 + 19 design had a duplicate storage point: de-duplicated by a 0.01 nudge that leaves collision-free designs unchanged | floors G2 > G2p, 60-draw uniqueness | done |
+
+### 7.2 Hard errors left in place (for the lead: strike or build before the freeze)
+
+| what | where it raises | why it cannot be built faithfully |
+|---|---|---|
+| 11a item 1(a) and item 5 comparison with A10 | `physval.compare_with_a10_activation`, `compare_with_a10_signs` -> `UnverifiedArmError` (recorded as `blocked` in `physval_11a.json`; raised with `strict=True`) | needs the verified A10 equations (Stroebl SI S.1.1 / JES 142, 119552, FB-2) |
+| 11a item 1(b) published activation energies | `physval.compare_with_published`: "omitted" unless the lead passes sources with DOI, location and range | no verified source exists in the repository; nothing is built in |
+| 9.8 lab-indicator rows (f), A1, A9, A12, Test B and Test C | `run.NotBuiltError` (config `lab_indicator`) | "a lab indicator in the per-cell prior/inputs": where it enters each arm, the coding of three laboratories and the reference level are not fixed |
+| 3.3(8) forecast-failure row | `run.NotBuiltError` (config `forecast_failure`) | cells whose record ends inside the window have no post-window check-ups; the text gives no forecast times to score "as forecast failures" |
+| 9.8(n) separate h_cal and h_cyc for A2 (RK4), optional | not built | optional, descriptive, "only if CPU remains" |
+| stage of each file-level incident drop (FB-4) | `INCIDENT_FILE_DROPS` still matches both stages | needs the dates of the full download |
+| rank-correlation threshold for the residual map (13) | `verdicts["residual_map_claim"]` says "not available" | the statistician sets it before optional G3 |
+| interval widths (13, "diagnostic") | not built | no arm produces intervals |
+
+### 7.3 Choices made where the text is open (the lead confirms or overrules)
+
+1. FB-5 validation: "DoD class" is not defined in the prereg; `zyk.DOD_CLASS_EDGES = (0.15, 0.35)` (three classes). The sampling-gap threshold that makes a ZYK segment "incomplete" is `zyk.GAP_FLAG_S = 600 s`. Neither number rests on a ZYK file (none read); both must be fixed from the first ZYK files, before the freeze.
+2. Consecutive drops: entries are those of the prereg sentence (TP_z24_01 after segment 02, TP_z25_01 after 04, TP_z07_03 after 16, TP_z20_03 after 16, TP_z17 after 18). A key without a cell number ("TP_z17") matches all cells of the test point; a row is dropped when its file number exceeds the segment number. To check against the dataset paper's "Known incidents" list (not read by the builder): TP_z24_01 with segment 02 loses every check-up, so that cell leaves the data.
+3. H3: "H1b tier S against that arm" is tested at the Holm level assigned to H1b (conservative; the prereg names no separate level). "G2 passes" = validity (median additive floor > 0.15) AND A1 median nRMSE <= 0.15 AND A1 lower than A4 (paired one-sided Wilcoxon p < 0.05) on G2. Order: win, worse, tie, unresolved.
+4. P1 requires both structured arms A1 and A2 to beat both learners (prereg 10: "structured arms ... beat A11/A12"; 17.4 says "A1 beats A11/A12"). `h7.P1_ARMS` is the switch.
+5. Post-stratified mean = mean of the laboratory means (each laboratory counts equally); majority laboratory or stage of a condition = most scored cells, ties alphabetical.
+6. `G2p` = the lower corner of the pilot grids (H 0.8, P 0.5) is this builder's reading of "pilot strength".
+7. `figures/table2.py` still reads the nRMSE-only P1 flag (`P1_G0_nrmse_leq_0p15`, kept in `controls.json`); the gate input is `P1_passed`. The figure owner's file was not touched.
+
+### 7.4 Lead actions in the prereg text
+
+PREREG_v3 sections 9.7 ("`stats_step` does not assemble H3 yet"), 13 ("not yet built"), 17.4 (code-status table) and 18.3 ("`PREREG_DEFAULT` still names v2") are now out of date; the change-log row is the lead's. Item (7) of the consistency check in section 19 closes for H3, P1 and the guard default.
+
+### 7.5 Disclosure
+
+While searching the repository for the incident text, a `grep` over `*.csv` printed ten rows of `data/processed/samsung_checkups.csv` (cell TP_z24_01_s1, stage 1, a cycling cell; capacity and retention columns included) to the builder's own terminal. Nothing from it was copied to any file under `runs/`, `notes/` or `code/`, no number was used and no model was scored. It is a slip against the spirit of 3.3(9) that the lead may want to list.
+
+Full suite after section 7: `.venv\Scripts\python.exe -P -m pytest code	ests -q`: **256 passed, 0 failed** (205 before; 51 new), 223 s, single thread. No `FROZEN`, no `SCORED.jsonl`, no new run directory.

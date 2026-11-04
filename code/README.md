@@ -1,4 +1,4 @@
-# pinnkan: confirmatory code base (PREREG_v2)
+# pinnkan: confirmatory code base (PREREG_v2; extended for the freeze candidate PREREG_v3 in build_v1 section 7)
 
 New package `code/pinnkan/` plus tests `code/tests/test_pk_*.py`. The pilot modules (`code/models/*`, `code/pilots/*`, `code/data/*`) are
 imported, never edited: `models.kan_spline`, `models.ageing_models.SolutionNet`, `models.ageing_p45.KANStack`, `pilots.p3_headroom` (A11/A12 learners).
@@ -27,7 +27,7 @@ cd "C:\Users\Shlok\Downloads\PINN KAN battery paper"
 | `steps_scale` | scales the neural step counts (smoke tests only; 1.0 for confirmatory runs) |
 | `oracle_throughput` | logged throughput after the window (sensitivity row) |
 | `per_cell_factor` | A10 per-cell factor on/off (off = "A10 as published") |
-| `retain_all`, `throughput` | keep every check-up regardless of QC flags (sensitivity); `analytic` (default) or `zyk` ([FB-5] stub) |
+| `retain_all`, `throughput` | keep every check-up regardless of QC flags (sensitivity); `analytic` (default) or `zyk` (ZYK-logged EFC from `data/processed/samsung_zyk_efc.csv`, built by `python -P -m pinnkan.zyk --build` after the download; `ZykDataMissing` while the table or a cycling cell's entries are absent) |
 | `target_kind` | derived from `test` (B, C, A: cycling; S2, S3: storage); a contradicting value raises `ConfigError` |
 | `permute_stress` | NC-2 (D014, interpretive, NOT gating, Test B only; `ConfigError` for other tests): stress vectors with their design throughput permuted among cycling conditions, separately in training and test; run A1 (A9, R1, R2 optional); scored by `stats_step.nc2` against the real Test B run |
 | `nc1_scramble_test` | synthetic confirmatory runs: replace the held-out cells' post-window labels by garbage before scoring (used by `mode: nc1_full`) |
@@ -35,6 +35,10 @@ cd "C:\Users\Shlok\Downloads\PINN KAN battery paper"
 | `pinn` | `{clip, warmup, lr}` overrides of the optimiser recipe (D013); `clip` also reaches A2 and A9 |
 | `diagnostics` | default true: one refit per gradient-trained arm at its tuned settings, written to `diagnostics.json` (tuned `lam_res` and grid-edge flag, sd of fitted `delta_c` against TAU, clipped-step fraction) |
 | `auto_budget` | N and inner folds are fixed from one timing fit per neural arm BEFORE tuning (`budget_rule.json`) |
+| `throughput_fallback` | `none` (default) or `analytic`: with `throughput: zyk`, a cycling cell without any ZYK entry then uses the designed throughput (recorded in `meta`); an interval whose segment is missing or has a sampling gap takes the designed throughput in every case (prereg 3.3(4)) |
+| `include_at`, `include_storage_0406`, `min_fc_points` | sensitivity rows 9.8(i): AT check-ups join the forecast set; storage cells 04-06 enter as their (two-point) records; scored cells need this many forecast points (training windows unchanged) |
+| `law_overrides` | rows (l) and (m): `{tau, Y0, gamma}` for A2 only, `{delta_scope: "total"}` for A1 only (`ConfigError` for other arms); restored after the run |
+| `forecast_failure`, `lab_indicator` | rows 9.8(3.3(8)) and 9.8(f): **not built**, `NotBuiltError` with the reason (see RESULT.md section 7) |
 | `twins` | `auto` (Test C adds the 35 C calendar twins from the held-out condition identifiers), `train`, `c35` |
 
 **Modes and the guard.** `inner` and `timing` build only the training side (`load_split(..., role="train")`: an outer-test cell or condition is filtered
@@ -68,9 +72,9 @@ and for datasets with a calendar term and the Samsung stress layout (Samsung, sy
 storage rate in pp per 500 d, Arrhenius lines, centred cyclic partial dependences; A1 envelope = min/max over the run's final-refit seeds, A4 and A10 curves when those arms ran),
 `residual_map.npz` (median |R| of the A1 residual on bins, training points) and `superposition.csv` (counterfactual calendar share `y(a_cyc = 0) / y(full)` of A1 and A2 at the last check-up,
 scored cycling cells; confirmatory runs only). Runs on synthetic data carry a `SYNTHETIC` marker file, which the figure scripts turn into a watermark.
-`mode: "h7"` (synthetic only, config `h7: {gens, n_draws, arms, n_trials, inner_k, steps_scale, design}`) runs the identifiability driver of `pinnkan/h7.py` and writes `summary.json` and `surfaces_<gen>.npz`.
+`mode: "h7"` (synthetic only, config `h7: {gens, n_draws, arms, arms_by_gen, n_trials, inner_k, steps_scale, design, shard, resume}`) runs the identifiability driver of `pinnkan/h7.py`: every (generator, draw) unit is written to `draws/<gen>_<draw>.json` when finished, a rerun skips finished units, `shard: [k, n]` shares the 60 units between up to three processes on one run directory (`resume: true`), and the process that completes the set writes `summary.json`, `surfaces_<gen>.npz` and the section-13 `verdicts` (recovery status, structured vs free-G with paired Wilcoxon, G2 validity and gate, G0 KAN vs GAM, positive control P1, hard vs soft on G1, Kendall tau). The batch configs are `runs/build_v1/configs/h7_batch_shard{0,1,2}of3.json` (not run by the builder).
 
-Statistics step (`pinnkan/stats_step.py`, launcher `code/run_pinnkan_stats.py`):
+Statistics step (`pinnkan/stats_step.py`, sensitivity rows `pinnkan/stats_ext.py`, 11a `pinnkan/physval.py`, launcher `code/run_pinnkan_stats.py`; `--physval` writes `physval_11a.json`, `--h7-run` supplies the G2 gate of H3 and P1):
 
 ```
 .venv/Scripts/python.exe -P code/run_pinnkan_stats.py --analysis-dir runs/<x>/analysis --runs B=runs/b_fold0,runs/b_fold1 --runs C=runs/c --runs S2=runs/s2 \
@@ -132,15 +136,15 @@ logged inside the window, the window's mean rate afterwards) and keep the foreca
 
 - **A10 equations** [FB-2]: the form in `semi.py` is the one in `notes/papers/samsung50e_dataset_paper.md` (exponent placement garbled there). Marked PROVISIONAL, refused in confirmatory runs. Open: exponent placement,
   the SOC argument of the calendar term for cycling cells (SOC_mid assumed), published bounds and start values, EOLC and reference values (absorbed by free log-scales). The ISU/SNL analogue is the cyclic term with the stresses the dataset has.
-- **Throughput validation** [FB-5]: `throughput="zyk"` raises `NotImplementedError` (no ZYK-logged EFC on disk). Oracle row = `oracle_throughput: true`.
+- **Throughput validation** [FB-5]: the ZYK branch is built (`pinnkan/zyk.py`, tested on a synthetic ZYK-format file) but no ZYK file is on disk; `python -P -m pinnkan.zyk --validate` applies the prereg-5 rule once the table exists. Two named assumptions to fix after the first ZYK files are read: the sampling-gap threshold `GAP_FLAG_S` and the DoD classes `DOD_CLASS_EDGES`. Oracle row = `oracle_throughput: true`.
 - **Window counts** [FB-6]: `window_rule_from_counts` exists; Samsung k_cyc = 4 and k_sto = 2 in the defaults are placeholders until the member listings are counted.
 - **Reference Q0,c** [FB-3]: the loader uses the pipeline's `retention` (ET_T23 if present, else first CU) and renormalises to the first retained check-up.
-- **Consecutive-file incident drops** (prereg 3.3(4), second sentence) and the stage mapping of each named incident file [FB-4]: not implemented (`INCIDENT_CONSECUTIVE_DROPS_IMPLEMENTED = False`).
-- **H7** (`mode: "h7"`): driver, A8 and the recovery metric exist; not built: the G1 hard-versus-soft batch (20 draws), the Kendall-tau / variance-importance metric, the paired Wilcoxon thresholds of section 13 and the positive control `A1 beats A11/A12 on G0`. The 240-fit batch at the pilot tuning effort is a long CPU job and was only run at demo size.
+- **Consecutive-file incident drops** (prereg 3.3(4), second sentence): implemented as `data.INCIDENT_CONSECUTIVE_DROPS` (entries of the prereg text; a key without a cell number matches all cells of the test point); the stage of each named incident file is still not mapped (both stages are matched) [FB-4].
+- **H7** (`mode: "h7"`): driver, A8, recovery metric, Kendall tau, the section-13 thresholds, P1 and the G1 hard-versus-soft contrast are built (build_v1 section 7); the 60-unit batch at the pilot tuning effort is a long CPU job (about 6 CPU-h) that the builder did not launch. No rank-correlation threshold for the residual map exists (Fig. 7 carries no claim).
 - **Review m1 (left for the lead)**: the pipeline's isolated-outlier QC rule (`code/data/samsung_checkups.py`, prereg 3.3(3)) looks at the next capacity, so whether the last window point survives depends on the first post-window value. Changing it (preceding neighbours only) changes a preregistered rule and a pipeline output; not done here.
 - **Review m2**: the forecast-time list of ISU/SNL still ends at the 70 % crossing (it is the scored set); every arm predicts pointwise and `test_m2_forecast_does_not_depend_on_where_the_query_list_ends` pins that predictions at a check-up do not depend on later query times (A8's integration grid does; synthetic only).
 - **Review m6**: A11/A12 train on the cells that have enough window and forecast points; the other arms on all cells. `n_train_used` and `n_train_scorable_cells` are in the run record; with the secondary window k-1 all storage cells drop out of A11/A12 (k_sto = 1 gives 2 window points < 3).
-- **Statistics**: `stats_step.py` implements the D012 sign-test rule for the contrasts; the type-I simulations stay in `code/prereg/`. BCa intervals use the registered per-contrast streams. H3 (KAN wording against A4/A5 with the G2 validity rule) is not assembled.
+- **Statistics**: `stats_step.py` implements the D012 sign-test rule for the contrasts; the type-I simulations stay in `code/prereg/`. BCa intervals use the registered per-contrast streams. H3 (KAN wording against A4/A5, needs the H7 batch for the G2 gate) is assembled; `controls.json` carries `gate_G`.
 - Implemented after review: the negative control (D014: NC-1 invariance gate, NC-2 permuted stress; see above), and the secondary metrics R^2, MAPE, error by horizon and RUL error in the outer-test `metrics.json`.
-- **Physical validation analyses** of prereg 11a (activation energy, SOC slope, superposition check) and the figure scripts are not part of this build.
-- Sensitivity rows implemented as options: windows (`shift`), oracle throughput, A10 as published, retain-every-check-up. Not implemented: lab-indicator rows, AT-included (`include_at` exists in `load_split`), forecast-failure rule, lab-stratified bootstraps.
+- **Physical validation analyses** of prereg 11a items 1, 2, 4, 5: built in `physval.py`; the comparisons with A10 (items 1(a) and 5) raise `UnverifiedArmError` until `A10_FORM["verified"]`, and 1(b) (published activation energies) is omitted unless the lead supplies sources with a DOI and a location.
+- Sensitivity rows implemented: windows (`shift`), oracle throughput, A10 as published, retain-every-check-up, AT included, storage cells 04-06, cells with >= 3 forecast points, clip and warm-up (`pinn`), delta scope total and the A2-only tournament scales (`law_overrides`), margin sensitivities, lab/stage rows, leave-one-lab-out, lab-stratified and two-stage bootstraps (`sensitivity_<test>.json`). Not built (hard errors): lab-indicator rows and the forecast-failure rule.

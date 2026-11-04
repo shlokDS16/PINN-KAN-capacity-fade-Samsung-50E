@@ -66,7 +66,7 @@ class HttpRangeFile(io.RawIOBase):
 
 def main():
     mode, url = sys.argv[1], sys.argv[2]
-    zf = zipfile.ZipFile(io.BufferedReader(HttpRangeFile(url), buffer_size=1 << 20))
+    zf = zipfile.ZipFile(io.BufferedReader(HttpRangeFile(url), buffer_size=1 << 16))
     if mode == "list":
         with open(sys.argv[3], "w", encoding="utf8") as f:
             f.write("member\tcompressed\tuncompressed\n")

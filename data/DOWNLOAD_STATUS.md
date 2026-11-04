@@ -1,8 +1,8 @@
-# Download status (updated 2026-11-04 22:25:43)
+# Download status (updated 2026-11-04 22:33:29)
 
 Resumes from the bytes on disk after every drop. Stop: create data/STOP_DOWNLOADS.
 
-Downloading Q_interpolated.zip: 4.1 of 47.8 MB.
+Stopped by STOP_DOWNLOADS.
 
 | dataset | file | size MB | done MB | % | state |
 |---|---|---|---|---|---|
@@ -10,9 +10,9 @@ Downloading Q_interpolated.zip: 4.1 of 47.8 MB.
 | isu_ilcc_figshare_22582234 | process_data.py | 0.0 | 0.0 | 100 | verified |
 | isu_ilcc_figshare_22582234 | capacity_fade.zip | 0.1 | 0.1 | 100 | verified |
 | isu_ilcc_figshare_22582234 | README_V2.0.pdf | 0.6 | 0.6 | 100 | verified |
-| isu_ilcc_figshare_22582234 | Q_interpolated.zip | 47.8 | 4.1 | 8 | downloading |
-| isu_ilcc_figshare_22582234 | RPT_json.zip | 929.4 | 0.0 | 0 | queued |
-| isu_ilcc_figshare_22582234 | Cycling_json.zip | 10208.1 | 0.0 | 0 | queued |
+| isu_ilcc_figshare_22582234 | Q_interpolated.zip | 47.8 | 4.7 | 10 | partial |
+| isu_ilcc_figshare_22582234 | RPT_json.zip | 929.4 | 0.0 | 0 | skipped (needs decision) |
+| isu_ilcc_figshare_22582234 | Cycling_json.zip | 10208.1 | 0.0 | 0 | skipped (needs decision) |
 | samsung50e_figshare_25975315 | experiments_meta.csv | 0.0 | 0.0 | 0 | queued |
 | samsung50e_figshare_25975315 | TP_k01_05.zip | 7.0 | 0.0 | 0 | queued |
 | samsung50e_figshare_25975315 | TP_k02_06.zip | 7.1 | 0.0 | 0 | queued |
@@ -308,11 +308,18 @@ Downloading Q_interpolated.zip: 4.1 of 47.8 MB.
 | calce_official | CX2_36.zip | 0.0 | 0.0 | 0 | queued |
 | calce_official | CS2_8.zip | 4.4 | 0.0 | 0 | queued |
 | calce_official | CX2_31.zip | 11.9 | 0.0 | 0 | queued |
+| calce_official | CS2_34.zip | 43.8 | 0.0 | 0 | queued |
 | calce_official | CS2_33.zip | 45.3 | 0.0 | 0 | queued |
 | calce_official | CX2_37.zip | 53.3 | 0.0 | 0 | queued |
+| calce_official | SOC_0-100_2C.zip | 57.6 | 0.0 | 0 | queued |
+| calce_official | SOC_40-60_2C.zip | 57.7 | 0.0 | 0 | queued |
+| calce_official | SOC_0-100_HalfC.zip | 67.5 | 0.0 | 0 | queued |
 | calce_official | CX2_38.zip | 70.0 | 0.0 | 0 | queued |
+| calce_official | SOC_40-60_HalfC.zip | 72.8 | 0.0 | 0 | queued |
+| calce_official | SOC_20-80_2C.zip | 74.6 | 0.0 | 0 | queued |
 | calce_official | CX2_8.zip | 79.9 | 0.0 | 0 | queued |
 | calce_official | CX2_33.zip | 86.7 | 0.0 | 0 | queued |
+| calce_official | SOC_0-60_HalfC.zip | 89.4 | 0.0 | 0 | queued |
 | calce_official | SOC_40-100_HalfC.zip | 106.6 | 0.0 | 0 | queued |
 | calce_official | CX2_16.zip | 114.8 | 0.0 | 0 | queued |
 | calce_official | CS2_24.zip | 127.5 | 0.0 | 0 | queued |

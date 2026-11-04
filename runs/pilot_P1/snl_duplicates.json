@@ -1,0 +1,930 @@
+{
+ "n_cells": 61,
+ "pairs_checked": 1830,
+ "raw_fingerprint_matches": [],
+ "capacity_vector_identical": [],
+ "capacity_near_identical": [],
+ "same_cycle_count_groups": [
+  {
+   "n_cycles": 389,
+   "cells": [
+    "SNL_18650_NMC_15C_0-100_0.5-2C_a",
+    "SNL_18650_NMC_15C_0-100_0.5-2C_b"
+   ]
+  },
+  {
+   "n_cycles": 513,
+   "cells": [
+    "SNL_18650_NCA_25C_0-100_0.5-0.5C_a",
+    "SNL_18650_NMC_15C_0-100_0.5-1C_a",
+    "SNL_18650_NMC_15C_0-100_0.5-1C_b"
+   ]
+  },
+  {
+   "n_cycles": 515,
+   "cells": [
+    "SNL_18650_NCA_35C_0-100_0.5-1C_a",
+    "SNL_18650_NCA_35C_0-100_0.5-1C_c"
+   ]
+  },
+  {
+   "n_cycles": 522,
+   "cells": [
+    "SNL_18650_NCA_15C_0-100_0.5-1C_a",
+    "SNL_18650_NCA_25C_0-100_0.5-1C_b",
+    "SNL_18650_NCA_25C_0-100_0.5-1C_c"
+   ]
+  },
+  {
+   "n_cycles": 654,
+   "cells": [
+    "SNL_18650_NCA_25C_0-100_0.5-1C_a",
+    "SNL_18650_NCA_25C_0-100_0.5-1C_d",
+    "SNL_18650_NCA_35C_0-100_0.5-1C_d",
+    "SNL_18650_NCA_35C_0-100_0.5-2C_a"
+   ]
+  },
+  {
+   "n_cycles": 785,
+   "cells": [
+    "SNL_18650_NMC_25C_0-100_0.5-1C_b",
+    "SNL_18650_NMC_35C_0-100_0.5-1C_c"
+   ]
+  },
+  {
+   "n_cycles": 786,
+   "cells": [
+    "SNL_18650_NCA_25C_0-100_0.5-2C_a",
+    "SNL_18650_NCA_25C_0-100_0.5-2C_b",
+    "SNL_18650_NCA_35C_0-100_0.5-2C_b",
+    "SNL_18650_NMC_35C_0-100_0.5-1C_a",
+    "SNL_18650_NMC_35C_0-100_0.5-1C_b",
+    "SNL_18650_NMC_35C_0-100_0.5-1C_d",
+    "SNL_18650_NMC_35C_0-100_0.5-2C_a"
+   ]
+  },
+  {
+   "n_cycles": 916,
+   "cells": [
+    "SNL_18650_NCA_15C_0-100_0.5-2C_a",
+    "SNL_18650_NCA_25C_0-100_0.5-0.5C_b"
+   ]
+  },
+  {
+   "n_cycles": 3038,
+   "cells": [
+    "SNL_18650_LFP_25C_0-100_0.5-1C_c",
+    "SNL_18650_LFP_25C_0-100_0.5-1C_d"
+   ]
+  },
+  {
+   "n_cycles": 3342,
+   "cells": [
+    "SNL_18650_LFP_35C_0-100_0.5-1C_b",
+    "SNL_18650_LFP_35C_0-100_0.5-1C_c"
+   ]
+  },
+  {
+   "n_cycles": 4062,
+   "cells": [
+    "SNL_18650_LFP_25C_0-100_0.5-3C_b",
+    "SNL_18650_LFP_25C_0-100_0.5-3C_d"
+   ]
+  }
+ ],
+ "same_count_pairwise_capacity_diff": [
+  {
+   "cells": [
+    "SNL_18650_NMC_15C_0-100_0.5-2C_a",
+    "SNL_18650_NMC_15C_0-100_0.5-2C_b"
+   ],
+   "n_cycles": 389,
+   "median_abs_pairwise_diff_ah": 0.02200000000000002
+  },
+  {
+   "cells": [
+    "SNL_18650_NCA_25C_0-100_0.5-0.5C_a",
+    "SNL_18650_NMC_15C_0-100_0.5-1C_a",
+    "SNL_18650_NMC_15C_0-100_0.5-1C_b"
+   ],
+   "n_cycles": 513,
+   "median_abs_pairwise_diff_ah": 0.5780000000000001
+  },
+  {
+   "cells": [
+    "SNL_18650_NCA_35C_0-100_0.5-1C_a",
+    "SNL_18650_NCA_35C_0-100_0.5-1C_c"
+   ],
+   "n_cycles": 515,
+   "median_abs_pairwise_diff_ah": 0.03399999999999981
+  },
+  {
+   "cells": [
+    "SNL_18650_NCA_15C_0-100_0.5-1C_a",
+    "SNL_18650_NCA_25C_0-100_0.5-1C_b",
+    "SNL_18650_NCA_25C_0-100_0.5-1C_c"
+   ],
+   "n_cycles": 522,
+   "median_abs_pairwise_diff_ah": 0.23099999999999987
+  },
+  {
+   "cells": [
+    "SNL_18650_NCA_25C_0-100_0.5-1C_a",
+    "SNL_18650_NCA_25C_0-100_0.5-1C_d",
+    "SNL_18650_NCA_35C_0-100_0.5-1C_d",
+    "SNL_18650_NCA_35C_0-100_0.5-2C_a"
+   ],
+   "n_cycles": 654,
+   "median_abs_pairwise_diff_ah": 0.10000000000000009
+  },
+  {
+   "cells": [
+    "SNL_18650_NMC_25C_0-100_0.5-1C_b",
+    "SNL_18650_NMC_35C_0-100_0.5-1C_c"
+   ],
+   "n_cycles": 785,
+   "median_abs_pairwise_diff_ah": 0.04800000000000004
+  },
+  {
+   "cells": [
+    "SNL_18650_NCA_25C_0-100_0.5-2C_a",
+    "SNL_18650_NCA_25C_0-100_0.5-2C_b",
+    "SNL_18650_NCA_35C_0-100_0.5-2C_b",
+    "SNL_18650_NMC_35C_0-100_0.5-1C_a",
+    "SNL_18650_NMC_35C_0-100_0.5-1C_b",
+    "SNL_18650_NMC_35C_0-100_0.5-1C_d",
+    "SNL_18650_NMC_35C_0-100_0.5-2C_a"
+   ],
+   "n_cycles": 786,
+   "median_abs_pairwise_diff_ah": 0.08000000000000007
+  },
+  {
+   "cells": [
+    "SNL_18650_NCA_15C_0-100_0.5-2C_a",
+    "SNL_18650_NCA_25C_0-100_0.5-0.5C_b"
+   ],
+   "n_cycles": 916,
+   "median_abs_pairwise_diff_ah": 0.3314999999999999
+  },
+  {
+   "cells": [
+    "SNL_18650_LFP_25C_0-100_0.5-1C_c",
+    "SNL_18650_LFP_25C_0-100_0.5-1C_d"
+   ],
+   "n_cycles": 3038,
+   "median_abs_pairwise_diff_ah": 0.0009999999999998899
+  },
+  {
+   "cells": [
+    "SNL_18650_LFP_35C_0-100_0.5-1C_b",
+    "SNL_18650_LFP_35C_0-100_0.5-1C_c"
+   ],
+   "n_cycles": 3342,
+   "median_abs_pairwise_diff_ah": 0.0129999999999999
+  },
+  {
+   "cells": [
+    "SNL_18650_LFP_25C_0-100_0.5-3C_b",
+    "SNL_18650_LFP_25C_0-100_0.5-3C_d"
+   ],
+   "n_cycles": 4062,
+   "median_abs_pairwise_diff_ah": 0.01200000000000001
+  }
+ ],
+ "cell_quality": {
+  "SNL_18650_LFP_15C_0-100_0.5-2C_b": {
+   "n_cycles": 3754,
+   "first_cycle": 1,
+   "last_cycle": 3754,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 1.029,
+   "q_last_ah": 0.933,
+   "retention_last_vs_first": 0.9067055393586007,
+   "total_throughput_ah": 7120.137484548553,
+   "span_days": 360.60524343750166
+  },
+  "SNL_18650_LFP_25C_0-100_0.5-0.5C_a": {
+   "n_cycles": 3050,
+   "first_cycle": 1,
+   "last_cycle": 3050,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 1.067,
+   "q_last_ah": 0.964,
+   "retention_last_vs_first": 0.9034676663542643,
+   "total_throughput_ah": 6056.242964304583,
+   "span_days": 474.3920828009245
+  },
+  "SNL_18650_LFP_25C_0-100_0.5-1C_a": {
+   "n_cycles": 3545,
+   "first_cycle": 1,
+   "last_cycle": 3545,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 1.032,
+   "q_last_ah": 0.944,
+   "retention_last_vs_first": 0.9147286821705426,
+   "total_throughput_ah": 6860.947519672474,
+   "span_days": 406.85067092592396
+  },
+  "SNL_18650_LFP_25C_0-100_0.5-1C_b": {
+   "n_cycles": 3636,
+   "first_cycle": 1,
+   "last_cycle": 3636,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 90,
+   "q_first_ah": 1.035,
+   "q_last_ah": 0.943,
+   "retention_last_vs_first": 0.9111111111111111,
+   "total_throughput_ah": 6935.880889787349,
+   "span_days": 575.0949041782391
+  },
+  "SNL_18650_LFP_25C_0-100_0.5-1C_c": {
+   "n_cycles": 3038,
+   "first_cycle": 1,
+   "last_cycle": 3038,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 1.05,
+   "q_last_ah": 0.973,
+   "retention_last_vs_first": 0.9266666666666666,
+   "total_throughput_ah": 6024.629363241262,
+   "span_days": 355.98407848379736
+  },
+  "SNL_18650_LFP_25C_0-100_0.5-1C_d": {
+   "n_cycles": 3038,
+   "first_cycle": 1,
+   "last_cycle": 3038,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 1.049,
+   "q_last_ah": 0.973,
+   "retention_last_vs_first": 0.9275500476644424,
+   "total_throughput_ah": 6021.903226841662,
+   "span_days": 356.15127568287005
+  },
+  "SNL_18650_LFP_25C_0-100_0.5-2C_a": {
+   "n_cycles": 3544,
+   "first_cycle": 1,
+   "last_cycle": 3544,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 1.036,
+   "q_last_ah": 0.95,
+   "retention_last_vs_first": 0.9169884169884169,
+   "total_throughput_ah": 6766.838390677036,
+   "span_days": 337.8727716319452
+  },
+  "SNL_18650_LFP_25C_0-100_0.5-2C_b": {
+   "n_cycles": 4050,
+   "first_cycle": 1,
+   "last_cycle": 4050,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 1.03,
+   "q_last_ah": 0.94,
+   "retention_last_vs_first": 0.9126213592233009,
+   "total_throughput_ah": 7724.361458196949,
+   "span_days": 386.245325289351
+  },
+  "SNL_18650_LFP_25C_0-100_0.5-3C_a": {
+   "n_cycles": 4569,
+   "first_cycle": 1,
+   "last_cycle": 4569,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 1.036,
+   "q_last_ah": 0.82,
+   "retention_last_vs_first": 0.7915057915057915,
+   "total_throughput_ah": 8129.478753686311,
+   "span_days": 385.5100938773141
+  },
+  "SNL_18650_LFP_25C_0-100_0.5-3C_b": {
+   "n_cycles": 4062,
+   "first_cycle": 1,
+   "last_cycle": 4062,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 1.048,
+   "q_last_ah": 0.846,
+   "retention_last_vs_first": 0.8072519083969465,
+   "total_throughput_ah": 7272.328920515954,
+   "span_days": 345.0668076851845
+  },
+  "SNL_18650_LFP_25C_0-100_0.5-3C_c": {
+   "n_cycles": 3555,
+   "first_cycle": 1,
+   "last_cycle": 3555,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 1.039,
+   "q_last_ah": 0.808,
+   "retention_last_vs_first": 0.7776708373435998,
+   "total_throughput_ah": 6251.4261300558865,
+   "span_days": 297.6124300462958
+  },
+  "SNL_18650_LFP_25C_0-100_0.5-3C_d": {
+   "n_cycles": 4062,
+   "first_cycle": 1,
+   "last_cycle": 4062,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 1.062,
+   "q_last_ah": 0.848,
+   "retention_last_vs_first": 0.7984934086629001,
+   "total_throughput_ah": 7383.185009117415,
+   "span_days": 349.1214299305553
+  },
+  "SNL_18650_LFP_35C_0-100_0.5-1C_a": {
+   "n_cycles": 3156,
+   "first_cycle": 1,
+   "last_cycle": 3156,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 1.076,
+   "q_last_ah": 0.918,
+   "retention_last_vs_first": 0.8531598513011153,
+   "total_throughput_ah": 6152.15397707511,
+   "span_days": 364.1788390162018
+  },
+  "SNL_18650_LFP_35C_0-100_0.5-1C_b": {
+   "n_cycles": 3342,
+   "first_cycle": 1,
+   "last_cycle": 3342,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 1.046,
+   "q_last_ah": 0.879,
+   "retention_last_vs_first": 0.8403441682600382,
+   "total_throughput_ah": 6290.335954988069,
+   "span_days": 372.26228533565
+  },
+  "SNL_18650_LFP_35C_0-100_0.5-1C_c": {
+   "n_cycles": 3342,
+   "first_cycle": 1,
+   "last_cycle": 3342,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 1.057,
+   "q_last_ah": 0.9,
+   "retention_last_vs_first": 0.8514664143803218,
+   "total_throughput_ah": 6359.709070599412,
+   "span_days": 374.9138070486107
+  },
+  "SNL_18650_LFP_35C_0-100_0.5-1C_d": {
+   "n_cycles": 3798,
+   "first_cycle": 1,
+   "last_cycle": 3798,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 1.059,
+   "q_last_ah": 0.895,
+   "retention_last_vs_first": 0.8451369216241739,
+   "total_throughput_ah": 7276.401584244093,
+   "span_days": 427.4060702662044
+  },
+  "SNL_18650_LFP_35C_0-100_0.5-2C_a": {
+   "n_cycles": 3856,
+   "first_cycle": 1,
+   "last_cycle": 3856,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 1.064,
+   "q_last_ah": 0.892,
+   "retention_last_vs_first": 0.8383458646616541,
+   "total_throughput_ah": 7388.118437929032,
+   "span_days": 365.4598875231486
+  },
+  "SNL_18650_LFP_35C_0-100_0.5-2C_b": {
+   "n_cycles": 3598,
+   "first_cycle": 1,
+   "last_cycle": 3598,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 1.039,
+   "q_last_ah": 0.837,
+   "retention_last_vs_first": 0.8055822906641001,
+   "total_throughput_ah": 6643.701842685042,
+   "span_days": 330.1453082986108
+  },
+  "SNL_18650_NCA_15C_0-100_0.5-1C_a": {
+   "n_cycles": 522,
+   "first_cycle": 1,
+   "last_cycle": 522,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.911,
+   "q_last_ah": 2.281,
+   "retention_last_vs_first": 0.7835795259361045,
+   "total_throughput_ah": 2473.3857723215297,
+   "span_days": 53.538015057870425
+  },
+  "SNL_18650_NCA_15C_0-100_0.5-1C_b": {
+   "n_cycles": 918,
+   "first_cycle": 1,
+   "last_cycle": 918,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.841,
+   "q_last_ah": 2.101,
+   "retention_last_vs_first": 0.739528335093277,
+   "total_throughput_ah": 4318.211995265834,
+   "span_days": 93.14807693287035
+  },
+  "SNL_18650_NCA_15C_0-100_0.5-2C_a": {
+   "n_cycles": 916,
+   "first_cycle": 1,
+   "last_cycle": 916,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.87,
+   "q_last_ah": 0.072,
+   "retention_last_vs_first": 0.02508710801393728,
+   "total_throughput_ah": 3614.5760791313983,
+   "span_days": 70.5706998726852
+  },
+  "SNL_18650_NCA_15C_0-100_0.5-2C_b": {
+   "n_cycles": 784,
+   "first_cycle": 1,
+   "last_cycle": 784,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.901,
+   "q_last_ah": 1.57,
+   "retention_last_vs_first": 0.5411926921751121,
+   "total_throughput_ah": 3318.2057410066827,
+   "span_days": 63.19632418981507
+  },
+  "SNL_18650_NCA_25C_0-100_0.5-0.5C_a": {
+   "n_cycles": 513,
+   "first_cycle": 1,
+   "last_cycle": 513,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 3.161,
+   "q_last_ah": 2.168,
+   "retention_last_vs_first": 0.6858589054096805,
+   "total_throughput_ah": 2697.6053213399987,
+   "span_days": 75.4520753703704
+  },
+  "SNL_18650_NCA_25C_0-100_0.5-0.5C_b": {
+   "n_cycles": 916,
+   "first_cycle": 1,
+   "last_cycle": 916,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 3.158,
+   "q_last_ah": 0.069,
+   "retention_last_vs_first": 0.02184927169094364,
+   "total_throughput_ah": 2815.1064164988907,
+   "span_days": 84.54880187500004
+  },
+  "SNL_18650_NCA_25C_0-100_0.5-1C_a": {
+   "n_cycles": 654,
+   "first_cycle": 1,
+   "last_cycle": 654,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 3.053,
+   "q_last_ah": 2.493,
+   "retention_last_vs_first": 0.816573861775303,
+   "total_throughput_ah": 3385.5033606104234,
+   "span_days": 73.54506921296314
+  },
+  "SNL_18650_NCA_25C_0-100_0.5-1C_b": {
+   "n_cycles": 522,
+   "first_cycle": 1,
+   "last_cycle": 522,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 3.12,
+   "q_last_ah": 2.492,
+   "retention_last_vs_first": 0.7987179487179487,
+   "total_throughput_ah": 2722.109467610967,
+   "span_days": 59.39606585648133
+  },
+  "SNL_18650_NCA_25C_0-100_0.5-1C_c": {
+   "n_cycles": 522,
+   "first_cycle": 1,
+   "last_cycle": 522,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 3.157,
+   "q_last_ah": 2.452,
+   "retention_last_vs_first": 0.77668672790624,
+   "total_throughput_ah": 2748.495658692509,
+   "span_days": 59.77649608796306
+  },
+  "SNL_18650_NCA_25C_0-100_0.5-1C_d": {
+   "n_cycles": 654,
+   "first_cycle": 1,
+   "last_cycle": 654,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 3.105,
+   "q_last_ah": 2.415,
+   "retention_last_vs_first": 0.7777777777777778,
+   "total_throughput_ah": 3396.5366563813877,
+   "span_days": 73.74419745370355
+  },
+  "SNL_18650_NCA_25C_0-100_0.5-2C_a": {
+   "n_cycles": 786,
+   "first_cycle": 1,
+   "last_cycle": 786,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 3.116,
+   "q_last_ah": 2.437,
+   "retention_last_vs_first": 0.7820924261874197,
+   "total_throughput_ah": 3767.1351557215244,
+   "span_days": 72.42517009259251
+  },
+  "SNL_18650_NCA_25C_0-100_0.5-2C_b": {
+   "n_cycles": 786,
+   "first_cycle": 1,
+   "last_cycle": 786,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.933,
+   "q_last_ah": 1.856,
+   "retention_last_vs_first": 0.6327991817251961,
+   "total_throughput_ah": 3713.1019924741686,
+   "span_days": 70.08906503472218
+  },
+  "SNL_18650_NCA_25C_20-80_0.5-0.5C_a": {
+   "n_cycles": 1123,
+   "first_cycle": 1,
+   "last_cycle": 1123,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.018,
+   "q_last_ah": 1.326,
+   "retention_last_vs_first": 0.6570862239841428,
+   "total_throughput_ah": 3686.4135584122378,
+   "span_days": 96.47635033564866
+  },
+  "SNL_18650_NCA_25C_20-80_0.5-0.5C_b": {
+   "n_cycles": 1250,
+   "first_cycle": 1,
+   "last_cycle": 1250,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.028,
+   "q_last_ah": 1.39,
+   "retention_last_vs_first": 0.685404339250493,
+   "total_throughput_ah": 4238.494045170279,
+   "span_days": 110.7061495023147
+  },
+  "SNL_18650_NCA_25C_20-80_0.5-0.5C_c": {
+   "n_cycles": 1251,
+   "first_cycle": 1,
+   "last_cycle": 1251,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.015,
+   "q_last_ah": 1.227,
+   "retention_last_vs_first": 0.6089330024813896,
+   "total_throughput_ah": 4122.808476056112,
+   "span_days": 107.76280927083315
+  },
+  "SNL_18650_NCA_25C_20-80_0.5-0.5C_d": {
+   "n_cycles": 1509,
+   "first_cycle": 1,
+   "last_cycle": 1509,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 1.979,
+   "q_last_ah": 1.242,
+   "retention_last_vs_first": 0.6275896917635169,
+   "total_throughput_ah": 4757.439861793747,
+   "span_days": 124.24575010416646
+  },
+  "SNL_18650_NCA_35C_0-100_0.5-1C_a": {
+   "n_cycles": 515,
+   "first_cycle": 1,
+   "last_cycle": 515,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 3.187,
+   "q_last_ah": 2.459,
+   "retention_last_vs_first": 0.7715720112958896,
+   "total_throughput_ah": 2845.0504929566673,
+   "span_days": 63.55144965277779
+  },
+  "SNL_18650_NCA_35C_0-100_0.5-1C_b": {
+   "n_cycles": 464,
+   "first_cycle": 1,
+   "last_cycle": 464,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 3.153,
+   "q_last_ah": 2.412,
+   "retention_last_vs_first": 0.7649857278782112,
+   "total_throughput_ah": 2502.72337459555,
+   "span_days": 56.05238560185189
+  },
+  "SNL_18650_NCA_35C_0-100_0.5-1C_c": {
+   "n_cycles": 515,
+   "first_cycle": 1,
+   "last_cycle": 515,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 3.189,
+   "q_last_ah": 2.521,
+   "retention_last_vs_first": 0.7905299466917528,
+   "total_throughput_ah": 2853.0641192618077,
+   "span_days": 63.51505907407403
+  },
+  "SNL_18650_NCA_35C_0-100_0.5-1C_d": {
+   "n_cycles": 654,
+   "first_cycle": 1,
+   "last_cycle": 654,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 3.205,
+   "q_last_ah": 2.22,
+   "retention_last_vs_first": 0.6926677067082684,
+   "total_throughput_ah": 3507.110112242768,
+   "span_days": 78.00419520833316
+  },
+  "SNL_18650_NCA_35C_0-100_0.5-2C_a": {
+   "n_cycles": 654,
+   "first_cycle": 1,
+   "last_cycle": 654,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 3.158,
+   "q_last_ah": 2.557,
+   "retention_last_vs_first": 0.8096896770107663,
+   "total_throughput_ah": 3123.597471300402,
+   "span_days": 64.68232055555542
+  },
+  "SNL_18650_NCA_35C_0-100_0.5-2C_b": {
+   "n_cycles": 786,
+   "first_cycle": 1,
+   "last_cycle": 786,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 3.106,
+   "q_last_ah": 2.518,
+   "retention_last_vs_first": 0.8106889890534449,
+   "total_throughput_ah": 3661.6950238730396,
+   "span_days": 76.91828155092595
+  },
+  "SNL_18650_NMC_15C_0-100_0.5-1C_a": {
+   "n_cycles": 513,
+   "first_cycle": 1,
+   "last_cycle": 513,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.697,
+   "q_last_ah": 1.628,
+   "retention_last_vs_first": 0.6036336670374489,
+   "total_throughput_ah": 2062.169333764857,
+   "span_days": 49.01153545138882
+  },
+  "SNL_18650_NMC_15C_0-100_0.5-1C_b": {
+   "n_cycles": 513,
+   "first_cycle": 1,
+   "last_cycle": 513,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.536,
+   "q_last_ah": 1.675,
+   "retention_last_vs_first": 0.6604889589905363,
+   "total_throughput_ah": 2054.58068692625,
+   "span_days": 48.80285762731477
+  },
+  "SNL_18650_NMC_15C_0-100_0.5-2C_a": {
+   "n_cycles": 389,
+   "first_cycle": 1,
+   "last_cycle": 389,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.724,
+   "q_last_ah": 1.933,
+   "retention_last_vs_first": 0.709618208516887,
+   "total_throughput_ah": 1629.5905135031953,
+   "span_days": 33.45174579861111
+  },
+  "SNL_18650_NMC_15C_0-100_0.5-2C_b": {
+   "n_cycles": 389,
+   "first_cycle": 1,
+   "last_cycle": 389,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.67,
+   "q_last_ah": 1.907,
+   "retention_last_vs_first": 0.7142322097378278,
+   "total_throughput_ah": 1611.7359691372221,
+   "span_days": 32.848327511574055
+  },
+  "SNL_18650_NMC_25C_0-100_0.5-0.5C_b": {
+   "n_cycles": 679,
+   "first_cycle": 1,
+   "last_cycle": 679,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.99,
+   "q_last_ah": 2.253,
+   "retention_last_vs_first": 0.7535117056856188,
+   "total_throughput_ah": 3364.468930133321,
+   "span_days": 102.24028564814769
+  },
+  "SNL_18650_NMC_25C_0-100_0.5-1C_a": {
+   "n_cycles": 521,
+   "first_cycle": 1,
+   "last_cycle": 521,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.839,
+   "q_last_ah": 2.365,
+   "retention_last_vs_first": 0.8330398027474464,
+   "total_throughput_ah": 2591.9881103300013,
+   "span_days": 61.4461394444445
+  },
+  "SNL_18650_NMC_25C_0-100_0.5-1C_b": {
+   "n_cycles": 785,
+   "first_cycle": 1,
+   "last_cycle": 785,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.768,
+   "q_last_ah": 2.306,
+   "retention_last_vs_first": 0.8330924855491331,
+   "total_throughput_ah": 3779.7584500456933,
+   "span_days": 90.79778070601837
+  },
+  "SNL_18650_NMC_25C_0-100_0.5-1C_c": {
+   "n_cycles": 397,
+   "first_cycle": 1,
+   "last_cycle": 397,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.931,
+   "q_last_ah": 2.344,
+   "retention_last_vs_first": 0.7997270556124189,
+   "total_throughput_ah": 1984.6928624701384,
+   "span_days": 47.77465885416663
+  },
+  "SNL_18650_NMC_25C_0-100_0.5-1C_d": {
+   "n_cycles": 529,
+   "first_cycle": 1,
+   "last_cycle": 529,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.819,
+   "q_last_ah": 2.287,
+   "retention_last_vs_first": 0.8112805959560128,
+   "total_throughput_ah": 2599.811360226253,
+   "span_days": 62.17007949074076
+  },
+  "SNL_18650_NMC_25C_0-100_0.5-2C_a": {
+   "n_cycles": 661,
+   "first_cycle": 1,
+   "last_cycle": 661,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.929,
+   "q_last_ah": 2.264,
+   "retention_last_vs_first": 0.7729600546261522,
+   "total_throughput_ah": 3161.187445558186,
+   "span_days": 64.4900571180556
+  },
+  "SNL_18650_NMC_25C_0-100_0.5-2C_b": {
+   "n_cycles": 1321,
+   "first_cycle": 1,
+   "last_cycle": 1321,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.801,
+   "q_last_ah": 2.215,
+   "retention_last_vs_first": 0.7907890039271688,
+   "total_throughput_ah": 6082.7102314872045,
+   "span_days": 125.87238847222181
+  },
+  "SNL_18650_NMC_25C_0-100_0.5-3C_a": {
+   "n_cycles": 730,
+   "first_cycle": 1,
+   "last_cycle": 730,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.875,
+   "q_last_ah": 2.347,
+   "retention_last_vs_first": 0.8163478260869566,
+   "total_throughput_ah": 3492.9890342315266,
+   "span_days": 67.92859579861097
+  },
+  "SNL_18650_NMC_25C_0-100_0.5-3C_b": {
+   "n_cycles": 552,
+   "first_cycle": 1,
+   "last_cycle": 552,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.791,
+   "q_last_ah": 2.371,
+   "retention_last_vs_first": 0.8495163024005733,
+   "total_throughput_ah": 2681.528663995823,
+   "span_days": 52.88226229166659
+  },
+  "SNL_18650_NMC_25C_0-100_0.5-3C_c": {
+   "n_cycles": 698,
+   "first_cycle": 1,
+   "last_cycle": 698,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.791,
+   "q_last_ah": 2.391,
+   "retention_last_vs_first": 0.8566821927624507,
+   "total_throughput_ah": 3361.213102686357,
+   "span_days": 67.37603104166662
+  },
+  "SNL_18650_NMC_25C_0-100_0.5-3C_d": {
+   "n_cycles": 905,
+   "first_cycle": 1,
+   "last_cycle": 905,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.792,
+   "q_last_ah": 2.333,
+   "retention_last_vs_first": 0.8356017191977079,
+   "total_throughput_ah": 4300.1609999201555,
+   "span_days": 84.93328599537028
+  },
+  "SNL_18650_NMC_35C_0-100_0.5-1C_a": {
+   "n_cycles": 786,
+   "first_cycle": 1,
+   "last_cycle": 786,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.821,
+   "q_last_ah": 2.359,
+   "retention_last_vs_first": 0.836228287841191,
+   "total_throughput_ah": 3901.352141282633,
+   "span_days": 90.83263843749992
+  },
+  "SNL_18650_NMC_35C_0-100_0.5-1C_b": {
+   "n_cycles": 786,
+   "first_cycle": 1,
+   "last_cycle": 786,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.822,
+   "q_last_ah": 2.343,
+   "retention_last_vs_first": 0.8302622253720765,
+   "total_throughput_ah": 3905.90547098334,
+   "span_days": 90.96837575231501
+  },
+  "SNL_18650_NMC_35C_0-100_0.5-1C_c": {
+   "n_cycles": 785,
+   "first_cycle": 1,
+   "last_cycle": 785,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.806,
+   "q_last_ah": 2.367,
+   "retention_last_vs_first": 0.8435495367070562,
+   "total_throughput_ah": 3913.389344554994,
+   "span_days": 91.08996166666638
+  },
+  "SNL_18650_NMC_35C_0-100_0.5-1C_d": {
+   "n_cycles": 786,
+   "first_cycle": 1,
+   "last_cycle": 786,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.808,
+   "q_last_ah": 2.329,
+   "retention_last_vs_first": 0.8294159544159545,
+   "total_throughput_ah": 3904.219995990552,
+   "span_days": 90.72640972222209
+  },
+  "SNL_18650_NMC_35C_0-100_0.5-2C_a": {
+   "n_cycles": 786,
+   "first_cycle": 1,
+   "last_cycle": 786,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.894,
+   "q_last_ah": 2.371,
+   "retention_last_vs_first": 0.8192812715964063,
+   "total_throughput_ah": 3910.900775559837,
+   "span_days": 78.85257715277766
+  },
+  "SNL_18650_NMC_35C_0-100_0.5-2C_b": {
+   "n_cycles": 772,
+   "first_cycle": 1,
+   "last_cycle": 772,
+   "n_missing_cycle_numbers": 0,
+   "n_zero_or_nan_capacity": 0,
+   "q_first_ah": 2.777,
+   "q_last_ah": 2.337,
+   "retention_last_vs_first": 0.8415556355779619,
+   "total_throughput_ah": 3793.611045209461,
+   "span_days": 75.56404332175953
+  }
+ },
+ "peak_rss_mb": 221.65504,
+ "verdict_duplicates": "NO whole-trajectory duplicates"
+}

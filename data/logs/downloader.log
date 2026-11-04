@@ -28,3 +28,7 @@
 2026-11-04 21:51:00 start Q_interpolated.zip at 0 of 47797453
 2026-11-04 22:01:37 downloader started
 2026-11-04 22:01:40 start Q_interpolated.zip at 815104 of 47797453
+2026-11-04 22:32:41 paused by lead: link at a few KB/s, Samsung P0 check-ups take priority
+2026-11-04 22:33:14 curl rc=4294967295 Q_interpolated.zip now 4698112 
+2026-11-04 22:33:29 downloader finished
+2026-11-04 22:33:29 restart loop: downloader exited, restarting in 60 s

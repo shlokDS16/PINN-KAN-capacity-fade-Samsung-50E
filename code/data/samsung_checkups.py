@@ -20,6 +20,12 @@ Definitions (see runs/samsung_pipeline/RESULT.md for the evidence):
   q_mean = (q_ch + q_dch) / 2: the capacity definition of the dataset paper (mean of charge and discharge
   capacity of the RPT at 23 C). retention = q_mean / reference capacity, where the reference is the ET_T23
   capacity if that file is present, otherwise the first quality-passed check-up of the cell.
+  Quality flag capacity_outlier_vs_neighbours (name kept for compatibility) is CAUSAL since 2026-11-05.6
+  (review m1): a valid 23 C check-up is flagged when its capacity is above the range of the up to 2
+  preceding valid check-ups of the cell by more than 1 % of its own value, or below it by more than 1 % plus
+  twice the latest observed fall (flag_outliers docstring); the first check-up is not tested, the second for a
+  rise only, and no later check-up is used. (Before: range of the preceding and the following neighbour; the
+  plain preceding-range rule, OUTLIER_DROP_MULT = 0, would flag 24 % of the check-ups as steady ageing.)
   Equivalent full cycles (EFC, cycling cells) are an ANALYTIC ESTIMATE from the design, not a measurement;
   they must be validated against the ZYK segment files.
 """
@@ -50,7 +56,7 @@ OUT_CELLS = OUT_DIR / "samsung_cells.csv"
 CACHE = OUT_DIR / ".samsung_file_cache.json"
 RUN_DIR = ROOT / "runs" / "samsung_pipeline"
 
-CODE_VERSION = "2026-11-05.5"  # bump to invalidate the per-file cache
+CODE_VERSION = "2026-11-05.6"  # bump to invalidate the per-file cache
 
 # ---- constants taken from the dataset paper (notes/papers/samsung50e_dataset_paper.md, Table 3) ----
 Q_NOM_AH = 4.9                    # rated capacity; C-rates refer to it
@@ -69,7 +75,8 @@ STEP_GAP_S = 60.0             # sampling gap inside a capacity step
 STUB_AH = 0.05                # a second run of a step passing less than this is a stub (info only)
 LONG_FILE_H = 30.0            # info flag
 START_TEMP_TOL_C = 5.0        # |surface temperature at the start of the discharge - 23 C|
-OUTLIER_REL = 0.01            # point outside the range of its two neighbours by more than this fraction
+OUTLIER_REL = 0.01            # point outside the range of its (up to) 2 PRECEDING valid points by more than this fraction
+OUTLIER_DROP_MULT = 2.0       # ... a fall is further allowed up to this multiple of the latest observed fall
 RISE_REL = 0.005              # info flag: capacity rises by more than this fraction vs previous check-up
 SCHEDULE_FIRST_D = {"z": 7.0, "k": 35.0}   # days from the start of ageing to the first check-up (Fig. 4 of the dataset
 #                                             paper, read from the image: cycling 1 W, storage 5 W)
@@ -284,15 +291,29 @@ def events_between(a: int, b: int, ctype: str, seq: dict[int, str] | None) -> tu
     return ["exCU"] * n, True
 
 
-def flag_outliers(x: np.ndarray, q: np.ndarray, valid: np.ndarray, thr: float = OUTLIER_REL) -> np.ndarray:
-    """Interior points whose capacity lies outside the range spanned by the two neighbouring valid points
-    by more than thr (relative). Isolated spikes are caught; smooth curvature or a knee is not."""
+def flag_outliers(x: np.ndarray, q: np.ndarray, valid: np.ndarray, thr: float = OUTLIER_REL,
+                  drop_mult: float = OUTLIER_DROP_MULT) -> np.ndarray:
+    """Causal isolated-outlier rule (code review m1, V3 edit 5). Among the valid points with a finite capacity,
+    in order, with a, b the two preceding valid points (a older) and d = max(a - b, 0) the latest observed drop,
+    point i is flagged when
+        q[i] > max(a, b) + thr * q[i]                      (rise above the preceding range), or
+        q[i] < min(a, b) - drop_mult * d - thr * q[i]      (fall below it by more than the drop allowance).
+    drop_mult = 0 is the plain preceding-range rule; the default allows a fall of up to drop_mult times the last
+    observed fall plus thr, so that steady or accelerating ageing is not flagged (the plain rule would flag about
+    a quarter of the check-ups of this dataset, whose check-ups are 1-4 months apart). The first valid point is
+    never tested; the second has one predecessor and is tested for a rise only (a fall cannot be judged without a
+    trend). Preceding points are the valid ones, flagged or not, so the point after a spike is not flagged. Only
+    earlier points enter, so the flag of i never changes when later points change. Isolated spikes are caught;
+    smooth curvature or a knee is not. x is unused (kept for the call signature)."""
     out = np.zeros(len(q), bool)
     vi = np.flatnonzero(valid & np.isfinite(q))
-    for k in range(1, len(vi) - 1):
-        i, p, n = vi[k], vi[k - 1], vi[k + 1]
-        lo, hi = min(q[p], q[n]), max(q[p], q[n])
-        if q[i] < lo - thr * q[i] or q[i] > hi + thr * q[i]:
+    for k in range(1, len(vi)):
+        i = vi[k]
+        prev = q[vi[max(0, k - 2):k]]
+        hi = prev.max() + thr * q[i]
+        d = max(prev[0] - prev[1], 0.0) if len(prev) == 2 else np.inf
+        lo = prev.min() - drop_mult * d - thr * q[i]
+        if q[i] > hi or q[i] < lo:
             out[i] = True
     return out
 
@@ -822,7 +843,7 @@ def main(argv=None):
         "code_version": CODE_VERSION, "git_commit": git_head(), "raw_dir": str(RAW),
         "thresholds": {"dch_dur_h": DCH_DUR_H, "ch_dur_h": CH_DUR_H, "dch_current_a": DCH_CURRENT_A, "ch_current_a": CH_CURRENT_A,
                        "cap_range_ah": CAP_RANGE_AH, "ch_dch_mismatch": CH_DCH_MISMATCH, "step_gap_s": STEP_GAP_S,
-                       "outlier_rel": OUTLIER_REL, "rise_rel": RISE_REL, "rest_sensitivity_s": REST_SENSITIVITY_S},
+                       "outlier_rel": OUTLIER_REL, "outlier_drop_mult": OUTLIER_DROP_MULT, "rise_rel": RISE_REL, "rest_sensitivity_s": REST_SENSITIVITY_S},
         "nominal_durations_h": DUR_H, "q_nom_ah": Q_NOM_AH,
         "output_sha256": {OUT_CHECKUPS.name: hashlib.sha256(OUT_CHECKUPS.read_bytes()).hexdigest()}}, indent=2), encoding="utf-8")
     pd.DataFrame(issues, columns=["serial", "file", "issue", "detail"]).to_csv(RUN_DIR / "issues.csv", index=False)

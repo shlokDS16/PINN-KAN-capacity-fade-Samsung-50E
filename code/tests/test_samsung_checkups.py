@@ -190,10 +190,50 @@ def test_outlier_rule():
     valid = np.ones(8, bool)
     out = S.flag_outliers(x, q, valid)
     assert out.tolist() == [False, False, False, True, False, False, False, False]
-    smooth = 4.9 - 0.02 * x - 0.004 * x ** 2                            # curvature / knee alone is not an outlier
+    smooth = 4.9 - 0.01 * x - 0.002 * x ** 2                            # curvature below 1 % per check-up is not an outlier
     assert not S.flag_outliers(x, smooth, valid).any()
     q2 = q.copy()
     assert not S.flag_outliers(x, q2, np.r_[valid[:3], False, valid[4:]])[3]   # an invalid point is never flagged
+
+
+def test_outlier_rule_is_causal():
+    """The flag of point i never depends on points after i (review m1)."""
+    rng = np.random.default_rng(0)
+    n = 30
+    x = np.arange(float(n))
+    for _ in range(50):
+        q = 4.9 - 0.01 * x + rng.normal(0, 0.03, n)
+        valid = rng.random(n) > 0.15
+        base = S.flag_outliers(x, q, valid)
+        for i in (1, 5, 12, 20):
+            q2, v2 = q.copy(), valid.copy()
+            q2[i + 1:] = rng.uniform(3.0, 6.0, n - i - 1)          # wild post-i capacities
+            v2[i + 1:] = rng.random(n - i - 1) > 0.5               # and different validity after i
+            new = S.flag_outliers(x, q2, v2)
+            assert new[:i + 1].tolist() == base[:i + 1].tolist()
+    q = np.array([4.9, 4.88, 4.86, 4.84])                           # the last point of a window: label after it is irrelevant
+    for later in (4.82, 3.0, 9.0, np.nan):
+        assert not S.flag_outliers(np.arange(5.0), np.r_[q, later], np.ones(5, bool))[3]
+
+
+def test_outlier_rule_catches_isolated_spike_after_normal_points():
+    x = np.arange(7.0)
+    valid = np.ones(7, bool)
+    base = np.array([4.90, 4.88, 4.86, 4.84, 4.82, 4.80, 4.78])
+    for k, val in ((2, 4.60), (3, 5.20), (4, 4.50)):                # dips and a rise
+        q = base.copy()
+        q[k] = val
+        out = S.flag_outliers(x, q, valid)
+        assert out[k] and out.sum() == 1                            # the spike only; the point after it is not flagged
+    q = base.copy()
+    q[1] = 5.20                                                     # second point: one predecessor, a rise is tested
+    assert S.flag_outliers(x, q, valid)[1]
+    q[1] = 4.60                                                     # ... a fall cannot be judged without a trend
+    assert not S.flag_outliers(x, q, valid)[1]
+    steady = 4.9 * 0.985 ** np.arange(7.0)                          # 1.5 % per check-up: ageing, not an outlier
+    assert not S.flag_outliers(x, steady, valid).any()
+    assert S.flag_outliers(x, steady, valid, drop_mult=0.0)[2:].all()   # the plain preceding-range rule would flag it
+    assert not S.flag_outliers(x, base, valid)[0]                   # first point is never tested
 
 
 def test_trapezoid_rule():
@@ -251,7 +291,7 @@ def test_process_cell_exposure_and_efc(tmp_path, monkeypatch):
     _write_meta(f / "TP_z01_01_01_ET_T10_meta.txt", "01.01.2023")
     # CU 03 on 20 Jan, CU 05 on 27 Jan, CU 09 on 24 Feb (an exCU is hidden between 05 and 09, file 07)
     for idx, date in ((3, "20.01.2023"), (5, "27.01.2023"), (9, "24.02.2023")):
-        make_cu_csv(f / f"TP_z01_01_{idx:02d}_CU.csv", q_ch=4.8 - 0.1 * idx / 3, q_dch=4.8 - 0.1 * idx / 3 + 0.01, rest_tail_h=2.0)
+        make_cu_csv(f / f"TP_z01_01_{idx:02d}_CU.csv", q_ch=4.8 - 0.02 * idx / 3, q_dch=4.8 - 0.02 * idx / 3 + 0.01, rest_tail_h=2.0)
         _write_meta(f / f"TP_z01_01_{idx:02d}_CU_meta.txt", date)
     cond = pd.Series(dict(serial_internal="S019", serial="TP_z01_01", lab="SIE", stage=1, type="z", tp=1, cell=1, amb_temp_tp=23,
                           soc_max_tp=0.7, dod_tp=0.3, c_ch_tp=0.6, c_dch_tp=1.1, sampling="cLH"))

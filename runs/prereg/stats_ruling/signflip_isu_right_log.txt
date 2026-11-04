@@ -1,0 +1,2 @@
+isu_right 40 done 82 s
+isu_right 13 done 139 s

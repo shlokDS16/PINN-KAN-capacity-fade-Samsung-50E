@@ -1,0 +1,95 @@
+{
+ "settings": {
+  "B_sf": 100000,
+  "B_boot": 10000,
+  "nsim_null": 20000,
+  "nsim_pow": 0,
+  "levels": {
+   "a/4": 0.00625,
+   "a/3": 0.008333333333333333,
+   "a/2": 0.0125,
+   "a": 0.025
+  },
+  "m_S": 0.01980262729617973,
+  "m_N": -0.09531017980432493,
+  "cv": 0.45,
+  "seed_sd": 0.0316227766016838,
+  "f_cont": 0.1,
+  "mode": "spot"
+ },
+ "null": [
+  {
+   "shape": "contam",
+   "n": 40,
+   "rho": "rho0.95",
+   "boundary": "sup_boundary",
+   "nsim": 20000,
+   "rej_a/4": 0.00765,
+   "rej_a/3": 0.00955,
+   "rej_a/2": 0.01375,
+   "rej_a": 0.0275
+  },
+  {
+   "shape": "contam",
+   "n": 40,
+   "rho": "rho0.95",
+   "boundary": "ni_boundary",
+   "nsim": 20000,
+   "rej_a/4": 0.0086,
+   "rej_a/3": 0.01075,
+   "rej_a/2": 0.01535,
+   "rej_a": 0.0286
+  },
+  {
+   "shape": "contam",
+   "n": 40,
+   "rho": "rho0.90",
+   "boundary": "sup_boundary",
+   "nsim": 20000,
+   "rej_a/4": 0.0074,
+   "rej_a/3": 0.0102,
+   "rej_a/2": 0.0149,
+   "rej_a": 0.0289
+  },
+  {
+   "shape": "contam",
+   "n": 40,
+   "rho": "rho0.90",
+   "boundary": "ni_boundary",
+   "nsim": 20000,
+   "rej_a/4": 0.00775,
+   "rej_a/3": 0.0099,
+   "rej_a/2": 0.01425,
+   "rej_a": 0.0288
+  },
+  {
+   "shape": "contam",
+   "n": 40,
+   "rho": "rho0.75",
+   "boundary": "sup_boundary",
+   "nsim": 20000,
+   "rej_a/4": 0.0079,
+   "rej_a/3": 0.01005,
+   "rej_a/2": 0.01445,
+   "rej_a": 0.0284
+  },
+  {
+   "shape": "contam",
+   "n": 40,
+   "rho": "rho0.75",
+   "boundary": "ni_boundary",
+   "nsim": 20000,
+   "rej_a/4": 0.00785,
+   "rej_a/3": 0.0101,
+   "rej_a/2": 0.0136,
+   "rej_a": 0.0259
+  }
+ ],
+ "power": [],
+ "kcont": {
+  "rho0.95": 1.329422421857018,
+  "rho0.90": 1.450289627059782,
+  "rho0.75": 1.6840011325570052
+ },
+ "seconds": 305.29927158355713
+}

@@ -76,3 +76,20 @@ start, 6% at 22:00 (see the end of this file for the latest); Fable 0%. CPU only
 - **A preregistration draft exists** (runs/prereg/PREREG_DRAFT.md): hypotheses, splits, every model
   arm, statistics, and which title follows each outcome. It is frozen only after Zhang JES 182, 125097
   is read and the full Samsung data is in.
+
+## 6. Likely outcome, said now (statistician D009 and judge D011)
+- Final primary tests (D011): physics residual on vs off; KAN stress functions vs the best simpler stress map
+  (GAM, interaction GAM, polynomial, MLP); and our model vs the dataset authors' own model (Stroebl et al.).
+  Beating the best data-only learner is a key secondary test.
+- With about 40 test conditions the design detects relative gains of roughly 10-19% only. The judge's most
+  likely outcome: better than the authors' model, residual helps or is not worse, KAN ties the best GAM,
+  data-only learners not beaten, PINN vs plain ODE unresolved. Then **title 3** applies (descriptive, no
+  "forecast" verb): *Learning stress-dependent calendar and cycle ageing laws of lithium-ion cells with
+  physics-informed neural networks and Kolmogorov-Arnold networks*. The paper's selling points would be
+  the coupled calendar + cycle PINN-KAN, the learned stress laws and their physical checks, and the gain
+  over the dataset authors' model, not raw accuracy over machine-learning baselines.
+- **Your call:** are you happy with that framing as the likely result, or do you want the team to look for
+  a design with more statistical power (e.g. adding the ISU and SNL cycling conditions to the primary test,
+  at the cost of a less clean claim)?
+- Before the preregistration is frozen: Zhang JES 182, 125097 and Stroebl JES 142, 119552 read (your
+  e-gateway download), full Samsung data in (your download), throughput checked on cycling logs.

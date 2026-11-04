@@ -155,3 +155,33 @@ Row format:
   13 conditions, about 17%+); simulated type-I error 1.6-2.3x nominal under strong left skew (open).
 - **Proposer / opponent / judge:** statistician / gate audit and Codex turn 3 / D011 judge to confirm.
 - **Re-open if:** the D011 judge or a re-run of the type-I simulation changes the test.
+
+### D011 Contents of the frozen preregistration (2026-11-05, status: accepted; amends D005 contrast (iii) and D009's test)
+- **Decision:** debates/D011_prereg/01_judge.md, verdict REVISE. (1) Primary Holm family = {H1a residual, H1b stress map
+  (pool A3, A4, A5, A7), H6 dataset authors' semi-empirical model A10}, one-sided 0.025, tiers N then S; H1c (best of
+  GP-ARD/LightGBM) becomes a key secondary, serially gatekept (tested at 0.025 only if all three reach S). Claim contract
+  (iii) = A10, not the data-only learners. A10 gets one per-cell window factor (same prior as A1), published form as
+  sensitivity. (2) Arms cut to the essential set: A6 dropped, A8 synthetic only, A14 and Test A exploratory, A13 (joint vs
+  cycling-only) secondary; Test C arms A1, A9, A10, A11, A12; negative control A1, A9, R2. (3) Test C = "held-out
+  temperature-laboratory domain (35 C, INT)"; never a temperature claim; lab-indicator sensitivity identified from INT at
+  23 C; title never mentions 35 C. (4) Primary contrast on the log ratio of condition scores, margins ln(1.02) / -ln(1.10);
+  test = studentized sign-flip permutation AND BCa bound; level verified by simulation (<= 1.2 x nominal, failure-
+  contamination shape) before the freeze, else exact sign test (median estimand); pp difference always reported.
+  (5) Outcome table and titles fixed (3.2); likely outcome title 3 (H6 S, H1a S/N, H1b tie, H1c closed/unresolved, H2
+  unresolved): the lead tells Shlok now. (6) Gate conditions C1-C9 accepted with fixes; D008 (a) and (b) confirmed, (a)
+  with a Samsung timing run and equal-budget Partial rule. (7) Physical checks (activation energy vs the authors' fit and
+  verified literature only; SOC > 0.8 behaviour; Arrhenius monotonicity; superposition; cyclic signs) secondary,
+  descriptive. (8) Freeze preconditions: Zhang JES 182, 125097 and Stroebl JES 142, 119552 full texts, Hallinger read;
+  full Samsung download with manifest; stage assignment for 279 cells; analytic-vs-ZYK throughput check (median <= 5 %,
+  max 10 %, else ZYK for all); window counts; simulation; timing run; second gate audit. 19 edits listed for PREREG_v2.md.
+- **Alternatives and why they lost:** statistician's family with H1c inside (power about 19% needed, NI tier 24-40% at
+  equality; mostly costs alpha); data-only learners as the headline comparator (contradicts P3 headroom); keeping all 14
+  arms (compute, no hypothesis for A6/A8/A14 on real data); Wilcoxon + BCa on pp (liberal 1.6-2.3x under left skew; tests
+  the pseudo-median, not the mean); exact sign test as primary (power loss; kept as fallback); Test C as temperature
+  interpolation (35 C aliased with lab INT).
+- **Evidence:** runs/prereg/PREREG_DRAFT.md, runs/prereg/STATS_RULING.md, runs/GATE_pilots_audit.md,
+  debates/codex_panel/turn03_response.md, runs/pilot_P3-P5/RESULT.md, runs/samsung_pipeline/RESULT.md,
+  debates/D010_topic/05_novelty_reaudit.md.
+- **Proposer / opponent / judge:** experiment designer and statistician / gate auditor and Codex panel / D011 judge.
+- **Re-open if:** Zhang or Hallinger contains the combination; the level simulation fails both rules; the timing run
+  breaks the CPU week; Shlok rejects title 3 as an endpoint or asks for H1c back in the family.

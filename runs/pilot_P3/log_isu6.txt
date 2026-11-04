@@ -17,3 +17,46 @@
 [isu W=6.0] fold 4 persist: inner-CV 12.736 pp (floor median 5.329, mean 6.548) 0s
 [isu W=6.0] fold 4 pl: inner-CV 6.588 pp (floor median 5.329, mean 6.548) 1s
 [isu W=6.0] fold 4 lgb: inner-CV 4.956 pp (floor median 5.329, mean 6.548) 5s
+[isu W=6.0] fold 4 gp: inner-CV 5.343 pp (floor median 5.329, mean 6.548) 420s
+{
+ "ratio_primary": 0.7922185466451535,
+ "ratio_like_for_like_mean": 0.7261981982144313,
+ "ratio_repartition": 0.8553408728998303,
+ "per_fold_ratio": [
+  0.7468631408082169,
+  0.7437079194235611,
+  0.7392946469249334,
+  0.8011415714041062,
+  0.9300854546649502
+ ],
+ "min_fold_ratio": 0.7392946469249334,
+ "mean_best_error_pp": 4.8576758816342664,
+ "mean_floor_median_pp": 6.172623434007972,
+ "mean_floor_mean_pp": 6.691479357015053,
+ "mean_inner_cv_persist_pp": 12.537911119822832,
+ "ratio_persist": 2.044534454502319,
+ "mean_inner_cv_pl_pp": 6.298378771176824,
+ "ratio_pl": 1.0282599620716606,
+ "mean_inner_cv_gp_pp": 5.035940154041418,
+ "ratio_gp": 0.8225772316253949,
+ "mean_inner_cv_lgb_pp": 4.8691303981591405,
+ "ratio_lgb": 0.7940321580795098,
+ "pooled_condition_level": {
+  "n_conditions": 60,
+  "ratio_judge_literal": 0.7823082936543102,
+  "ci95_judge_literal": [
+   0.6748656272667074,
+   0.974681078007677
+  ],
+  "ratio_like_for_like": 0.7257351141851004,
+  "ci95_like_for_like": [
+   0.6564607315374694,
+   0.8023037043364539
+  ],
+  "mean_error_pp": 4.858145617999055,
+  "median_floor_pp": 6.210014207194119,
+  "mean_floor_pp": 6.694103017812604
+ },
+ "verdict_rule": "ratio_primary > 1.2: superiority winnable; <= 1.2: contrast (iii) preregistered as non-inferiority",
+ "verdict": "NON-INFERIORITY"
+}

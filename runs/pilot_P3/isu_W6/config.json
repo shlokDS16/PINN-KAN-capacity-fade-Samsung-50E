@@ -1,0 +1,17 @@
+{
+ "pilot": "P3",
+ "dataset": "isu",
+ "window": 6.0,
+ "window_unit": "weeks",
+ "n_trials": 20,
+ "seed": 1,
+ "inner_folds": 3,
+ "life_level": 0.7,
+ "snl_grid": 25,
+ "commit": "86fca6f7c126ae62797d8767ffe2aa332d10b186",
+ "threads": "1",
+ "cuda_visible_devices": "",
+ "split_file": "./runs/splits/isu_testB.json",
+ "split_sha256": "c1227642a067e61c4e5110d577e0b84b6ccb6da1cd8e4b48b16e03b2ba4419d8",
+ "command": "code/pilots/p3_headroom.py . isu 6 20 1"
+}

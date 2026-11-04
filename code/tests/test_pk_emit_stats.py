@@ -195,12 +195,13 @@ def test_stats_step_end_to_end_with_controls(runs_dir, tmp_path):
     assert set(demo) - {"synthetic"} <= set(c)                                                                  # same top-level keys as the figure demo
     assert {"H1a", "H1b", "H6", "ref_R1", "ref_R2"} <= set(c["contrasts"]) and set(demo["contrasts"]["H1a"]) - {"label", "hyp"} <= set(c["contrasts"]["H1a"])
     ctl = json.load(open(an / "controls.json"))
-    assert set(ctl["negative"]) == {"permutation", "A9_minus_A1_mean_L", "p_two_sided", "passed", "A1_vs_R2_median_L", "A1_not_beating_R2"}
+    assert set(ctl["negative"]) == {"nc1", "nc2"} and ctl["negative"]["nc1"]["passed"] is True and ctl["negative"]["nc1"]["max_abs_diff"] == 0.0 and ctl["negative"]["nc1"]["gating"]
+    n2 = ctl["negative"]["nc2"]
+    assert n2["gating"] is False and n2["n"] == c["n"] and n2["k_positive"] <= n2["n"] and "scores_under_permutation_mean_pp" in n2["descriptive"] and "A1" in n2["descriptive"]["scores_real_mean_pp"]
     assert isinstance(ctl["positive"]["P2_monotone_in_T"], bool)
     ref = json.load(open(an / "reference.json"))["values"]["B"]
     assert ref["R_LOO"] > 0 and ref["R_WARP"] > 0
-    m = json.load(open(runs_dir / "NEG" / "metrics.json"))
-    assert m["negative_control"]["complete"] and "median_L_R2_over_A1" in m["negative_control"]
+    assert (runs_dir / "B" / "invariance.json").exists() and json.load(open(runs_dir / "B" / "invariance.json"))["n_rows"] > 0
 
 
 def test_stats_step_on_real_training_folds_uses_inner_cv_only(tmp_path):

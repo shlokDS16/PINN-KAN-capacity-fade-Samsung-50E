@@ -69,9 +69,14 @@ def main():
     neg, pos = ctl["negative"], ctl["positive"]
     ok = lambda b: "pass" if b else "FAIL"
     mn = lambda v, nd=3: f"{v:.{nd}f}".replace("-", "$-$")
-    L.append("Negative: stress vectors permuted among conditions (A1, A9, R2 re-run) & mean $L$, A9 vs A1 & "
-             f"{mn(neg['A9_minus_A1_mean_L'])}, two-sided $p={neg['p_two_sided']:.2f}$ & $<\\ln 1.02$ and $p>0.05$: {ok(neg['passed'])} \\\\")
-    L.append(f" & median $L$, A1 vs R2 & {mn(neg['A1_vs_R2_median_L'])} & no win beyond margin: {ok(neg['A1_not_beating_R2'])} \\\\")
+    nc1, nc2 = neg.get("nc1"), neg.get("nc2")      # D014: NC-1 label invariance (gate G), NC-2 permuted stress (interpretive, not gating)
+    if nc1:
+        L.append("NC-1 (gate G): post-window labels of held-out cells replaced by garbage & max $|\\Delta\\hat y|$ over "
+                 f"{nc1['n_rows']} predictions & {nc1['max_abs_diff']:.1e} & identical (0): {ok(nc1['passed'])} \\\\")
+    if nc2:
+        L.append("NC-2: stress vectors permuted among conditions (A1 re-run; not gating) & median $L=\\ln(S_{\\mathrm{perm}}/S_{\\mathrm{real}})$, "
+                 f"{nc2['k_positive']}/{nc2['n']} positive & {mn(nc2['median_L'])} [{mn(nc2['median_ci95'][0])}, {mn(nc2['median_ci95'][1])}] & exact sign test $p={nc2['p_one_sided_exact']:.3f}$ "
+                 f"$\\le 0.025$: {ok(nc2['passed'])} \\\\")
     L.append(f"Positive P1: well-specified synthetic G0 & nRMSE of recovered surface & -- & $\\le 0.15$: {ok(pos['P1_G0_nrmse_leq_0p15'])} \\\\")
     L.append(f"Positive P2: storage cells & calendar rate against $T$ & monotone at every SOC in the hull & {ok(pos['P2_monotone_in_T'])} \\\\")
     L.append(f"Positive P3: PINN-KAN against persistence & median $L$ & {mn(pos['P3_A1_beats_R1_median_L'], 2)} & $>0$: {ok(pos['P3_A1_beats_R1_median_L'] > 0)} \\\\")

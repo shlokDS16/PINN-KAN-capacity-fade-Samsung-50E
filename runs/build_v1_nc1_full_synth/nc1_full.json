@@ -1,0 +1,13 @@
+{
+ "passed": true,
+ "same_row_keys": true,
+ "max_abs_diff_outer": 0.0,
+ "max_abs_diff_inner_oof": 0.0,
+ "n_outer_rows": 6336,
+ "identical_records": {
+  "tuning_done.json": true,
+  "margins_inputs.json": true
+ },
+ "clean_run": "runs\\build_v1_nc1_full_synth_clean",
+ "scrambled_run": "runs\\build_v1_nc1_full_synth_scrambled"
+}

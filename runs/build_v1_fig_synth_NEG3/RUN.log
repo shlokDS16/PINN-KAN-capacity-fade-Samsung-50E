@@ -1,0 +1,14 @@
+[03:22:27] run build_v1_fig_synth_NEG3: dataset synthetic test B fold 0 mode confirmatory (requested confirmatory) blinded=False
+[03:22:27] train cells 85: 66 cycling, 19 storage; conditions 41
+[03:22:34] backbone tournament: chosen self_limiting (best self_limiting)
+[03:22:46] tuned A1: inner-CV 3.302 pp, best {'h': 3, 'grid': 2, 'l2': 0.001, 'sparsity': 0.001, 'lam_res': 0.01, 'placement': 'record_end'}, median fit 2.5 s, failed 0
+[03:22:49] tuned A9: inner-CV 4.182 pp, best {'width': 128, 'depth': 4, 'wd': 1e-05, 'zdim': 3}, median fit 0.7 s, failed 0
+[03:22:49] tuned R1: inner-CV 13.460 pp, best {}, median fit 0.0 s, failed 0
+[03:22:49] tuned R2: inner-CV 12.956 pp, best {}, median fit 0.0 s, failed 0
+[03:22:53] diagnostics: {"A1": {"lam_res": 0.01, "clip_fraction": 0.54, "delta_sd": 0.334, "tau": 0.15, "delta_sd_over_tau": 2.228}, "A9": {"clip_fraction": 0.942}}
+[03:23:02] outer test A1: 5.672 pp (seed SD 0.221) over 8 conditions
+[03:23:06] outer test A9: 2.256 pp (seed SD 0.045) over 8 conditions
+[03:23:06] outer test R1: 14.149 pp (seed SD 0.000) over 8 conditions
+[03:23:06] outer test R2: 10.016 pp (seed SD 0.000) over 8 conditions
+[03:23:07] emitted window.csv, stress_functions.json, residual_map.npz, superposition.csv
+[03:23:07] done in 40 s

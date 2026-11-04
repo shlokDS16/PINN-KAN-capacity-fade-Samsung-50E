@@ -1,0 +1,74 @@
+{
+ "A1": {
+  "tuning_seconds": 12.259153604507446,
+  "median_fit_seconds": 2.5546504855155945,
+  "n_trials": 2,
+  "n_failed": 0,
+  "refit_seed0_seconds": 3.22605299949646,
+  "refit_seed1_seconds": 3.343407154083252,
+  "refit_seed2_seconds": 3.4345955848693848
+ },
+ "A2": {
+  "tuning_seconds": 3.6396822929382324,
+  "median_fit_seconds": 0.506773054599762,
+  "n_trials": 2,
+  "n_failed": 0,
+  "refit_seed0_seconds": 1.2362079620361328,
+  "refit_seed1_seconds": 1.4296317100524902,
+  "refit_seed2_seconds": 1.1631617546081543
+ },
+ "A4": {
+  "tuning_seconds": 8.505871057510376,
+  "median_fit_seconds": 1.7610281705856323,
+  "n_trials": 2,
+  "n_failed": 0,
+  "refit_seed0_seconds": 2.76733660697937,
+  "refit_seed1_seconds": 2.81431245803833,
+  "refit_seed2_seconds": 2.709611415863037
+ },
+ "A9": {
+  "tuning_seconds": 2.50184965133667,
+  "median_fit_seconds": 0.5285622477531433,
+  "n_trials": 2,
+  "n_failed": 0,
+  "refit_seed0_seconds": 1.4580090045928955,
+  "refit_seed1_seconds": 1.5437695980072021,
+  "refit_seed2_seconds": 1.421907901763916
+ },
+ "A10": {
+  "tuning_seconds": 3.8809595108032227,
+  "median_fit_seconds": 1.9350942373275757,
+  "n_trials": 0,
+  "n_failed": 0,
+  "refit_seed0_seconds": 3.0124146938323975,
+  "refit_seed1_seconds": 2.9414994716644287,
+  "refit_seed2_seconds": 3.0195019245147705
+ },
+ "A12": {
+  "tuning_seconds": 0.1500263214111328,
+  "median_fit_seconds": 0.023482322692871094,
+  "n_trials": 2,
+  "n_failed": 0,
+  "refit_seed0_seconds": 0.06436824798583984,
+  "refit_seed1_seconds": 0.06702995300292969,
+  "refit_seed2_seconds": 0.06389212608337402
+ },
+ "R1": {
+  "tuning_seconds": 0.0014460086822509766,
+  "median_fit_seconds": 5.364418029785156e-06,
+  "n_trials": 0,
+  "n_failed": 0,
+  "refit_seed0_seconds": 0.0011391639709472656,
+  "refit_seed1_seconds": 0.0009398460388183594,
+  "refit_seed2_seconds": 0.0009195804595947266
+ },
+ "R2": {
+  "tuning_seconds": 0.002488851547241211,
+  "median_fit_seconds": 2.9802322387695312e-06,
+  "n_trials": 0,
+  "n_failed": 0,
+  "refit_seed0_seconds": 0.0033321380615234375,
+  "refit_seed1_seconds": 0.0017278194427490234,
+  "refit_seed2_seconds": 0.002025127410888672
+ }
+}

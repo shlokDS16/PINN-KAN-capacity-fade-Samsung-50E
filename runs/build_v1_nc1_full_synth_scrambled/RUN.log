@@ -1,0 +1,22 @@
+[03:23:48] run build_v1_nc1_full_synth_scrambled: dataset synthetic test B fold 0 mode confirmatory (requested confirmatory) blinded=False
+[03:23:48] train cells 85: 66 cycling, 19 storage; conditions 41
+[03:23:53] backbone tournament: chosen self_limiting (best self_limiting)
+[03:24:04] tuned A1: inner-CV 1.345 pp, best {'h': 3, 'grid': 2, 'l2': 0.001, 'sparsity': 0.001, 'lam_res': 0.01, 'placement': 'record_end'}, median fit 2.4 s, failed 0
+[03:24:07] tuned A2: inner-CV 1.131 pp, best {'h': 3, 'grid': 8, 'l2': 0.01, 'sparsity': 0.01}, median fit 0.5 s, failed 0
+[03:24:16] tuned A4: inner-CV 3.446 pp, best {'grid': 10, 'l2': 0.1, 'lam_res': 1.0, 'placement': 'whole_axis'}, median fit 1.8 s, failed 0
+[03:24:19] tuned A9: inner-CV 3.380 pp, best {'width': 128, 'depth': 4, 'wd': 1e-05, 'zdim': 3}, median fit 0.6 s, failed 0
+[03:24:23] tuned A10: inner-CV 2.026 pp, best {}, median fit 2.1 s, failed 0
+[03:24:23] tuned A12: inner-CV 2.126 pp, best {'n_est': 352, 'lr': 0.11387317092169064, 'leaves': 21, 'mcs': 35, 'l2': 0.04950159553733195}, median fit 0.0 s, failed 0
+[03:24:23] tuned R1: inner-CV 13.460 pp, best {}, median fit 0.0 s, failed 0
+[03:24:23] tuned R2: inner-CV 12.956 pp, best {}, median fit 0.0 s, failed 0
+[03:24:29] diagnostics: {"A1": {"lam_res": 0.01, "clip_fraction": 0.453, "delta_sd": 0.161, "tau": 0.15, "delta_sd_over_tau": 1.072}, "A2": {"clip_fraction": 0.161, "delta_sd": 0.197, "tau": 0.15, "delta_sd_over_tau": 1.315}, "A4": {"lam_res": 1.0, "clip_fraction": 1.0, "delta_sd": 0.157, "tau": 0.15, "delta_sd_over_tau": 1.048}, "A9": {"clip_fraction": 0.982}}
+[03:24:39] outer test A1: 8.388 pp (seed SD 0.324) over 8 conditions
+[03:24:42] outer test A2: 7.248 pp (seed SD 0.073) over 8 conditions
+[03:24:50] outer test A4: 10.013 pp (seed SD 0.452) over 8 conditions
+[03:24:54] outer test A9: 7.657 pp (seed SD 0.074) over 8 conditions
+[03:25:04] outer test A10: 7.510 pp (seed SD 0.000) over 8 conditions
+[03:25:04] outer test A12: 7.319 pp (seed SD 0.011) over 8 conditions
+[03:25:04] outer test R1: 14.715 pp (seed SD 0.000) over 8 conditions
+[03:25:04] outer test R2: 11.086 pp (seed SD 0.000) over 8 conditions
+[03:25:05] emitted window.csv, stress_functions.json, residual_map.npz, superposition.csv
+[03:25:05] done in 77 s

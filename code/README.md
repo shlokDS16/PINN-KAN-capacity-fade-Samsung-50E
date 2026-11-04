@@ -29,7 +29,9 @@ cd "C:\Users\Shlok\Downloads\PINN KAN battery paper"
 | `per_cell_factor` | A10 per-cell factor on/off (off = "A10 as published") |
 | `retain_all`, `throughput` | keep every check-up regardless of QC flags (sensitivity); `analytic` (default) or `zyk` ([FB-5] stub) |
 | `target_kind` | derived from `test` (B, C, A: cycling; S2, S3: storage); a contradicting value raises `ConfigError` |
-| `permute_stress` | negative control (prereg 10): stress vectors with their design throughput permuted among cycling conditions, separately in the training and the test set; run A1, A9, R2; `metrics.json` gets `negative_control` with the acceptance checks |
+| `permute_stress` | NC-2 (D014, interpretive, NOT gating, Test B only; `ConfigError` for other tests): stress vectors with their design throughput permuted among cycling conditions, separately in training and test; run A1 (A9, R1, R2 optional); scored by `stats_step.nc2` against the real Test B run |
+| `nc1_scramble_test` | synthetic confirmatory runs: replace the held-out cells' post-window labels by garbage before scoring (used by `mode: nc1_full`) |
+| `mc_seed_root` | fixed at 20261105 (NEGCONTROL_RULING 5.2); every Monte Carlo step uses `SeedSequence([root, crc32(label)])`; in `seeds.json` and the config hash |
 | `pinn` | `{clip, warmup, lr}` overrides of the optimiser recipe (D013); `clip` also reaches A2 and A9 |
 | `diagnostics` | default true: one refit per gradient-trained arm at its tuned settings, written to `diagnostics.json` (tuned `lam_res` and grid-edge flag, sd of fitted `delta_c` against TAU, clipped-step fraction) |
 | `auto_budget` | N and inner folds are fixed from one timing fit per neural arm BEFORE tuning (`budget_rule.json`) |
@@ -50,6 +52,14 @@ Run record in `runs/<run_id>/`: `config.json`, `env.json`, `git.json` (commit + 
 `backbone_tournament.json`, `margins_inputs.json`, `margins.json`, `timings.json`, `metrics.json`, `condition_scores.json`, `predictions.csv`
 (phase `inner_oof` or `outer_test`, arm, seed, cell, condition, time, predicted and true retention), `RUN.log`.
 
+## Negative control (runs/prereg/NEGCONTROL_RULING.md, D014)
+
+- **NC-1, gate G (label invariance).** In every confirmatory run, after the final predictions, each fitted arm and seed predicts again from windows rebuilt out of cells whose post-window retention was replaced by garbage
+  (`negcontrol.scramble_cells`; with a life level the forecast set is kept and asserted). Predictions must be bit-identical (max |diff| = 0, same forecast times); the result is `invariance.json`; a difference writes `GATE_G_TRIPPED` and raises
+  `InvarianceError`. `mode: "nc1_full"` (synthetic only) runs the whole pipeline twice, clean and with scrambled test labels, and compares predictions (inner OOF and outer), `tuning_done.json` and `margins_inputs.json` (`nc1_full.json`): the mandatory pre-freeze run at the candidate commit.
+- **NC-2 (interpretive).** `permute_stress` run vs the real Test B run: `L_c = ln(S_A1,permuted / S_A1,real)` paired by condition, exact one-sided sign test at 0.025 (`controls.json: negative.nc2`; descriptive rows beside it). The score-contrast criteria of the draft (A9 - A1, A1 vs R2) and the sign-flip p-value are gone.
+- **No use of the forecast-set extent.** `test_no_arm_depends_on_the_extent_of_its_forecast_set` (all 15 arms) shows predictions at a check-up are unchanged (float32 rounding, 1e-6) when later times are cut or added; a static test forbids `t_fc[-1]`, `t_fc.max` etc. in the model modules. (ISU/SNL forecast sets end at the 70 % crossing.)
+
 ## Figure inputs and the statistics step (code/figures/README.md formats)
 
 Written by the run writer (`pinnkan/emit.py`, called at the end of every `inner` and `confirmatory` run; a failure is recorded in `emit_errors.json`, not hidden):
@@ -68,11 +78,11 @@ Statistics step (`pinnkan/stats_step.py`, launcher `code/run_pinnkan_stats.py`):
 ```
 It reads `condition_scores.json`, `metrics.json` (`inner_cv_pp`) and `config.json` of the fold runs (one directory per outer fold; conditions are merged, comparators are chosen per fold by
 the inner-CV score of that fold's training side, never by test error) and writes `contrasts_<test>.json`, `reference.json` (median over folds of the training-side reference values) and
-`controls.json`. Rule: exact one-sided sign test on `ln(S_comp / S_A1)` (median estimand, order-statistic 95 % interval), tiers S (ln 1.02) and N (-ln 1.10), Holm over {H1a, H1b, H6} by the N-tier p-values,
+`controls.json` (NC-1 from the `invariance.json` of the real runs, NC-2 from `--negative-run`, one directory per Test B fold). Rule: exact one-sided sign test on `ln(S_comp / S_A1)` (median estimand, order-statistic 95 % interval), tiers S (ln 1.02) and N (-ln 1.10), Holm over {H1a, H1b, H6} by the N-tier p-values,
 H1c tested only when all three are tier S (and only for the inner-CV-best of A11/A12), H2 outcome A/C/B/unresolved (PREREG_v2 9.6), Test C Holm-2 (H4a, H4b), S2 one non-inferiority test (H5),
 ISU/SNL as Test B on their pool (A4, A5, A7; H1c unadjusted). Beside each tier: mean paired pp difference with a BCa interval and the pp-scale tier of D009 (0.02 E, 0.10 E; E = the comparator's
 inner-CV score pooled by test-condition count); `tier_pp_differs` flags a disagreement. A directory without `condition_scores.json` (a training-fold `inner` run) is read from its out-of-fold inner-CV scores and the
-output says `source: inner_cv_training_conditions` (not a confirmatory result). The negative control of `controls.json` comes from the `permute_stress` run; P2 from `stress_functions.json`; P1 from the H7 summary (G0).
+output says `source: inner_cv_training_conditions` (not a confirmatory result). P2 from `stress_functions.json`; P1 from the H7 summary (G0).
 
 ## Arms (config ids; spaces and dimensions as PREREG_v2 7.1, tested in `test_arm_table_matches_prereg_dimensions`)
 
@@ -130,7 +140,7 @@ logged inside the window, the window's mean rate afterwards) and keep the foreca
 - **Review m1 (left for the lead)**: the pipeline's isolated-outlier QC rule (`code/data/samsung_checkups.py`, prereg 3.3(3)) looks at the next capacity, so whether the last window point survives depends on the first post-window value. Changing it (preceding neighbours only) changes a preregistered rule and a pipeline output; not done here.
 - **Review m2**: the forecast-time list of ISU/SNL still ends at the 70 % crossing (it is the scored set); every arm predicts pointwise and `test_m2_forecast_does_not_depend_on_where_the_query_list_ends` pins that predictions at a check-up do not depend on later query times (A8's integration grid does; synthetic only).
 - **Review m6**: A11/A12 train on the cells that have enough window and forecast points; the other arms on all cells. `n_train_used` and `n_train_scorable_cells` are in the run record; with the secondary window k-1 all storage cells drop out of A11/A12 (k_sto = 1 gives 2 window points < 3).
-- **Statistics**: `stats_step.py` implements the D012 sign-test rule for the contrasts; the type-I simulations stay in `code/prereg/`. The sign-flip p of the negative control uses a placeholder RNG seed. H3 (KAN wording against A4/A5 with the G2 validity rule) is not assembled.
-- Implemented after review: the negative control (`permute_stress`, with the acceptance checks of prereg 10; the sign-flip p uses a placeholder RNG seed), and the secondary metrics R^2, MAPE, error by horizon and RUL error in the outer-test `metrics.json`.
+- **Statistics**: `stats_step.py` implements the D012 sign-test rule for the contrasts; the type-I simulations stay in `code/prereg/`. BCa intervals use the registered per-contrast streams. H3 (KAN wording against A4/A5 with the G2 validity rule) is not assembled.
+- Implemented after review: the negative control (D014: NC-1 invariance gate, NC-2 permuted stress; see above), and the secondary metrics R^2, MAPE, error by horizon and RUL error in the outer-test `metrics.json`.
 - **Physical validation analyses** of prereg 11a (activation energy, SOC slope, superposition check) and the figure scripts are not part of this build.
 - Sensitivity rows implemented as options: windows (`shift`), oracle throughput, A10 as published, retain-every-check-up. Not implemented: lab-indicator rows, AT-included (`include_at` exists in `load_split`), forecast-failure rule, lab-stratified bootstraps.

@@ -23,7 +23,7 @@ import numpy as np
 import torch
 
 from . import ROOT as _ROOT
-from . import emit, guard, h7, margins, metrics, semi, stats_step, synth, tuning
+from . import emit, guard, h7, margins, metrics, negcontrol, semi, stats_step, synth, tuning
 from .arms import ARMS, H1B_POOL, NEURAL, default_hp, make_arm
 from .data import WindowRule, load_split, prepare_many, sha256_file
 from .law import TAU
@@ -33,7 +33,7 @@ torch.set_num_threads(1)
 
 DEFAULTS = {"mode": "inner", "test": "B", "fold": 0, "arms": ["A1", "A2", "A9", "R1", "R2"], "seeds": [0, 1, 2, 3, 4], "n_trials": 20, "inner_k": 3,
             "backbone": "self_limiting", "steps_scale": 1.0, "window": {}, "oracle_throughput": False, "per_cell_factor": True, "twins": "auto",
-            "refit_timing": False, "overwrite": False, "retain_all": False, "throughput": "analytic", "target_kind": None, "auto_budget": False, "permute_stress": False, "pinn": {}, "diagnostics": True}
+            "refit_timing": False, "overwrite": False, "retain_all": False, "throughput": "analytic", "target_kind": None, "auto_budget": False, "permute_stress": False, "pinn": {}, "diagnostics": True, "mc_seed_root": negcontrol.MC_SEED_ROOT, "nc1_scramble_test": False}
 TARGET_BY_TEST = {"B": "cycling", "C": "cycling", "A": "cycling", "S2": "storage", "S3": "storage"}   # the tuned task is the scored task (review M3)
 
 
@@ -145,6 +145,10 @@ def run(cfg_in, root=None, runs_dir=None):
     run_id = cfg["run_id"]
     run_dir = os.path.join(runs_dir, run_id)
     ds, mode = cfg["dataset"], cfg["mode"]
+    if cfg["permute_stress"] and cfg["test"] != "B":
+        raise ConfigError("permute_stress (NC-2) is defined on Test B only, not on Test C (NEGCONTROL_RULING section 3)")
+    if cfg["mc_seed_root"] != negcontrol.MC_SEED_ROOT:
+        raise ConfigError("mc_seed_root is fixed by the NEGCONTROL ruling (20261105)")
     tk = TARGET_BY_TEST.get(cfg["test"], "cycling")
     if cfg.get("target_kind") not in (None, tk):
         raise ConfigError(f"target_kind {cfg['target_kind']!r} contradicts test {cfg['test']!r} (scored kind is {tk!r})")
@@ -164,6 +168,18 @@ def run(cfg_in, root=None, runs_dir=None):
             raise FileExistsError(run_dir)
     os.makedirs(run_dir, exist_ok=True)
     blinded = ds == "samsung" and not guard.is_valid_freeze(root)
+    if mode == "nc1_full":                                    # mandatory pre-freeze check: whole pipeline with scrambled test labels (synthetic only)
+        if ds != "synthetic":
+            raise ConfigError("mode nc1_full is synthetic only")
+        base = {k: v for k, v in cfg.items() if k not in ("run_id", "mode", "overwrite")}
+        dA = run({**base, "run_id": run_id + "_clean", "mode": "confirmatory", "nc1_scramble_test": False}, root=root, runs_dir=runs_dir)
+        dB = run({**base, "run_id": run_id + "_scrambled", "mode": "confirmatory", "nc1_scramble_test": True}, root=root, runs_dir=runs_dir)
+        res = negcontrol.compare_runs(dA, dB)
+        _json(os.path.join(run_dir, "config.json"), cfg)
+        _json(os.path.join(run_dir, "nc1_full.json"), {**res, "clean_run": dA, "scrambled_run": dB})
+        if not res["passed"]:
+            raise negcontrol.InvarianceError(f"NC-1 full pipeline: {res}")
+        return run_dir
     if mode == "h7":                                        # identifiability driver, synthetic only (PREREG_v2 13)
         if ds != "synthetic":
             raise ConfigError("mode h7 is synthetic only")
@@ -183,7 +199,8 @@ def run(cfg_in, root=None, runs_dir=None):
     _json(os.path.join(run_dir, "env.json"), env_info())
     _json(os.path.join(run_dir, "git.json"), git_info(root))
     _json(os.path.join(run_dir, "seeds.json"), {"final_refit_seeds": cfg["seeds"], "tuning_seed": "1000 + outer fold", "tpe_sampler_seed": "outer fold",
-                                                "permutation_test_rng_seed": "set by the statistics step (prereg 9.3)"})
+                                                "mc_seed_root": cfg["mc_seed_root"], "mc_seed_rule": "np.random.default_rng(SeedSequence([root, zlib.crc32(label)])) for every Monte Carlo step; labels such as 'B|H1a|BCa_mean_pp' are listed in the contrasts files",
+                                                "permute_stress_stream": "[20261107, 31, fold] (train), fold + 1000 (test)", "nc1_scramble_stream": "mc_rng('NC1|' + cell_id)"})
     role = "test" if mode == "confirmatory" else "train"
     D = build_data(cfg, root, role)          # the test-fold guard is inside load_split (role != 'train')
     spec, train = D["spec"], D["train"]
@@ -201,6 +218,10 @@ def run(cfg_in, root=None, runs_dir=None):
         rec.log(f"NOTE: {len(D['split']['missing_train_conditions'])} training conditions of the split have no cells on disk (partial download)")
     wk = cfg["window"]
     rule = WindowRule.for_spec(spec, k_cycling=wk.get("k_cycling"), k_storage=wk.get("k_storage"), W=wk.get("W"), shift=wk.get("shift", 0))
+    if cfg["nc1_scramble_test"]:
+        if ds != "synthetic" or D["test"] is None:
+            raise ConfigError("nc1_scramble_test is for synthetic confirmatory runs only")
+        D["test"] = negcontrol.scramble_cells(D["test"], rule, spec)
     extra = None
     if (cfg["twins"] == "c35") or (cfg["twins"] == "auto" and cfg["test"] == "C" and ds == "samsung"):
         extra = twins_from_conditions(D["split"].get("test_conditions", []))
@@ -294,7 +315,7 @@ def run(cfg_in, root=None, runs_dir=None):
     if bad:
         raise ConfigError(f"test cells of kind {sorted(bad)} but the tuned and scored kind is {tk}")
     cond_scores_out, per_arm = {}, {}
-    fitted = {}
+    fitted, inv_records = {}, {}
     for a in arms:
         per_seed_rows, per_seed_preds = [], []
         for s in cfg["seeds"]:
@@ -304,6 +325,7 @@ def run(cfg_in, root=None, runs_dir=None):
             rows = metrics.score_prepared(preds, prep)
             per_seed_rows.append(rows)
             per_seed_preds.append(preds)
+            inv_records[f"{a}|{s}"] = negcontrol.check_invariance(arm.predict, D["test"], rule, spec, cfg["oracle_throughput"], base_preds=preds, base_prepared=prep)
             if a in ("A1", "A2", "A4", "A10"):
                 fitted.setdefault(a, []).append(arm)
             rec.add_preds("outer_test", a, s, rows)
@@ -318,8 +340,16 @@ def run(cfg_in, root=None, runs_dir=None):
     metrics_out["outer_test"] = per_arm
     emit_artifacts(run_dir, rec, spec, train, prep, fitted, ctx["backbone"], prep)
     write_reference(run_dir, train, rule, blinded, cfg, rec)
+    inv = negcontrol.summarise(inv_records)
+    _json(os.path.join(run_dir, "invariance.json"), inv)
+    metrics_out["nc1_invariance_passed"] = inv["passed"]
+    if not inv["passed"]:
+        open(os.path.join(run_dir, "GATE_G_TRIPPED"), "w").write("NC-1: predictions changed when held-out post-window labels were replaced by garbage (see invariance.json)\n")
+        rec.log("GATE G TRIPPED (NC-1)")
+        _finish(rec, run_dir, timings, metrics_out, t_start)
+        raise negcontrol.InvarianceError(f"NC-1 label-invariance failed: max |diff| = {inv['max_abs_diff']} (see {run_dir}/invariance.json)")
     if cfg["permute_stress"]:
-        metrics_out["negative_control"] = negative_control(cond_scores_out)
+        metrics_out["permuted_stress_run"] = "NC-2 input: scored by stats_step.nc2 against the real Test B run (exact one-sided sign test)"
     _json(os.path.join(run_dir, "condition_scores.json"), cond_scores_out)
     _finish(rec, run_dir, timings, metrics_out, t_start)
     return run_dir
@@ -393,22 +423,6 @@ def outer_extras(prep, per_seed_preds, per_seed_rows, rul_level=0.8):
     return {"r2_pooled": r2, "mape_pct_mean": mape, "horizon_rmse_pp": hmean,
             "rul": {"level": rul_level, "n_cells_crossing": len(vals[0]),
                     "mean_abs_error_time_units": float(np.mean([np.mean(np.abs(v)) for v in vals if v])) if vals[0] else None}}
-
-
-def negative_control(cond_scores, margin=1.02):
-    """prereg 10 acceptance: A9 - A1 has mean L < ln(1.02) and the two-sided sign-flip p > 0.05; A1 does not beat R2 by more than the margin"""
-    out = {"required_arms": ["A1", "A9", "R2"], "complete": all(a in cond_scores for a in ("A1", "A9", "R2"))}
-    if not out["complete"]:
-        return out
-    L9 = metrics.log_ratio(cond_scores["A9"], cond_scores["A1"])
-    L2 = metrics.log_ratio(cond_scores["R2"], cond_scores["A1"])
-    m9, m2 = float(np.mean(list(L9.values()))), float(np.mean(list(L2.values())))
-    med2 = float(np.median(list(L2.values())))
-    p = metrics.signflip_p_two_sided(list(L9.values()))
-    out.update(mean_L_A9_over_A1=m9, signflip_p_two_sided=p, mean_L_R2_over_A1=m2, median_L_R2_over_A1=med2, ln_margin=float(np.log(margin)),
-               pass_residual_effect_vanishes=bool(m9 < np.log(margin) and p > 0.05), pass_A1_not_better_than_R2=bool(m2 <= np.log(margin)))
-    out["passed"] = out["pass_residual_effect_vanishes"] and out["pass_A1_not_better_than_R2"]
-    return out
 
 
 def _finish(rec, run_dir, timings, metrics_out, t_start):

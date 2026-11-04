@@ -1,0 +1,243 @@
+{
+ "passed": true,
+ "max_abs_diff": 0.0,
+ "n_rows": 10296,
+ "tolerance": 0.0,
+ "per_arm_seed": {
+  "A1|0": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A1|1": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A1|2": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A2|0": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A2|1": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A2|2": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A3|0": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A3|1": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A3|2": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A4|0": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A4|1": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A4|2": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A5|0": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A5|1": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A5|2": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A7|0": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A7|1": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A7|2": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A9|0": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A9|1": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A9|2": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A10|0": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A10|1": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A10|2": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A11|0": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A11|1": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A11|2": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A12|0": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A12|1": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A12|2": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A13|0": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A13|1": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "A13|2": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "R1|0": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "R1|1": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "R1|2": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "R2|0": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "R2|1": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  },
+  "R2|2": {
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 264,
+   "forecast_sets_equal": true
+  }
+ },
+ "scramble": "post-window retention replaced by garbage (NEGCONTROL_RULING section 3), same fitted arms and seeds, predict stage"
+}

@@ -194,24 +194,6 @@ def test_m4_permute_stress_moves_every_vector_and_keeps_labels():
     assert {c.cond for c in metrics.permute_stress(te, SPEC, 1000)} == {c.cond for c in te}              # permutation inside the test set only
 
 
-def test_m4_negative_control_acceptance_logic():
-    conds = [f"c{i}" for i in range(12)]
-    same = {c: 2.0 + 0.01 * i for i, c in enumerate(conds)}
-    nc = run.negative_control({"A1": same, "A9": {c: v * (1.0 + (0.02 if i % 2 else -0.02)) for i, (c, v) in enumerate(same.items())}, "R2": {c: 2.0 * v for c, v in same.items()}})
-    assert nc["complete"] and nc["pass_residual_effect_vanishes"] and not nc["pass_A1_not_better_than_R2"] and not nc["passed"]
-    ok = run.negative_control({"A1": same, "A9": {c: v * (1.0 + (0.02 if i % 2 else -0.02)) for i, (c, v) in enumerate(same.items())}, "R2": same})
-    assert ok["passed"]
-    bad = run.negative_control({"A1": same, "A9": {c: 1.3 * v for c, v in same.items()}, "R2": same})
-    assert not bad["pass_residual_effect_vanishes"]
-    assert run.negative_control({"A1": same})["complete"] is False
-
-
-def test_m4_signflip_p_values():
-    rng = np.random.default_rng(0)
-    assert metrics.signflip_p_two_sided(rng.normal(0, 1, 30), B=5000) > 0.05
-    assert metrics.signflip_p_two_sided(rng.normal(1.5, 1, 30), B=5000) < 0.01
-
-
 def test_m4_metrics_are_wired_and_negative_control_runs_end_to_end(tmp_path):
     cfg = {"run_id": "nc", "dataset": "synthetic", "mode": "confirmatory", "arms": ["A1", "A9", "R2"], "n_trials": 1, "inner_k": 2, "steps_scale": 0.05, "seeds": [0, 1],
            "permute_stress": True, "synthetic": {"kind": "G0", "n_cyc_cond": 16, "n_sto_cond": 6, "reps": 2, "seed": 3}}
@@ -221,7 +203,8 @@ def test_m4_metrics_are_wired_and_negative_control_runs_end_to_end(tmp_path):
     for k in ("r2_pooled", "mape_pct_mean", "horizon_rmse_pp", "rul", "n_train_used", "mae_pp_mean"):
         assert k in a1, k
     assert "1" in a1["horizon_rmse_pp"] and a1["rul"]["level"] == 0.8
-    assert m["negative_control"]["complete"] is True and "signflip_p_two_sided" in m["negative_control"]
+    assert "negative_control" not in m and "permuted_stress_run" in m and m["nc1_invariance_passed"] is True            # D014: no score-contrast criteria in the run record
+    assert json.load(open(os.path.join(d, "invariance.json")))["passed"] is True
     assert json.load(open(os.path.join(d, "config.json")))["permute_stress"] is True
 
 

@@ -14,6 +14,7 @@ import numpy as np
 from scipy import stats
 
 from . import margins as mg
+from .negcontrol import MC_SEED_ROOT, mc_rng
 
 ALPHA = 0.025
 LOG_S, LOG_N = float(np.log(1.02)), float(-np.log(1.10))
@@ -37,13 +38,13 @@ def median_order_ci(x, conf=0.95):
     return float(x[l - 1]), float(x[n - l]), l
 
 
-def bca_mean_ci(x, B=10000, seed=0, alpha=0.05):
-    """BCa interval of the mean over resampled conditions"""
+def bca_mean_ci(x, B=10000, label="bca", alpha=0.05):
+    """BCa interval of the mean over resampled conditions. RNG: SeedSequence([20261105, crc32(label)]) (NEGCONTROL_RULING 5.2); `label` is a fixed string such as "B|H1a|A9|BCa_mean_pp"."""
     x = np.asarray(x, float)
     n = len(x)
     if n < 3 or np.allclose(x, x[0]):
         return float(x.mean()), float(x.mean())
-    rng = np.random.default_rng(seed)
+    rng = mc_rng(label)
     boot = np.sort(x[rng.integers(0, n, (B, n))].mean(1))
     th = x.mean()
     z0 = stats.norm.ppf(np.clip((boot < th).mean(), 1.0 / (B + 1), 1 - 1.0 / (B + 1)))
@@ -79,6 +80,7 @@ def load_fold(run_dir):
 class Builder:
     def __init__(self, folds, test, alpha=ALPHA):
         self.folds, self.test, self.alpha = folds, test, alpha
+        self.mc_labels = []
         self.arms = set.intersection(*[set(f["scores"]) for f in folds])
         self.conds = sorted(c for f in folds for c in f["scores"]["A1"])
         self.s1 = {c: f["scores"]["A1"][c] for f in folds for c in f["scores"]["A1"]}
@@ -98,7 +100,9 @@ class Builder:
         L = np.log(sc / s1)
         d = sc - s1
         lo, hi, _ = median_order_ci(L)
-        blo, bhi = bca_mean_ci(d)
+        lab = f"{self.test}|{hyp}|{max(set(comp_by_fold), key=comp_by_fold.count)}|BCa_mean_pp"
+        self.mc_labels.append(lab)
+        blo, bhi = bca_mean_ci(d, label=lab)
         E = mg.pooled_E([(f["n"], f["inner"][a]) for f, a in zip(self.folds, comp_by_fold)])
         dS, dN = 0.02 * E, 0.10 * E
         pS, pN = sign_p(L, LOG_S), sign_p(L, LOG_N)
@@ -200,7 +204,8 @@ class Builder:
         return dict(test=t, rule="exact one-sided sign test on L-m (TYPE1_SIGNFLIP.md, D012); estimand: median over conditions; pp tier of D009 beside it",
                     alpha=self.alpha, margins=dict(S=LOG_S, N=LOG_N), n=len(self.conds), n_folds=len(self.folds), contrasts=fam,
                     comparator_rule="inner-CV score on the training side of each outer fold; never the outer-test error",
-                    synthetic=any(f["cfg"].get("dataset") == "synthetic" for f in self.folds), source=sorted({f["source"] for f in self.folds}))
+                    synthetic=any(f["cfg"].get("dataset") == "synthetic" for f in self.folds), source=sorted({f["source"] for f in self.folds}),
+                    mc_seed_root=MC_SEED_ROOT, mc_labels=list(self.mc_labels))
 
 
 def build_contrasts(test, run_dirs, alpha=ALPHA):
@@ -263,15 +268,69 @@ def write_reference(path, per_test):
 
 
 # --------------------------------------------------------------------------------------------------- controls (prereg section 10)
-def build_controls(negative_run=None, contrasts_B=None, stress_functions=None, h7_summary=None):
-    """negative: metrics.json of the permute_stress run; positive P1 from the H7 summary (G0), P2 from stress_functions.json, P3 from contrasts_B"""
+def exact_two_sided_p(k, n):
+    """exact two-sided sign-test p: min(1, 2 min(tail)); k = number of positives"""
+    return float(min(1.0, 2.0 * min(stats.binom.sf(k - 1, n, 0.5), stats.binom.cdf(k, n, 0.5))))
+
+
+def nc2(real_runs, permuted_runs, alpha=ALPHA):
+    """NC-2 (interpretive, not gating; Test B only): L_c = ln(S_A1,permuted,c / S_A1,real,c) paired by condition on the same held-out conditions;
+    exact one-sided sign test of median(L) > 0 at 0.025; plus descriptive rows. NEGCONTROL_RULING section 3."""
+    def merged(dirs):
+        out = {}
+        for d in dirs:
+            for arm, sc in _load(os.path.join(d, "condition_scores.json")).items():
+                out.setdefault(arm, {}).update(sc)
+        return out
+    R, P = merged(real_runs), merged(permuted_runs)
+    cfgs = [_load(os.path.join(d, "config.json")) for d in permuted_runs]
+    if any(c.get("test") != "B" for c in cfgs) or not all(c.get("permute_stress") for c in cfgs):
+        raise ValueError("NC-2 needs permute_stress runs of Test B")
+    if set(R["A1"]) != set(P["A1"]):
+        raise ValueError("NC-2 pairs the same held-out conditions: the real and the permuted run score different condition sets")
+    conds = sorted(R["A1"])
+    L = np.array([np.log(P["A1"][c] / R["A1"][c]) for c in conds])
+    k = int((L > 0).sum())
+    lo, hi, _ = median_order_ci(L)
+    p = sign_p(L, 0.0)
+    desc = {"scores_under_permutation_mean_pp": {a: float(np.mean(list(P[a].values()))) for a in sorted(P)},
+            "scores_real_mean_pp": {a: float(np.mean(list(R[a].values()))) for a in sorted(R)}}
+    if "A9" in R and "A9" in P:
+        desc["mean_L_A9_over_A1_real"] = float(np.mean([np.log(R["A9"][c] / R["A1"][c]) for c in conds]))
+        desc["mean_L_A9_over_A1_permuted"] = float(np.mean([np.log(P["A9"][c] / P["A1"][c]) for c in conds]))
+    return dict(test="B", n=len(conds), k_positive=k, median_L=float(np.median(L)), rel_increase_median=float(np.exp(np.median(L)) - 1.0), median_ci95=[lo, hi],
+                p_one_sided_exact=p, p_two_sided_exact=exact_two_sided_p(k, len(L)), alpha=alpha, passed=bool(p <= alpha),
+                wording=("pass licenses: 'the accuracy of the learned law depends on the stress dependence it learns'; fail removes it (competing explanation E1)"),
+                L_by_cond={c: float(v) for c, v in zip(conds, L)}, descriptive=desc, gating=False)
+
+
+def nc1_from_runs(real_runs, full_pipeline_json=None):
+    """NC-1 (gate G): every confirmatory run's invariance.json must show passed with max |diff| = 0; optional full-pipeline check (nc1_full.json)"""
+    recs = []
+    for d in real_runs:
+        p = os.path.join(d, "invariance.json")
+        if os.path.exists(p):
+            recs.append(_load(p))
+    out = dict(runs_checked=len(recs), passed=bool(recs and all(r["passed"] for r in recs)), max_abs_diff=float(max((r["max_abs_diff"] for r in recs), default=float("nan"))),
+               n_rows=int(sum(r["n_rows"] for r in recs)), gating=True)
+    if full_pipeline_json:
+        f = _load(full_pipeline_json)
+        out["full_pipeline"] = dict(passed=bool(f["passed"]), max_abs_diff_outer=f["max_abs_diff_outer"], identical_records=f["identical_records"])
+        out["passed"] = bool(out["passed"] and f["passed"])
+    return out
+
+
+def build_controls(negative_runs=None, contrasts_B=None, stress_functions=None, h7_summary=None, real_runs=None, nc1_full=None):
+    """negative.nc1 (gate G) from the invariance.json of the confirmatory runs; negative.nc2 (interpretive) from the permute_stress runs against the real Test B runs;
+    positive P1 from the H7 summary (G0), P2 from stress_functions.json, P3 from contrasts_B"""
     out = {"negative": None, "positive": {}}
-    if negative_run:
-        nc = _load(os.path.join(negative_run, "metrics.json")).get("negative_control")
-        if nc and nc.get("complete"):
-            out["negative"] = dict(permutation="stress vectors (with design throughput) permuted among conditions, separately in training and test; A1, A9, R2 re-run",
-                                   A9_minus_A1_mean_L=nc["mean_L_A9_over_A1"], p_two_sided=nc["signflip_p_two_sided"], passed=bool(nc["pass_residual_effect_vanishes"]),
-                                   A1_vs_R2_median_L=nc["median_L_R2_over_A1"], A1_not_beating_R2=bool(nc["pass_A1_not_better_than_R2"]))
+    if real_runs or negative_runs:
+        neg = {}
+        if real_runs:
+            neg["nc1"] = nc1_from_runs(real_runs, nc1_full)
+        if negative_runs and real_runs:
+            neg["nc2"] = nc2(real_runs, negative_runs)
+        out["negative"] = neg
     pos = out["positive"]
     if h7_summary:
         g0 = [d for d in _load(h7_summary)["draws"] if d["gen"] == "G0"]
@@ -300,7 +359,7 @@ def reference_from_runs(dirs):
     return dict(R_LOO=float(np.median([v["R_LOO"] for v in vals])), R_WARP=float(np.median([v["R_WARP"] for v in vals])), n_folds=len(vals))
 
 
-def run_stats(analysis_dir, runs_by_test, negative_run=None, h7_run=None, stress_run=None, reference_by_test=None):
+def run_stats(analysis_dir, runs_by_test, negative_run=None, h7_run=None, stress_run=None, reference_by_test=None, nc1_full=None):
     """runs_by_test: {'B': [fold run dirs], 'C': [...], 'S2': [...], 'ISU': [...], 'SNL': [...]} -> writes analysis_dir/contrasts_<test>.json, controls.json (+ reference.json)"""
     os.makedirs(analysis_dir, exist_ok=True)
     out = {}
@@ -313,9 +372,10 @@ def run_stats(analysis_dir, runs_by_test, negative_run=None, h7_run=None, stress
         reference_by_test = {t: v for t, v in ref.items() if v}
     if reference_by_test:
         write_reference(os.path.join(analysis_dir, "reference.json"), reference_by_test)
-    ctl = build_controls(negative_run, os.path.join(analysis_dir, "contrasts_B.json") if "B" in runs_by_test else None,
+    neg = [negative_run] if isinstance(negative_run, str) else (list(negative_run) if negative_run else None)
+    ctl = build_controls(neg, os.path.join(analysis_dir, "contrasts_B.json") if "B" in runs_by_test else None,
                          os.path.join(stress_run, "stress_functions.json") if stress_run and os.path.exists(os.path.join(stress_run, "stress_functions.json")) else None,
-                         os.path.join(h7_run, "summary.json") if h7_run else None)
+                         os.path.join(h7_run, "summary.json") if h7_run else None, real_runs=runs_by_test.get("B"), nc1_full=nc1_full)
     write_json(os.path.join(analysis_dir, "controls.json"), ctl)
     if any(_load(os.path.join(d, "config.json")).get("dataset") == "synthetic" for ds in runs_by_test.values() for d in ds):
         open(os.path.join(analysis_dir, "SYNTHETIC"), "w").write("analysis of synthetic runs\n")
@@ -327,7 +387,8 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description="statistics step: contrasts_<test>.json, reference.json, controls.json from run directories")
     ap.add_argument("--analysis-dir", required=True)
     ap.add_argument("--runs", action="append", required=True, help="TEST=dir1,dir2,... (one directory per outer fold); TEST in B, C, S2, ISU, SNL")
-    ap.add_argument("--negative-run", default=None, help="run directory of the permute_stress control")
+    ap.add_argument("--negative-run", action="append", default=None, help="permute_stress run directory (NC-2), one per Test B fold, in the order of --runs B=...")
+    ap.add_argument("--nc1-full", default=None, help="nc1_full.json of the pre-freeze full-pipeline invariance run")
     ap.add_argument("--h7-run", default=None)
     ap.add_argument("--stress-run", default=None, help="Test B run directory holding stress_functions.json (control P2)")
     a = ap.parse_args(argv)
@@ -335,4 +396,4 @@ def main(argv=None):
     for item in a.runs:
         t, dirs = item.split("=", 1)
         runs[t] = dirs.split(",")
-    run_stats(a.analysis_dir, runs, a.negative_run, a.h7_run, a.stress_run)
+    run_stats(a.analysis_dir, runs, a.negative_run, a.h7_run, a.stress_run, nc1_full=a.nc1_full)

@@ -1,0 +1,13 @@
+{
+ "final_refit_seeds": [
+  0,
+  1,
+  2
+ ],
+ "tuning_seed": "1000 + outer fold",
+ "tpe_sampler_seed": "outer fold",
+ "mc_seed_root": 20261105,
+ "mc_seed_rule": "np.random.default_rng(SeedSequence([root, zlib.crc32(label)])) for every Monte Carlo step; labels such as 'B|H1a|BCa_mean_pp' are listed in the contrasts files",
+ "permute_stress_stream": "[20261107, 31, fold] (train), fold + 1000 (test)",
+ "nc1_scramble_stream": "mc_rng('NC1|' + cell_id)"
+}

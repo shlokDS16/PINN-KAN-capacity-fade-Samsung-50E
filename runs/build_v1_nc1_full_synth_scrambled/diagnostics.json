@@ -1,0 +1,46 @@
+{
+ "arms": {
+  "A1": {
+   "lam_res": 0.01,
+   "lam_res_at_lower_edge": false,
+   "lam_res_at_upper_edge": false,
+   "clip_fraction": 0.4533333333333333,
+   "delta_sd": 0.16075019538402557,
+   "tau": 0.15,
+   "delta_sd_over_tau": 1.0716679692268372,
+   "delta_sd_flag_outside_0p5_2": false
+  },
+  "A2": {
+   "clip_fraction": 0.16111111111111112,
+   "delta_sd": 0.1972716599702835,
+   "tau": 0.15,
+   "delta_sd_over_tau": 1.3151443998018901,
+   "delta_sd_flag_outside_0p5_2": false
+  },
+  "A4": {
+   "lam_res": 1.0,
+   "lam_res_at_lower_edge": false,
+   "lam_res_at_upper_edge": false,
+   "clip_fraction": 1.0,
+   "delta_sd": 0.15726338326931,
+   "tau": 0.15,
+   "delta_sd_over_tau": 1.0484225551287334,
+   "delta_sd_flag_outside_0p5_2": false
+  },
+  "A9": {
+   "clip_fraction": 0.9822222222222222
+  }
+ },
+ "lam_res_edge_share_over_arms": 0.0,
+ "lam_res_grid": [
+  0.001,
+  0.01,
+  0.1,
+  1.0,
+  10.0,
+  100.0
+ ],
+ "tau": 0.15,
+ "outer_fold": 0,
+ "tournament_table": "see backbone_tournament.json"
+}

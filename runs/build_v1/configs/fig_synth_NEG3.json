@@ -1,0 +1,30 @@
+{
+ "run_id": "build_v1_fig_synth_NEG3",
+ "dataset": "synthetic",
+ "mode": "confirmatory",
+ "n_trials": 2,
+ "inner_k": 2,
+ "steps_scale": 0.15,
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "backbone": "tournament",
+ "test": "B",
+ "arms": [
+  "A1",
+  "A9",
+  "R1",
+  "R2"
+ ],
+ "permute_stress": true,
+ "synthetic": {
+  "kind": "G2",
+  "n_cyc_cond": 30,
+  "n_sto_cond": 19,
+  "reps": 3,
+  "seed": 31,
+  "test_frac": 0.25
+ }
+}

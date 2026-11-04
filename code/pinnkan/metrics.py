@@ -98,19 +98,6 @@ def log_ratio(s_comp, s_pinn):
     return {c: float(np.log(s_comp[c] / s_pinn[c])) for c in conds}
 
 
-def signflip_p_two_sided(L, B=100000, seed=20261107):
-    """two-sided studentized sign-flip permutation p of mean(L) = 0 (statistic t = mean / (sd / sqrt n)); prereg 9.3 form, used for the negative control.
-    The seed is a placeholder [D] until the statistician fixes it."""
-    L = np.asarray(L, float)
-    n = len(L)
-    rng = np.random.default_rng(seed)
-    t = lambda x: x.mean(-1) / (x.std(-1, ddof=1) / np.sqrt(n) + 1e-300)
-    t0 = abs(float(t(L)))
-    signs = rng.choice([-1.0, 1.0], size=(B, n))
-    tt = np.abs(t(signs * L))
-    return float((1 + np.sum(tt >= t0 - 1e-12)) / (1 + B))
-
-
 def permute_stress(cells, spec, seed):
     """Negative control (prereg 10): stress vectors (with the design throughput that goes with them) are permuted among the CYCLING conditions
     of this set; condition labels, window and forecast data stay. Called separately for the training and the test set."""

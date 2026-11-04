@@ -1,0 +1,1218 @@
+2026-11-04T22:05:07.891443Z ERROR codex_models_manager::manager: failed to refresh available models: request timed out
+OpenAI Codex v0.162.1
+--------
+workdir: C:\Users\Shlok\Downloads\PINN KAN battery paper\debates\codex_panel
+model: gpt-6-luna
+provider: openai
+approval: never
+sandbox: read-only
+reasoning effort: medium
+reasoning summaries: none
+session id: 01a1a70f-11a9-7313-988d-5d4e85ad3047
+--------
+user
+Turn 4 (you are the OPPONENT in debate D016). Read: C:\Users\Shlok\Downloads\PINN KAN battery paper\debates\D015_redteam_v3\01_redteam.md (red team: FATAL F1 "expected outcome shows no benefit from PINN or KAN", F2 "outcome table not closed") and the proposal C:\Users\Shlok\Downloads\PINN KAN battery paper\debates\D016_roles\01_proposal.md ("Design R": the confirmatory question becomes data efficiency: how many ageing conditions (m = 8/16/32) and early check-ups (k = 0/2/full) are needed; PINN role = physics prior paying when data are scarce, tested as physics-informed family vs best data-only learner over 4 pre-ordered cells; KAN role = readable, fold-stable stress laws with accuracy tie pre-stated; soft residual vs hard ODE and storage transfer become secondary; six-title closed outcome table for the author to approve). Also runs\prereg\STATS_RULING.md and runs\pilot_P3\RESULT.md for power and headroom.
+
+Attack it hard and concretely:
+1. Does Design R really fix F1? Is "physics prior helps when data are scarce" a contribution a JES reviewer would value, or an obvious, already-shown result (name verified prior work if you know it; else "unverified")? Is the physics-informed family vs data-only family test fair (feature engineering for the data-only side, e.g. Arrhenius features)?
+2. Is the KAN role (readable, fold-stable laws, direction agreement with the dataset authors' model) a real contribution or decoration? What would make it convincing to an electrochemist (e.g. activation energies within literature ranges for NCA/graphite, SOC dependence matching the non-monotonic behaviour the dataset authors report above 80 % SOC)?
+3. Statistics: fixed-sequence over 4 cells, power at n = 40 with the 17-22 % detectable gain, and the risk that the first cell (8 conditions, 2 check-ups) fails and blocks everything.
+4. Is there a better design that keeps "PINN + KAN" central and gives each a demonstrable role, in one week on CPU, with the same data? Propose it concretely if so.
+5. Final: accept / revise / reject Design R, with the 3 changes you would require.
+Under 1200 words. No invented numbers or citations; mark "unverified".
+
+warning: clamping SessionEnd hook timeout to 3s in C:\Users\Shlok\.codex\plugins\cache\openai-codex\codex\1.0.6\hooks\hooks.json
+2026-11-04T22:05:09.376408Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer realm=\"OAuth\", resource_metadata=\"https://mcp.canva.com/.well-known/oauth-protected-resource/mcp\", error=\"invalid_token\", error_description=\"Missing or invalid access token\"" })
+2026-11-04T22:05:09.387679Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer error=\"invalid_token\", error_description=\"No authorization provided\", resource_metadata=\"https://mcp.vercel.com/.well-known/oauth-protected-resource\"" })
+2026-11-04T22:05:09.544994Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://mcp.supabase.com/.well-known/oauth-protected-resource/mcp\"" })
+2026-11-04T22:05:09.745230Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://mcp.context7.com/.well-known/oauth-protected-resource/mcp\"" })
+2026-11-04T22:05:10.051913Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://huggingface.co/.well-known/oauth-protected-resource/mcp?login\"" })
+2026-11-04T22:05:10.322674Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://mcp.figma.com/.well-known/oauth-protected-resource\",scope=\"mcp:connect\",authorization_uri=\"https://api.figma.com/.well-known/oauth-authorization-server\"" })
+2026-11-04T22:05:10.340398Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when UnexpectedServerResponse("HTTP 404: \n<!DOCTYPE html>\n<html>\n  <head>\n    <meta charset=\"utf-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n    <title>404 - No instance here</title>\n    <link\n      href=\"https://fonts.googleapis.com/css?family=Open Sans\"\n      rel=\"stylesheet\"\n    />\n    <style>\n      html {\n        width: 100%;\n        height: 100%;\n      }\n\n      body {\n        height: 100%;\n        width: 100%;\n        background-color: #fbfcfe;\n        font-family: \"Open Sans\";\n        font-style: normal;\n        text-align: center;\n        color: #555555;\n        display: flex;\n        flex-direction: column;\n        align-items: center;\n        font-weight: 400;\n      }\n\n      body * {\n        margin-block-start: 0;\n        margin-block-end: 5px;\n      }\n\n      .container {\n        display: flex;\n        flex-direction: column;\n        align-items: center;\n        height: 100%;\n        max-width: 350px;\n        margin-top: 48px;\n      }\n\n      h1 {\n        font-weight: 400;\n        font-size: 28px;\n        line-height: 35px;\n        color: #555555;\n        margin-top: 64px;\n      }\n\n      h2 {\n        font-weight: 400;\n        font-size: 20px;\n        line-height: 26px;\n      }\n\n      p {\n        font-size: 14px;\n        line-height: normal;\n        color: #7d7d87;\n      }\n\n      a {\n        color: #fd4d21;\n        text-decoration: none;\n        text-align: center;\n        font-weight: 400px;\n      }\n\n      .subheading {\n        margin-top: 24px;\n      }\n    </style>\n  </head>\n  <body>\n    <div class=\"container\">\n      <svg\n        xmlns=\"http://www.w3.org/2000/svg\"\n        width=\"120\"\n        height=\"32\"\n        viewBox=\"0 0 120 32\"\n        fill=\"none\"\n      >\n        <path\n          fill-rule=\"evenodd\"\n          clip-rule=\"evenodd\"\n          d=\"M55.1998 12.8C52.2177 12.8 49.7119 10.7604 49.0014 8H41.666C40.1017 8 38.7667 9.13092 38.5096 10.6739L38.2465 12.2522C37.9968 13.7506 37.2388 15.0548 36.1668 16C37.2388 16.9452 37.9968 18.2494 38.2465 19.7478L38.5096 21.3261C38.7667 22.8691 40.1017 24 41.666 24H42.6014C43.3119 21.2396 45.8177 19.2 48.7998 19.2C52.3344 19.2 55.1998 22.0654 55.1998 25.6C55.1998 29.1346 52.3344 32 48.7998 32C45.8177 32 43.3119 29.9604 42.6014 27.2H41.666C38.5374 27.2 35.8674 24.9382 35.3531 21.8522L35.0901 20.2739C34.8329 18.7309 33.4979 17.6 31.9336 17.6H29.3982C28.6877 20.3604 26.1819 22.4 23.1998 22.4C20.2177 22.4 17.7119 20.3604 17.0014 17.6H13.3982C12.6877 20.3604 10.1819 22.4 7.1998 22.4C3.66518 22.4 0.799805 19.5346 0.799805 16C0.799805 12.4654 3.66518 9.6 7.1998 9.6C10.1819 9.6 12.6877 11.6396 13.3982 14.4H17.0014C17.7119 11.6396 20.2177 9.6 23.1998 9.6C26.1819 9.6 28.6877 11.6396 29.3982 14.4H31.9336C33.4979 14.4 34.8329 13.2691 35.0901 11.7261L35.3531 10.1478C35.8674 7.06184 38.5374 4.8 41.666 4.8L49.0014 4.8C49.7119 2.03964 52.2177 0 55.1998 0C58.7344 0 61.5998 2.86538 61.5998 6.4C61.5998 9.93462 58.7344 12.8 55.1998 12.8ZM55.1998 9.6C56.9671 9.6 58.3998 8.16731 58.3998 6.4C58.3998 4.63269 56.9671 3.2 55.1998 3.2C53.4325 3.2 51.9998 4.63269 51.9998 6.4C51.9998 8.16731 53.4325 9.6 55.1998 9.6ZM7.1998 19.2C8.96712 19.2 10.3998 17.7673 10.3998 16C10.3998 14.2327 8.96712 12.8 7.1998 12.8C5.43249 12.8 3.9998 14.2327 3.9998 16C3.9998 17.7673 5.43249 19.2 7.1998 19.2ZM26.3998 16C26.3998 17.7673 24.9671 19.2 23.1998 19.2C21.4325 19.2 19.9998 17.7673 19.9998 16C19.9998 14.2327 21.4325 12.8 23.1998 12.8C24.9671 12.8 26.3998 14.2327 26.3998 16ZM51.9998 25.6C51.9998 27.3673 50.5671 28.8 48.7998 28.8C47.0325 28.8 45.5998 27.3673 45.5998 25.6C45.5998 23.8327 47.0325 22.4 48.7998 22.4C50.5671 22.4 51.9998 23.8327 51.9998 25.6Z\"\n          fill=\"#EA4B71\"\n        />\n        <path\n          fill-rule=\"evenodd\"\n          clip-rule=\"evenodd\"\n          d=\"M100.004 13.8366V13.6841C101.121 13.1249 102.237 12.1591 102.237 10.2529C102.237 7.508 99.9791 5.85596 96.8579 5.85596C93.6606 5.85596 91.3768 7.60966 91.3768 10.3038C91.3768 12.1337 92.4426 13.1249 93.6099 13.6841V13.8366C92.3157 14.2941 90.7678 15.6665 90.7678 17.954C90.7678 20.7243 93.0516 22.656 96.8325 22.656C100.613 22.656 102.821 20.7243 102.821 17.954C102.821 15.6665 101.299 14.3195 100.004 13.8366ZM96.8325 8.19423C98.1013 8.19423 99.0402 9.00755 99.0402 10.38C99.0402 11.7525 98.0759 12.5658 96.8325 12.5658C95.5892 12.5658 94.5488 11.7525 94.5488 10.38C94.5488 8.98213 95.5384 8.19423 96.8325 8.19423ZM96.8325 20.216C95.3608 20.216 94.1681 19.2756 94.1681 17.6744C94.1681 16.2257 95.1578 15.1328 96.8072 15.1328C98.4312 15.1328 99.4208 16.2003 99.4208 17.7252C99.4208 19.2756 98.2789 20.216 96.8325 20.216Z\"\n          fill=\"#101330\"\n        />\n        <path\n          d=\"M106.736 22.4018H109.984V15.514C109.984 13.252 111.354 12.2608 112.902 12.2608C114.425 12.2608 115.617 13.2774 115.617 15.3616V22.4018H118.865V14.7007C118.865 11.3712 116.937 9.43962 113.917 9.43962C112.014 9.43962 110.948 10.2021 110.187 11.1933H109.984L109.705 9.69378H106.736V22.4018Z\"\n          fill=\"#101330\"\n        />\n        <path\n          d=\"M77.9839 22.4018H74.7358V9.69378H77.7048L77.9839 11.1933H78.1869C78.9481 10.2021 80.0139 9.43962 81.9171 9.43962C84.9367 9.43962 86.8653 11.3712 86.8653 14.7007V22.4018H83.6172V15.3616C83.6172 13.2774 82.4246 12.2608 80.9021 12.2608C79.3542 12.2608 77.9839 13.252 77.9839 15.514V22.4018Z\"\n          fill=\"#101330\"\n        />\n      </svg>\n\n      <h1>No instance here</h1>\n      <h2><a href=\"https://app.n8n.cloud/magic-link\">Open Cloud console</a></h2>\n      <h2></h2>\n      <p class=\"subheading\">\n        If the instance exists, the owner can manage it from the Cloud console.\n      </p>\n    </div>\n  </body>\n</html>")
+2026-11-04T22:05:11.689262Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer error=\"invalid_request\", error_description=\"No access token was provided in this request\", resource_metadata=\"https://api.githubcopilot.com/.well-known/oauth-protected-resource/mcp/\"" })
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Failed
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+hook: UserPromptSubmit Completed
+codex
+I’ll read the red-team critique, Design R, and the power/headroom ruling, then attack the proposal on contribution, fairness, and whether its sequential test can answer the question.
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command "Get-Content -Raw 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\debates\\D015_redteam_v3\\01_redteam.md'; Get-Content -Raw 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\debates\\D016_roles\\01_proposal.md'; Get-Content -Raw 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\runs\\prereg\\STATS_RULING.md'; Get-Content -Raw 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\runs\\pilot_P3\\RESULT.md'" in C:\Users\Shlok\Downloads\PINN KAN battery paper\debates\codex_panel
+ succeeded in 419ms:
+# D015 red team of PREREG_v3 and the paper package (2026-11-05)
+
+Role: red team (finds problems only). Reading: **full text** of CONTRACT.md, DECISIONS.md (D001-D014), PREREG_v3.md, D011 judge, PRIORART_SUMMARY.md, D010 novelty re-audit (05), draft sections 2-5, 00_open_items.md, CITATION_AUDIT.md (sections 0-4), BLUEPRINT.md, D-figures.md, code/README.md; **partial** of code (`stats_step.py` lines 1-30 and 160-200, `samsung_checkups.py` header and outlier rule, grep only); P5 RESULT.md (grep); progress.md (first 60 lines). Rendered figures opened: fig3_forecasts, fig4_forest, fig5_stress, fig8_synthetic (all SYNTHETIC demos, so figure remarks are about form and what the design permits, not results). No Samsung data opened. Pointers are file:section.
+
+Ledger: `tools/ledger.py` does not exist in this project (`ROOT\tools` holds only download scripts; also noted in CITATION_AUDIT section 0). No ledger rows could be added. The fatal findings below need a resolution row written by the orchestrator by hand.
+
+Severity: **fatal** (blocks the gate), **major**, **minor**.
+
+---
+
+## 0. Verdict in five lines
+
+1. The preregistration is procedurally strong (identifier-only splits, guard, exact sign test, NC-1) but it **knowingly freezes a design whose expected outcome gives the paper no demonstrated benefit from either method named in its title** (PREREG_v3 section 1 "Expected endpoint"). That is the paper's identity problem, not a statistics problem (F1).
+2. The outcome table does not close the forking paths: four rows end in "framing put to Shlok", one wording row uses tie language for a "none" result, and H1c and H6 have no reverse branch (F2).
+3. H6, the contrast the design expects to win, is a win over a model its own authors call inadequate, with an arm (A10) whose equations are unread and refused by the code (FB-2).
+4. The temperature-laboratory confound is disclosed honestly but is **not controlled where it matters most for the headline contrast**: the lab-indicator row omits A10, and Test B itself is aliased.
+5. Several documents contradict each other (stats code vs prereg on Test C; draft 5.5 vs D014; README stale). Nine findings are major.
+
+---
+
+## 1. Findings
+
+### F1. The expected result leaves "PINN" and "KAN" without a demonstrated benefit (fatal)
+- Evidence: PREREG_v3 section 1 "Expected endpoint": H1b "N or none (KAN tie)", H2 "unresolved", H1c "gate closed or unresolved", title T3. D011 judge 3.1 says the same. Pilot P5 (`runs/pilot_P5/RESULT.md` line 25): with the prespecified collocation the soft PINN beat the hard ODE by median ratio 0.96 (4 of 5), a 4 % gain at an MDE of 9-22 % (PREREG section 1 Power). P4: KAN 0.081 vs GAM 0.103 on a generator the author designed, GAM floor 0.05-0.07. P3: best data-only learner already at the replicate reference (ISU 0.90).
+- Attack (supervisor): the paper's two named methods are, on the design's own forecast, neither shown necessary. Title T3 ("... with physics-informed neural networks and Kolmogorov-Arnold networks") names both. The only expected win is H6 (against a parametric model) and H1a (against a residual-free network). A reader of the abstract cannot say what PINN+KAN bought.
+- The PINN is redundant by construction: D013 (a) chose one shared state factor "needed for the closed form" so that the law integrates exactly (Eq. 5). The hard ODE A2 is then the exact solution of the same law, and F is slack. The design makes the PINN's only role (integrating the law) unnecessary, then tests whether the slack helps (H2). The KAN's hidden layer `[5,h,1]` with h up to 8 and G up to 12 on 32 training conditions per fold is a spline MLP; the KAN-specific selling points (symbolic discovery in PIKAN/PGKAN, readable edge functions) are not used: no symbolic extraction is in the plan except an appendix mention, and Fig. 5 shows additive partial dependences of a non-additive map, not KAN edge functions.
+- Alternative explanation of any H1a/H6 win: the baselines are weak by design (see F6, F7), so a tuned parametric neural model wins regardless of PINN or KAN.
+- Forces rejection of the "PINN+KAN is what works" reading: H2 not A and H1b not S (the stated likely outcome).
+- What answers it: a statement, before the freeze, of what contribution survives if H1b and H2 are null, written into the claim contract and accepted by Shlok in a ledger row (D011 told him; no row records his answer; `checklist 17.2` has the told-on date still open).
+
+### F2. Outcome table leaves the claim to post-hoc discretion and has wording holes (fatal for a freeze whose purpose is to fix wording)
+- Evidence: PREREG_v3 section 11.
+  1. Rows 1, 2, 3 and 5 end "framing put to Shlok", "lead tells Shlok before writing", "retitle put to Shlok", "C1 or C2". The stated likely outcomes include H1a at tier N (section 1: "H1a S or N") which is row 2: the framing is then a human choice after the data.
+  2. Row 4 covers "H1b N or none" with the wording "reached the accuracy of the best prespecified-interaction model". Tier "none" means non-inferiority was **not** shown, and section 1 says "comparable" only after a TOST. Row 4 gives tie language to a result the rules call unresolved.
+  3. Row 3 "H6 not S" includes the case where A10 is reliably better than A1 (reverse tier S). Only H1b (row 1) and H2 (order C) have a reverse branch. H1a reverse (the residual hurts) is folded into "did not lower". For H1c the "none / gate closed" wording is "accuracy could not be distinguished from tuned data-driven learners" even when the interval lies wholly on the learner's side.
+  4. About 20 sensitivity rows (9.8) and the D013 re-open triggers ("a sensitivity row changes a primary tier") have no assigned consequence except the lab-stratified row ("the abstract says so"). A flipped tier in any other row can be called robust or not at the author's choice.
+  5. Section 11 "Test C wording": the abstract "may carry at most one sentence" and may omit it "for space". Inclusion is optional, so selective emphasis is possible even though the paper must report it elsewhere.
+- Cheapest spin: report H6 S and H1a N as "outperforms the dataset authors' model; the residual helps", choose T3 or T2 after seeing H2, and describe LightGBM as "not distinguishable" while Table 1 shows it better.
+- What answers it: every outcome combination maps to one title and one abstract wording with no human choice, including reverse tiers for H6, H1a, H1c; row 4 wording restricted to tier N; a rule for sensitivity rows that flip a tier.
+
+### F3. Median estimand: acceptable in form, risky in effect (major)
+- Evidence: D012; PREREG section 1 Estimand, 9.3, 9.10; Fig. 4 and Fig. 3 demos.
+- The exact sign test on per-condition log ratios is defensible and level-safe. Problems: (a) it is blind to catastrophic conditions. The Fig. 3 demo itself shows A1 at 24.02 pp against A10 at 7.46 pp in one panel, and the Fig. 4 demo shows H6 with the median ratio favouring A1 while the mean paired difference is -1.65 pp [-8.39, 0.79] (comparator better). Under the rules the abstract still says "typical held-out condition". A JES reader of a forecasting paper cares about the worst case and the mean. (b) The sign test discards effect size: 28 of 40 conditions with a 0.1 % gain pass the 2 % margin only if the median does; the test is on L - m, so this is partly handled, but there is no tail estimand at all (worst-condition error, share of conditions with error above a stated tolerance). (c) D011 itself chose the mean-targeting rule first and fell back to the median only because the test failed its level; the estimand changed to suit the available test.
+- JES acceptability: median-of-condition ratios with exact order-statistic intervals and tiers S/N/none are unfamiliar. Reviewers expect RMSE, MAE, MAPE and R^2 on test cells with a stated mean. These are secondary here.
+- What answers it: the abstract states the mean pp difference and the worst-condition error beside the median whenever their signs disagree, as a fixed rule.
+
+### F4. Independence, dependence structure and power of the sign test (major)
+- Evidence: PREREG 9.1 ("Neighbour dependence and fold-shared fits are not modelled"), T1 power table (assumed error correlation 0.95 / 0.90 / 0.75), 4 ("holds its size for any continuous distribution").
+- The size guarantee needs independent conditions. The 40 conditions share folds (one tuned configuration per fold), share the same 5-D design with deliberately spread neighbours (section 4: neighbourhood members go to different folds), and share labs (35 C all INT, 45 C 66 of 75 HM). Positive dependence between conditions' signs inflates the type-I rate; the simulations in T1 drew independent conditions. The exact test's size at n = 40 is 0.019 or 0.0083, not 0.025; the claimed "family-wise 0.025" is not what is achieved and the Holm levels are applied to p-values ordered by the **N-tier** statistic while the S-tier test (a different null) is run at the rank's level (section 9.5). Holm validity needs the ordering by the p-values of the hypotheses actually tested; ordering by another statistic can exceed the family level when two S nulls are true.
+- Power: the correlation 0.95 for H1a is called "same-model contrasts" (section 1) but A9 has no law and no residual; it is not the same model. At 0.75 the MDE is 17-22 % and the pilots show gains of 4 % (P5) to about 20 % on a synthetic KAN/GAM recovery metric. H1b and H2 will end "unresolved" with near certainty; the preregistration cannot adjudicate the KAN.
+- Alpha accounting: H2 (three tests), H5, H1c, NC-2, X1, H3, ISU, SNL each at 0.025 outside the Holm family. "Family-wise" covers three tests only.
+- Forces rejection of the stated size: a simulation in which condition errors share fold-level and lab-level random effects with the left-skew shape of ISU gives a sign-test rate above 1.2 x nominal.
+
+### F5. H1a is a low bar (major)
+- Evidence: PREREG 7.1 (A9: "F, same z_c, inputs, window inversion, no residual, no law"), H1a "residual does work".
+- A9 is a tanh network extrapolating in time from a window of about 4 check-ups (weeks 1-5 for cycling cells: D010 re-audit item on cadence; P0). Without the law, the only thing that shapes the extrapolation is the training cells' shape. H1a at tier S says "a network told the functional form of fade beats a network not told it", which is the expected result for any structured model. It is not evidence that the physics residual helps in the sense of the PINN literature, which would be a comparison against the same law without F (that is H2, not in the family). The family contains the easy PINN contrast and excludes the hard one.
+- Cheapest alternative explanation of a H1a win: A9's extrapolation is poor; the residual is a regulariser on the extrapolation region (collocation to 1.1 x the longest record).
+- Also (E1 design): A9 gets a different (larger) tuned space than A1's F, "conservative", yet the data-only learners that a reviewer would use as the data-only reference (A11/A12) are excluded from the family.
+
+### F6. H6: win over a model its authors call inadequate, with an unverified comparator (major)
+- Evidence: D011 3.1 (H6 "most likely to reach S"); D006; PREREG 7.2, FB-2; README "A10 PROVISIONAL", `UnverifiedArmError`; CITATION_AUDIT S5 (exponent placement garbled, Muehlbauer unread).
+- The comparator is one parametric superposition (3 + 6 parameters) that the dataset authors, in the follow-up the project will cite, call inadequate for the cycle part. Beating it with a tuned neural model that has 20-40 TPE trials and a per-cell latent is the weakest published-model comparison the field accepts. Fairness in the other direction is also open: A10 has no tuning, no state factor h(y), and its per-cell factor scales the **total** loss (the scope sentence says this favours A10, but the factor was added by the project, so "the dataset authors' model" is no longer the published model). The "A10 as published" row is a sensitivity row, not the headline.
+- The equations are not frozen: 7.2 says the local conversion is garbled; the code refuses a confirmatory A10 run until `A10_FORM["verified"]`. The freeze cannot proceed on this arm until Shlok saves the paper (FB-2). Hallinger, Zhang (FB-1) unread.
+- Forces rejection of any "physics-based model" wording: H6 tier S under "A10 as published" fails while it passes with the factor.
+
+### F7. The comparator set is thin for JES and the data-only learners are gated out (major)
+- Evidence: PREREG 7.1 ("LSTM, Transformer, PiDDM reimplementation, BatLiNet/FlowBatt: out"); BLUEPRINT standards; section 1 claim contract.
+- A JES reviewer of a PINN/KAN paper expects LSTM, GRU or Transformer baselines, and at least one published PINN (Wang et al.) and one KAN model (PIKAN/PGKAN-style) run on the same cells. None is in the plan. PiDDM is represented by a "PiDDM-style" MLP inside the project's own law (A7), not a reimplementation. The data-only learners (A11/A12) that probably already sit at the replicate reference (P3) are a gated secondary and the abstract is restricted to "could not be distinguished" (F2). R2 (line through the window) is not in any contrast; the D014 ruling removed "A1 must not beat R2", and no remaining control requires A1 to beat the simplest informed baseline, only persistence R1 (a weak control at 4 check-ups).
+- Window-information check missing: the design never tests whether the 4-check-up window adds anything to the condition-only population prediction. First check-ups are at weeks 1, 2, 3, 5 (cycling) and the loss assumes noise 0.5 pp (draft Eq. 7, sigma = 0.05). If the window carries little information, "forecast from first check-ups" reduces to "predict from conditions", and the H1a, H6, X1 contrasts differ only in how the population law is parametrised.
+
+### F8. Temperature-laboratory confound: honestly stated, incompletely handled (major)
+- Evidence: PREREG 3.3(7), 4 (Test C), 9.8(f), 11 Test C wording; D011 section 2.
+- Credit: no temperature claim, Test C descriptive, title never mentions 35 C, lab/stage rows, surface-temperature offsets by lab. This is more careful than the exemplars.
+- Gaps: (1) **Test B is aliased too.** All 35 C cells are INT and almost all 45 C cells are HM; held-out conditions at 35 and 45 C sit among training conditions of the same lab. A temperature input is also a lab indicator, so a flexible stress map (KAN, GP, GAM) gains accuracy at held-out conditions by learning lab offsets, which says nothing about stress physics. "Untested conditions" in the T1 title is then interpolation within lab, in a design that puts neighbours in other folds on purpose (section 4). (2) The lab-indicator sensitivity row covers A1, A9, A12 **but not A10**, the arm of the key contrast H6; A10, which has no lab term, is disadvantaged exactly where labs differ, and the row cannot show whether the H6 win is a lab artefact. (3) The identification of an INT offset needs "no lab x temperature interaction", an untestable assumption that the design prints but cannot check. (4) Non-isothermal check-ups: the cell surface sits near 28-33 C in a 23 C chamber (lab differences up to 4.6 C), a lab- and age-dependent measurement offset of the same order as the forecast errors in the demo (1-2 pp). It is "not adjusted in the primary models", so every score carries it. (5) Stage 2 is a new cell batch with an 80 % SOC limit, confounded with conditions; stage is not a stratum. (6) E(SOC) (Fig. 5a) rests on three storage temperatures, each from a different lab (10 C all SIE, 45 C all HM), so the "effective activation energy" is not separable from lab offsets; the comparison is only to the authors' own fit on the same data.
+- Forces rejection of physical wording: E(SOC) changes by more than its envelope when a lab indicator is added.
+
+### F9. Calendar and cyclic terms are collinear inside each cycling cell; "joint law" interpretation is assumption (major, electrochemist)
+- Evidence: draft Eq. (2)-(5); PREREG 7 "single state-dependent modulation"; 11a item 4.
+- For a cycling cell the throughput rate is nearly constant, so E_n(t) is proportional to t_n and Phi = (a_cal + a_cyc nu) t_n: only the sum is identified from that cell. The split is identified only if the calendar rate of a cycled cell equals the storage rate evaluated at (T, SOC_mid), which ignores the SOC swing, charge-hold time at high SOC, and rest-period differences. The "calendar share of fade" (11a item 4, Fig. 6c) is a model-defined quantity, not a measurement; the counterfactual a_cyc = 0 is not physical when one h(y) couples both terms. A single shared h also forces calendar SEI growth (decelerating) and cycling mechanisms (plating or LAM knees at 1.2 C charge, accelerating) to share one state dependence; the separate-h variant is an appendix row only (D013, (n)).
+- The "physics" in the residual is a phenomenological rate law with free KAN-valued coefficients; any F that can be fitted by some parameter set satisfies it. There is no electrochemical content (no SEI diffusion, no plating onset), no EIS, DVA or resistance fade, and capacity fade only. "Physics-informed" will be read narrowly by an electrochemist.
+- 35 C calendar twins and Latin-hypercube points in a 5-D hull of 32 training points impose the author's own extrapolated law as pseudo-data where no cells exist; this is self-consistency, not validation (the prereg says so for twins only).
+
+### F10. Garden of forking paths in data handling and the freeze timetable (major)
+- Evidence: PREREG 3.3(3), 3.3(10)(a), 17.1, 17.4; progress.md 03:20-03:32.
+- The QC thresholds were set after 163 check-ups of 18 cycling cells were parsed and the outlier rule was revised three times after the lead inspected what earlier forms flagged. The rule is capacity-based and removes test labels (forecast-set check-ups) that rise by more than 1 % or fall faster than a time-scaled allowance. That deletes real capacity regeneration and early knees from the **scoring set**. It is disclosed and has a "retain all" row, but "retain all" is again a sensitivity row (F2.4). The reference rule Q0 is chosen "by availability" after the download; k_cyc is computed from counts after the download; the rounding rule is stated but k is a placeholder; N (20 or 40) is fixed by timing at freeze.
+- Time: today is 2026-11-05; FB-1 to FB-6, FB-8 to FB-10 are open; the fallback to ISU is at 07 Nov 09:00. Zhang, Stroebl JES 142 and Hallinger need Shlok to save paywalled PDFs; the full Samsung download needs Shlok's faster network. The builder was still adding H3, H7 pieces, the ZYK branch, 11a analyses and lab rows (progress.md 03:32); 17.4 says "built or struck by a change-log row". The frozen text promises analyses that do not exist yet; the freeze commit must contain code for them, so either the freeze slips or the prereg is struck after the fact (a change log after the fact is an amendment).
+- ISU and SNL "not blind" results will be presented as "also holds / does not hold" support, though the scratch pilot saw all ISU cells.
+
+### F11. Circular or non-discriminating hypotheses and controls (major)
+- H7 / H3 "win": the generators share choices (a) and (b) with the fitted law (13, "pipeline check not evidence"); G2 was strengthened to H = 1.2, P = 0.8 **after seeing P4**, so that the additive-GAM floor exceeds 0.15; the validity rule then licenses the KAN win only on a generator built to defeat additive models. A KAN with a hidden layer beating an additive spline model on a surface with a hinge and a product term is guaranteed by construction. Fig. 8 demo: the additive-GAM floor diamonds sit at about 0 in G0, G1 and 0.015 in G2, below the 0.15 rule, so the figure's own validity marker would fail unless the generator is retuned.
+- NC-2 passes whenever the model uses stress at all, including as a lab proxy (F8); it cannot say the stress functions are physical. P3 control ("A1 beats persistence R1") is near-trivial with four window points. P1 (A1 beats A11/A12 on G0, p < 0.05, 20 draws) is a gate input (any failed positive control trips gate G) but G0 is the model's own law: failure of a synthetic flexible-learner comparison would halt the real analysis without being informative about real cells.
+- H4 is called descriptive but tiers remain implemented (F12).
+
+### F12. Internal inconsistencies between PREREG_v3, code README, code and draft (major)
+1. **Test C**: PREREG_v3 H4 and section 2 "descriptive, no tier word"; `code/pinnkan/stats_step.py` lines 180-190 still run a Holm-2 inside Test C and write tiers ("secondary, Holm-2 inside Test C (tier N / S)"). The README's statistics paragraph says the same. The outcome of the stats step can contradict the prereg wording.
+2. **Negative control**: draft `05_evaluation.md` 5.5 still carries the withdrawn criteria (A9 - A1 mean L < ln 1.02 with unshifted two-sided p > 0.05; A1 must not beat R2; stop for audit), which D014 and PREREG section 10 retire; the draft arms (A1, A9, R2) are also those D014 withdrew.
+3. `code/README.md` title and statistics step cite PREREG_v2 (including "H2 ... PREREG_v2 9.6"); it lists A8 as "not implemented here" though `pinnkan/free.py` exists and PREREG_v3 17.4 lists it as built; it lists "Review m1 left for the lead" while the QC rule is now causal (commit 3415db2, `samsung_checkups.py` header).
+4. `paper/draft/03_data.md` 3.1 still has "[TO VERIFY: the current code also uses the following neighbour]"; `00_open_items.md` says "prereg 9.3 still names the sign-flip rule", but v3 9.3 does not.
+5. PREREG section 1 lists H1a as a "same-model" contrast for the 0.95 correlation assumption; section 7.1 defines A9 as having no law.
+6. DECISIONS.md has no D010 row though D005 and PREREG cite "D010"; D008 "open to the D011 judge" is confirmed only inside D011.
+7. Pilot numbers: PREREG says H2 synthetic median ratio 0.96 "with one reversal"; P5 line 25 gives 0.96 for the judge-spec collocation and 0.84 for the whole-axis collocation, which is now a tuned categorical chosen after P5; the preregistered expectation quotes only the less favourable value, while the arm's tuning space includes the favourable one.
+
+### F13. Novelty is narrow and rests on unread sources (major)
+- Evidence: D010 re-audit 0, 2b, 6; PRIORART_SUMMARY.
+- Verdict "novel as a combination, 0.6; model class incremental, 0.7". Unread: Zhang JES 182, 125097 (cites this dataset, PINN), Hallinger SSRN 7417281, Stroebl JES 142 body, PGKAN, PI-EKAN, SOH-KPINN full texts, JECS addd4e; OpenReview and Exa not searched; "Kiefer" and "Schmitt" not located. Zhong and Rogge preregistered tests on this very archive (Zenodo evidence layer) exist. PiDDM, Guo et al. are preprints that may appear in JES before submission. A hostile reviewer assembles the paper from PiDDM + KA-CRNN + Stroebl + Kuzhiyil (the audit says so itself). The safe wording "to our knowledge, the first joint ... fitted to storage and cycling cells" is a priority claim on one dataset 14 months old.
+- Forces rejection of "first": Zhang or Hallinger contains the combination (D011 re-open item 1).
+
+### F14. Missing versus the strongest JES PINN/KAN papers (major)
+- The exemplars (PIKAN, PGKAN, PI-EKAN, PINEAPPLE, CDUA) use four to eight datasets, report absolute SOH/RUL errors (RMSE, MAE, MAPE, R^2) against LSTM/Transformer and prior PINNs, show robustness to noise or missing data and training cost, and give an interpretable discovered formula or similar. Here: one primary dataset of one cell type under constant-stress protocols (no dynamic load or EV-like profiles, the case JES readers care about); two secondary cycling-only datasets labelled "not blind" and reported with different horizons (EOL MAPE for ISU, point RMSE for SNL); no noise-robustness or small-data study; no post-mortem, EIS or DVA validation; no uncertainty (retired, acceptable); no RUL benchmark beyond a secondary metric on "few cells". The hardest figure content (Fig. 5, 6, 7) is "descriptive", carries no claim, and Fig. 7 (residual map) has "no claim without a threshold".
+- Figures: the demo Fig. 3 uses A1, A10 and A12 only and picks columns by percentile of A1's own score (a rule, good, but it displays A1's worst-case in the 75th-percentile column of the 45 C row, 24 pp, which the median estimand never penalises). Fig. 5 envelope is "3 members: min-max" (three folds x seeds?), too few to call an envelope; a min-max over final-refit seeds understates between-fold variation. Fig. 4 is unfamiliar to the audience and has two scales (log ratio and mean pp) that can disagree (F3).
+
+### F15. What would make the editor desk-reject (major)
+1. A result section in which no arm of the method wins except against its own ablation and a parametric baseline (F1, F5, F6).
+2. Preprint-heavy novelty positioning (PiDDM, Guo) and a "first" claim (F13).
+3. No standard deep-learning baselines or other datasets of the strength JES papers show (F7, F14).
+4. A methods section dominated by tier/gate/hierarchy machinery for a model whose headline is a tie; reviewers may read the prereg as defensive.
+5. The 6,000-word limit with 10 display items, 3 appendices and a statistics section (draft is already about 3,900 words before abstract, introduction, results, discussion; 00_open_items).
+6. A claim of "preregistration" that is not externally registered (OSF or similar); `runs/prereg/FROZEN` is a local file, committed in the author's own repository, with the same agent family writing, auditing and ruling.
+
+### F16. Minor
+- Window rule `k = round(n_med / 3)` with half-to-even rounding is a rule chosen from counts after the download (F10) and expected between 3 and 5; a tie at 3.5 gives 4, at 4.5 gives 4; trivial but the window length is the whole forecasting problem.
+- Retention is anchored on the first quality-passed CU for cells without ET (pipeline), so fade before it (1 week cycling, 5 weeks storage, 76-77 d for INT stage 2) is unobserved yet time zero is that CU: a bias that favours models with sqrt-like early fade (h self-limiting) and is common to all arms.
+- Seed averaging: one TPE search per fold; search variance outside every interval (stated).
+- Holm ordering and sign-test discreteness: exact levels 0.0083 / 0.0192 are reported, but the abstract rules say "no p-values".
+- Draft 4.2 fixes sigma = 0.5 pp in the loss; the same value is the claimed measurement noise level; the first window check-ups likely differ from persistence by less than that (F7).
+- CITATION_AUDIT verdict is FAIL at sentence level at the time of audit; the writer fixed flagged sentences, but no re-audit is recorded; title-only JES citations (yuan2026timexer, wang2026meta, sohkpinn2026) support sentences about content.
+- `tools/ledger.py` missing despite CONTRACT section 3 and the global rules.
+
+---
+
+## 2. Question-by-question answers
+
+- **Untestable or circular hypotheses.** H7 and H3 "win" (generator built to defeat additive models, after P4; F11); NC-2 (passes if the model uses stress at all); H1b tie (power cannot reach it at plausible correlation; F4); H1a (a low bar; F5). H4 is "descriptive" but the code tiers it (F12).
+- **After-the-fact spin.** Yes (F2): "framing put to Shlok" rows, tie wording for "none", missing reverse branches for H6 and H1c, optional abstract sentence for Test C, sensitivity rows without consequences, median wording when the mean disagrees (F3).
+- **Sign test / median acceptable to JES?** The test is valid in principle and the exact order-statistic interval is rigorous; the estimand ignores tail failures and its size claim relies on independence and on Holm ordering that does not match the tested nulls (F3, F4). Readers will want mean RMSE and worst case.
+- **Expected outcome (title 3) acceptable?** A descriptive title is acceptable to JES only if something is demonstrated. The design's expected demonstrations are against a parametric model and an ablation (F1, F6). Likely not accepted as the paper stands.
+- **Comparators fair?** A10: unverified, no tuning, per-cell total-loss factor that favours it, but it is a weak model by the dataset authors' own statement (F6). Data-only learners: probably at the replicate reference, gated out of the claim; inputs not identical (n_train_used differs; storage cells dropped for A11/A12). A9: not same-model (F5). A7: PiDDM-style only. No deep-learning baselines (F7).
+- **Temperature-laboratory confound honest?** Disclosed honestly and not overclaimed; not controlled for Test B, for E(SOC), nor for A10 in the lab-indicator row (F8).
+- **Still "PINN + KAN"?** Formally yes; empirically the closed-form hard ODE is the same law, and the KAN is a spline MLP with the interpretability features unused (F1). The supervisor's test "does each named component earn its place" is the paper's expected failure.
+- **Internal inconsistencies.** F12.
+- **What forces rejection of each claim.** H1a: tier S fails under clip 10 or 50 or warm-up 0.2 or 0.6 (rows k). H1b: reverse tier S, or the validity rule on G2 fails. H6: fails with "A10 as published", or with a lab-indicator in A10. Test C wording: lab-indicator row changes the sign of the median. Calendar-share and E(SOC) statements: change by more than the envelope when separate h_cal and h_cyc are used or a lab indicator is added.
+
+---
+
+## 3. Five changes demanded before the freeze, ranked
+
+1. **Close the outcome table (F2, F1).** Every combination of tiers, including reverse tiers for H6, H1a, H1c and a "none" for H1b, maps to one title and one abstract wording with no step that says "put to Shlok" and no tie wording for "none"; a recorded decision by Shlok (ledger row) that title T3 and a paper whose demonstrated benefit is a comparison with the dataset authors' model and an ablation is an acceptable endpoint. Without this the preregistration does not constrain the paper.
+2. **Settle A10 and the unread sources (F6, F13).** Zhang JES 182, Stroebl JES 142 and Hallinger read in full; A10 equations verified and its parameter-recovery test passing; the frozen H6 contrast stated for both "A10 as published" and "A10 with the factor" with the headline wording tied to the weaker of the two. A freeze with `A10_FORM["verified"]` unset is not a freeze.
+3. **Make the lab confound testable for the headline contrast (F8).** The lab-indicator and lab-stratified rows must include A10 and cover Test B, not only Test C; the rule for what happens to a tier when the lab row flips it is fixed in advance (not "disclosure").
+4. **Resolve the statistical accounting (F4, F3).** Holm ordering by the statistic actually tested (S-tier p-values for S claims); a type-I simulation of the sign test with fold-level and lab-level shared effects; alpha accounting for H2, H5, H1c, NC-2, X1; a fixed rule that the mean pp difference and the worst-condition error are in the abstract whenever they disagree with the median.
+5. **Remove the contradictions and the untestable pieces (F12, F11, F5).** Stats step and README aligned with PREREG_v3 on Test C (no tiers); draft 5.5 aligned with D014; the "same-model" correlation assumption for H1a corrected; the H7/H3 "win" tied to a G2 whose strength was fixed before P4 or struck; a window-information reference (condition-only population prediction without the window) added to the primary arms so that "forecast from first check-ups" is itself testable.
+
+Findings rated fatal: **F1, F2** (resolution row needed by the orchestrator before the gate opens).
+Major: F3-F15. Minor: F16.
+
+# D016 proposal: give the PINN and the KAN each a testable role (2026-11-05)
+
+Role: proposer (method-architect). Specification and predictions only; no result is claimed and no Samsung retention value was opened.
+Reading (full text unless stated): CONTRACT.md; D015 red team; DECISIONS D001-D015; PREREG_v3 sections 1-11a, 12-14, 16 (sections 3-4 and 17-19 skimmed by heading); D011 judge section 3 and headings; P3, P4, P5 RESULT.md; STATS_RULING sections 0-7; TYPE1_SIGNFLIP; samsung50e_dataset_paper.md; PRIORART_SUMMARY.md; code/README.md.
+One new measurement, from identifiers only (`data/raw/samsung50e_meta/experiments_meta.csv`, no capacity file): designed throughput of the 40 cycling conditions.
+Ledger: `tools/ledger.py` does not exist in this project (D015 red team says the same); no ledger rows added. The orchestrator must write the D016 row by hand.
+
+---
+
+## 0. Verdict in six lines
+
+1. F1 is correct for the design as frozen: the closed-form hard ODE is the same law as the PINN (D013 (a)), so the soft residual can only help where the law is wrong; the only pilot (P5) gives a 4 % median gain (16 % with whole-axis collocation) against an 80 %-power detectable gain of 9-22 % at n = 40. The KAN contrast (H1b) is unwinnable for the same reason (P4: forecast gap 0.0-0.1 pp).
+2. The fault is the regime, not the models: at full training data and a 4-check-up window, tuned data-only learners already sit at the replicate spread (P3: ISU 0.90 [0.78, 1.08]; SNL 1.13 [0.81, 1.62]). A physics prior cannot show value where nothing is left to win. It can where data are scarce.
+3. Recommended redesign ("Design R", section 5): keep the data, the code base and the exact sign test, and move the confirmatory question to **data efficiency**: how many ageing conditions (m) and how many early check-ups (k) are needed. The PINN's role is a **prior that pays when data are scarce** (physics-informed family vs best data-only learner, fixed-sequence over a pre-ordered grid of (m, k) cells). The KAN's role is a **readable, fold-stable stress law** obtained by symbolic extraction, with an accuracy tie accepted and pre-stated, and not a race against GAMs.
+4. What stays honest: the soft residual versus the hard ODE remains a secondary qualifier with a pre-written sentence for every outcome, including "tie". Nothing in the redesign makes the soft residual necessary; section 3, option 4 says what it can and cannot do.
+5. Closed outcome table (section 6): P role (win / none / reverse) x K role (readable / accurate-not-readable / not shown or worse) gives six titles and fixed wording; qualifiers (A10, hard ODE, storage transfer) change one sentence by tier, never the title; no row says "put to Shlok".
+6. Cost: about 2-3 days of code (subset selector, k = 0 and k = 2 windows, symbolic extraction, fixed-sequence assembly) plus a training-side pilot on ISU; extra CPU is of the order of the Test B core run (arithmetic in section 5.7). Everything in the D015 freeze conditions (A10 verified, lab confound on Test B including A10, Holm ordering, README alignment) still applies.
+
+---
+
+## 1. Evidence that sizes every option (what the files say)
+
+| # | Fact | Pointer |
+|---|---|---|
+| E1 | Best tuned data-only learner / replicate spread = 0.90 [0.78, 1.08] (ISU, W = 4 wk), 1.13 [0.81, 1.62] (SNL, W = 100 cycles); LightGBM best in 3 of 5 (ISU) and 5 of 5 (SNL) folds. At full data and a full window there is little headroom over data-only learners. Samsung is blinded; no Samsung number exists. | P3 RESULT, verdict table |
+| E2 | KAN [3,h,1] vs additive GAM on synthetic G2: nRMSE 0.081 vs 0.103 (median), forecast RMSE gap 0.0-0.1 pp, GAM class floor 0.05-0.07; hidden width at the grid edge in 5 of 5 draws. | P4 RESULT |
+| E3 | Soft PINN vs hard ODE on synthetic G1 (strong misspecification): judge-spec collocation median ratio 0.96 (4 of 5 draws, one reversal +0.40 pp); whole-axis collocation 0.84 (5 of 5). Lambda_res = 10 was worse than hard in every draw. Attribution not clean (F and z_c are extra capacity). | P5 RESULT, items 1-4 |
+| E4 | Exact sign test, n = 40, Holm step 1: 80 %-power gain about 9-12 % (rho 0.95), 12-16 % (0.90), 17-22 % (0.75); non-inferiority at true equality (margin 10 %) 0.71-0.95 / 0.40-0.72 / 0.16-0.32; n = 13 cannot support anything below about 20 %; n = 27 (design effect 1.5) 12.5 % / 15.5 % / above 20 % (Wilcoxon-based). rho for PINN-KAN pairs is an assumption. | TYPE1_SIGNFLIP "Power"; STATS_RULING 7 |
+| E5 | Design: 279 cells; 147 cycling cells in 40 conditions; 132 storage cells in 19 conditions, only cells 01-03 (66) have intermediate check-ups; Test B = 5 folds of 8 held-out conditions, so 32 training conditions per fold; all 35 C cells are lab INT, 45 C is mostly HM. | PREREG 3.1, 4; dataset note |
+| E6 | Check-up cadence: cycling CU at weeks 1, 2, 3 then 5, 7, 9, 13, ...; storage CU at about weeks 5, 9, 17, 25 then every 8 weeks. Window k_cyc = round(n_med / 3), expected 3-5. | dataset note Fig. 4; PREREG 5 |
+| E7 | **Designed throughput (new, identifiers only; assumes charge time DoD/C_ch plus discharge time DoD/C_dch, no rest, no CV phase, no pauses):** the 40 cycling conditions span 23 to 112 equivalent full cycles per week, a factor of about 5; none is a low-rate, calendar-dominated condition. The calendar term therefore enters every cycling cell, but the cycling term is large in all of them; no stratum exists where storage knowledge dominates. | `experiments_meta.csv`, arithmetic in section 7 |
+| E8 | In a cycling cell calendar and cyclic terms are collinear (E_n proportional to t_n at constant rate); only storage cells identify the split. | D015 F9 |
+
+Consequence: wherever the full training set and a full window are used, the expected differences are inside the minimum detectable gain. Every option below is judged by whether it moves to a regime where a gain above the MDE is plausible, or accepts a tie and says so in advance.
+
+---
+
+## 2. Why the current design produces F1 (diagnosis, for the judge)
+
+- PINN role "integrate the law": removed by the closed form (D013 (a)); A2 is the exact solution of the PINN's own law.
+- PINN role "regularise F where data are absent" (collocation, twins): F is a surrogate of the law; with the law fixed, collocation adds no information about the cell, only consistency with the law's own stress map. It cannot beat the law-integrator unless the law is wrong.
+- KAN role "accuracy": a hidden-layer KAN [5,h,1] with h up to 8 on 32 training conditions is a tuned spline MLP; accuracy over GAM/MLP is E2-sized.
+- KAN role "interpretability": the KAN literature's selling point; the frozen design uses it only as partial-dependence plots of a non-additive map (D015 F1).
+- Comparators: H1a (A9) is a low bar (F5), H6 is a win over a model its authors call inadequate (F6), H1c is gated and probably unwinnable (E1).
+
+So the redesign changes the regime (scarce data) and the KAN claim (readable law, tie accepted), and demotes everything that cannot be won to a qualifier with fixed wording.
+
+---
+
+## 3. Options
+
+Common conventions: unit = held-out condition; primary test = exact one-sided sign test on L_c = ln(S_comp,c / S_A,c) with margins ln 1.02 (tier S) and -ln 1.10 (tier N), as D012. "Chance" is a qualitative judgement from E1-E8, not a probability; no pilot on Samsung exists.
+
+### Option 1. Knowledge transfer across arms (storage <-> cycling)
+
+- **Hypothesis H-T1.** Training jointly on 132 storage cells lowers the forecast error of held-out cycling conditions relative to cycling-only training (A1 vs A13), because the shared calendar term r_cal(T, SOC) is identified by storage cells. Dose-response sub-hypothesis: the gain grows as cycling conditions become scarce (m = 8 vs 32) and with the calendar share. Converse H-T2: cycling cells lower the forecast error of held-out storage conditions (A1 vs A14, S2, n = 19).
+- **Endpoint.** Condition-level retention RMSE (pp), log ratio. Dose-response: Spearman correlation between L_c and a **label-free** design covariate (designed EFC per week, E7), n = 40.
+- **Test.** Exact sign test A13 vs A1, tier S/N, n = 40, level 0.025. Dose-response: Fisher-z approximation, 80 % power for |rho_s| about 0.43 at n = 40 (textbook value, not simulated). H-T2: n = 19, sign test (15 positives needed at 0.025); no tabulated MDE below about 17 % at n = 13 and above 12.5 % at n = 27 suggests above 15 %.
+- **Power.** Same-model contrast (rho about 0.95): MDE about 9-12 % at n = 40. Any stratified subset (for example the 20 lowest-throughput conditions) has n = 20, not tabulated; interpolating the n = 13 and n = 27 columns puts the 80 % MDE above 13 % even at rho 0.95 (to be simulated by the statistician).
+- **Risk.** (i) The calendar share of fade is probably modest in every cycling condition (E7: throughput 23-112 EFC/week, factor 5 only), so the transfer gain is probably below 9-12 %. (ii) Storage cells also feed the backbone tournament; the gain may be a backbone effect, not a calendar-term effect. (iii) The carrier is the shared law, which A2 has too; the soft residual is not the carrier. (iv) Temperature is lab-aliased (35 C INT, 45 C HM); storage cells at 10 C are all SIE. (v) H-T2 is expected null: storage conditions are measured directly.
+- **Chance of a demonstrable effect.** Low to moderate for the main effect at n = 40; moderate for the scarcity version (m = 8), where the cycling-only model has too few conditions to separate the calendar part.
+- **Title and claim if it carries the paper.** "Calendar-ageing tests as informative priors for cycling forecasts: ..." Claim: "joint training lowered the typical held-out cycling error by X % (interval) and the gain was larger where cycling conditions were scarce."
+- **Verdict.** Keep as a **qualifier** (Q-T) at two grid cells and as a figure panel; not strong enough alone.
+
+### Option 2. Data-poor regimes (learning curves)
+
+Two axes, both available from the data and the code base.
+
+**2a. Early check-ups k (window length).** k in {0, 2, k_full}, k_full = k_cyc by the frozen rule. k = 0 is the window-information reference demanded by D015 F7 (condition-only forecast, no cell information); k = 1 descriptive.
+**2b. Ageing tests m (number of training cycling conditions per fold).** m in {8, 16, 32}; the 8 held-out conditions of each fold are identical for all m, so contrasts are paired across the grid. Training subsets are a deterministic max-min (space-filling) selection among the fold's 32 training conditions in standardised stress space (identifier-only, label-free, reproducible; the logic of the dataset's own conditioned-Latin-hypercube and pi-OED designs); random subsets are a sensitivity row. All storage cells stay in training in the base grid.
+
+- **Hypothesis H-P (the PINN as a prior).** In the most data-poor cell the physics-informed family (law + F + residual, stress map chosen per fold by inner CV among A1 KAN, A3 parametric, A4 additive GAM) has a lower median condition error than the best data-only learner (inner-CV best of A9, A11, A12 with physics-motivated features, see fairness below). Prediction: the advantage is largest at (m = 8, k = 2) and shrinks as m and k grow (E1 says it is about nil at (32, k_full)).
+- **Endpoint.** Condition retention RMSE (pp) at each cell; primary quantity L_c per cell.
+- **Test.** Fixed-sequence testing at 0.025 per step (no multiplicity cost): g1 = (8, 2), g2 = (16, 2), g3 = (32, 2), g4 = (32, k_full); stop at the first step that fails. Tier S one-sided; reverse tier S evaluated at g1 regardless (safety finding). Result = number of consecutive passes J (0 to 4) and the sign at g1.
+- **Power.** Different model families, rho about 0.75: 80 %-power gain 17-22 % at n = 40 (E4). That is large for E1's regime but small for a regime where a learner with 8 training conditions in a 5-D stress space must extrapolate; whether the true gain at g1 reaches it is **not measured** (Samsung blinded). The pre-freeze pilot P6 (section 5.6) measures the direction on ISU training sides.
+- **Risk.** (i) At m = 8 every model may collapse to the same near-constant forecast (ratios near 1). (ii) Inner CV with 8 conditions is noisy (2 inner folds; equal for all arms). (iii) Straw-man risk: a reviewer will call a data-only learner without Arrhenius-type features a weak baseline; fairness condition: A11/A12 get a tuned choice between raw stresses and physics-motivated features (1/T, log C-rate, log DoD, SOC and SOC squared, the A3 abscissae) and the data-only family includes A9. (iv) Subsampling conditions changes the hull; report lab and temperature composition per cell. (v) "Physics beats data-only at small n" is a known pattern; the novelty is the quantified crossover on a designed dataset with a semi-empirical reference, not the pattern.
+- **Chance.** Moderate for g1 (textbook regime, unmeasured here); low for g4 (E1).
+- **Title and claim.** P+: "Physics-informed neural networks ... forecast lithium-ion capacity fade from few ageing tests and early check-ups"; claim: "with m = 8 training conditions and two check-ups the typical held-out condition error was X % lower than the best data-driven learner (interval), and the advantage extended down to cell g_J."
+- **Verdict.** Adopt as the PINN's primary role.
+
+### Option 3. KAN as readable, physically checkable stress laws
+
+- **Hypotheses.** H-K1 accuracy tie: the closed-form law extracted from the trained KAN (A15) is non-inferior to the unsimplified KAN (A1) within 10 %. H-K2 stability: the selected function family per stress input is the same across outer folds. H-K3 consistency: the direction of each extracted stress effect agrees with the sign of the corresponding exponent in the dataset authors' (verified) model A10, and the effective activation energy of the calendar term is reported with its fold spread against the authors' own fit and against **verified** literature only. Optional H-K4: the extracted law is more accurate than A10 (superiority), as a qualifier.
+- **Procedure (A15, to be specified in full by method-architect after the opponent round).** Per outer fold, on training conditions only: tuned KAN with hidden width limited to {1, 2}; sparsify (existing L1 plus entropy penalty, sparsity level from the tuned grid); prune edges below a pre-set importance; fit each surviving first-layer edge by a **pre-registered library** (zero, linear, power, log, exponential/Arrhenius in 1/T, quadratic, hinge) with a fixed BIC rule and a complexity cap; refit the free coefficients end to end under the same loss. The extraction rule is frozen before any outer prediction.
+- **Endpoints.** (K-acc) sign tests of A15 vs A1 at +-ln 1.10 (TOST) at g4. (K-stab) number of the 5 stress inputs whose family label (pruned counts as a label) is identical in at least 4 of 5 folds; context: the same count on the NC-2 permuted-stress fits. (K-con) number of inputs whose extracted direction matches the sign of A10's exponent; needs FB-2 closed. (Q-A10) A15 vs A10 tier. Thresholds "4 of 5 inputs" are the proposer's design choices, flagged for the statistician; they are not derived.
+- **Power.** TOST at n = 40 with same-model rho about 0.95: 0.71-0.95 at Holm step 1 (E4), higher at 0.025. K-stab and K-con are counts over 5 inputs and 5 folds: no formal power; they are pass/fail descriptors with pre-stated rules. This is the honest limit of interpretability claims.
+- **Risk.** (i) A15 loses accuracy through the width cap or the library (then the KAN role is "not shown"). (ii) With 3 storage temperatures (10 C all SIE, 45 C all HM) E_a is lab-confounded; the comparison is only to A10's fit on the same data, and a lab-indicator row is mandatory. (iii) The 35 C level exists in cycling only. (iv) The BIC library can pick different families fold to fold when the edge is nearly linear (stability fails for a benign reason; report "equivalent over the hull" as a second label, pre-defined as max difference below 5 % of the edge range, a proposer's choice). (v) Reviewers may call 5 inputs a thin test of "interpretability"; the claim is worded as "stable and consistent", not "discovered physics".
+- **Chance.** Accuracy tie: moderate to high. Stability: moderate, unknown. Consistency with A10's signs: moderate (monotone effects expected, but non-monotone SOC-window effects may appear). Superiority over A10 (K-D): unknown.
+- **Title and claim.** K+: "... with readable Kolmogorov-Arnold stress laws ..."; claim: "a closed-form law extracted from the KAN reached the accuracy of the full KAN within 10 % (interval), the same functional family was selected in k of 5 folds for n of 5 inputs, and the directions agreed with the dataset authors' model for n of 5 inputs."
+- **Verdict.** Adopt as the KAN's primary role. It converts "KAN = spline MLP" into a deliverable (a formula plus its stability), with the tie pre-stated.
+
+### Option 4. What the soft residual can do that the closed-form ODE cannot (and an honest statement if nothing)
+
+Honest statement first. With a fixed law and a closed-form (or RK4) integral, the hard ODE uses every piece of information the law carries. The soft residual adds **no** information about the system; it can only (a) relax the law where the law is wrong (F can bend, lambda_res tunes how much), (b) interpolate between the law-driven limit (lambda_res large, A2-like) and the data-driven limit (lambda_res small, A9-like), (c) expose where the law is violated (residual map), and (d) accommodate laws without a closed form, which RK4 also handles. Anything beyond (a)-(c) would be a claim without a mechanism. If the data show a tie with the better of A2 and A9 everywhere, the PINN's contribution is robustness (not having to choose), and the paper must say so.
+
+Testable forms:
+- **4a. Regime adaptivity ("no regret").** Using the same (m, k) grid: A1 is non-inferior (tier N) to the inner-CV best of {A2 hard law, A9 data-only} at each cell, and strictly better (tier S) at any cell where the two limits cross. Test: sign tests per cell, N then S; no extra data. Power: A1 vs A2 and A1 vs A9 are near-same-model contrasts (rho 0.90-0.95): NI at equality 0.40-0.95 (E4); the S tier at a crossing cell needs 9-16 %. Chance: NI moderate; S at a crossing cell low (E3: 4-16 %). Wording: "tracked the better of ... within 10 %" or "was not shown necessary".
+- **4b. Controlled misspecification (backbone dose-response).** Fix the state factor h to each of {constant, self-limiting, accelerating} for A1 and A2 (existing `backbone` config), order the three by the hard ODE's training-side inner-CV error (training data only, computed before any outer scoring), and test A1_b vs A2_b in descending dose, fixed sequence. Chance: low to moderate (E3 is the only evidence). Risk: reviewers read a deliberately wrong law as a straw man; mitigated because the three backbones are the tournament's own candidates, but the result is a robustness statement, not an accuracy claim. Adopt only as an appendix row.
+- **4c. Residual map as a law-violation detector.** Does |R| from A1 (training points) rank-correlate (n = 40) with the hard ODE's held-out error by condition, and does it beat the hard ODE's own training misfit mapped over stress as a predictor? Expected: equal to training misfit, i.e. no PINN-specific value. Chance: low. Descriptive figure only.
+- **4d. Collocation where data are absent / calendar twins.** No mechanism beyond (a); keep as a mechanism description, not a test.
+- **Verdict.** Adopt 4a as the qualifier Q-H (H2 restated on the grid, fixed wording), keep 4b-4c as appendix rows, state in the Discussion that the soft residual is not shown necessary unless Q-H says otherwise. This is the honest answer to F1 for the residual itself.
+
+### Option 5. Other ideas
+
+- **5a. k = 0 window-information reference (adopted).** Answers D015 F7: if the window adds nothing at k_full, "forecast from first check-ups" is empty. It is free for the law-based arms (no window inversion).
+- **5b. Design-stage reading of k = 0 and m (adopted as the framing).** "Predict a planned ageing condition from the tests already run" is what an ageing-test planner does; it ties the study to the dataset's own subject (optimal experimental design).
+- **5c. KAN-discovered term added to A10 (A10+).** Test A10+ vs A10 (same family, rho high, MDE about 10 %). Not adopted: it needs a second model-building step and A10 is still unverified (FB-2); possible follow-up.
+- **5d. More condition-level units from further cycling datasets (for example BatteryLife).** Would lower the MDE (n = 126 pooled units from Samsung, ISU, SNL is already available but ISU/SNL are "not blind"). Not adopted: data volume (31 GB), CONTRACT preference and one-week limit; ISU and SNL are used as "also holds" replications of the same grid.
+- **5e. Pooled units, cycling plus storage.** One sign test over 40 + 19 = 59 conditions of "held-out ageing condition". Heterogeneous estimand; secondary only.
+- **5f. Hierarchical prior for the per-cell offset from replicate structure.** Would help law-based arms at k <= 2 but adds a tuned dimension. Not adopted.
+
+### Comparison
+
+| Option | Role it gives | Realistic chance at n = 40 | Meaning for engineers | Closes F1? |
+|---|---|---|---|---|
+| 1 transfer | shared law as carrier | low-moderate | fewer cycling tests via storage tests | partly (carrier is the law, not the residual) |
+| 2 data-poor | PINN as prior | moderate at g1, low at g4 | how many tests/check-ups are needed | yes for "physics-informed", not for "soft residual" |
+| 3 readable KAN | KAN as symbolic law, tie accepted | tie: moderate-high; stability: moderate | a formula to check and reuse | yes for the KAN, if worded as readable/stable |
+| 4 residual | relaxation, adaptivity | low-moderate | robustness to a wrong law | honest "not shown" if null |
+| 5a/5b | window information, design-stage framing | n/a (reference) | meaning of "early forecast" | supports 2 |
+
+---
+
+## 4. Contract questions (CONTRACT section 3, items 2-5)
+
+**Why this and not each alternative.**
+- Keep PREREG_v3 and add an expected-outcome clause: loses, because F1 is the expected outcome itself and the supervisor's test ("does each named component earn its place") fails by design.
+- Option 1 alone: loses on E7 (no calendar-dominated stratum) and because the carrier is the law, which A2 shares.
+- Option 3 alone (KAN-only paper): loses the PINN, which the author wants, and the tie has no accuracy headline.
+- Option 4b alone (misspecification): loses as a straw man and rests on E3 only.
+- Drop PINN/KAN from the title (Codex's earlier identifiability-first idea, D005): already rejected by the author's brief.
+- Option 5d (more datasets): loses on volume and time.
+
+**Is this the best possible, or is there room?** Design R is the best option I can find inside "same data, CPU, one week". Room: a measured effect at g1 on Samsung is unknown; the training-side ISU pilot (P6) is the only cheap evidence before the freeze, and it is cyclic-only.
+
+**What a JES reviewer would still hit.** One cell type (NCA-type chemistry is not stated in the data paper note, so no chemistry claim); constant-stress protocols, no dynamic loads; capacity only (no EIS/DVA); lab/temperature aliasing; learning curves on random/space-filling subsets are a standard device; "interpretable" claims rest on 5 inputs; the 4-8-dataset breadth of the strongest JES PINN/KAN papers is not matched (ISU, SNL as replications).
+
+**What would make a reviewer reject.** (1) A data-only baseline without physics-motivated features (fixed by the fairness condition); (2) a learning curve whose small-m cells are chosen after seeing results (fixed: grid and order frozen); (3) a symbolic-law claim without a stability rule (fixed: K-stab); (4) a PINN claim where only the hard ODE matters (fixed: wording "physics-informed", soft residual only per Q-H); (5) preprint-heavy novelty (unchanged; D015 F13 remains open).
+
+---
+
+## 5. Recommended design ("Design R")
+
+### 5.1 Question and claim
+"How few ageing tests and early check-ups does a physics-informed neural network with learned stress laws need to forecast the capacity fade of unseen cycling conditions, and are the learned stress laws readable and consistent with the dataset authors' model?" The claim contract is the outcome table of section 6; no sentence of the paper is chosen after the data.
+
+### 5.2 Grid, arms, tuning
+- Grid cells (m, k): m in {8, 16, 32}, k in {0, 2, k_full}; k = 1 descriptive. Primary path (fixed sequence): g1 = (8, 2), g2 = (16, 2), g3 = (32, 2), g4 = (32, k_full). If k_full = 2 then g3 = g4 and the sequence has three steps; if k_full = 3, g4 = (32, 3).
+- Held-out set: the unchanged Test B (5 folds of 8, 40 conditions, `samsung_splits_v2.json`, hash pinned); only the training side is thinned.
+- Arms: physics-informed family A1, A3, A4 (stress map by inner CV); A2 hard ODE; A9 data-only F; A10 semi-empirical (with per-cell factor, and "as published" row); A11, A12 data-only learners with physics-motivated feature option; A13 cycling-only (Q-T); A15 symbolic (K role; g4 only, plus g1 descriptive); R1, R2 and the k = 0 population forecast (reference). Dropped from Test B: A5, A7 (their only contrast, H1b, is replaced; A7 may stay at g4 as the "PiDDM-style" comparator), H3, G2-based KAN "win".
+- Tuning: equal for every arm; same N of TPE trials, inner folds 2 for m < 32 and 3 for m = 32 (a stated rule, equal across arms); training-side only; comparators chosen per fold and per cell by inner-CV score, never by test error. The k axis costs inference only for A1-A4, A9, A10 (window inversion at test time); A11/A12 retrain per k (cheap).
+
+### 5.3 Statistics
+- Primary tests: exact one-sided sign tests (D012), tiers S (ln 1.02) and N (-ln 1.10), median estimand, exact order-statistic interval.
+- P role: fixed-sequence over g1-g4 at 0.025 each (tier S); reverse S at g1 tested regardless.
+- K role: TOST at g4 (two sign tests at +-ln 1.10, 0.025 each); K-stab and K-con as pass rules; Q-A10 tier.
+- Qualifiers (Q-A10, Q-H, Q-T) at g1 and g4, each labelled secondary, interval reported, tier word by the shared template of section 6; none changes a title.
+- Holm is not needed inside the primary roles (fixed-sequence for P; K's two components are a conjunction of independently stated pass rules). The two roles are tested at their own 0.025 and are not combined into a family claim; the abstract says so. This replaces the unclear alpha accounting of D015 F4.
+- Rules from D015 adopted here: (i) whenever the sign of the mean paired pp difference differs from the median log ratio at a primary cell, the abstract adds the mean difference with its BCa interval and the worst-condition error; (ii) a lab-stratified, lab-indicator (including A10) or retain-all sensitivity row that lowers a primary tier lowers the tier word in the abstract automatically (other sensitivity rows carry no consequence); (iii) Holm ordering is by the statistic actually tested (moot here); (iv) a type-I simulation with fold-level and lab-level shared effects is still required before the freeze.
+
+### 5.4 Fairness conditions (to be checked by red team)
+1. Data-only family sees the same training cells, equal tuning budget, and may use Arrhenius-type features.
+2. A10 uses the verified form (FB-2) both as published and with the per-cell factor; the weaker of the two sets the wording.
+3. Subset selection is label-free and deterministic; random subsets are a sensitivity row.
+4. All storage cells stay in the base grid; storage-off is Q-T.
+5. Lab and temperature composition of every thinned training set is tabulated; the lab-indicator row exists for Test B including A10.
+
+### 5.5 What the retained freeze conditions still require
+FB-1 to FB-6 and FB-8 to FB-10 are unchanged; the new code items are: the subset selector, the k = 0 population forecast and k = 2 window path, the symbolic extraction (A15), data-only learner feature option, the fixed-sequence assembly in `stats_step.py`, the sentence templates, and a unit test for each limiting case (m = 32 reproduces the unthinned run bit for bit; k = full reproduces Test B; A15 with an untruncated library reproduces A1 to float tolerance on a noiseless synthetic law; subsets are identical for identical identifiers). README, stats step and draft 5.5 must be aligned with the new document (D015 F12).
+
+### 5.6 Pre-freeze pilot P6 (training sides only, ISU, non-binding)
+Learning curves on ISU (63 conditions, cyclic term only): m in {8, 16, 32, all} and the weeks-window analogue of k, for A1, A2, A9, A11, A12, A10-analogue, inner CV on training conditions only (the P3 enforcement). Purpose: show whether the ordering "law-based better than data-only at small m" exists at all on a dataset that is already "not blind". Pre-set reading, fixed now: if on ISU the physics-informed family is not lower than the best data-only learner at the smallest m in a majority of the five outer training sides, the lead tells Shlok before the freeze that P0 is the likely outcome; the design is not changed on the basis of the pilot's size. The pilot uses no Samsung number.
+
+### 5.7 Compute (arithmetic from PREREG section 16, not measured)
+Baseline Test B core at N = 20 is about 9.4 CPU-h expected (35.8 ceiling) for 8 neural arms over 5 folds. Design R drops two arms (A5, A7) from Test B and adds m = 8 and m = 16 refits for A1, A2, A3, A4, A9 with smaller training sets and 2 inner folds; the k axis adds inference only. Order of magnitude: the extra work is comparable to the dropped work, so the core total stays near 10-20 CPU-h expected with a ceiling near 40-70 (three single-thread processes: about one day wall clock expected). A15 adds a few refits per fold. The timing run at the freeze commit fixes N; the Partial plan of D008 (a) applies to every arm equally if triggered.
+
+### 5.8 Power summary for the recommended design
+- P role per step: a gain of about 17-22 % (assumed rho 0.75, n = 40) is detectable at 80 %; smaller gains would end as "none" at that step. Whether the gain at g1 reaches it is the open risk.
+- K-acc: TOST detectable at equality with power 0.71-0.95 or higher (rho 0.95).
+- Qualifiers: Q-A10 and Q-H are same-model-like contrasts (MDE 9-16 %); Q-T as in option 1.
+- No simulation was run for fixed sequences, for the thinned-training correlation structure, or for n = 20 strata; the statistician must supply them (a freeze condition).
+
+---
+
+## 6. Closed outcome table (Design R)
+
+Evaluate gate G first, then the P role (three states), then the K role (three states); the title is the single cell of the matrix. Qualifier sentences are added by tier from the shared template. No row requires a choice by the lead or by Shlok.
+
+**Gate G.** NC-1 trips, or a positive control fails, or a test-fold read is found, or A10's form is unverified at the freeze, or the freeze conditions of section 5.5 are unmet: no claim, audit, new version.
+
+**P role states.**
+- P+ : tier S at g1 (physics-informed family lower than the best data-only learner by more than 2 %, exact one-sided sign test at 0.025). Extent J = number of consecutive tier-S passes along g1-g4.
+- P0 : no tier S at g1 and no reverse tier S at g1 ("none").
+- P- : reverse tier S at g1 (the best data-only learner is lower than the physics-informed family by more than 2 %).
+
+**K role states.**
+- K+ : K-acc (TOST pass: A15 within 10 % of A1 in both directions) AND K-stab (at least 4 of 5 inputs stable) AND K-con (at least 4 of 5 directions agree with A10).
+- K1 : K-acc passes but K-stab or K-con fails.
+- K0 : K-acc does not pass (A15 not shown within 10 % of A1; includes reverse tier S for A15).
+
+**Titles (one per cell).**
+
+| P \ K | K+ | K1 | K0 |
+|---|---|---|---|
+| P+ | **T1** "Physics-informed neural networks with readable Kolmogorov-Arnold stress laws forecast lithium-ion capacity fade from few ageing tests and early check-ups" | **T2** "Physics-informed neural networks with Kolmogorov-Arnold stress functions forecast lithium-ion capacity fade from few ageing tests and early check-ups" | **T3** "Physics-informed neural networks forecast lithium-ion capacity fade from few ageing tests and early check-ups: learning curves against data-driven and semi-empirical models" |
+| P0 | **T4** "Readable Kolmogorov-Arnold stress laws for calendar and cycle ageing of lithium-ion cells: accuracy, stability and data requirements" | **T5** "Learning curves of learned calendar and cycle ageing laws for lithium-ion cells: how many ageing tests and check-ups are needed" | **T5** |
+| P- | **T6** "When a physics prior does not help: learning curves of physics-informed and data-driven forecasts of lithium-ion capacity fade from few ageing tests" | **T6** | **T6** |
+
+**Abstract wording per state (fixed).**
+- P+ : "With m = [8] training conditions and k = [2] check-ups, the physics-informed network's typical (median) held-out condition error was X % lower than the best data-driven learner (95 % interval; n = 40). The advantage held down to [cell g_J] and was not shown beyond it." (J = 4: "at every tested cell".)
+- P0 : "The physics-informed network's typical held-out condition error could not be distinguished from the best data-driven learner at the most data-poor cell (interval; n = 40)."
+- P- : "The best data-driven learner had a lower typical held-out condition error than the physics-informed network at the most data-poor cell by X % (interval)."
+- K+ : "A closed-form law extracted from the KAN was within 10 % of the full KAN (interval), selected the same function family in at least 4 of 5 folds for n of 5 inputs, and agreed in direction with the dataset authors' model for n of 5 inputs."
+- K1 : "A closed-form law extracted from the KAN was within 10 % of the full KAN (interval); its function families were stable for n of 5 inputs and consistent with the dataset authors' model for n of 5 inputs, which is below the stated criterion."
+- K0 : "A closed-form law extracted from the KAN was not shown to be within 10 % of the full KAN (interval); the readable-law claim is not made."
+- Never: "outperforms", "matches", "interpretable physics discovered", "first" (unless D015 F13 is cleared by the novelty auditor).
+
+**Qualifier sentences (appended in the Results and Abstract slot; the same template for every qualifier, by tier of the exact sign test, cells g1 and g4).**
+
+| Tier | Template |
+|---|---|
+| S (comparator worse) | "[A] had a median condition error X % lower than [B] (interval; n = 40)" |
+| N | "[A] was no more than 10 % worse than [B] (one-sided bound); not shown better" |
+| none | "[A] and [B] could not be distinguished (interval)" |
+| reverse S | "[B] had a median condition error X % lower than [A] (interval)" |
+
+Qualifiers: Q-A10 = physics-informed family (and A15) vs A10 ("the dataset authors' semi-empirical model"); Q-H = A1 vs A2 ("exact integration of the same law"), both cells; Q-T = A1 vs A13 ("with vs without storage cells"), both cells. The sentence for Q-H "none" must read "the soft residual was not shown necessary". Crossover with A10 (smallest m at which the physics-informed family is lower than A10 at tier S, or "not within the tested range") is reported as a descriptive sentence.
+
+**Rules that close the remaining forks.** (1) Mean-vs-median disagreement: add the mean pp difference and worst-condition error (section 5.3). (2) A sensitivity row that lowers a primary tier lowers the abstract's tier word (section 5.3). (3) Test C stays descriptive with the D011 wording and may not be omitted from the Results; the abstract carries it in a fixed form only if the lab-indicator row leaves the median ratio's sign unchanged, otherwise it is omitted from the abstract and stated in Limitations (a rule, not a choice). (4) A tier-S result on ISU or SNL is worded "also holds / does not hold" with its own n (not blind).
+Reverse tiers for A10, A2, A13: covered by the qualifier template.
+
+---
+
+## 7. Notes on facts and snippets used
+
+- E7 arithmetic: for each of the 40 unique cycling conditions in `experiments_meta.csv` (type z; key = temperature, SOC_max, DoD, C_ch, C_dch, stage): hours per cycle = DoD/C_ch + DoD/C_dch, cycles per week = 168 / hours, EFC per week = cycles per week x DoD. Minimum 23.1 (45 C, DoD 0.6, C_ch 0.2, C_dch 0.44), maximum 112.0 (45 C, DoD 0.6, C_ch 1, C_dch 2). It ignores rest, CV phases, check-up time and pauses, so absolute values are upper bounds; the ratio (about 5) is the point.
+- No literature value (activation energy, exponent) is quoted anywhere in this file. Any such comparison in the paper needs the citation validator (Crossref-verified DOI, page/table) and A10's verified equations (FB-2).
+- The chemistry of the cell is not stated in the dataset note; no chemistry-specific claim is made.
+
+## 8. Decision sheet for Shlok (approve before the freeze)
+
+1. The headline becomes a data-efficiency study with two named roles (PINN as prior when data are scarce; KAN as a readable, stable stress law with an accuracy tie accepted), not "PINN-KAN beats everything".
+2. You approve in advance all six titles T1-T6 of section 6, including T5 and T6 (the "none" and reverse results), and the rule that no sentence is chosen after the data.
+3. The soft residual is not claimed to be necessary; if Q-H says "none", the paper says "not shown necessary".
+4. You accept 2-3 extra days for code and the P6 pilot; the 07 Nov 09:00 Samsung fallback of D005 is not moved by this proposal.
+
+## 9. Hand-offs
+Next in the debate: Codex opponent (attack the grid, the fixed sequence, the fairness of the data-only family, the A15 rules), then judge. Before any code: red-team on the derivation of the stat rules (hard rule of this agent). The statistician must supply: fixed-sequence power, n = 20 strata, correlated-condition type-I with fold and lab effects, and the thresholds marked "proposer's choice" in option 3.
+
+# Statistics ruling for the confirmatory experiments (2026-11-05, before any Samsung label is scored)
+
+Role: statistician (owner of OPEN-4, OPEN-5 and the D007 re-open clause). Does not edit `PREREG_DRAFT.md`; section 9 lists the edits
+the experiment-designer must make. Reading: full text of CONTRACT.md, `04_judge.md` (all, section 6 in detail), PREREG_DRAFT.md,
+P3/P4/P5 RESULT.md, DECISIONS D007, `p3_headroom.py`, and `experiments_meta.csv` (identifiers only). No Samsung capacity file was
+opened. ISU and SNL were touched on **training sides only**, per outer fold, with the P3 enforcement (outer test cells dropped before
+any computation; `stats_warp_calibration.py`, audit field `test_cells_read: false`). No outer test fold of any dataset was read,
+predicted or scored. Nothing here is a result about PINN-KAN; every number below is a pilot training-side measurement or a stated
+simulation assumption. Files: code in `code/prereg/` (`stats_rule.py` = the decision rule as code, `stats_warp_calibration.py`,
+`stats_power_sim.py`, `stats_mde_table.py`); outputs in `runs/prereg/stats_ruling/`.
+
+## 0. Rulings at a glance
+
+| # | Question | Ruling |
+|---|---|---|
+| 1 | Replicate floor | It is **not a lower bound** for held-out conditions and is renamed *replicate spread* `R_LOO` (descriptive). A window-aware replicate predictor `R_WARP` is added as a second descriptive reference. **Neither is a margin and neither is a gate.** D007's rule (gate at 1.2) is superseded by a hierarchical superiority-then-non-inferiority test; D007's consequence for the abstract stands. |
+| 2 | Margins | Relative to the comparator's training-side inner-CV score `E`: superiority `delta_S = 0.02 E`, non-inferiority `delta_N = 0.10 E`, per outer fold, pooled by test-condition count. Computed and written to `runs/prereg/margins.json` before any outer prediction exists. |
+| 3 | Holm family | Four hypotheses: H1a (S), H1b (S), H1c (N, then S as fixed-sequence follow-up), **H6 (S) joins the family (OPEN-5: yes)**. H2 is gatekept, not in the family. Family level 0.025 one-sided (= 0.05 two-sided for a directional claim). |
+| 4 | Unit and test | Unit = held-out condition (40 in Test B). Paired difference of seed-averaged condition scores. Exact one-sided Wilcoxon on `d - margin` AND BCa one-sided bound of the mean, both at the Holm step level. Lab and stage: not blocking factors in the primary; lab-stratified bootstrap and by-lab/stage tables are mandatory sensitivity rows. |
+| 5 | Seeds | 5 final refits (0-4) per arm and fold; condition score = mean over seeds of the per-seed condition RMSE; seeds are never units; no best-seed reporting; tuning is not re-seeded (stated limitation). |
+| 6 | Abstract | Per primary contrast: n, mean paired difference in pp with 95% BCa interval, relative reduction with interval, tier reached (S / N / none). No p-values, no "significant", no "outperforms" below tier S. |
+| 7 | Power | n = 40 detects (80%, Holm-3 first step) a **9.8% / 13.7% / 19.4%** relative improvement when the arms' condition errors correlate 0.95 / 0.90 / 0.75. Title 1 (superiority over all three) needs about 10% for H1a, H1b and about 19% for H1c. Details in section 7. |
+
+---
+
+## 1. Replicate floor, a better reference, and D007
+
+### 1.1 What the floor is and is not
+`R_LOO` (judge, P3 `replicate_floor`): for cell j of condition k, RMSE of the mean trajectory of the other replicates against j at j's
+forecast times; mean over replicates, median over training conditions. It is a valid lower bound only for an *oracle that knows the
+condition's other replicates and not the held-out cell*. It is **not a bound for Test B** for three reasons, two of them mechanical:
+1. Learners see the held-out cell's own window; `R_LOO` does not (P3 caution 1; ratios 0.82-1.04 on ISU).
+2. The mean of r-1 other replicates carries its own noise: under iid replicate noise `R_LOO` is inflated over single-cell noise by
+   sqrt(1 + 1/(r-1)) = 1.15 for 4 replicates (ISU) and 1.22 for 3 (Samsung's 35 of 40 conditions).
+3. A model pools 39 other conditions to denoise a condition's curve; the replicate mean cannot.
+Conversely it is not "reachable" either: for a held-out *condition* a model also pays a condition-generalisation error that no replicate
+quantity measures. So no replicate-based number is a floor for Test B. It is a floor-like yardstick only for Test A (held-out replicates
+of seen conditions).
+
+### 1.2 Reference definitions (both descriptive, computed on training sides only, same window and forecast set as the endpoint)
+Loss `l_j(t) = 1 - r_j(t)` (retention relative to the cell's own reference check-up). `m_{-j}(t)` = mean of `l_i(t)` over the other
+replicates that reach t (linear interpolation in time, as P3). Window times `t_1..t_w` exclude the reference check-up; `t_w` is the last.
+- `R_LOO`: as P3 (unchanged, kept for continuity). Named **replicate spread**.
+- `R_WARP` (window-aware replicate predictor): forecast `l_hat_j(tau) = m_{-j}(tau) + [l_j(t_w) - m_{-j}(t_w)]` (additive form) or
+  `l_hat_j(tau) = kappa_j m_{-j}(tau)`, `kappa_j = clip( sum_i l_j(t_i) m_{-j}(t_i) / sum_i m_{-j}(t_i)^2 , 0.25, 4)` (multiplicative form);
+  no label after j's window is used for j. Condition value = mean over replicates of cell RMSE (pp); `R_WARP` = median over training
+  conditions with >= 2 replicates, **for the form with the lower training-side median in that outer fold** (rule, ties to additive).
+Report `E/R_LOO` and `E/R_WARP` (E = the arm's pooled score) in Table 1 as context. Neither enters a test or a margin.
+
+### 1.3 Evidence (training sides, 5 outer folds of the P3 splits, W = 4 weeks ISU / 100 cycles SNL; `warp_*.json`)
+| Dataset | `R_LOO` | `R_WARP` mult. | `R_WARP` add. | best tuned learner (P3) | ratio / `R_LOO` | / WARP mult. | / WARP add. |
+|---|---|---|---|---|---|---|---|
+| ISU | 5.75 pp | 5.60 | 5.24 | 5.13 pp | **0.90** | 0.92 | **0.98** (folds 0.89-1.15) |
+| SNL | 2.62 pp | 3.38 | 1.45 | 2.97 pp | **1.13** | 0.89 | **2.06** (folds 1.60-2.60) |
+
+ISU: the window barely helps a replicate predictor (5.75 to 5.24 pp): the learners are at the reference under every definition.
+SNL: the additive window offset almost halves the reference (2.62 to 1.45 pp), the multiplicative form worsens it. The *same* learner
+errors give 1.13, 0.89 or 2.06 depending on the definition. The reference quantifies noise plus window information; it does not say
+how much a model can still gain at unseen conditions. A gate built on it cannot be trusted to decide the test type.
+
+### 1.4 Does D007 stand?
+D007 (contrast (iii) = non-inferiority on ISU and SNL, from the 1.2 gate) is **re-opened in part, as its own clause allows**.
+- *ISU*: the NI conclusion stands under all three definitions (0.90, 0.92, 0.98; all below 1.2). Consistent with the data.
+- *SNL*: the verdict is definition-dependent (1.13 / 0.89 / 2.06); the data do not support a pre-decided test type either way.
+- *Samsung*: "decided by the same rule once data are in" is **withdrawn**. The gate is retired for all datasets.
+- The draft margin `delta = R_LOO` could never be met as a superiority margin: on ISU it exceeds the comparator's own error (5.75 > 5.13 pp),
+  on SNL it is 88% of it (2.62 of 2.97 pp). As a non-inferiority margin it would be 112% of E on ISU: vacuous. OPEN-4 is therefore answered: **the floor is not used as a margin**.
+- Replacement: the **hierarchical rule** of section 2.3, applied to H1c on every dataset. It contains the NI outcome D007 wanted and
+  allows superiority only if the interval earns it. D007's consequence stands unchanged: *the abstract cannot say "beats all
+  data-driven models" unless H1c reaches tier S*. This change uses no Samsung data and no test fold; it is fixed before confirmatory runs.
+  The lead should log it as a supersession row of D007 (not an edit).
+
+---
+
+## 2. Margins and the hierarchical test
+
+### 2.1 Quantities (all from training-side data)
+For comparator arm c and outer fold f: `E_f^c` = inner-CV condition-mean window-forecast RMSE (pp) of c's *selected* configuration on f's
+training conditions (the same inner partition and metric used for tuning and for comparator selection; A10 and A3-type fixed-form arms get
+the same 3-fold inner CV). Pooled `E^c = sum_f n_f E_f^c / sum_f n_f` with `n_f` = test conditions in fold f. For Test C, S2 use their own
+training side. `margins.json` (E^c, delta_S, delta_N per contrast) is written and hashed after tuning ends and before any final refit
+is applied to a test condition.
+
+### 2.2 Margin values (rule)
+- **Superiority margin `delta_S = 0.02 E^c`** (relative reduction of at least 2%). Purpose: exclude differences of no consequence while
+  staying below the effect sizes the pilots suggest (P5: 3-14% per draw). Not zero, per the judge ("effect below the margin").
+- **Non-inferiority margin `delta_N = 0.10 E^c`** ("no worse than 10% above the comparator"). Judgement, not derivation; stated as such.
+  Sensitivity rows (descriptive): `delta_S` in {0, 0.05}, `delta_N` in {0.05, 0.15}.
+- The replicate spread is **not** in the margin: with E = R on the pilots a margin of R is the whole error, and on Samsung E/R is unknown
+  and may be far from 1.
+- Illustration (pilot E, not Samsung): ISU E = 5.13 pp gives 0.10 and 0.51 pp; SNL E = 2.97 pp gives 0.06 and 0.30 pp.
+- Contrast direction: `d_c = S_comp,c - S_PINN,c` (condition score in pp), positive favours PINN-KAN.
+- Heteroscedasticity: condition-error CV is 0.45 on both pilots (training sides), so the pp-scale mean difference is dominated by hard
+  conditions. The primary stays in pp (judge's endpoint). Mandatory robustness row: the same rule on `log(S_comp/S_PINN)` with margins
+  `log(1.02)` and `-log(1.10)`; if the tier differs from the primary the abstract states both.
+
+### 2.3 Hierarchical test for one contrast at Holm step level `a`
+A contrast **passes margin m** iff (i) exact one-sided Wilcoxon signed-rank p of `d - m` (H0: pseudo-median <= m) is <= a, AND (ii)
+the one-sided BCa lower limit of mean(d) at confidence 1 - a (10,000 condition resamples) exceeds m. Tiers: **S** passes `delta_S`; **N**
+passes `-delta_N` but not S; **none** otherwise. Implementation: `stats_rule.tier`. The null of N is nested in the null of S, so testing
+N then S in sequence at the same level needs no extra correction. "Equivalent" wording needs a two-sided TOST at `+-delta_N`; N alone is
+"non-inferior".
+Behaviour of the rule, from simulation (family level 0.025, section 7): rejection at the null boundary is below nominal for the skewed
+shape measured on ISU (max 0.0045 / 0.0050 / 0.0155 at nominal 0.00625 / 0.00833 / 0.025) and about nominal for normal errors
+(0.0075 / 0.0105 / 0.0275); for a strong **left** skew of d (a few conditions where PINN-KAN fails badly), it is liberal, up to
+0.0145 / 0.017 / 0.0395 (1.6-2.3 times nominal). That is the price of using a mean-based bound with n = 40; the share of non-finite
+forecasts and the trimmed-mean/log-ratio rows are therefore mandatory beside any tier claim.
+
+---
+
+## 3. Holm family (OPEN-5)
+
+Family, one-sided level 0.025 (two-sided 0.05 for a directional claim; the 95% intervals in tables then agree with the decision):
+1. H1a: A9 (lambda = 0) vs A1 - hypothesis S.
+2. H1b: inner-CV-best of A3-A7 vs A1 - hypothesis S.
+3. H1c: inner-CV-best of A11/A12 vs A1 - **enters with the N p-value**; its S claim is a fixed-sequence follow-up at the same
+   multiplicity level (compare `p_S x (Holm multiplier of H1c)` with 0.025).
+4. **H6: A10 (Stroebl semi-empirical) vs A1 - hypothesis S. Included.**
+Why H6 joins: it is the closest prior art and the abstract will say how PINN-KAN stands against the dataset authors' model; any contrast
+named in the abstract/title/highlights must be in the family or be labelled exploratory. Cost: if A10 is as inadequate as its authors
+state, its p is tiny and it takes Holm step 1, costing the others nothing; worst case it raises the first threshold from alpha/3 to
+alpha/4 and the 80%-power effect by at most 0.5 points of relative improvement (section 7). The judge's claim (the conjunction of the
+three model-part contrasts) is unchanged; H6 failing triggers outcome row K, not refutation.
+H2 (hard vs soft) is **not** in the family. Outcome A (soft better) is tested only if the family passes (gatekeeping, no extra error
+cost). Outcome C (hard better) is tested regardless (safety finding). Order of evaluation: A (tier S on `d = S_hard - S_PINN`, margin
+`delta_S` of the hard ODE's E), then C (reverse S at `delta_S`), then B (TOST at `+-delta_N`); otherwise "unresolved", worded as B.
+H4 (Test C): Holm-3 within Test C, secondary, n = 13. H5/S2 and the rest: exploratory unless the abstract uses them, then labelled
+secondary with their own N rule at `delta_N`. Windows k-1, k+2 and all other rows: descriptive.
+
+---
+
+## 4. Unit of analysis, paired test, lab and stage
+
+- **Unit = held-out condition** (Test B 40, Test C 13, S2 19, ISU 63, SNL 23). Condition score = mean over seeds, then mean over the
+  condition's scored cells, of cell RMSE (pp). Equal weight per condition (estimand: the designed region of stress space, not the
+  replicate count; 5 centre conditions have 6-12 cells and are not up-weighted). Sensitivity: weights by scored cells; a two-stage
+  bootstrap (conditions, then cells within).
+- **Estimand** per contrast: `psi = (1/N) sum_c [S_comp(c) - S_PINN(c)]` over the held-out conditions for the frozen pipeline, expected
+  over initialisation seeds. Inference is to conditions drawn from this design hull for this cell type; not to other chemistries and not to
+  stress outside the hull.
+- **Pairing:** by condition (both arms scored on the same cells and windows). Seeds are not paired across arms; they are averaged first.
+- **Dependence not modelled:** neighbouring conditions share training information and conditions in one fold share one fitted model;
+  the standard errors treat conditions as exchangeable. Report per-fold means and the number of folds where the sign agrees; this is
+  descriptive. Design effect: section 7 gives n = 27 as a "design effect 1.5" scenario.
+- **Lab and stage.** From the metadata (identifiers only): of the 40 cycling conditions 37 are single-lab (INT 19, HM 14, SIE 4) and 3 are mixed
+  (23 C is INT 6, SIE 3, HM+INT 1; 35 C is INT 13; 45 C is HM 14, HM+SIE 2, SIE 1)
+  and every condition lies in one stage (stage 1: 25, stage 2: 15). Temperature is almost a function of lab, and the Test B folds are already stratified by temperature, so
+  lab/stage cannot be blocking factors without removing the temperature contrast. Ruling: **not** blocking in the primary. Mandatory
+  sensitivity rows: (a) bootstrap resampling conditions *within lab strata* (stratum = majority lab) and the post-stratified mean; (b) the
+  mean of d per lab and per stage, with n; (c) leave-one-lab-out mean. If the stratified tier is lower than the primary tier the abstract
+  must say so (disclosure, not an automatic downgrade). For Test C and S2 the temperature contrast is confounded with lab by design and
+  no statistical device removes that; the wording rule is in section 6.
+
+---
+
+## 5. Seeds
+
+- 5 final refits per arm and outer fold (seeds 0-4), as CONTRACT 6. Per-condition score = mean over seeds of the per-seed condition RMSE.
+  The seed SD of the cross-condition mean is shown beside every score in tables; it is a reproducibility statement, not a confidence interval.
+- Seeds are not units and are not pooled with conditions in any test. Never report the best seed or best fold; the selection rule for the
+  comparator is the inner-CV rule of section 3 and nothing else.
+- Why 5 suffice: seed noise adds `2 sigma_s^2 / S` to Var(d_c). With a per-seed SD of 5% of E (assumed; no pilot measured it) this is 0.001 E^2
+  against `sigma_d^2` of 0.02 E^2 (same-model contrasts): +5% variance, +2.5% on the standard error; 10 seeds would save 1.3%. At 10% seed
+  SD it would be +20% variance (+10% SE); still not worth more than 5. Cost of a change to 10 seeds is only the final refits (5 of 65 fits per
+  arm and fold), so it can be adopted if the lead prefers, but the ruling does not need it. No post-hoc seed addition is allowed.
+- Limitation to state: the tuned configuration comes from one TPE search per outer fold (as P3); search-to-search variation is not in the
+  standard errors. A second search seed on the primary contrasts is advisable if compute allows and is an appendix row, not a decision input.
+
+---
+
+## 6. What goes into the abstract
+
+For each primary contrast (n, estimand and tier stated): mean paired difference in pp with the 95% BCa interval (`stats_rule.effect_summary`),
+the relative reduction `mean(d)/mean(S_comp)` with its interval from the same resamples, and the tier. Also PINN-KAN's own score as mean
+over conditions with the seed SD. Not in the abstract: p-values, rank statistics, results of unadjusted tests, the sensitivity margins.
+Wording by tier:
+- **S**: "lower by X pp (Y%; 95% CI a to b; n = 40 held-out conditions)". "Outperforms"/"beats" only at tier S.
+- **N**: "no more than 10% worse than [comparator] (one-sided lower bound ...)" plus the observed difference with its interval. "Comparable",
+  "on par", "equivalent": only after a two-sided TOST at `+-delta_N`; "matches" is not allowed.
+- **none**: "could not be distinguished"; give the interval; no direction language.
+Scope words: "held-out cycling conditions of one cell type in three laboratories"; "an untested temperature" only if H4 reaches N or S **and**
+the sentence carries the lab-confound clause; storage-transfer sentence only if H5 reaches N. A claim on ISU/SNL is "also holds / does not
+hold", with its own n; never pooled with Samsung. Relative-reduction intervals use fixed margins from training data; the pp and relative
+intervals are not corrected for the training-side margin being an estimate (stated). The judge's refutation sentence ("lower RMSE than every
+model") is carried by tier S on H1a, H1b, H1c; N on H1c supports only the tie wording (title 3).
+
+---
+
+## 7. Power and precision (simulation; assumptions, not Samsung numbers)
+
+Code `stats_power_sim.py`; results `power_sim_alpha0.025.json` (family level used here) and `power_sim_alpha0.05.json` (earlier run at 0.05;
+same conclusions, MDEs 0.4-1.1 points lower); MDE table `mde_table_alpha0.025.csv`. 2,000 simulations per cell, bootstrap B = 1,000 inside
+the simulation (10,000 in the real analysis), the exact decision rule of section 2.3, scale E = 1.
+
+**Assumptions.** (A1) Condition-level paired differences are iid across conditions: `d_c = mu + sigma_d Z + seed noise`. (A2) `sigma_d`
+from the correlation `rho` between the two arms' condition errors with SD(error)/E = 0.45 (measured: ISU 0.45, SNL 0.45 on training
+sides): `sigma_d = 0.45 sqrt(2(1-rho)) E`, i.e. 0.14 E (`rho` 0.95, variants of one model: H1a, H1b), 0.20 E (0.90), 0.32 E (0.75, different
+families: H1c). Measured anchor: ISU power law vs LightGBM have `rho` = 0.75 and SD(d)/E = 0.39 on training sides. The `rho` for PINN-KAN
+pairs is **not measured**; it can be estimated from inner-CV condition scores before the freeze as a power report only (no rule changes).
+(A3) Shape of Z: standardised ISU (power law - LightGBM) differences (skewness 1.06, excess kurtosis 2.7), plus normal and mirrored
+(left-skewed) versions. (A4) Seed noise: per-seed SD 0.05 E, S = 5. (A5) Margins `delta_S` = 0.02 E, `delta_N` = 0.10 E.
+
+**Minimum detectable relative improvement** (80% power, superiority at `delta_S`, skewed shape; power = P(tier S)):
+
+| n (conditions) | arms' error correlation | Holm-3 step 1 (a = 0.025/3) | Holm-4 step 1 (0.025/4) | last step (0.025) |
+|---|---|---|---|---|
+| 40 (Test B, ISU-like) | 0.95 (H1a, H1b) | **9.8%** | 10.3% | 9.1% |
+| 40 | 0.90 | 13.7% | 13.8% | 12.5% |
+| 40 | 0.75 (H1c) | **19.4%** | 19.8% | 17.5% |
+| 27 (design effect 1.5) | 0.95 / 0.90 / 0.75 | 12.5% / 15.5% / > 20% | 12.8% / 16.2% / > 20% | 10.2% / 13.9% / 19.9% |
+| 13 (Test C) | 0.95 / 0.90 / 0.75 | 16.8% / > 20% / > 20% | 17.4% / > 20% / > 20% | 14.3% / 19.0% / > 20% |
+
+In pp: with E = 5 pp, n = 40 detects 0.49 / 0.69 / 0.97 pp at `rho` 0.95 / 0.90 / 0.75; with E = 3 pp, 0.29 / 0.41 / 0.58 pp. Samsung's E is
+unknown, so quote the relative figure. Adding H6 to the family (Holm-4 instead of Holm-3) raises the MDE by about 0.1-0.5 relative points.
+Power at selected true effects, n = 40, Holm-3 step 1: mu = 0.08: 0.47 / 0.20 / 0.07; 0.10: 0.83 / 0.43 / 0.13; 0.15: 1.00 / 0.94 / 0.47; 0.20:
+1.00 / 1.00 / 0.84 (columns `rho` 0.95 / 0.90 / 0.75).
+
+**Non-inferiority power at true equality** (`mu = 0`, `delta_N = 0.10 E`, P(tier S or N)), n = 40: Holm-3 step 1: 0.96 / 0.68 / 0.24; last
+step 0.99 / 0.81 / 0.40. n = 27: 0.87 / 0.46 / 0.14. n = 13: 0.40 / 0.16 / 0.05. A tie with the best data-only learner (`rho` ~ 0.75) is
+therefore **resolved as N only about a quarter to two fifths of the time** at 10%; with `delta_N = 0.15` the normal-approximation power at
+Holm-3 step 1 is about 0.7 (not simulated). That is the price of a tight margin and the lead should know it: the tie outcome of the plan
+is likely to read "unresolved" if the data-only learners are a different model family from PINN-KAN.
+
+**Conjunction** (title 1 needs S on H1a, H1b, H1c), n = 40, equal true effect mu in all three, contrasts correlated 0.5, Holm, Wilcoxon only
+(BCa omitted, so slightly optimistic): mu = 0.08: 0.45 (`rho` 0.95) / 0.18 (0.90); 0.10: 0.79 / 0.39; 0.15: 1.00 / 0.92.
+
+**Plain reading.** The Samsung test-B design (40 conditions) can show that PINN-KAN beats the lambda = 0 network and the best alternative
+stress map if the true gain is about 10% (same-model contrasts); it can show superiority over a different-family data-only learner only if
+the true gain is about 19% (roughly 1 pp at E = 5 pp). The P3 pilots found the best data-only learner already at the replicate reference
+on ISU (and on SNL by the judge's definition), so a 19% gain over it is unlikely; the plan should expect the N or "unresolved" tier on H1c
+and title 3, and Shlok should be told so now rather than after the run. Test C (n = 13) cannot resolve anything below about 17% and is a
+descriptive check. The power figures do not include fold-level dependence beyond the n = 27 scenario, and `rho` for PINN-KAN pairs is an
+assumption.
+
+---
+
+## 8. Reported limits of this ruling
+1. `rho`, seed SD and error shape for PINN-KAN pairs are assumptions; real values come from inner-CV condition scores, usable only for a power
+   statement, not for changing rules.
+2. The margins 2% and 10% are judgement; they are fixed now so that outcomes cannot move them. The sensitivity rows show the dependence.
+3. SNL has 23 conditions, 20 with replicates; claims there are exploratory in strength (MDE > 20% for `rho` 0.75).
+4. The `R_WARP` additive/multiplicative choice and the 0.25-4 clip are conventions; both forms are always reported.
+5. The simulation uses B = 1,000 and 2,000 draws per cell (Monte Carlo SE of a power value about 0.01).
+6. No Samsung number appears; the headroom quantities for Samsung (`E/R_LOO`, `E/R_WARP`) are to be computed on Samsung training sides after
+   parsing, as descriptive entries in the PREREG section 11 slot; they decide nothing.
+
+## 9. Edits required in PREREG_DRAFT.md (the experiment-designer applies them; this file does not edit it)
+1. Section 9.3 (margin delta): replace by section 2 of this ruling; delete 9.5 (feasibility check) and OPEN-4.
+2. Section 9.4: replace the test with the criterion of section 2.3 (Wilcoxon AND BCa bound at the Holm step level); fix the inconsistency
+   in the draft ("mean >= delta" plus a bootstrap interval excluding 0): the bound must exceed the margin.
+3. Section 9.9 and section 11 (rows 3, 4): H1c is hierarchical (N then S); P3 slot [a] becomes a descriptive entry; row 4 "[a] preregisters
+   non-inferiority" is deleted; D007 is superseded by the log row.
+4. Section 9.6: H2 order A, C, B with margins `delta_S`/`delta_N`; A gatekept by the family.
+5. Section 3 / 9 family: four hypotheses (H1a, H1b, H1c, H6), level 0.025 one-sided; OPEN-5 closed.
+6. Section 8: add "condition score = mean over seeds"; one search seed limitation; no best seed.
+7. Section 9.10 and section 4: add the lab-stratified bootstrap, the by-lab/by-stage means, the log-ratio row and the two-stage bootstrap.
+8. New section: write `margins.json` (E^c, delta_S, delta_N, hash) after tuning and before final refits are applied to test conditions;
+   test-fold guard line in every run.
+9. Section 6/14: report `E/R_LOO`, `E/R_WARP` in Table 1; rename "replicate floor" to "replicate spread" in all prose.
+10. Add the power paragraph (section 7 here) and the abstract wording rules (section 6 here) to the claim contract.
+
+Sign-off: statistician signs PREREG sections 6-9 and 16 **conditional on edits 1-8**. Not signed: the sensitivity of power to `rho` (no data).
+
+## 10. Reproduce
+`.venv/Scripts/python.exe -P code/prereg/stats_warp_calibration.py <ROOT>` (training sides, about 5 min);
+`... stats_power_sim.py <ROOT> 2000 1000 0.025` (about 10 min, 1 thread); `... stats_mde_table.py <ROOT> 0.025`. Outputs:
+`runs/prereg/stats_ruling/{warp_isu_W4,warp_snl_W100,cond_isu_W4,cond_snl_W100,power_sim_alpha0.025,power_sim_alpha0.05,mde_table_*}.*`.
+
+# P3 result: headroom on training folds only (2026-11-04/05)
+
+Judge rule (D010 section 7, P3): inner-CV error of the best flexible learner (tuned GP-ARD or LightGBM) divided by the
+replicate floor. **> 1.2: superiority winnable. <= 1.2: the primary contrast (iii) on that dataset is preregistered as
+non-inferiority.**
+
+## Verdict
+| Dataset (primary window) | ratio, judge-literal (fold mean) | pooled-condition 95 % CI (cluster bootstrap, 10,000) | like-for-like (mean/mean) | verdict |
+|---|---|---|---|---|
+| ISU-ILCC, W = 4 weeks | **0.90** (folds 0.82-1.04) | 0.90 [0.78, 1.08] | 0.83 | **non-inferiority** |
+| SNL, W = 100 cycles | **1.13** (folds 0.96-1.34; two folds above 1.2) | 1.11 [0.81, 1.62] | 1.04 | **non-inferiority** (weak: CI straddles 1.2) |
+
+Sensitivity (same code, other window): ISU W = 6 weeks 0.79 [0.68, 0.98]; SNL W = 200 cycles 0.93 [0.65, 1.35].
+Both datasets give non-inferiority under every window run. The data cannot support a superiority claim over the best
+data-only learner on ISU; on SNL the primary-window point estimate (1.13) is close enough to 1.2, and the interval wide
+enough, that superiority is not excluded by this pilot, but the preregistered rule says non-inferiority.
+**Preregister contrast (iii) as non-inferiority on both, with the margin of the next section.**
+
+## Numbers (pp = percentage points of retention; condition-averaged cell RMSE; mean over 5 outer training folds)
+| | ISU W4 | ISU W6 | SNL W100 | SNL W200 |
+|---|---|---|---|---|
+| persistence (r at window end) | 13.22 | 12.54 | 10.83 | 7.71 |
+| per-cell power law, tuned exponent bounds | 6.67 | 6.30 | 4.67 | 3.72 |
+| GP-ARD, tuned | 5.24 | 5.04 | 3.33 | 2.93 |
+| LightGBM, tuned | 5.21 | 4.87 | 2.97 | 2.54 |
+| best flexible (per fold min of GP, LGBM) | 5.13 | 4.86 | 2.97 | 2.54 |
+| replicate floor, median over conditions (judge margin) | 5.75 | 6.17 | 2.62 | 2.74 |
+| replicate floor, mean over conditions | 6.19 | 6.69 | 2.85 | 2.99 |
+
+Ratios to the median floor: power law 1.17 / 1.03 / 1.78 / 1.36; GP 0.92 / 0.82 / 1.27 / 1.07; LightGBM 0.91 / 0.79 / 1.13 / 0.93.
+Best learner per fold: LightGBM in 3 of 5 folds (ISU W4), 5 of 5 (SNL). Re-scoring the selected configurations on a second
+inner partition (selection-bias check) moves the ratio by 0.00 / +0.06 / -0.01 / +0.03 (ISU W4, ISU W6, SNL W100, SNL W200).
+
+**Margin to carry forward (rule of section 6, computed on training conditions only):** replicate floor, median over
+training conditions, mean of the five outer training folds: **ISU W4 5.75 pp** (folds 5.10-6.09; 48-50 multi-replicate
+conditions per fold), **SNL W100 2.62 pp** (folds 2.39-2.76; 15-17 conditions per fold). These are pilot values; the
+confirmatory margin must be recomputed with the frozen window and forecast set.
+
+## Design as run (fixed in code before results; pilot choices marked P)
+- **Splits** (committed first, `splits:` commit 16a9da4): `runs/splits/{isu,snl}_testB.json` (held-out conditions, 5 folds) and
+  `{isu,snl}_testA.json` (held-out replicate cells, 4 folds); seeds ISU 20261104 (B) / 20261105 (A), SNL 20261105 (B) / 20261106 (A);
+  README in that folder. ISU: 63 conditions (folds of 12-13); k-means (13 clusters on standardised charge C, discharge C, DoD)
+  gives stress-space neighbourhoods whose members are dealt to different folds. SNL: 23 chemistry x temperature x SOC window
+  x charge C x discharge C condition groups (unique tuples in `snl_cells.csv`, 1-4 cells each, 3 of them single-cell), folds
+  of 4-5; blocks of 5 stress neighbours inside a chemistry dealt to different folds. Chemistries are pooled in the split and
+  in the learners (chemistry one-hot) because 7-8 conditions per chemistry cannot support 5 outer x 3 inner folds.
+  P: 5 outer folds for ISU (judge, section 6) instead of the proposal's 7.
+- **Task** (proposal section 6 wording; judge: ISU/SNL are the Test B analogue): inputs stress vector, Q0 (retention is
+  relative to the cell's first check-up), check-ups inside window W; output retention at every later check-up up to and
+  including the first one below 70 %; per-cell RMSE (pp), mean within condition, then over conditions. P: ISU W = 4 weeks
+  (primary), 6 (sensitivity); SNL check-ups = every 25th cycle (1, 26, 51, ...), W = 100 cycles (primary), 200 (sensitivity).
+  `runs/prereg/` did not exist, so these values are pilot choices, not preregistered. Cells with no forecast point (life ends
+  inside the window) are excluded and counted: ISU 7 of 251 (W4), 13 of 251 (W6); SNL none. SNL rows with capacity <= 0.05 Ah
+  dropped (P1 caveat).
+- **Replicate floor:** for each cell, RMSE of the mean trajectory of the other replicates of its condition (linear
+  interpolation in time; replicates not reaching that time skipped), evaluated at the cell's forecast times; mean over the
+  condition's replicates; median over the training conditions with >= 2 replicates (judge, section 6). Inside each outer
+  training set only.
+- **Learners, inner grouped CV by condition (3 folds, one partition shared by all learners), equal tuning budget = 20 Optuna
+  TPE trials per learner per outer fold** (search seed 7*seed+fold with seed 1; one search seed only). GP-ARD (scikit-learn; ARD
+  Matern 1.5/2.5 or RBF + white noise; tuned: kernel family, rows per cell 3/4/6, linear or log time, full or minimal feature
+  set, noise lower bound; L-BFGS-B capped at 60 iterations). LightGBM (n_estimators, learning rate, leaves, min child
+  samples, subsample, colsample, L2, optional monotone constraint in time, linear or log time; rows weighted so every cell counts
+  once). Per-cell power law r = 1 - a t^b fitted to the window (a closed form, b on a 41-point grid inside tuned bounds),
+  extrapolated. Persistence as reference. Features: stress vector, window summary (r at window end, r at first check-up,
+  window slope, curvature, window end time), time since window end. Target: drop since window end. CPU only, 1 thread per
+  process; four runs took about 4,600 CPU-s (ISU W4 2,370 s, W6 1,800 s, SNL 200-215 s each); memory not measured (frames of
+  at most 100k rows).
+- **Selection:** best flexible learner per outer fold = lower inner-CV error of GP and LightGBM at its best trial; ratio per
+  fold, then averaged. Pooled-condition CI: cluster bootstrap over training conditions (condition error = mean over the outer
+  folds in which it was a training condition; the floor per condition does not depend on the training set). The bootstrap
+  conditions on the fixed splits and one search seed; folds overlap in training conditions, so fold ratios are not independent.
+
+## Cautions for the paper and the preregistration
+1. **The replicate floor is not a lower bound.** The learners see the held-out cell's own window, the floor does not, so ratios
+   below 1 occur (ISU 0.8-0.9). The 1.2 rule therefore gates "is there anything left to win over a tuned data-only learner";
+   the answer is no on ISU and not clearly on SNL.
+2. The judge's floor is a median over conditions; the learner error is a mean over conditions (primary endpoint). Judge-literal
+   and like-for-like ratios are both shown; the verdict is the same on every row (1.13 vs 1.04 on SNL W100).
+3. Mean errors are 5.1 pp (ISU) and 3.0 pp (SNL): this is forecasting, not estimation. ISU replicate spread alone is about 5.8 pp.
+4. SNL W100 is the only row near the threshold: folds 1 and 2 give 1.29 and 1.34; pooled CI [0.81, 1.62]. A superiority claim
+   there would need the confirmatory run, not this pilot. Tuned optima at search-space edges were not checked.
+5. One search seed; seed spread of the ratio not estimated (5 seeds belong to the confirmatory runs).
+6. ISU and SNL have no storage arm; this pilot says nothing about Samsung.
+
+## Test-fold guard (required line)
+**No outer test fold (the conditions and cells listed in `runs/splits/*_testB.json`, `folds[f].test_cells`) was read,
+predicted or scored.** Enforcement in `code/pilots/p3_headroom.py`, `main()`: for each outer fold the frame is filtered with
+`train = full[~full.cell.isin(test_cells)]` before any feature, floor or model code runs; assertions check that no train cell
+or condition belongs to the fold's test cells/conditions; every later function (`build_cells`, `replicate_floor`, `tune`)
+receives only objects derived from `train`; no model is refit or applied outside inner CV (the verdict is inner-CV only);
+after the loop the split-file hash is recomputed and asserted unchanged. The per-run audit in `results.json` -> `audit`
+records `intersection_within_fold: 0`, `test_fold_scored: false` and the split SHA-256. Limit of the enforcement: the processed
+CSV is read whole into memory before the filter (the test rows are dropped, not inspected). Test A splits were fixed but not used.
+
+## Files
+`code/pilots/p3_headroom.py` (sha256 cda0bd3f...ca5966 at run time), `code/pilots/p3_make_splits.py`; per run
+`runs/pilot_P3/<ds>_W<w>/{config.json,results.json,condition_level.csv}`; logs `log_*.txt`. Reproduce:
+`CUDA_VISIBLE_DEVICES= .venv/Scripts/python.exe -P code/pilots/p3_headroom.py . isu 4 20 1` (then `snl 100`, `isu 6`, `snl 200`).
+`config.json` records the HEAD commit at launch (61bb730); the code file was committed afterwards with unchanged content
+(sha above); the commit of this result carries the prefix "P3:".
+
+## Errata (2026-11-05, from GATE_pilots_audit.md)
+
+Original text above is unchanged.
+
+1. **Sensitivity ratios and intervals (audit N5).** Original (line after the verdict table): "ISU W = 6 weeks 0.79 [0.68, 0.98]; SNL W = 200 cycles 0.93 [0.65, 1.35]." The interval in each case belongs to the pooled-condition ratio, not to the fold-mean ratio printed beside it, and the endpoints are rounded wrongly. Corrected:
+   - ISU W6: fold-mean ratio **0.79** (judge-literal primary, 0.792); pooled-condition ratio **0.78**, 95 % CI **[0.67, 0.97]** (60 conditions).
+   - SNL W200: fold-mean ratio **0.93** (0.925); pooled-condition ratio **0.92**, 95 % CI **[0.64, 1.35]** (20 conditions).
+
+   Evidence: `runs/pilot_P3/isu_W6/results.json` and `runs/pilot_P3/snl_W200/results.json`, fields `summary.ratio_primary` and `summary.pooled_condition_level` (cluster bootstrap by condition, 10,000 draws).
+
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command "Get-Content 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\debates\\D016_roles\\01_proposal.md' -TotalCount 190" in C:\Users\Shlok\Downloads\PINN KAN battery paper\debates\codex_panel
+ succeeded in 246ms:
+# D016 proposal: give the PINN and the KAN each a testable role (2026-11-05)
+
+Role: proposer (method-architect). Specification and predictions only; no result is claimed and no Samsung retention value was opened.
+Reading (full text unless stated): CONTRACT.md; D015 red team; DECISIONS D001-D015; PREREG_v3 sections 1-11a, 12-14, 16 (sections 3-4 and 17-19 skimmed by heading); D011 judge section 3 and headings; P3, P4, P5 RESULT.md; STATS_RULING sections 0-7; TYPE1_SIGNFLIP; samsung50e_dataset_paper.md; PRIORART_SUMMARY.md; code/README.md.
+One new measurement, from identifiers only (`data/raw/samsung50e_meta/experiments_meta.csv`, no capacity file): designed throughput of the 40 cycling conditions.
+Ledger: `tools/ledger.py` does not exist in this project (D015 red team says the same); no ledger rows added. The orchestrator must write the D016 row by hand.
+
+---
+
+## 0. Verdict in six lines
+
+1. F1 is correct for the design as frozen: the closed-form hard ODE is the same law as the PINN (D013 (a)), so the soft residual can only help where the law is wrong; the only pilot (P5) gives a 4 % median gain (16 % with whole-axis collocation) against an 80 %-power detectable gain of 9-22 % at n = 40. The KAN contrast (H1b) is unwinnable for the same reason (P4: forecast gap 0.0-0.1 pp).
+2. The fault is the regime, not the models: at full training data and a 4-check-up window, tuned data-only learners already sit at the replicate spread (P3: ISU 0.90 [0.78, 1.08]; SNL 1.13 [0.81, 1.62]). A physics prior cannot show value where nothing is left to win. It can where data are scarce.
+3. Recommended redesign ("Design R", section 5): keep the data, the code base and the exact sign test, and move the confirmatory question to **data efficiency**: how many ageing conditions (m) and how many early check-ups (k) are needed. The PINN's role is a **prior that pays when data are scarce** (physics-informed family vs best data-only learner, fixed-sequence over a pre-ordered grid of (m, k) cells). The KAN's role is a **readable, fold-stable stress law** obtained by symbolic extraction, with an accuracy tie accepted and pre-stated, and not a race against GAMs.
+4. What stays honest: the soft residual versus the hard ODE remains a secondary qualifier with a pre-written sentence for every outcome, including "tie". Nothing in the redesign makes the soft residual necessary; section 3, option 4 says what it can and cannot do.
+5. Closed outcome table (section 6): P role (win / none / reverse) x K role (readable / accurate-not-readable / not shown or worse) gives six titles and fixed wording; qualifiers (A10, hard ODE, storage transfer) change one sentence by tier, never the title; no row says "put to Shlok".
+6. Cost: about 2-3 days of code (subset selector, k = 0 and k = 2 windows, symbolic extraction, fixed-sequence assembly) plus a training-side pilot on ISU; extra CPU is of the order of the Test B core run (arithmetic in section 5.7). Everything in the D015 freeze conditions (A10 verified, lab confound on Test B including A10, Holm ordering, README alignment) still applies.
+
+---
+
+## 1. Evidence that sizes every option (what the files say)
+
+| # | Fact | Pointer |
+|---|---|---|
+| E1 | Best tuned data-only learner / replicate spread = 0.90 [0.78, 1.08] (ISU, W = 4 wk), 1.13 [0.81, 1.62] (SNL, W = 100 cycles); LightGBM best in 3 of 5 (ISU) and 5 of 5 (SNL) folds. At full data and a full window there is little headroom over data-only learners. Samsung is blinded; no Samsung number exists. | P3 RESULT, verdict table |
+| E2 | KAN [3,h,1] vs additive GAM on synthetic G2: nRMSE 0.081 vs 0.103 (median), forecast RMSE gap 0.0-0.1 pp, GAM class floor 0.05-0.07; hidden width at the grid edge in 5 of 5 draws. | P4 RESULT |
+| E3 | Soft PINN vs hard ODE on synthetic G1 (strong misspecification): judge-spec collocation median ratio 0.96 (4 of 5 draws, one reversal +0.40 pp); whole-axis collocation 0.84 (5 of 5). Lambda_res = 10 was worse than hard in every draw. Attribution not clean (F and z_c are extra capacity). | P5 RESULT, items 1-4 |
+| E4 | Exact sign test, n = 40, Holm step 1: 80 %-power gain about 9-12 % (rho 0.95), 12-16 % (0.90), 17-22 % (0.75); non-inferiority at true equality (margin 10 %) 0.71-0.95 / 0.40-0.72 / 0.16-0.32; n = 13 cannot support anything below about 20 %; n = 27 (design effect 1.5) 12.5 % / 15.5 % / above 20 % (Wilcoxon-based). rho for PINN-KAN pairs is an assumption. | TYPE1_SIGNFLIP "Power"; STATS_RULING 7 |
+| E5 | Design: 279 cells; 147 cycling cells in 40 conditions; 132 storage cells in 19 conditions, only cells 01-03 (66) have intermediate check-ups; Test B = 5 folds of 8 held-out conditions, so 32 training conditions per fold; all 35 C cells are lab INT, 45 C is mostly HM. | PREREG 3.1, 4; dataset note |
+| E6 | Check-up cadence: cycling CU at weeks 1, 2, 3 then 5, 7, 9, 13, ...; storage CU at about weeks 5, 9, 17, 25 then every 8 weeks. Window k_cyc = round(n_med / 3), expected 3-5. | dataset note Fig. 4; PREREG 5 |
+| E7 | **Designed throughput (new, identifiers only; assumes charge time DoD/C_ch plus discharge time DoD/C_dch, no rest, no CV phase, no pauses):** the 40 cycling conditions span 23 to 112 equivalent full cycles per week, a factor of about 5; none is a low-rate, calendar-dominated condition. The calendar term therefore enters every cycling cell, but the cycling term is large in all of them; no stratum exists where storage knowledge dominates. | `experiments_meta.csv`, arithmetic in section 7 |
+| E8 | In a cycling cell calendar and cyclic terms are collinear (E_n proportional to t_n at constant rate); only storage cells identify the split. | D015 F9 |
+
+Consequence: wherever the full training set and a full window are used, the expected differences are inside the minimum detectable gain. Every option below is judged by whether it moves to a regime where a gain above the MDE is plausible, or accepts a tie and says so in advance.
+
+---
+
+## 2. Why the current design produces F1 (diagnosis, for the judge)
+
+- PINN role "integrate the law": removed by the closed form (D013 (a)); A2 is the exact solution of the PINN's own law.
+- PINN role "regularise F where data are absent" (collocation, twins): F is a surrogate of the law; with the law fixed, collocation adds no information about the cell, only consistency with the law's own stress map. It cannot beat the law-integrator unless the law is wrong.
+- KAN role "accuracy": a hidden-layer KAN [5,h,1] with h up to 8 on 32 training conditions is a tuned spline MLP; accuracy over GAM/MLP is E2-sized.
+- KAN role "interpretability": the KAN literature's selling point; the frozen design uses it only as partial-dependence plots of a non-additive map (D015 F1).
+- Comparators: H1a (A9) is a low bar (F5), H6 is a win over a model its authors call inadequate (F6), H1c is gated and probably unwinnable (E1).
+
+So the redesign changes the regime (scarce data) and the KAN claim (readable law, tie accepted), and demotes everything that cannot be won to a qualifier with fixed wording.
+
+---
+
+## 3. Options
+
+Common conventions: unit = held-out condition; primary test = exact one-sided sign test on L_c = ln(S_comp,c / S_A,c) with margins ln 1.02 (tier S) and -ln 1.10 (tier N), as D012. "Chance" is a qualitative judgement from E1-E8, not a probability; no pilot on Samsung exists.
+
+### Option 1. Knowledge transfer across arms (storage <-> cycling)
+
+- **Hypothesis H-T1.** Training jointly on 132 storage cells lowers the forecast error of held-out cycling conditions relative to cycling-only training (A1 vs A13), because the shared calendar term r_cal(T, SOC) is identified by storage cells. Dose-response sub-hypothesis: the gain grows as cycling conditions become scarce (m = 8 vs 32) and with the calendar share. Converse H-T2: cycling cells lower the forecast error of held-out storage conditions (A1 vs A14, S2, n = 19).
+- **Endpoint.** Condition-level retention RMSE (pp), log ratio. Dose-response: Spearman correlation between L_c and a **label-free** design covariate (designed EFC per week, E7), n = 40.
+- **Test.** Exact sign test A13 vs A1, tier S/N, n = 40, level 0.025. Dose-response: Fisher-z approximation, 80 % power for |rho_s| about 0.43 at n = 40 (textbook value, not simulated). H-T2: n = 19, sign test (15 positives needed at 0.025); no tabulated MDE below about 17 % at n = 13 and above 12.5 % at n = 27 suggests above 15 %.
+- **Power.** Same-model contrast (rho about 0.95): MDE about 9-12 % at n = 40. Any stratified subset (for example the 20 lowest-throughput conditions) has n = 20, not tabulated; interpolating the n = 13 and n = 27 columns puts the 80 % MDE above 13 % even at rho 0.95 (to be simulated by the statistician).
+- **Risk.** (i) The calendar share of fade is probably modest in every cycling condition (E7: throughput 23-112 EFC/week, factor 5 only), so the transfer gain is probably below 9-12 %. (ii) Storage cells also feed the backbone tournament; the gain may be a backbone effect, not a calendar-term effect. (iii) The carrier is the shared law, which A2 has too; the soft residual is not the carrier. (iv) Temperature is lab-aliased (35 C INT, 45 C HM); storage cells at 10 C are all SIE. (v) H-T2 is expected null: storage conditions are measured directly.
+- **Chance of a demonstrable effect.** Low to moderate for the main effect at n = 40; moderate for the scarcity version (m = 8), where the cycling-only model has too few conditions to separate the calendar part.
+- **Title and claim if it carries the paper.** "Calendar-ageing tests as informative priors for cycling forecasts: ..." Claim: "joint training lowered the typical held-out cycling error by X % (interval) and the gain was larger where cycling conditions were scarce."
+- **Verdict.** Keep as a **qualifier** (Q-T) at two grid cells and as a figure panel; not strong enough alone.
+
+### Option 2. Data-poor regimes (learning curves)
+
+Two axes, both available from the data and the code base.
+
+**2a. Early check-ups k (window length).** k in {0, 2, k_full}, k_full = k_cyc by the frozen rule. k = 0 is the window-information reference demanded by D015 F7 (condition-only forecast, no cell information); k = 1 descriptive.
+**2b. Ageing tests m (number of training cycling conditions per fold).** m in {8, 16, 32}; the 8 held-out conditions of each fold are identical for all m, so contrasts are paired across the grid. Training subsets are a deterministic max-min (space-filling) selection among the fold's 32 training conditions in standardised stress space (identifier-only, label-free, reproducible; the logic of the dataset's own conditioned-Latin-hypercube and pi-OED designs); random subsets are a sensitivity row. All storage cells stay in training in the base grid.
+
+- **Hypothesis H-P (the PINN as a prior).** In the most data-poor cell the physics-informed family (law + F + residual, stress map chosen per fold by inner CV among A1 KAN, A3 parametric, A4 additive GAM) has a lower median condition error than the best data-only learner (inner-CV best of A9, A11, A12 with physics-motivated features, see fairness below). Prediction: the advantage is largest at (m = 8, k = 2) and shrinks as m and k grow (E1 says it is about nil at (32, k_full)).
+- **Endpoint.** Condition retention RMSE (pp) at each cell; primary quantity L_c per cell.
+- **Test.** Fixed-sequence testing at 0.025 per step (no multiplicity cost): g1 = (8, 2), g2 = (16, 2), g3 = (32, 2), g4 = (32, k_full); stop at the first step that fails. Tier S one-sided; reverse tier S evaluated at g1 regardless (safety finding). Result = number of consecutive passes J (0 to 4) and the sign at g1.
+- **Power.** Different model families, rho about 0.75: 80 %-power gain 17-22 % at n = 40 (E4). That is large for E1's regime but small for a regime where a learner with 8 training conditions in a 5-D stress space must extrapolate; whether the true gain at g1 reaches it is **not measured** (Samsung blinded). The pre-freeze pilot P6 (section 5.6) measures the direction on ISU training sides.
+- **Risk.** (i) At m = 8 every model may collapse to the same near-constant forecast (ratios near 1). (ii) Inner CV with 8 conditions is noisy (2 inner folds; equal for all arms). (iii) Straw-man risk: a reviewer will call a data-only learner without Arrhenius-type features a weak baseline; fairness condition: A11/A12 get a tuned choice between raw stresses and physics-motivated features (1/T, log C-rate, log DoD, SOC and SOC squared, the A3 abscissae) and the data-only family includes A9. (iv) Subsampling conditions changes the hull; report lab and temperature composition per cell. (v) "Physics beats data-only at small n" is a known pattern; the novelty is the quantified crossover on a designed dataset with a semi-empirical reference, not the pattern.
+- **Chance.** Moderate for g1 (textbook regime, unmeasured here); low for g4 (E1).
+- **Title and claim.** P+: "Physics-informed neural networks ... forecast lithium-ion capacity fade from few ageing tests and early check-ups"; claim: "with m = 8 training conditions and two check-ups the typical held-out condition error was X % lower than the best data-driven learner (interval), and the advantage extended down to cell g_J."
+- **Verdict.** Adopt as the PINN's primary role.
+
+### Option 3. KAN as readable, physically checkable stress laws
+
+- **Hypotheses.** H-K1 accuracy tie: the closed-form law extracted from the trained KAN (A15) is non-inferior to the unsimplified KAN (A1) within 10 %. H-K2 stability: the selected function family per stress input is the same across outer folds. H-K3 consistency: the direction of each extracted stress effect agrees with the sign of the corresponding exponent in the dataset authors' (verified) model A10, and the effective activation energy of the calendar term is reported with its fold spread against the authors' own fit and against **verified** literature only. Optional H-K4: the extracted law is more accurate than A10 (superiority), as a qualifier.
+- **Procedure (A15, to be specified in full by method-architect after the opponent round).** Per outer fold, on training conditions only: tuned KAN with hidden width limited to {1, 2}; sparsify (existing L1 plus entropy penalty, sparsity level from the tuned grid); prune edges below a pre-set importance; fit each surviving first-layer edge by a **pre-registered library** (zero, linear, power, log, exponential/Arrhenius in 1/T, quadratic, hinge) with a fixed BIC rule and a complexity cap; refit the free coefficients end to end under the same loss. The extraction rule is frozen before any outer prediction.
+- **Endpoints.** (K-acc) sign tests of A15 vs A1 at +-ln 1.10 (TOST) at g4. (K-stab) number of the 5 stress inputs whose family label (pruned counts as a label) is identical in at least 4 of 5 folds; context: the same count on the NC-2 permuted-stress fits. (K-con) number of inputs whose extracted direction matches the sign of A10's exponent; needs FB-2 closed. (Q-A10) A15 vs A10 tier. Thresholds "4 of 5 inputs" are the proposer's design choices, flagged for the statistician; they are not derived.
+- **Power.** TOST at n = 40 with same-model rho about 0.95: 0.71-0.95 at Holm step 1 (E4), higher at 0.025. K-stab and K-con are counts over 5 inputs and 5 folds: no formal power; they are pass/fail descriptors with pre-stated rules. This is the honest limit of interpretability claims.
+- **Risk.** (i) A15 loses accuracy through the width cap or the library (then the KAN role is "not shown"). (ii) With 3 storage temperatures (10 C all SIE, 45 C all HM) E_a is lab-confounded; the comparison is only to A10's fit on the same data, and a lab-indicator row is mandatory. (iii) The 35 C level exists in cycling only. (iv) The BIC library can pick different families fold to fold when the edge is nearly linear (stability fails for a benign reason; report "equivalent over the hull" as a second label, pre-defined as max difference below 5 % of the edge range, a proposer's choice). (v) Reviewers may call 5 inputs a thin test of "interpretability"; the claim is worded as "stable and consistent", not "discovered physics".
+- **Chance.** Accuracy tie: moderate to high. Stability: moderate, unknown. Consistency with A10's signs: moderate (monotone effects expected, but non-monotone SOC-window effects may appear). Superiority over A10 (K-D): unknown.
+- **Title and claim.** K+: "... with readable Kolmogorov-Arnold stress laws ..."; claim: "a closed-form law extracted from the KAN reached the accuracy of the full KAN within 10 % (interval), the same functional family was selected in k of 5 folds for n of 5 inputs, and the directions agreed with the dataset authors' model for n of 5 inputs."
+- **Verdict.** Adopt as the KAN's primary role. It converts "KAN = spline MLP" into a deliverable (a formula plus its stability), with the tie pre-stated.
+
+### Option 4. What the soft residual can do that the closed-form ODE cannot (and an honest statement if nothing)
+
+Honest statement first. With a fixed law and a closed-form (or RK4) integral, the hard ODE uses every piece of information the law carries. The soft residual adds **no** information about the system; it can only (a) relax the law where the law is wrong (F can bend, lambda_res tunes how much), (b) interpolate between the law-driven limit (lambda_res large, A2-like) and the data-driven limit (lambda_res small, A9-like), (c) expose where the law is violated (residual map), and (d) accommodate laws without a closed form, which RK4 also handles. Anything beyond (a)-(c) would be a claim without a mechanism. If the data show a tie with the better of A2 and A9 everywhere, the PINN's contribution is robustness (not having to choose), and the paper must say so.
+
+Testable forms:
+- **4a. Regime adaptivity ("no regret").** Using the same (m, k) grid: A1 is non-inferior (tier N) to the inner-CV best of {A2 hard law, A9 data-only} at each cell, and strictly better (tier S) at any cell where the two limits cross. Test: sign tests per cell, N then S; no extra data. Power: A1 vs A2 and A1 vs A9 are near-same-model contrasts (rho 0.90-0.95): NI at equality 0.40-0.95 (E4); the S tier at a crossing cell needs 9-16 %. Chance: NI moderate; S at a crossing cell low (E3: 4-16 %). Wording: "tracked the better of ... within 10 %" or "was not shown necessary".
+- **4b. Controlled misspecification (backbone dose-response).** Fix the state factor h to each of {constant, self-limiting, accelerating} for A1 and A2 (existing `backbone` config), order the three by the hard ODE's training-side inner-CV error (training data only, computed before any outer scoring), and test A1_b vs A2_b in descending dose, fixed sequence. Chance: low to moderate (E3 is the only evidence). Risk: reviewers read a deliberately wrong law as a straw man; mitigated because the three backbones are the tournament's own candidates, but the result is a robustness statement, not an accuracy claim. Adopt only as an appendix row.
+- **4c. Residual map as a law-violation detector.** Does |R| from A1 (training points) rank-correlate (n = 40) with the hard ODE's held-out error by condition, and does it beat the hard ODE's own training misfit mapped over stress as a predictor? Expected: equal to training misfit, i.e. no PINN-specific value. Chance: low. Descriptive figure only.
+- **4d. Collocation where data are absent / calendar twins.** No mechanism beyond (a); keep as a mechanism description, not a test.
+- **Verdict.** Adopt 4a as the qualifier Q-H (H2 restated on the grid, fixed wording), keep 4b-4c as appendix rows, state in the Discussion that the soft residual is not shown necessary unless Q-H says otherwise. This is the honest answer to F1 for the residual itself.
+
+### Option 5. Other ideas
+
+- **5a. k = 0 window-information reference (adopted).** Answers D015 F7: if the window adds nothing at k_full, "forecast from first check-ups" is empty. It is free for the law-based arms (no window inversion).
+- **5b. Design-stage reading of k = 0 and m (adopted as the framing).** "Predict a planned ageing condition from the tests already run" is what an ageing-test planner does; it ties the study to the dataset's own subject (optimal experimental design).
+- **5c. KAN-discovered term added to A10 (A10+).** Test A10+ vs A10 (same family, rho high, MDE about 10 %). Not adopted: it needs a second model-building step and A10 is still unverified (FB-2); possible follow-up.
+- **5d. More condition-level units from further cycling datasets (for example BatteryLife).** Would lower the MDE (n = 126 pooled units from Samsung, ISU, SNL is already available but ISU/SNL are "not blind"). Not adopted: data volume (31 GB), CONTRACT preference and one-week limit; ISU and SNL are used as "also holds" replications of the same grid.
+- **5e. Pooled units, cycling plus storage.** One sign test over 40 + 19 = 59 conditions of "held-out ageing condition". Heterogeneous estimand; secondary only.
+- **5f. Hierarchical prior for the per-cell offset from replicate structure.** Would help law-based arms at k <= 2 but adds a tuned dimension. Not adopted.
+
+### Comparison
+
+| Option | Role it gives | Realistic chance at n = 40 | Meaning for engineers | Closes F1? |
+|---|---|---|---|---|
+| 1 transfer | shared law as carrier | low-moderate | fewer cycling tests via storage tests | partly (carrier is the law, not the residual) |
+| 2 data-poor | PINN as prior | moderate at g1, low at g4 | how many tests/check-ups are needed | yes for "physics-informed", not for "soft residual" |
+| 3 readable KAN | KAN as symbolic law, tie accepted | tie: moderate-high; stability: moderate | a formula to check and reuse | yes for the KAN, if worded as readable/stable |
+| 4 residual | relaxation, adaptivity | low-moderate | robustness to a wrong law | honest "not shown" if null |
+| 5a/5b | window information, design-stage framing | n/a (reference) | meaning of "early forecast" | supports 2 |
+
+---
+
+## 4. Contract questions (CONTRACT section 3, items 2-5)
+
+**Why this and not each alternative.**
+- Keep PREREG_v3 and add an expected-outcome clause: loses, because F1 is the expected outcome itself and the supervisor's test ("does each named component earn its place") fails by design.
+- Option 1 alone: loses on E7 (no calendar-dominated stratum) and because the carrier is the law, which A2 shares.
+- Option 3 alone (KAN-only paper): loses the PINN, which the author wants, and the tie has no accuracy headline.
+- Option 4b alone (misspecification): loses as a straw man and rests on E3 only.
+- Drop PINN/KAN from the title (Codex's earlier identifiability-first idea, D005): already rejected by the author's brief.
+- Option 5d (more datasets): loses on volume and time.
+
+**Is this the best possible, or is there room?** Design R is the best option I can find inside "same data, CPU, one week". Room: a measured effect at g1 on Samsung is unknown; the training-side ISU pilot (P6) is the only cheap evidence before the freeze, and it is cyclic-only.
+
+**What a JES reviewer would still hit.** One cell type (NCA-type chemistry is not stated in the data paper note, so no chemistry claim); constant-stress protocols, no dynamic loads; capacity only (no EIS/DVA); lab/temperature aliasing; learning curves on random/space-filling subsets are a standard device; "interpretable" claims rest on 5 inputs; the 4-8-dataset breadth of the strongest JES PINN/KAN papers is not matched (ISU, SNL as replications).
+
+**What would make a reviewer reject.** (1) A data-only baseline without physics-motivated features (fixed by the fairness condition); (2) a learning curve whose small-m cells are chosen after seeing results (fixed: grid and order frozen); (3) a symbolic-law claim without a stability rule (fixed: K-stab); (4) a PINN claim where only the hard ODE matters (fixed: wording "physics-informed", soft residual only per Q-H); (5) preprint-heavy novelty (unchanged; D015 F13 remains open).
+
+---
+
+## 5. Recommended design ("Design R")
+
+### 5.1 Question and claim
+"How few ageing tests and early check-ups does a physics-informed neural network with learned stress laws need to forecast the capacity fade of unseen cycling conditions, and are the learned stress laws readable and consistent with the dataset authors' model?" The claim contract is the outcome table of section 6; no sentence of the paper is chosen after the data.
+
+### 5.2 Grid, arms, tuning
+- Grid cells (m, k): m in {8, 16, 32}, k in {0, 2, k_full}; k = 1 descriptive. Primary path (fixed sequence): g1 = (8, 2), g2 = (16, 2), g3 = (32, 2), g4 = (32, k_full). If k_full = 2 then g3 = g4 and the sequence has three steps; if k_full = 3, g4 = (32, 3).
+- Held-out set: the unchanged Test B (5 folds of 8, 40 conditions, `samsung_splits_v2.json`, hash pinned); only the training side is thinned.
+- Arms: physics-informed family A1, A3, A4 (stress map by inner CV); A2 hard ODE; A9 data-only F; A10 semi-empirical (with per-cell factor, and "as published" row); A11, A12 data-only learners with physics-motivated feature option; A13 cycling-only (Q-T); A15 symbolic (K role; g4 only, plus g1 descriptive); R1, R2 and the k = 0 population forecast (reference). Dropped from Test B: A5, A7 (their only contrast, H1b, is replaced; A7 may stay at g4 as the "PiDDM-style" comparator), H3, G2-based KAN "win".
+- Tuning: equal for every arm; same N of TPE trials, inner folds 2 for m < 32 and 3 for m = 32 (a stated rule, equal across arms); training-side only; comparators chosen per fold and per cell by inner-CV score, never by test error. The k axis costs inference only for A1-A4, A9, A10 (window inversion at test time); A11/A12 retrain per k (cheap).
+
+### 5.3 Statistics
+- Primary tests: exact one-sided sign tests (D012), tiers S (ln 1.02) and N (-ln 1.10), median estimand, exact order-statistic interval.
+- P role: fixed-sequence over g1-g4 at 0.025 each (tier S); reverse S at g1 tested regardless.
+- K role: TOST at g4 (two sign tests at +-ln 1.10, 0.025 each); K-stab and K-con as pass rules; Q-A10 tier.
+- Qualifiers (Q-A10, Q-H, Q-T) at g1 and g4, each labelled secondary, interval reported, tier word by the shared template of section 6; none changes a title.
+- Holm is not needed inside the primary roles (fixed-sequence for P; K's two components are a conjunction of independently stated pass rules). The two roles are tested at their own 0.025 and are not combined into a family claim; the abstract says so. This replaces the unclear alpha accounting of D015 F4.
+- Rules from D015 adopted here: (i) whenever the sign of the mean paired pp difference differs from the median log ratio at a primary cell, the abstract adds the mean difference with its BCa interval and the worst-condition error; (ii) a lab-stratified, lab-indicator (including A10) or retain-all sensitivity row that lowers a primary tier lowers the tier word in the abstract automatically (other sensitivity rows carry no consequence); (iii) Holm ordering is by the statistic actually tested (moot here); (iv) a type-I simulation with fold-level and lab-level shared effects is still required before the freeze.
+
+### 5.4 Fairness conditions (to be checked by red team)
+1. Data-only family sees the same training cells, equal tuning budget, and may use Arrhenius-type features.
+2. A10 uses the verified form (FB-2) both as published and with the per-cell factor; the weaker of the two sets the wording.
+3. Subset selection is label-free and deterministic; random subsets are a sensitivity row.
+4. All storage cells stay in the base grid; storage-off is Q-T.
+5. Lab and temperature composition of every thinned training set is tabulated; the lab-indicator row exists for Test B including A10.
+
+### 5.5 What the retained freeze conditions still require
+FB-1 to FB-6 and FB-8 to FB-10 are unchanged; the new code items are: the subset selector, the k = 0 population forecast and k = 2 window path, the symbolic extraction (A15), data-only learner feature option, the fixed-sequence assembly in `stats_step.py`, the sentence templates, and a unit test for each limiting case (m = 32 reproduces the unthinned run bit for bit; k = full reproduces Test B; A15 with an untruncated library reproduces A1 to float tolerance on a noiseless synthetic law; subsets are identical for identical identifiers). README, stats step and draft 5.5 must be aligned with the new document (D015 F12).
+
+### 5.6 Pre-freeze pilot P6 (training sides only, ISU, non-binding)
+Learning curves on ISU (63 conditions, cyclic term only): m in {8, 16, 32, all} and the weeks-window analogue of k, for A1, A2, A9, A11, A12, A10-analogue, inner CV on training conditions only (the P3 enforcement). Purpose: show whether the ordering "law-based better than data-only at small m" exists at all on a dataset that is already "not blind". Pre-set reading, fixed now: if on ISU the physics-informed family is not lower than the best data-only learner at the smallest m in a majority of the five outer training sides, the lead tells Shlok before the freeze that P0 is the likely outcome; the design is not changed on the basis of the pilot's size. The pilot uses no Samsung number.
+
+### 5.7 Compute (arithmetic from PREREG section 16, not measured)
+Baseline Test B core at N = 20 is about 9.4 CPU-h expected (35.8 ceiling) for 8 neural arms over 5 folds. Design R drops two arms (A5, A7) from Test B and adds m = 8 and m = 16 refits for A1, A2, A3, A4, A9 with smaller training sets and 2 inner folds; the k axis adds inference only. Order of magnitude: the extra work is comparable to the dropped work, so the core total stays near 10-20 CPU-h expected with a ceiling near 40-70 (three single-thread processes: about one day wall clock expected). A15 adds a few refits per fold. The timing run at the freeze commit fixes N; the Partial plan of D008 (a) applies to every arm equally if triggered.
+
+### 5.8 Power summary for the recommended design
+- P role per step: a gain of about 17-22 % (assumed rho 0.75, n = 40) is detectable at 80 %; smaller gains would end as "none" at that step. Whether the gain at g1 reaches it is the open risk.
+- K-acc: TOST detectable at equality with power 0.71-0.95 or higher (rho 0.95).
+- Qualifiers: Q-A10 and Q-H are same-model-like contrasts (MDE 9-16 %); Q-T as in option 1.
+- No simulation was run for fixed sequences, for the thinned-training correlation structure, or for n = 20 strata; the statistician must supply them (a freeze condition).
+
+---
+
+## 6. Closed outcome table (Design R)
+
+Evaluate gate G first, then the P role (three states), then the K role (three states); the title is the single cell of the matrix. Qualifier sentences are added by tier from the shared template. No row requires a choice by the lead or by Shlok.
+
+**Gate G.** NC-1 trips, or a positive control fails, or a test-fold read is found, or A10's form is unverified at the freeze, or the freeze conditions of section 5.5 are unmet: no claim, audit, new version.
+
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command "Get-Content 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\debates\\D016_roles\\01_proposal.md' | Select-Object -Skip 185 -First 100" in C:\Users\Shlok\Downloads\PINN KAN battery paper\debates\codex_panel
+ succeeded in 284ms:
+
+Evaluate gate G first, then the P role (three states), then the K role (three states); the title is the single cell of the matrix. Qualifier sentences are added by tier from the shared template. No row requires a choice by the lead or by Shlok.
+
+**Gate G.** NC-1 trips, or a positive control fails, or a test-fold read is found, or A10's form is unverified at the freeze, or the freeze conditions of section 5.5 are unmet: no claim, audit, new version.
+
+**P role states.**
+- P+ : tier S at g1 (physics-informed family lower than the best data-only learner by more than 2 %, exact one-sided sign test at 0.025). Extent J = number of consecutive tier-S passes along g1-g4.
+- P0 : no tier S at g1 and no reverse tier S at g1 ("none").
+- P- : reverse tier S at g1 (the best data-only learner is lower than the physics-informed family by more than 2 %).
+
+**K role states.**
+- K+ : K-acc (TOST pass: A15 within 10 % of A1 in both directions) AND K-stab (at least 4 of 5 inputs stable) AND K-con (at least 4 of 5 directions agree with A10).
+- K1 : K-acc passes but K-stab or K-con fails.
+- K0 : K-acc does not pass (A15 not shown within 10 % of A1; includes reverse tier S for A15).
+
+**Titles (one per cell).**
+
+| P \ K | K+ | K1 | K0 |
+|---|---|---|---|
+| P+ | **T1** "Physics-informed neural networks with readable Kolmogorov-Arnold stress laws forecast lithium-ion capacity fade from few ageing tests and early check-ups" | **T2** "Physics-informed neural networks with Kolmogorov-Arnold stress functions forecast lithium-ion capacity fade from few ageing tests and early check-ups" | **T3** "Physics-informed neural networks forecast lithium-ion capacity fade from few ageing tests and early check-ups: learning curves against data-driven and semi-empirical models" |
+| P0 | **T4** "Readable Kolmogorov-Arnold stress laws for calendar and cycle ageing of lithium-ion cells: accuracy, stability and data requirements" | **T5** "Learning curves of learned calendar and cycle ageing laws for lithium-ion cells: how many ageing tests and check-ups are needed" | **T5** |
+| P- | **T6** "When a physics prior does not help: learning curves of physics-informed and data-driven forecasts of lithium-ion capacity fade from few ageing tests" | **T6** | **T6** |
+
+**Abstract wording per state (fixed).**
+- P+ : "With m = [8] training conditions and k = [2] check-ups, the physics-informed network's typical (median) held-out condition error was X % lower than the best data-driven learner (95 % interval; n = 40). The advantage held down to [cell g_J] and was not shown beyond it." (J = 4: "at every tested cell".)
+- P0 : "The physics-informed network's typical held-out condition error could not be distinguished from the best data-driven learner at the most data-poor cell (interval; n = 40)."
+- P- : "The best data-driven learner had a lower typical held-out condition error than the physics-informed network at the most data-poor cell by X % (interval)."
+- K+ : "A closed-form law extracted from the KAN was within 10 % of the full KAN (interval), selected the same function family in at least 4 of 5 folds for n of 5 inputs, and agreed in direction with the dataset authors' model for n of 5 inputs."
+- K1 : "A closed-form law extracted from the KAN was within 10 % of the full KAN (interval); its function families were stable for n of 5 inputs and consistent with the dataset authors' model for n of 5 inputs, which is below the stated criterion."
+- K0 : "A closed-form law extracted from the KAN was not shown to be within 10 % of the full KAN (interval); the readable-law claim is not made."
+- Never: "outperforms", "matches", "interpretable physics discovered", "first" (unless D015 F13 is cleared by the novelty auditor).
+
+**Qualifier sentences (appended in the Results and Abstract slot; the same template for every qualifier, by tier of the exact sign test, cells g1 and g4).**
+
+| Tier | Template |
+|---|---|
+| S (comparator worse) | "[A] had a median condition error X % lower than [B] (interval; n = 40)" |
+| N | "[A] was no more than 10 % worse than [B] (one-sided bound); not shown better" |
+| none | "[A] and [B] could not be distinguished (interval)" |
+| reverse S | "[B] had a median condition error X % lower than [A] (interval)" |
+
+Qualifiers: Q-A10 = physics-informed family (and A15) vs A10 ("the dataset authors' semi-empirical model"); Q-H = A1 vs A2 ("exact integration of the same law"), both cells; Q-T = A1 vs A13 ("with vs without storage cells"), both cells. The sentence for Q-H "none" must read "the soft residual was not shown necessary". Crossover with A10 (smallest m at which the physics-informed family is lower than A10 at tier S, or "not within the tested range") is reported as a descriptive sentence.
+
+**Rules that close the remaining forks.** (1) Mean-vs-median disagreement: add the mean pp difference and worst-condition error (section 5.3). (2) A sensitivity row that lowers a primary tier lowers the abstract's tier word (section 5.3). (3) Test C stays descriptive with the D011 wording and may not be omitted from the Results; the abstract carries it in a fixed form only if the lab-indicator row leaves the median ratio's sign unchanged, otherwise it is omitted from the abstract and stated in Limitations (a rule, not a choice). (4) A tier-S result on ISU or SNL is worded "also holds / does not hold" with its own n (not blind).
+Reverse tiers for A10, A2, A13: covered by the qualifier template.
+
+---
+
+## 7. Notes on facts and snippets used
+
+- E7 arithmetic: for each of the 40 unique cycling conditions in `experiments_meta.csv` (type z; key = temperature, SOC_max, DoD, C_ch, C_dch, stage): hours per cycle = DoD/C_ch + DoD/C_dch, cycles per week = 168 / hours, EFC per week = cycles per week x DoD. Minimum 23.1 (45 C, DoD 0.6, C_ch 0.2, C_dch 0.44), maximum 112.0 (45 C, DoD 0.6, C_ch 1, C_dch 2). It ignores rest, CV phases, check-up time and pauses, so absolute values are upper bounds; the ratio (about 5) is the point.
+- No literature value (activation energy, exponent) is quoted anywhere in this file. Any such comparison in the paper needs the citation validator (Crossref-verified DOI, page/table) and A10's verified equations (FB-2).
+- The chemistry of the cell is not stated in the dataset note; no chemistry-specific claim is made.
+
+## 8. Decision sheet for Shlok (approve before the freeze)
+
+1. The headline becomes a data-efficiency study with two named roles (PINN as prior when data are scarce; KAN as a readable, stable stress law with an accuracy tie accepted), not "PINN-KAN beats everything".
+2. You approve in advance all six titles T1-T6 of section 6, including T5 and T6 (the "none" and reverse results), and the rule that no sentence is chosen after the data.
+3. The soft residual is not claimed to be necessary; if Q-H says "none", the paper says "not shown necessary".
+4. You accept 2-3 extra days for code and the P6 pilot; the 07 Nov 09:00 Samsung fallback of D005 is not moved by this proposal.
+
+## 9. Hand-offs
+Next in the debate: Codex opponent (attack the grid, the fixed sequence, the fairness of the data-only family, the A15 rules), then judge. Before any code: red-team on the derivation of the stat rules (hard rule of this agent). The statistician must supply: fixed-sequence power, n = 20 strata, correlated-condition type-I with fold and lab effects, and the thresholds marked "proposer's choice" in option 3.
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+## Opponent’s verdict: revise, not accept as written
+
+Design R addresses F1 by moving the experiment into data-poor regimes and giving the KAN a deliverable beyond raw accuracy. But it does **not yet show that PINN or KAN is the reason for any gain**. The data-efficiency question is valuable to battery-test planners; “physics helps when data are scarce” by itself is a familiar result, and the proposal itself cites small-sample PINN/PIKAN work. The exact prior results and their comparability to this task are **unverified** here. A JES paper must show *where* the prior helps, against a fair comparator, and what the learned law adds.
+
+### 1. PINN claim and baseline fairness
+
+The proposed P+ comparison is a **physics-informed family**—law, solution network, residual, and whichever stress map wins inner CV—against a data-only family. That can establish a useful system-level result, but it cannot attribute the gain to the residual, KAN, or rate-law structure. A win over that family comparator should not be described as “the PINN helps” without matched component ablations.
+
+The fairness clause allowing data-only models to use Arrhenius-type features is necessary but underspecified. Every learner needs the same condition data, time/exposure coordinates, early-window summaries, and access to per-cell adaptation. Give the data-only side the same transformed inputs—such as \(1/T\), log C-rate and DoD, SOC terms, calendar time, and throughput—and tune them inside training folds. Otherwise the PINN receives physically engineered features and the comparator is accused of being deliberately uninformed. Conversely, a raw-feature model should remain as a separate baseline to show what feature engineering buys.
+
+The P3 headroom on ISU/Sandia warns that full-data gains over flexible learners may be absent. It does not establish Samsung’s small-\(m\), small-\(k\) effect. The proposed ISU P6 is useful for rejecting a hopeless idea, but it cannot validate Samsung behavior or its storage arm.
+
+### 2. KAN role: promising, but current endpoints risk decoration
+
+Readable and fold-stable equations could be a real contribution if an electrochemist can check them and they predict a held-out condition. The current criteria—same selected function family in four of five folds, agreement in direction with A10, and extracted-law error within 10% of the numeric KAN—are mostly **internal consistency checks**. The 4/5 threshold is arbitrary, and agreement with a comparator fitted to the same dataset is not independent physical validation.
+
+The electrochemical case needs more. Check whether calendar temperature dependence implies plausible activation energies, but use literature matched to the cell chemistry, SOC, and protocol; do not assume NCA/graphite unless verified. Check SOC dependence against the dataset authors’ reported non-monotonic behavior above 80% SOC, but only where there are measurements and sufficient replication. That behavior concerns calendar cells; it does not automatically validate cycling SOC-window effects. The storage temperature/lab confound further limits any activation-energy claim. **Literature ranges and the cell chemistry are unverified here.**
+
+KAN versus a prespecified GAM/polynomial need not be a race if the claim is readability, but compare them anyway. At minimum, show equally sparse, rounded functions for both, out-of-fold prediction from each, and stability of *predicted response curves over the supported stress region*. If only the KAN can be simplified under the chosen extraction library, the comparison is unfair.
+
+### 3. Statistics: useful grid, fragile gate
+
+At \(n=40\), the ruling estimates an 80%-power detectable improvement of roughly **17–22%** for a different-family comparison at \(\rho=0.75\). Smaller effects are likely to be unresolved. Those are simulation assumptions, not Samsung power measurements; correlation and effect size at \(m=8\) remain unknown. The fixed-sequence rule also means that if \((m=8,k=2)\) fails, confirmatory claims at \(m=16\) or \(m=32\) stop—even if the advantage appears there. That is a poor fit for the stated question, “how many tests are needed?” Report the entire learning curve with simultaneous intervals or a preregistered trend/interaction test; reserve the gated claim for “benefit holds down to \(m=8,k=2\).”
+
+Also make the \(k_{\text{full}}\) rule fixed from cadence before outcome inspection. The four grid points are not four independent replications: they reuse the same outer conditions and fitted folds. The proposed sign tests need a type-I simulation that includes fold-shared and lab-shared effects, as the proposal itself acknowledges. Do not describe the power as established until that is done.
+
+### 4. Better use of the same data
+
+Keep the data-efficiency experiment, but make it a **matched factorial ablation**:
+
+- **Physics axis:** structured rate-law prior active versus removed/relaxed, with the same solution model, latent dimension, inputs, and tuning budget.
+- **Stress-map axis:** KAN versus the strongest tuned GAM/interaction-GAM, using the same prior and training subsets.
+- **Data axes:** \(m=8,16,32\) and \(k=0,2,k_{\text{full}}\), with identical outer held-out conditions and label-free condition subsets.
+
+The primary PINN question becomes whether the physics prior changes the learning curve—especially at low \(m\)—relative to a data-only model given the same physics-motivated features. The KAN question becomes whether its extracted, rounded response law is stable and predicts held-out conditions as well as the full KAN and the matched GAM. Treat the soft-residual versus hard-integration comparison as secondary: when both encode the same rate law, the residual may add little beyond the prior. If soft PINN wins only under controlled law misspecification, say that is the demonstrated regime.
+
+### Required changes before freeze
+
+1. **Replace the single fixed-sequence result with an inferential learning-curve analysis.** Keep \(g_1\) as the threshold claim, but don’t let its failure erase evidence about \(g_2\)–\(g_4\).
+2. **Match the comparison and attribution.** Same information and adaptation for data-only models; separate physics-prior and KAN effects with the factorial ablations. Do not call a family-level win a residual-specific win.
+3. **Make the KAN result externally checkable.** Freeze the symbolic library and simplification rules; report held-out curve accuracy and stability against GAM/polynomial simplifications; restrict electrochemical validation to supported, independently sourced expectations, with chemistry and lab-confounding limits stated.
+
+Without these revisions, Design R is more defensible than the original full-data comparison, but it still risks reading as a learning-curve study with a PINN/KAN label attached.
+hook: Stop
+hook: Stop
+hook: Stop Completed
+hook: Stop Failed
+tokens used
+346,708
+## Opponent’s verdict: revise, not accept as written
+
+Design R addresses F1 by moving the experiment into data-poor regimes and giving the KAN a deliverable beyond raw accuracy. But it does **not yet show that PINN or KAN is the reason for any gain**. The data-efficiency question is valuable to battery-test planners; “physics helps when data are scarce” by itself is a familiar result, and the proposal itself cites small-sample PINN/PIKAN work. The exact prior results and their comparability to this task are **unverified** here. A JES paper must show *where* the prior helps, against a fair comparator, and what the learned law adds.
+
+### 1. PINN claim and baseline fairness
+
+The proposed P+ comparison is a **physics-informed family**—law, solution network, residual, and whichever stress map wins inner CV—against a data-only family. That can establish a useful system-level result, but it cannot attribute the gain to the residual, KAN, or rate-law structure. A win over that family comparator should not be described as “the PINN helps” without matched component ablations.
+
+The fairness clause allowing data-only models to use Arrhenius-type features is necessary but underspecified. Every learner needs the same condition data, time/exposure coordinates, early-window summaries, and access to per-cell adaptation. Give the data-only side the same transformed inputs—such as \(1/T\), log C-rate and DoD, SOC terms, calendar time, and throughput—and tune them inside training folds. Otherwise the PINN receives physically engineered features and the comparator is accused of being deliberately uninformed. Conversely, a raw-feature model should remain as a separate baseline to show what feature engineering buys.
+
+The P3 headroom on ISU/Sandia warns that full-data gains over flexible learners may be absent. It does not establish Samsung’s small-\(m\), small-\(k\) effect. The proposed ISU P6 is useful for rejecting a hopeless idea, but it cannot validate Samsung behavior or its storage arm.
+
+### 2. KAN role: promising, but current endpoints risk decoration
+
+Readable and fold-stable equations could be a real contribution if an electrochemist can check them and they predict a held-out condition. The current criteria—same selected function family in four of five folds, agreement in direction with A10, and extracted-law error within 10% of the numeric KAN—are mostly **internal consistency checks**. The 4/5 threshold is arbitrary, and agreement with a comparator fitted to the same dataset is not independent physical validation.
+
+The electrochemical case needs more. Check whether calendar temperature dependence implies plausible activation energies, but use literature matched to the cell chemistry, SOC, and protocol; do not assume NCA/graphite unless verified. Check SOC dependence against the dataset authors’ reported non-monotonic behavior above 80% SOC, but only where there are measurements and sufficient replication. That behavior concerns calendar cells; it does not automatically validate cycling SOC-window effects. The storage temperature/lab confound further limits any activation-energy claim. **Literature ranges and the cell chemistry are unverified here.**
+
+KAN versus a prespecified GAM/polynomial need not be a race if the claim is readability, but compare them anyway. At minimum, show equally sparse, rounded functions for both, out-of-fold prediction from each, and stability of *predicted response curves over the supported stress region*. If only the KAN can be simplified under the chosen extraction library, the comparison is unfair.
+
+### 3. Statistics: useful grid, fragile gate
+
+At \(n=40\), the ruling estimates an 80%-power detectable improvement of roughly **17–22%** for a different-family comparison at \(\rho=0.75\). Smaller effects are likely to be unresolved. Those are simulation assumptions, not Samsung power measurements; correlation and effect size at \(m=8\) remain unknown. The fixed-sequence rule also means that if \((m=8,k=2)\) fails, confirmatory claims at \(m=16\) or \(m=32\) stop—even if the advantage appears there. That is a poor fit for the stated question, “how many tests are needed?” Report the entire learning curve with simultaneous intervals or a preregistered trend/interaction test; reserve the gated claim for “benefit holds down to \(m=8,k=2\).”
+
+Also make the \(k_{\text{full}}\) rule fixed from cadence before outcome inspection. The four grid points are not four independent replications: they reuse the same outer conditions and fitted folds. The proposed sign tests need a type-I simulation that includes fold-shared and lab-shared effects, as the proposal itself acknowledges. Do not describe the power as established until that is done.
+
+### 4. Better use of the same data
+
+Keep the data-efficiency experiment, but make it a **matched factorial ablation**:
+
+- **Physics axis:** structured rate-law prior active versus removed/relaxed, with the same solution model, latent dimension, inputs, and tuning budget.
+- **Stress-map axis:** KAN versus the strongest tuned GAM/interaction-GAM, using the same prior and training subsets.
+- **Data axes:** \(m=8,16,32\) and \(k=0,2,k_{\text{full}}\), with identical outer held-out conditions and label-free condition subsets.
+
+The primary PINN question becomes whether the physics prior changes the learning curve—especially at low \(m\)—relative to a data-only model given the same physics-motivated features. The KAN question becomes whether its extracted, rounded response law is stable and predicts held-out conditions as well as the full KAN and the matched GAM. Treat the soft-residual versus hard-integration comparison as secondary: when both encode the same rate law, the residual may add little beyond the prior. If soft PINN wins only under controlled law misspecification, say that is the demonstrated regime.
+
+### Required changes before freeze
+
+1. **Replace the single fixed-sequence result with an inferential learning-curve analysis.** Keep \(g_1\) as the threshold claim, but don’t let its failure erase evidence about \(g_2\)–\(g_4\).
+2. **Match the comparison and attribution.** Same information and adaptation for data-only models; separate physics-prior and KAN effects with the factorial ablations. Do not call a family-level win a residual-specific win.
+3. **Make the KAN result externally checkable.** Freeze the symbolic library and simplification rules; report held-out curve accuracy and stability against GAM/polynomial simplifications; restrict electrochemical validation to supported, independently sourced expectations, with chemistry and lab-confounding limits stated.
+
+Without these revisions, Design R is more defensible than the original full-data comparison, but it still risks reading as a learning-curve study with a PINN/KAN label attached.

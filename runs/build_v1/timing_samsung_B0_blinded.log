@@ -1,0 +1,17 @@
+[01:33:27] run build_v1_timing_samsung_B0_blinded: dataset samsung test B fold 0 mode timing (requested timing) blinded=True
+[01:33:27] train cells 17: 16 cycling, 1 storage; conditions 16
+[01:33:41] timing A1: 13.2 s, 2669 parameters
+[01:33:43] timing A2: 2.1 s, 236 parameters
+[01:33:51] timing A3: 8.4 s, 2459 parameters
+[01:34:01] timing A4: 9.6 s, 2523 parameters
+[01:34:14] timing A5: 13.7 s, 2715 parameters
+[01:34:24] timing A7: 9.5 s, 2838 parameters
+[01:34:25] timing A9: 1.4 s, 8961 parameters
+[01:34:26] timing A10: 0.5 s, 11 parameters
+[01:34:26] timing A11: 0.0 s, 0 parameters
+[01:34:26] timing A12: 0.0 s, 0 parameters
+[01:34:38] timing A13: 12.4 s, 2669 parameters
+[01:34:44] timing A14: 5.8 s, 2669 parameters
+[01:34:44] timing R1: 0.0 s, 0 parameters
+[01:34:44] timing R2: 0.0 s, 0 parameters
+[01:34:44] done in 77 s

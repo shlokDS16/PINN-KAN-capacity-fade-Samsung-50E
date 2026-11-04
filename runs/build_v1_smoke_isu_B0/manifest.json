@@ -1,0 +1,12 @@
+[
+ {
+  "path": "data/processed/isu_capacity.csv",
+  "size": 348114,
+  "sha256": "d00d354880c63ae98dcd290f3881f4a53f967ad75c6b01302141325fd29cb656"
+ },
+ {
+  "path": "data/processed/isu_conditions.csv",
+  "size": 1264,
+  "sha256": "0ad8d560c4be4bf6ec9742b5c72990647891f76ec14a6b496bd2c757dba5967b"
+ }
+]

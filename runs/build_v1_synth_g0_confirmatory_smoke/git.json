@@ -1,0 +1,35 @@
+{
+ "commit": "281ce50de1f6d1c786c46e09b8661e047bb54e6b",
+ "branch": "main",
+ "dirty_files": [
+  "M code/pinnkan/arms.py",
+  " M code/pinnkan/law.py",
+  " M code/tests/test_pk_models.py",
+  " M data/SAMSUNG_CU_STATUS.md",
+  " M data/logs/samsung_cu.log",
+  "?? code/README.md",
+  "?? code/pinnkan/free.py",
+  "?? runs/build_v1/",
+  "?? runs/build_v1_smoke_isu_B0/",
+  "?? runs/build_v1_smoke_snl_B0/",
+  "?? runs/build_v1_synth_g0_confirmatory_smoke/",
+  "?? runs/build_v1_timing_samsung_B0_blinded/",
+  "?? runs/build_v1_timing_synth_samsung_size/",
+  "?? runs/pilot_P0/member_lists/TP_z09_01__f47632384.txt",
+  "?? runs/pilot_P0/member_lists/TP_z10_01__f47631232.txt",
+  "?? runs/pilot_P0/member_lists/TP_z11_01__f47632357.txt",
+  "?? runs/pilot_P0/member_lists/TP_z12_01__f47632360.txt",
+  "?? runs/pilot_P0/member_lists/TP_z13_01__f47632228.txt",
+  "?? runs/pilot_P0/member_lists/TP_z14_01__f47632426.txt",
+  "?? runs/pilot_P0/member_lists/TP_z15_01__f47632252.txt",
+  "?? runs/pilot_P0/member_lists/TP_z16_01__f47632378.txt"
+ ],
+ "n_dirty": 21,
+ "dirty_code": [
+  "M code/pinnkan/arms.py",
+  " M code/pinnkan/law.py",
+  " M code/tests/test_pk_models.py",
+  "?? code/README.md",
+  "?? code/pinnkan/free.py"
+ ]
+}

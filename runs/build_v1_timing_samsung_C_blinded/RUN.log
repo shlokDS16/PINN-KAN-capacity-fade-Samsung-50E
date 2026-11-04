@@ -1,0 +1,9 @@
+[01:37:15] run build_v1_timing_samsung_C_blinded: dataset samsung test C fold 0 mode timing (requested timing) blinded=True
+[01:37:15] train cells 14: 13 cycling, 1 storage; conditions 13
+[01:37:23] timing A1: 7.7 s, 2669 parameters
+[01:37:23] timing A9: 0.7 s, 8961 parameters
+[01:37:24] timing A10: 0.4 s, 11 parameters
+[01:37:24] timing A12: 0.0 s, 0 parameters
+[01:37:24] timing R1: 0.0 s, 0 parameters
+[01:37:24] timing R2: 0.0 s, 0 parameters
+[01:37:24] done in 9 s

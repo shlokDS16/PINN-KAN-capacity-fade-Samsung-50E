@@ -1,0 +1,22 @@
+[01:35:02] run build_v1_synth_g0_confirmatory_smoke: dataset synthetic test B fold 0 mode confirmatory (requested confirmatory) blinded=False
+[01:35:02] train cells 91: 72 cycling, 19 storage; conditions 43
+[01:35:11] backbone tournament: chosen self_limiting (best self_limiting)
+[01:35:53] tuned A1: inner-CV 1.660 pp, best {'h': 4, 'grid': 3, 'l2': 0.01, 'sparsity': 0.01, 'lam_res': 1.0, 'placement': 'whole_axis'}, median fit 6.6 s, failed 0
+[01:36:02] tuned A2: inner-CV 0.885 pp, best {'h': 4, 'grid': 3, 'l2': 0.01, 'sparsity': 0.001}, median fit 1.2 s, failed 0
+[01:36:35] tuned A4: inner-CV 1.124 pp, best {'grid': 30, 'l2': 0.01, 'lam_res': 0.1, 'placement': 'whole_axis'}, median fit 5.1 s, failed 0
+[01:38:18] tuned A8: inner-CV 1.015 pp, best {'width': 32, 'wd': 0.01}, median fit 13.9 s, failed 0
+[01:38:28] tuned A9: inner-CV 2.045 pp, best {'width': 128, 'depth': 4, 'wd': 1e-05, 'zdim': 3}, median fit 1.7 s, failed 0
+[01:38:31] tuned A10: inner-CV 1.366 pp, best {}, median fit 1.4 s, failed 0
+[01:38:31] tuned A12: inner-CV 1.569 pp, best {'n_est': 352, 'lr': 0.11387317092169064, 'leaves': 21, 'mcs': 35, 'l2': 0.04950159553733195}, median fit 0.0 s, failed 0
+[01:38:31] tuned R1: inner-CV 10.939 pp, best {}, median fit 0.0 s, failed 0
+[01:38:31] tuned R2: inner-CV 9.286 pp, best {}, median fit 0.0 s, failed 0
+[01:38:52] outer test A1: 1.142 pp (seed SD 0.076) over 8 conditions
+[01:38:57] outer test A2: 0.814 pp (seed SD 0.011) over 8 conditions
+[01:39:16] outer test A4: 0.898 pp (seed SD 0.041) over 8 conditions
+[01:40:09] outer test A8: 0.950 pp (seed SD 0.066) over 8 conditions
+[01:40:21] outer test A9: 2.592 pp (seed SD 0.134) over 8 conditions
+[01:40:28] outer test A10: 1.583 pp (seed SD 0.000) over 8 conditions
+[01:40:28] outer test A12: 1.187 pp (seed SD 0.062) over 8 conditions
+[01:40:28] outer test R1: 11.811 pp (seed SD 0.000) over 8 conditions
+[01:40:28] outer test R2: 10.029 pp (seed SD 0.000) over 8 conditions
+[01:40:28] done in 326 s

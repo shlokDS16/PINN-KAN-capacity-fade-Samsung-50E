@@ -1,0 +1,41 @@
+{
+ "mode": "inner",
+ "test": "B",
+ "fold": 0,
+ "arms": [
+  "R1",
+  "R2",
+  "A10",
+  "A12",
+  "A2",
+  "A9",
+  "A3",
+  "A4",
+  "A1"
+ ],
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "n_trials": 2,
+ "inner_k": 2,
+ "backbone": "self_limiting",
+ "steps_scale": 0.3,
+ "window": {},
+ "oracle_throughput": false,
+ "per_cell_factor": true,
+ "twins": "auto",
+ "refit_timing": true,
+ "overwrite": false,
+ "retain_all": false,
+ "throughput": "analytic",
+ "target_kind": "cycling",
+ "auto_budget": false,
+ "run_id": "build_v1_smoke_isu_B0",
+ "dataset": "isu",
+ "mode_effective": "inner",
+ "blinded_samsung_pre_freeze": false
+}

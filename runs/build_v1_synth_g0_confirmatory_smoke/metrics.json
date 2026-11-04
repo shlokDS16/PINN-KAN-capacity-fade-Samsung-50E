@@ -1,0 +1,90 @@
+{
+ "blinded": false,
+ "mode": "confirmatory",
+ "inner_cv_pp": {
+  "A1": 1.6595118915354472,
+  "A2": 0.8847441327486907,
+  "A4": 1.1242180280049083,
+  "A8": 1.0151822959235492,
+  "A9": 2.045284322673542,
+  "A10": 1.3656852655747207,
+  "A12": 1.5685985242630542,
+  "R1": 10.938834937013354,
+  "R2": 9.286472620677747
+ },
+ "backbone": "self_limiting",
+ "outer_test": {
+  "A1": {
+   "primary_pp": 1.1423549561905653,
+   "seed_sd_of_mean": 0.07590187470986298,
+   "n_conditions": 8,
+   "mae_pp_mean": 1.028114748928874,
+   "n_nonfinite": 0,
+   "n_params": 2621
+  },
+  "A2": {
+   "primary_pp": 0.8144617036900093,
+   "seed_sd_of_mean": 0.010864413602242134,
+   "n_conditions": 8,
+   "mae_pp_mean": 0.7065361581808856,
+   "n_nonfinite": 0,
+   "n_params": 188
+  },
+  "A4": {
+   "primary_pp": 0.8984811890651744,
+   "seed_sd_of_mean": 0.04086267368342476,
+   "n_conditions": 8,
+   "mae_pp_mean": 0.7876410852148809,
+   "n_nonfinite": 0,
+   "n_params": 2623
+  },
+  "A8": {
+   "primary_pp": 0.9498743374709417,
+   "seed_sd_of_mean": 0.06636482847993237,
+   "n_conditions": 8,
+   "mae_pp_mean": 0.8444815687700322,
+   "n_nonfinite": 0,
+   "n_params": 1378
+  },
+  "A9": {
+   "primary_pp": 2.5922081104004686,
+   "seed_sd_of_mean": 0.13402209138912374,
+   "n_conditions": 8,
+   "mae_pp_mean": 2.3469887246504806,
+   "n_nonfinite": 0,
+   "n_params": 50945
+  },
+  "A10": {
+   "primary_pp": 1.5833893518535547,
+   "seed_sd_of_mean": 7.376123324919394e-06,
+   "n_conditions": 8,
+   "mae_pp_mean": 1.4142999333258122,
+   "n_nonfinite": 0,
+   "n_params": 11
+  },
+  "A12": {
+   "primary_pp": 1.1865712738426792,
+   "seed_sd_of_mean": 0.06247852466430352,
+   "n_conditions": 8,
+   "mae_pp_mean": 1.0347568524617243,
+   "n_nonfinite": 0,
+   "n_params": 0
+  },
+  "R1": {
+   "primary_pp": 11.810508577498222,
+   "seed_sd_of_mean": 2.175583928816829e-15,
+   "n_conditions": 8,
+   "mae_pp_mean": 10.54517516638519,
+   "n_nonfinite": 0,
+   "n_params": 0
+  },
+  "R2": {
+   "primary_pp": 10.029155825432401,
+   "seed_sd_of_mean": 0.0,
+   "n_conditions": 8,
+   "mae_pp_mean": 8.34820379721605,
+   "n_nonfinite": 0,
+   "n_params": 0
+  }
+ }
+}

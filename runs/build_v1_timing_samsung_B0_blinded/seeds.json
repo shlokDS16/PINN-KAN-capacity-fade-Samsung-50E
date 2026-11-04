@@ -1,0 +1,12 @@
+{
+ "final_refit_seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "tuning_seed": "1000 + outer fold",
+ "tpe_sampler_seed": "outer fold",
+ "permutation_test_rng_seed": "set by the statistics step (prereg 9.3)"
+}

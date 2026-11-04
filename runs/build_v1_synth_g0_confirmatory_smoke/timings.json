@@ -1,0 +1,83 @@
+{
+ "A1": {
+  "tuning_seconds": 41.68351221084595,
+  "median_fit_seconds": 6.559186697006226,
+  "n_trials": 3,
+  "n_failed": 0,
+  "refit_seed0_seconds": 7.165519952774048,
+  "refit_seed1_seconds": 7.2841103076934814,
+  "refit_seed2_seconds": 7.119351148605347
+ },
+ "A2": {
+  "tuning_seconds": 9.102914333343506,
+  "median_fit_seconds": 1.2176198959350586,
+  "n_trials": 3,
+  "n_failed": 0,
+  "refit_seed0_seconds": 1.5024871826171875,
+  "refit_seed1_seconds": 1.518462896347046,
+  "refit_seed2_seconds": 1.5309062004089355
+ },
+ "A4": {
+  "tuning_seconds": 32.9777569770813,
+  "median_fit_seconds": 5.140563488006592,
+  "n_trials": 3,
+  "n_failed": 0,
+  "refit_seed0_seconds": 6.762024402618408,
+  "refit_seed1_seconds": 6.087366819381714,
+  "refit_seed2_seconds": 5.801687717437744
+ },
+ "A8": {
+  "tuning_seconds": 102.69178986549377,
+  "median_fit_seconds": 13.931773066520691,
+  "n_trials": 3,
+  "n_failed": 0,
+  "refit_seed0_seconds": 17.688810348510742,
+  "refit_seed1_seconds": 18.242841958999634,
+  "refit_seed2_seconds": 17.798219919204712
+ },
+ "A9": {
+  "tuning_seconds": 10.011340141296387,
+  "median_fit_seconds": 1.7063864469528198,
+  "n_trials": 3,
+  "n_failed": 0,
+  "refit_seed0_seconds": 3.7733492851257324,
+  "refit_seed1_seconds": 3.777217149734497,
+  "refit_seed2_seconds": 3.759392738342285
+ },
+ "A10": {
+  "tuning_seconds": 2.747159481048584,
+  "median_fit_seconds": 1.3685836791992188,
+  "n_trials": 0,
+  "n_failed": 0,
+  "refit_seed0_seconds": 2.397284984588623,
+  "refit_seed1_seconds": 2.3304519653320312,
+  "refit_seed2_seconds": 2.361480474472046
+ },
+ "A12": {
+  "tuning_seconds": 0.22002053260803223,
+  "median_fit_seconds": 0.023592472076416016,
+  "n_trials": 3,
+  "n_failed": 0,
+  "refit_seed0_seconds": 0.053521156311035156,
+  "refit_seed1_seconds": 0.052075862884521484,
+  "refit_seed2_seconds": 0.05316805839538574
+ },
+ "R1": {
+  "tuning_seconds": 0.0014069080352783203,
+  "median_fit_seconds": 4.76837158203125e-06,
+  "n_trials": 0,
+  "n_failed": 0,
+  "refit_seed0_seconds": 0.0004603862762451172,
+  "refit_seed1_seconds": 0.0004887580871582031,
+  "refit_seed2_seconds": 0.00034427642822265625
+ },
+ "R2": {
+  "tuning_seconds": 0.002487659454345703,
+  "median_fit_seconds": 2.6226043701171875e-06,
+  "n_trials": 0,
+  "n_failed": 0,
+  "refit_seed0_seconds": 0.0008218288421630859,
+  "refit_seed1_seconds": 0.00070953369140625,
+  "refit_seed2_seconds": 0.0007152557373046875
+ }
+}

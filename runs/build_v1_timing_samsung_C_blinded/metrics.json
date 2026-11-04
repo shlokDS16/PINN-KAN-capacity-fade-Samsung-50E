@@ -1,0 +1,5 @@
+{
+ "blinded": true,
+ "mode": "timing",
+ "note": "timing only; no scoring, no predictions (retention blinding before the freeze)"
+}

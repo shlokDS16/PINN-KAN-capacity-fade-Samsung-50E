@@ -1,0 +1,2 @@
+{"run_id": "build_v1_timing_samsung_C_blinded", "dataset": "samsung", "test": "C", "fold": 0, "mode": "timing",
+ "arms": ["A1", "A9", "A10", "A12", "R1", "R2"], "steps_scale": 0.5, "backbone": "self_limiting"}

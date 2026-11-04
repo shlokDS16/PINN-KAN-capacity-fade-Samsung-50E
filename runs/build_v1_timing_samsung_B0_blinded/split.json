@@ -1,0 +1,19 @@
+{
+ "file": "runs/prereg/samsung_splits_v2.json",
+ "sha256_file": "0446d5cfbd5b15ef93e97187f45fda0b391eb02fc905463e7df3b492cd4c8af8",
+ "fold_hash_stored": "5cde4d3eeeed0129ece14b7fc0312bfbacc70b8bce0662a6b2fec61dae069888",
+ "fold_hash_recomputed": "5cde4d3eeeed0129ece14b7fc0312bfbacc70b8bce0662a6b2fec61dae069888",
+ "fold_hash_ok": true,
+ "test_conditions": [
+  "T23|SOCmax0.65|DoD0.35|Cch0.4|Cdch1.5",
+  "T23|SOCmax0.8|DoD0.15|Cch0.9|Cdch2",
+  "T35|SOCmax0.55|DoD0.25|Cch0.4|Cdch1.4",
+  "T35|SOCmax0.7|DoD0.05|Cch0.3|Cdch1.2",
+  "T35|SOCmax0.8|DoD0.5|Cch0.9|Cdch1.1",
+  "T45|SOCmax0.65|DoD0.45|Cch0.5|Cdch1.4",
+  "T45|SOCmax0.8|DoD0.05|Cch0.9|Cdch1.6",
+  "T45|SOCmax0.8|DoD0.6|Cch0.2|Cdch0.44"
+ ],
+ "n_train_cells": 17,
+ "n_train_conditions": 16
+}

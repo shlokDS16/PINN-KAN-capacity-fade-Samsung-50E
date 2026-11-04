@@ -1,0 +1,12 @@
+[01:31:31] run build_v1_smoke_isu_B0: dataset isu test B fold 0 mode inner (requested inner) blinded=False
+[01:31:31] train cells 203: 203 cycling, 0 storage; conditions 51
+[01:31:31] tuned R1: inner-CV 13.056 pp, best {}, median fit 0.0 s, failed 0
+[01:31:31] tuned R2: inner-CV 7.983 pp, best {}, median fit 0.0 s, failed 0
+[01:31:32] tuned A10: inner-CV 7.019 pp, best {}, median fit 0.6 s, failed 0
+[01:31:33] tuned A12: inner-CV 5.784 pp, best {'n_est': 405, 'lr': 0.04429649570464297, 'leaves': 29, 'mcs': 58, 'l2': 0.03417952912061012}, median fit 0.1 s, failed 0
+[01:31:37] tuned A2: inner-CV 6.287 pp, best {'h': 4, 'grid': 12, 'l2': 0.01, 'sparsity': 0.01}, median fit 1.0 s, failed 0
+[01:31:46] tuned A9: inner-CV 8.964 pp, best {'width': 32, 'depth': 3, 'wd': 0.0001, 'zdim': 3}, median fit 2.0 s, failed 0
+[01:31:55] tuned A3: inner-CV 9.304 pp, best {'l2': 0.0001, 'lam_res': 10.0, 'placement': 'whole_axis'}, median fit 1.9 s, failed 0
+[01:32:05] tuned A4: inner-CV 6.932 pp, best {'grid': 20, 'l2': 0.0001, 'lam_res': 0.01, 'placement': 'whole_axis'}, median fit 2.2 s, failed 0
+[01:32:19] tuned A1: inner-CV 6.456 pp, best {'h': 4, 'grid': 3, 'l2': 0.01, 'sparsity': 0.01, 'lam_res': 1.0, 'placement': 'whole_axis'}, median fit 3.0 s, failed 0
+[01:32:30] done in 59 s

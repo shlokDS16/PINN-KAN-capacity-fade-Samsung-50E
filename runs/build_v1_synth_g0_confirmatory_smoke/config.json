@@ -1,0 +1,47 @@
+{
+ "mode": "confirmatory",
+ "test": "B",
+ "fold": 0,
+ "arms": [
+  "A1",
+  "A2",
+  "A4",
+  "A8",
+  "A9",
+  "A10",
+  "A12",
+  "R1",
+  "R2"
+ ],
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "n_trials": 3,
+ "inner_k": 2,
+ "backbone": "tournament",
+ "steps_scale": 0.5,
+ "window": {},
+ "oracle_throughput": false,
+ "per_cell_factor": true,
+ "twins": "auto",
+ "refit_timing": false,
+ "overwrite": false,
+ "retain_all": false,
+ "throughput": "analytic",
+ "target_kind": "cycling",
+ "auto_budget": false,
+ "run_id": "build_v1_synth_g0_confirmatory_smoke",
+ "dataset": "synthetic",
+ "synthetic": {
+  "kind": "G0",
+  "n_cyc_cond": 32,
+  "n_sto_cond": 19,
+  "reps": 3,
+  "seed": 21,
+  "test_frac": 0.25
+ },
+ "mode_effective": "confirmatory",
+ "blinded_samsung_pre_freeze": false
+}

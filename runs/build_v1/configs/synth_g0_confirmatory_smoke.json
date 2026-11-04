@@ -1,0 +1,4 @@
+{"run_id": "build_v1_synth_g0_confirmatory_smoke", "dataset": "synthetic", "mode": "confirmatory",
+ "arms": ["A1", "A2", "A4", "A8", "A9", "A10", "A12", "R1", "R2"], "n_trials": 3, "inner_k": 2, "steps_scale": 0.5, "seeds": [0, 1, 2],
+ "backbone": "tournament", "refit_timing": false,
+ "synthetic": {"kind": "G0", "n_cyc_cond": 32, "n_sto_cond": 19, "reps": 3, "seed": 21, "test_frac": 0.25}}

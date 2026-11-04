@@ -1,0 +1,38 @@
+{
+ "mode": "timing",
+ "test": "C",
+ "fold": 0,
+ "arms": [
+  "A1",
+  "A9",
+  "A10",
+  "A12",
+  "R1",
+  "R2"
+ ],
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "n_trials": 20,
+ "inner_k": 3,
+ "backbone": "self_limiting",
+ "steps_scale": 0.5,
+ "window": {},
+ "oracle_throughput": false,
+ "per_cell_factor": true,
+ "twins": "auto",
+ "refit_timing": false,
+ "overwrite": false,
+ "retain_all": false,
+ "throughput": "analytic",
+ "target_kind": "cycling",
+ "auto_budget": false,
+ "run_id": "build_v1_timing_samsung_C_blinded",
+ "dataset": "samsung",
+ "mode_effective": "timing",
+ "blinded_samsung_pre_freeze": true
+}

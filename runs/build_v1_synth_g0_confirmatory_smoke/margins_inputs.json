@@ -1,0 +1,61 @@
+{
+ "per_arm_E_by_fold": {
+  "E_A1": [
+   [
+    8,
+    1.6595118915354472
+   ]
+  ],
+  "E_A2": [
+   [
+    8,
+    0.8847441327486907
+   ]
+  ],
+  "E_A4": [
+   [
+    8,
+    1.1242180280049083
+   ]
+  ],
+  "E_A8": [
+   [
+    8,
+    1.0151822959235492
+   ]
+  ],
+  "E_A9": [
+   [
+    8,
+    2.045284322673542
+   ]
+  ],
+  "E_A10": [
+   [
+    8,
+    1.3656852655747207
+   ]
+  ],
+  "E_A12": [
+   [
+    8,
+    1.5685985242630542
+   ]
+  ],
+  "E_R1": [
+   [
+    8,
+    10.938834937013354
+   ]
+  ],
+  "E_R2": [
+   [
+    8,
+    9.286472620677747
+   ]
+  ]
+ },
+ "h1b_comparator_by_inner_cv": "A4",
+ "h1c_comparator_by_inner_cv": "A12",
+ "note": "margins.json is formed from these after all folds finish (stats step); tuning is complete before any test condition is scored"
+}

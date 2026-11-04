@@ -1,0 +1,13 @@
+[01:33:27] run build_v1_smoke_snl_B0: dataset snl test B fold 0 mode inner (requested inner) blinded=False
+[01:33:27] train cells 52: 52 cycling, 0 storage; conditions 19
+[01:33:27] tuned R1: inner-CV 9.537 pp, best {}, median fit 0.0 s, failed 0
+[01:33:27] tuned R2: inner-CV 15.156 pp, best {}, median fit 0.0 s, failed 0
+[01:33:28] tuned A10: inner-CV 8.956 pp, best {}, median fit 0.4 s, failed 0
+[01:33:29] tuned A11: inner-CV 3.998 pp, best {'nu': 2.5, 'noise_lo': 0.00015119336467641018, 'fs': 'min'}, median fit 0.1 s, failed 0
+[01:33:29] tuned A12: inner-CV 3.280 pp, best {'n_est': 352, 'lr': 0.11387317092169064, 'leaves': 21, 'mcs': 35, 'l2': 0.04950159553733195}, median fit 0.0 s, failed 0
+[01:33:34] tuned A2: inner-CV 5.805 pp, best {'h': 4, 'grid': 12, 'l2': 0.01, 'sparsity': 0.01}, median fit 0.9 s, failed 0
+[01:33:40] tuned A9: inner-CV 12.716 pp, best {'width': 32, 'depth': 3, 'wd': 0.0001, 'zdim': 3}, median fit 1.6 s, failed 0
+[01:33:55] tuned A5: inner-CV 7.698 pp, best {'grid': 5, 'l2': 0.01, 'lam_res': 10.0, 'placement': 'record_end', 'igrid': 3}, median fit 3.2 s, failed 0
+[01:34:04] tuned A7: inner-CV 7.647 pp, best {'width': 16, 'depth': 2, 'l2': 0.001, 'lam_res': 1.0, 'placement': 'whole_axis'}, median fit 2.1 s, failed 0
+[01:34:19] tuned A1: inner-CV 7.362 pp, best {'h': 4, 'grid': 3, 'l2': 0.01, 'sparsity': 0.01, 'lam_res': 1.0, 'placement': 'whole_axis'}, median fit 3.2 s, failed 0
+[01:34:31] done in 64 s

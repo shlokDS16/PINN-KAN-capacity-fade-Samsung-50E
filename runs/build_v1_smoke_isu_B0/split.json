@@ -1,0 +1,23 @@
+{
+ "file": "runs/splits/isu_testB.json",
+ "sha256_file": "c1227642a067e61c4e5110d577e0b84b6ccb6da1cd8e4b48b16e03b2ba4419d8",
+ "fold_hash_stored": "763eb6daed961753508705c13dd73e733e2842dd624191530bd3da40923876cc",
+ "fold_hash_recomputed": "763eb6daed961753508705c13dd73e733e2842dd624191530bd3da40923876cc",
+ "fold_hash_ok": true,
+ "test_conditions": [
+  "10",
+  "17",
+  "18",
+  "22",
+  "24",
+  "30",
+  "33",
+  "43",
+  "52",
+  "55",
+  "59",
+  "8"
+ ],
+ "n_train_cells": 203,
+ "n_train_conditions": 51
+}

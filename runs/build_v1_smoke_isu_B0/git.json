@@ -1,0 +1,23 @@
+{
+ "commit": "281ce50de1f6d1c786c46e09b8661e047bb54e6b",
+ "branch": "main",
+ "dirty_files": [
+  "M data/SAMSUNG_CU_STATUS.md",
+  " M data/logs/samsung_cu.log",
+  "?? code/README.md",
+  "?? runs/build_v1/",
+  "?? runs/build_v1_smoke_isu_B0/",
+  "?? runs/build_v1_timing_synth_samsung_size/",
+  "?? runs/pilot_P0/member_lists/TP_z09_01__f47632384.txt",
+  "?? runs/pilot_P0/member_lists/TP_z10_01__f47631232.txt",
+  "?? runs/pilot_P0/member_lists/TP_z11_01__f47632357.txt",
+  "?? runs/pilot_P0/member_lists/TP_z12_01__f47632360.txt",
+  "?? runs/pilot_P0/member_lists/TP_z13_01__f47632228.txt",
+  "?? runs/pilot_P0/member_lists/TP_z14_01__f47632426.txt",
+  "?? runs/pilot_P0/member_lists/TP_z15_01__f47632252.txt"
+ ],
+ "n_dirty": 13,
+ "dirty_code": [
+  "?? code/README.md"
+ ]
+}

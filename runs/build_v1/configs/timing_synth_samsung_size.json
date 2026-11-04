@@ -1,0 +1,4 @@
+{"run_id": "build_v1_timing_synth_samsung_size", "dataset": "synthetic", "mode": "timing",
+ "arms": ["A1", "A2", "A3", "A4", "A5", "A7", "A9", "A10", "A11", "A12", "A13", "A14", "R1", "R2"],
+ "synthetic": {"kind": "G0", "n_cyc_cond": 32, "n_sto_cond": 19, "reps": 3, "seed": 11, "test_frac": 0.2},
+ "steps_scale": 1.0, "backbone": "self_limiting", "fold": 0}

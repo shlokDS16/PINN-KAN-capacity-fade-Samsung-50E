@@ -1,0 +1,12 @@
+[
+ {
+  "path": "data/processed/snl_cells.csv",
+  "size": 4424,
+  "sha256": "1caf4c255e21164ace0246d709393b1e8d5f8a90ec338cef07e73be618c743ae"
+ },
+ {
+  "path": "data/processed/snl_cycles.csv",
+  "size": 19183990,
+  "sha256": "2d63e9e96357183bc230384d548463a4ca1878e8d17da0b02850962847194934"
+ }
+]

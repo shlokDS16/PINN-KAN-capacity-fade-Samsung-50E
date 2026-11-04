@@ -10,7 +10,7 @@ one torch thread, `.venv\Scripts\python.exe -P`. Status of the equations and the
 ```
 cd "C:\Users\Shlok\Downloads\PINN KAN battery paper"
 .venv\Scripts\python.exe -P code\run_pinnkan.py --config runs\build_v1\configs\smoke_isu_B0.json [--runs-dir runs]
-.venv\Scripts\python.exe -P -m pytest code\tests -q -k pk_          # 71 tests, about 40 s
+.venv\Scripts\python.exe -P -m pytest code\tests -q -k pk_          # 74 new tests (115 with the older ones), about 50 s
 ```
 (`python -P -m pinnkan.run` works when `code` is on `PYTHONPATH`.) A config is JSON or YAML; keys and defaults are in `pinnkan/run.py: DEFAULTS`.
 

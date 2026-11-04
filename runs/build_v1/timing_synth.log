@@ -1,0 +1,17 @@
+[01:30:10] run build_v1_timing_synth_samsung_size: dataset synthetic test B fold 0 mode timing (requested timing) blinded=False
+[01:30:10] train cells 97: 78 cycling, 19 storage; conditions 45
+[01:30:25] timing A1: 14.5 s, 2669 parameters
+[01:30:27] timing A2: 2.5 s, 236 parameters
+[01:30:36] timing A3: 9.4 s, 2459 parameters
+[01:30:47] timing A4: 10.6 s, 2523 parameters
+[01:31:02] timing A5: 14.5 s, 2715 parameters
+[01:31:12] timing A7: 9.9 s, 2838 parameters
+[01:31:14] timing A9: 2.7 s, 8961 parameters
+[01:31:17] timing A10: 2.9 s, 11 parameters
+[01:31:19] timing A11: 2.2 s, 0 parameters
+[01:31:19] timing A12: 0.0 s, 0 parameters
+[01:31:33] timing A13: 13.4 s, 2669 parameters
+[01:31:39] timing A14: 6.1 s, 2669 parameters
+[01:31:39] timing R1: 0.0 s, 0 parameters
+[01:31:39] timing R2: 0.0 s, 0 parameters
+[01:31:39] done in 89 s

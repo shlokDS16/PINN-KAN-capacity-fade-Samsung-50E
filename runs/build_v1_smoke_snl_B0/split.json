@@ -1,0 +1,15 @@
+{
+ "file": "runs/splits/snl_testB.json",
+ "sha256_file": "d5018c6bf008aab56708e3449af690cfe9a783ebc930c0c216644aa4b0a6d5d7",
+ "fold_hash_stored": "f9dba72d6373881f44fe5c6cf3e342b15dc7f9b46c6996804fc45dffe740d887",
+ "fold_hash_recomputed": "f9dba72d6373881f44fe5c6cf3e342b15dc7f9b46c6996804fc45dffe740d887",
+ "fold_hash_ok": true,
+ "test_conditions": [
+  "LFP|25C|0-100|ch0.5|dis0.5",
+  "LFP|35C|0-100|ch0.5|dis2.0",
+  "NCA|25C|0-100|ch0.5|dis2.0",
+  "NMC|25C|0-100|ch0.5|dis1.0"
+ ],
+ "n_train_cells": 52,
+ "n_train_conditions": 19
+}

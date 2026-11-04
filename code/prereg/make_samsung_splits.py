@@ -1,7 +1,7 @@
-"""DRAFT outer splits for Samsung INR21700-50E (preregistration draft, not frozen).
+"""v2 outer splits (pre-freeze) for Samsung INR21700-50E (preregistration draft, not frozen).
 
 Reads ONLY data/raw/samsung50e_meta/experiments_meta.csv (identifiers and designed stress values; no capacity
-value exists in that file). Writes runs/prereg/samsung_splits_DRAFT.json. Same dealing routine as
+value exists in that file). Writes runs/prereg/samsung_splits_v2.json. Same dealing routine as
 code/pilots/p3_make_splits.py (fewest-so-far fold, random ties), copied so that this file has no import side effects.
 
 Test B  : 40 cycling conditions, 5 folds, temperature strata (23, 35, 45 C), stress-space neighbourhoods dealt to
@@ -43,8 +43,8 @@ def deal_into(blocks, rng, nfold, count, out):
 
 def cell_id(r):
     """Zip names (serial) repeat between stage 1 and stage 2 (138 of 141 names occur twice on figshare), so a cell is
-    identified by stage + serial; the mapping of the two same-name files to the stages is a data-step rule (prereg 3.2)."""
-    return "st%s_%s" % (r["stage"].strip(), r["serial"].strip())
+    identified by <serial>_s<stage> (v2 key, same as runs/samsung_pipeline/folder_mapping.csv); the mapping of the two same-name files to the stages is a data-step rule (prereg 3.2)."""
+    return "%s_s%s" % (r["serial"].strip(), r["stage"].strip())
 
 
 def cond_id(r, kind):
@@ -85,7 +85,7 @@ def main():
         lab = KMeans(n_clusters=ncl, n_init=10, random_state=SEED_B).fit(Z).labels_
         blocks = [[ids[i] for i in range(len(ids)) if lab[i] == j] for j in range(ncl)]
         deal_into(blocks, rng, NB, count, fold_of)
-    B = {"dataset": "Samsung INR21700-50E", "test": "B", "seed": SEED_B, "n_folds": NB, "status": "DRAFT",
+    B = {"dataset": "Samsung INR21700-50E", "test": "B", "seed": SEED_B, "n_folds": NB, "status": "v2 (pre-freeze)",
          "unit": "cycling condition = (T, SOC_max, DoD, C_ch, C_dch); 40 conditions", "folds": {}}
     for f in range(NB):
         tc = sorted(c for c, ff in fold_of.items() if ff == f)
@@ -94,7 +94,7 @@ def main():
                               "storage": "all 132 storage cells in training (cells without check-ups enter only per the inclusion rule)"}
     # ------------------------------------------------------------------ Test C
     tc = sorted(c for c in zc if zx[c][0] == 35.0)
-    C = {"dataset": "Samsung INR21700-50E", "test": "C", "n_folds": 1, "status": "DRAFT",
+    C = {"dataset": "Samsung INR21700-50E", "test": "C", "n_folds": 1, "status": "v2 (pre-freeze)",
          "rule": "all cycling conditions at 35 C held out; train on 23 and 45 C cycling plus all storage (10/23/45 C)",
          "folds": {"0": {"test_conditions": tc, "test_cells": sorted(s for c in tc for s in zc[c]),
                          "train_cycling_conditions": sorted(set(zc) - set(tc))}}}
@@ -107,7 +107,7 @@ def main():
         off = int(rngA.integers(NA))
         for j, i in enumerate(perm):
             fa[cells[i]] = (j + off) % NA
-    A = {"dataset": "Samsung INR21700-50E", "test": "A", "seed": SEED_A, "n_folds": NA, "status": "DRAFT",
+    A = {"dataset": "Samsung INR21700-50E", "test": "A", "seed": SEED_A, "n_folds": NA, "status": "v2 (pre-freeze)",
          "unit": "replicate cell of a seen cycling condition (every condition keeps >= 2 cells in training per fold)",
          "folds": {str(f): {"test_cells": sorted(s for s, ff in fa.items() if ff == f)} for f in range(NA)}}
     # ------------------------------------------------------------------ S2 storage
@@ -119,7 +119,7 @@ def main():
         ids = sorted((c for c in kc if kx[c][0] == T), key=lambda c: kx[c][1])
         blocks += [ids[i:i + NS] for i in range(0, len(ids), NS)]
     deal_into(blocks, rngS, NS, cnt, fs)
-    S = {"dataset": "Samsung INR21700-50E", "test": "S2", "seed": SEED_S2, "n_folds": NS, "status": "DRAFT",
+    S = {"dataset": "Samsung INR21700-50E", "test": "S2", "seed": SEED_S2, "n_folds": NS, "status": "v2 (pre-freeze)",
          "unit": "storage condition = (T, storage SOC); 19 conditions; all cycling cells and the other storage conditions in training",
          "folds": {}}
     for f in range(NS):
@@ -132,7 +132,7 @@ def main():
     for name, o in out.items():
         if "folds" in o:
             o["sha256_of_folds"] = digest(o["folds"])
-    json.dump(out, open(f"{ROOT}/runs/prereg/samsung_splits_DRAFT.json", "w"), indent=1)
+    json.dump(out, open(f"{ROOT}/runs/prereg/samsung_splits_v2.json", "w"), indent=1)
     # ---- report (identifiers only)
     for f in range(NB):
         tcs = B["folds"][str(f)]["test_conditions"]

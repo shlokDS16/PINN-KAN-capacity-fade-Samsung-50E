@@ -21,6 +21,9 @@ from .hard import make_law, split_by_cell
 from .law import SIGMA, TAU, Batch, Law, batch_forecast_query, batch_from_windows, retention_from_y, state_factor
 
 
+GRAD_CLIP = 20.0   # global gradient-norm clip of the PINN fit (loss is scaled by 1/SIGMA^2 = 400); frozen with the code commit
+
+
 @dataclass
 class Collocation:
     a_t: torch.Tensor
@@ -142,7 +145,7 @@ class PINNModel(nn.Module):
         return tot, data, res
 
 
-def fit_pinn(b: Batch, spec, hp, backbone, seed, steps=2000, lr=5e-3, extra_twin_raw=None):
+def fit_pinn(b: Batch, spec, hp, backbone, seed, steps=2000, lr=5e-3, extra_twin_raw=None, warmup=0.4, clip=GRAD_CLIP):
     torch.manual_seed(seed)
     law = make_law(spec, b, hp, backbone)
     m = PINNModel(spec, law, b.C, backbone, width=32, depth=3, zdim=2)
@@ -154,10 +157,13 @@ def fit_pinn(b: Batch, spec, hp, backbone, seed, steps=2000, lr=5e-3, extra_twin
     gen = torch.Generator().manual_seed(seed + 17)
     lam, l2, sp = float(hp.get("lam_res", 1.0)), float(hp.get("l2", 1e-4)), float(hp.get("sparsity", 0.0))
     last = (float("nan"), float("nan"))
-    for _ in range(steps):
+    for it in range(steps):
         opt.zero_grad(set_to_none=True)
-        L, data, res = m.loss(b, col, lam, l2, sp, gen)
+        ramp = min(1.0, (it + 1) / max(warmup * steps, 1.0))     # residual weight ramps 0 -> lam_res over the first 40 % of steps (data-first warm-up)
+        L, data, res = m.loss(b, col, lam * ramp, l2, sp, gen)
         L.backward()
+        if clip:
+            torch.nn.utils.clip_grad_norm_(m.parameters(), clip)
         opt.step()
         sch.step()
         last = (float(data.detach()), float(res.detach()))

@@ -133,8 +133,9 @@ def run(cfg_in, root=None, runs_dir=None):
     os.makedirs(run_dir, exist_ok=True)
     ds, mode = cfg["dataset"], cfg["mode"]
     blinded = ds == "samsung" and not guard.is_frozen(root)
-    if blinded and mode != "timing":
+    if blinded and mode not in ("timing", "confirmatory"):
         mode = "timing"        # retention blinding before the freeze: no retention-derived number is written under runs/
+        # (a confirmatory request is NOT downgraded: it goes to the guard, which refuses it)
     rec = Recorder(run_dir, run_id)
     guard.GUARD_LOG.clear()
     t_start = time.time()

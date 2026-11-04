@@ -4,7 +4,7 @@ Everything here is CPU-only and single-threaded by default. The package never re
 runs/prereg/FROZEN exists (see guard.py)."""
 import os
 
-os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"   # CPU only, forced. An empty value is dropped by Windows (torch then sees the GPU); -1 hides every device
 for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"):
     os.environ.setdefault(_v, "1")
 

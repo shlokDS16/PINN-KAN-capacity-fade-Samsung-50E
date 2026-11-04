@@ -50,7 +50,11 @@ start, 6% at 22:00 (see the end of this file for the latest); Fable 0%. CPU only
 - Pilots: P0 Samsung file layout GO (capacity computable from check-up files); P1 data checks GO; P2 fit
   timing GO (PINN about 16-19 s per fit on CPU); P4 KAN vs additive GAM (synthetic) GO in 4 of 5 draws,
   small margin; P5 soft PINN vs plain ODE (synthetic) GO in 4 of 5 draws, small margin (5 draws: no
-  significance claim; go signals only). P3 headroom: running.
+  significance claim; go signals only). **P3 headroom: tuned data-only learners already reach about the
+  replicate noise floor on ISU (ratio 0.90) and Sandia (1.13, weak), so the claim "PINN-KAN beats the best
+  data-driven model" is replaced by non-inferiority on those datasets (D007, a rule fixed in advance).**
+  The paper's superiority claims then rest on: the physics residual helps, the KAN beats simpler stress
+  functions, and forecasts at held-out conditions. Samsung's own headroom test runs once its data are in.
 - Downloads: Samsung check-up files for all 279 cells by range requests (status:
   data/SAMSUNG_CU_STATUS.md; log data/logs/samsung_cu.log). Bulk downloader paused (data/STOP_DOWNLOADS)
   because of the slow link. At 23:20 the fetch ran at about one file per 30 s (figshare request latency),

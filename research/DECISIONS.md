@@ -199,3 +199,20 @@ Row format:
 - **Evidence:** runs/prereg/TYPE1_SIGNFLIP.md, code/prereg/stats_signflip_sim.py, stats_signtest_sim.py (commit 127a1c3).
 - **Proposer / opponent / judge:** statistician / D011 acceptance rule / rule pre-set by the D011 judge.
 - **Re-open if:** the observed Samsung training-side error shape differs strongly from the simulated shapes.
+
+### D013 Build choices of the confirmatory code (2026-11-05, status: accepted with changes; independent judge, no opponent convened)
+- **Decision:** (a) one state factor h(y) shared by the time-driven and throughput-driven rate: accepted (closed form, equal H2 comparison, no extra dimension); wording "single state-dependent modulation", never "independent superposition";
+  counterfactual share definition for 11a item 4. (b) per-cell offset on the term(s) the cell has (calendar term for storage cells): accepted, TAU = 0.15 fixed, scope differs from A10's total-loss factor (favours A10; printed), sensitivity row "delta on total rate".
+  (c) A5 pairs: Samsung (3 prereg pairs) and ISU (all 3 pairs) accepted; **SNL changed** to the 7 design-based pairs (T x discharge; chemistry flags x T and x discharge) because the charge rate is constant (0.5 C) in every Test B training fold and DoD has two levels.
+  (d) clip 20 and 40 % residual warm-up accepted as fixed recipe constants, **applied also to A9 (required) and A2 (uniform)**: an unclipped A9 was 0.1 to 0.7 pp worse on synthetic data (biased toward A1 in H1a); lam_res grid gains 1e-3 (lead to confirm; edge rule); sensitivity rows for clip {10, 50} and warm-up {0.2, 0.6}.
+  (e) CUDA_VISIBLE_DEVICES = -1: accepted; add a run-start assertion and the CPU/library sentence.
+- **Alternatives and why they lost:** separate h_cal and h_cyc (no closed form, re-timing, not testable on Samsung before the freeze; appendix row only); learned backbone shape (extra tuned dimension); offset on total rate for all cells (kept as sensitivity);
+  no offset on storage cells (replicate scatter into the calendar surface); keep builder's SNL pairs (degenerate), all 21 SNL pairs (constant inputs), pairs by inner CV (extra search dimension); tune clip and warm-up (two extra dimensions for PINN arms only), drop the clip (10.25 pp at lam 0.01), leave A9 unclipped (biased).
+- **Evidence:** debates/D013_build_choices/01_ruling.md and checks/ (clip_a.log, clip_b.log, a9.log, a2.log, snl_pairs0.log, snl_pairs4.log, snl_struct.txt); code/pinnkan/{law,pinn,hard,specs,synth,semi}.py; PREREG_v2 7, 7.1, 7.2, 9.8, 11a. Pilot checks: one synthetic design, one seed (clip), two inner-CV seeds (pairs); direction only.
+- **Proposer / opponent / judge:** build implementer (choices) / none / independent judge (D013).
+- **Re-open if:** the training-side Samsung tournament picks a non-simplest backbone in more than one fold; sd of fitted delta_c outside [0.5, 2] x 0.15 in most folds; tuned lam_res at the lower edge in most folds; a sensitivity row changes a primary tier; the A9 clip fix moves A9's inner-CV score by more than 10 %.
+- **Lead confirmation of D013 item C3 (2026-11-05 02:10):** add lam_res = 1e-3 to the PINN residual-weight grid.
+  Reason: on the synthetic well-specified law the optimum sat at the grid edge 0.01, and the project rule is to
+  extend a grid whose optimum is at an edge; the data-only arm (A9, lam = 0) remains a separate contrast (H1a),
+  so the extension does not favour A1. If the tuned optimum on Samsung training folds lands at 1e-3 the
+  residual adds little, and H1a will show it; that is a result, not a reason to restrict the grid.

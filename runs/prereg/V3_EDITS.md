@@ -1,4 +1,4 @@
-# Edits queued for PREREG_v3 (the version to be frozen), collected 2026-11-05 02:40
+# Edits queued for PREREG_v3 (the version to be frozen), collected 2026-11-05 02:12
 
 Apply together with the freeze blockers FB-1..FB-8 of PREREG_v2 section 17; each edit names its source.
 
@@ -12,7 +12,7 @@ Apply together with the freeze blockers FB-1..FB-8 of PREREG_v2 section 17; each
 4. **D013 C8/C9** (paper wording and disclosure sentences): "single state-dependent modulation"; "three
    prespecified pairs"; SNL charge-rate sentence; A10 flexibility sentence; synthetic-circularity sentence;
    optimiser recipe and SNL pairs fixed without Samsung data.
-5. **Code review m1 (lead ruling 02:40):** the Samsung capacity outlier rule (code/data/samsung_checkups.py,
+5. **Code review m1 (lead ruling 02:12):** the Samsung capacity outlier rule (code/data/samsung_checkups.py,
    neighbour range 1 %) is made causal: a check-up is compared with preceding check-ups only, so window
    membership never depends on a post-window label. Small effect, same for all arms; stated in 3.3.
 6. **Code review m6 (disclosure):** A11/A12 drop storage cells with fewer than 2 window points at k-1; the

@@ -1,0 +1,15 @@
+{
+ "negative": {
+  "permutation": "stress vectors (with design throughput) permuted among conditions, separately in training and test; A1, A9, R2 re-run",
+  "A9_minus_A1_mean_L": -0.04951620301809119,
+  "p_two_sided": 0.7983720162798372,
+  "passed": true,
+  "A1_vs_R2_median_L": 1.632762273578666,
+  "A1_not_beating_R2": false
+ },
+ "positive": {
+  "P1_G0_nrmse_leq_0p15": false,
+  "P2_monotone_in_T": true,
+  "P3_A1_beats_R1_median_L": 2.1641267078218105
+ }
+}

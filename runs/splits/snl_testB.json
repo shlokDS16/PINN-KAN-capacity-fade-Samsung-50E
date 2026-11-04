@@ -1,0 +1,227 @@
+{
+ "dataset": "SNL",
+ "test": "B",
+ "seed": 20261105,
+ "n_folds": 5,
+ "unit": "condition = (chemistry, temperature, SOC window, charge C, discharge C); 23 conditions, 1-4 cells each; chemistries are pooled in the splits and every chemistry appears in several folds",
+ "stratification": "blocks of 5 consecutive conditions inside one chemistry sorted by (temperature, SOC window, discharge C); conditions of a block dealt to different folds (fewest-so-far, random ties). Conditions are small in number (7-8 per chemistry), so folds hold 4-5 conditions.",
+ "folds": {
+  "0": {
+   "test_conditions": [
+    "LFP|25C|0-100|ch0.5|dis0.5",
+    "LFP|35C|0-100|ch0.5|dis2.0",
+    "NCA|25C|0-100|ch0.5|dis2.0",
+    "NMC|25C|0-100|ch0.5|dis1.0"
+   ],
+   "test_cells": [
+    "SNL_18650_LFP_25C_0-100_0.5-0.5C_a",
+    "SNL_18650_LFP_35C_0-100_0.5-2C_a",
+    "SNL_18650_LFP_35C_0-100_0.5-2C_b",
+    "SNL_18650_NCA_25C_0-100_0.5-2C_a",
+    "SNL_18650_NCA_25C_0-100_0.5-2C_b",
+    "SNL_18650_NMC_25C_0-100_0.5-1C_a",
+    "SNL_18650_NMC_25C_0-100_0.5-1C_b",
+    "SNL_18650_NMC_25C_0-100_0.5-1C_c",
+    "SNL_18650_NMC_25C_0-100_0.5-1C_d"
+   ],
+   "train_conditions": [
+    "LFP|15C|0-100|ch0.5|dis2.0",
+    "LFP|25C|0-100|ch0.5|dis1.0",
+    "LFP|25C|0-100|ch0.5|dis2.0",
+    "LFP|25C|0-100|ch0.5|dis3.0",
+    "LFP|35C|0-100|ch0.5|dis1.0",
+    "NCA|15C|0-100|ch0.5|dis1.0",
+    "NCA|15C|0-100|ch0.5|dis2.0",
+    "NCA|25C|0-100|ch0.5|dis0.5",
+    "NCA|25C|0-100|ch0.5|dis1.0",
+    "NCA|25C|20-80|ch0.5|dis0.5",
+    "NCA|35C|0-100|ch0.5|dis1.0",
+    "NCA|35C|0-100|ch0.5|dis2.0",
+    "NMC|15C|0-100|ch0.5|dis1.0",
+    "NMC|15C|0-100|ch0.5|dis2.0",
+    "NMC|25C|0-100|ch0.5|dis0.5",
+    "NMC|25C|0-100|ch0.5|dis2.0",
+    "NMC|25C|0-100|ch0.5|dis3.0",
+    "NMC|35C|0-100|ch0.5|dis1.0",
+    "NMC|35C|0-100|ch0.5|dis2.0"
+   ]
+  },
+  "1": {
+   "test_conditions": [
+    "LFP|25C|0-100|ch0.5|dis2.0",
+    "LFP|35C|0-100|ch0.5|dis1.0",
+    "NCA|15C|0-100|ch0.5|dis1.0",
+    "NMC|15C|0-100|ch0.5|dis2.0",
+    "NMC|25C|0-100|ch0.5|dis3.0"
+   ],
+   "test_cells": [
+    "SNL_18650_LFP_25C_0-100_0.5-2C_a",
+    "SNL_18650_LFP_25C_0-100_0.5-2C_b",
+    "SNL_18650_LFP_35C_0-100_0.5-1C_a",
+    "SNL_18650_LFP_35C_0-100_0.5-1C_b",
+    "SNL_18650_LFP_35C_0-100_0.5-1C_c",
+    "SNL_18650_LFP_35C_0-100_0.5-1C_d",
+    "SNL_18650_NCA_15C_0-100_0.5-1C_a",
+    "SNL_18650_NCA_15C_0-100_0.5-1C_b",
+    "SNL_18650_NMC_15C_0-100_0.5-2C_a",
+    "SNL_18650_NMC_15C_0-100_0.5-2C_b",
+    "SNL_18650_NMC_25C_0-100_0.5-3C_a",
+    "SNL_18650_NMC_25C_0-100_0.5-3C_b",
+    "SNL_18650_NMC_25C_0-100_0.5-3C_c",
+    "SNL_18650_NMC_25C_0-100_0.5-3C_d"
+   ],
+   "train_conditions": [
+    "LFP|15C|0-100|ch0.5|dis2.0",
+    "LFP|25C|0-100|ch0.5|dis0.5",
+    "LFP|25C|0-100|ch0.5|dis1.0",
+    "LFP|25C|0-100|ch0.5|dis3.0",
+    "LFP|35C|0-100|ch0.5|dis2.0",
+    "NCA|15C|0-100|ch0.5|dis2.0",
+    "NCA|25C|0-100|ch0.5|dis0.5",
+    "NCA|25C|0-100|ch0.5|dis1.0",
+    "NCA|25C|0-100|ch0.5|dis2.0",
+    "NCA|25C|20-80|ch0.5|dis0.5",
+    "NCA|35C|0-100|ch0.5|dis1.0",
+    "NCA|35C|0-100|ch0.5|dis2.0",
+    "NMC|15C|0-100|ch0.5|dis1.0",
+    "NMC|25C|0-100|ch0.5|dis0.5",
+    "NMC|25C|0-100|ch0.5|dis1.0",
+    "NMC|25C|0-100|ch0.5|dis2.0",
+    "NMC|35C|0-100|ch0.5|dis1.0",
+    "NMC|35C|0-100|ch0.5|dis2.0"
+   ]
+  },
+  "2": {
+   "test_conditions": [
+    "LFP|25C|0-100|ch0.5|dis3.0",
+    "NCA|25C|0-100|ch0.5|dis1.0",
+    "NCA|35C|0-100|ch0.5|dis2.0",
+    "NMC|25C|0-100|ch0.5|dis2.0",
+    "NMC|35C|0-100|ch0.5|dis2.0"
+   ],
+   "test_cells": [
+    "SNL_18650_LFP_25C_0-100_0.5-3C_a",
+    "SNL_18650_LFP_25C_0-100_0.5-3C_b",
+    "SNL_18650_LFP_25C_0-100_0.5-3C_c",
+    "SNL_18650_LFP_25C_0-100_0.5-3C_d",
+    "SNL_18650_NCA_25C_0-100_0.5-1C_a",
+    "SNL_18650_NCA_25C_0-100_0.5-1C_b",
+    "SNL_18650_NCA_25C_0-100_0.5-1C_c",
+    "SNL_18650_NCA_25C_0-100_0.5-1C_d",
+    "SNL_18650_NCA_35C_0-100_0.5-2C_a",
+    "SNL_18650_NCA_35C_0-100_0.5-2C_b",
+    "SNL_18650_NMC_25C_0-100_0.5-2C_a",
+    "SNL_18650_NMC_25C_0-100_0.5-2C_b",
+    "SNL_18650_NMC_35C_0-100_0.5-2C_a",
+    "SNL_18650_NMC_35C_0-100_0.5-2C_b"
+   ],
+   "train_conditions": [
+    "LFP|15C|0-100|ch0.5|dis2.0",
+    "LFP|25C|0-100|ch0.5|dis0.5",
+    "LFP|25C|0-100|ch0.5|dis1.0",
+    "LFP|25C|0-100|ch0.5|dis2.0",
+    "LFP|35C|0-100|ch0.5|dis1.0",
+    "LFP|35C|0-100|ch0.5|dis2.0",
+    "NCA|15C|0-100|ch0.5|dis1.0",
+    "NCA|15C|0-100|ch0.5|dis2.0",
+    "NCA|25C|0-100|ch0.5|dis0.5",
+    "NCA|25C|0-100|ch0.5|dis2.0",
+    "NCA|25C|20-80|ch0.5|dis0.5",
+    "NCA|35C|0-100|ch0.5|dis1.0",
+    "NMC|15C|0-100|ch0.5|dis1.0",
+    "NMC|15C|0-100|ch0.5|dis2.0",
+    "NMC|25C|0-100|ch0.5|dis0.5",
+    "NMC|25C|0-100|ch0.5|dis1.0",
+    "NMC|25C|0-100|ch0.5|dis3.0",
+    "NMC|35C|0-100|ch0.5|dis1.0"
+   ]
+  },
+  "3": {
+   "test_conditions": [
+    "LFP|25C|0-100|ch0.5|dis1.0",
+    "NCA|15C|0-100|ch0.5|dis2.0",
+    "NCA|35C|0-100|ch0.5|dis1.0",
+    "NMC|25C|0-100|ch0.5|dis0.5"
+   ],
+   "test_cells": [
+    "SNL_18650_LFP_25C_0-100_0.5-1C_a",
+    "SNL_18650_LFP_25C_0-100_0.5-1C_b",
+    "SNL_18650_LFP_25C_0-100_0.5-1C_c",
+    "SNL_18650_LFP_25C_0-100_0.5-1C_d",
+    "SNL_18650_NCA_15C_0-100_0.5-2C_a",
+    "SNL_18650_NCA_15C_0-100_0.5-2C_b",
+    "SNL_18650_NCA_35C_0-100_0.5-1C_a",
+    "SNL_18650_NCA_35C_0-100_0.5-1C_b",
+    "SNL_18650_NCA_35C_0-100_0.5-1C_c",
+    "SNL_18650_NCA_35C_0-100_0.5-1C_d",
+    "SNL_18650_NMC_25C_0-100_0.5-0.5C_b"
+   ],
+   "train_conditions": [
+    "LFP|15C|0-100|ch0.5|dis2.0",
+    "LFP|25C|0-100|ch0.5|dis0.5",
+    "LFP|25C|0-100|ch0.5|dis2.0",
+    "LFP|25C|0-100|ch0.5|dis3.0",
+    "LFP|35C|0-100|ch0.5|dis1.0",
+    "LFP|35C|0-100|ch0.5|dis2.0",
+    "NCA|15C|0-100|ch0.5|dis1.0",
+    "NCA|25C|0-100|ch0.5|dis0.5",
+    "NCA|25C|0-100|ch0.5|dis1.0",
+    "NCA|25C|0-100|ch0.5|dis2.0",
+    "NCA|25C|20-80|ch0.5|dis0.5",
+    "NCA|35C|0-100|ch0.5|dis2.0",
+    "NMC|15C|0-100|ch0.5|dis1.0",
+    "NMC|15C|0-100|ch0.5|dis2.0",
+    "NMC|25C|0-100|ch0.5|dis1.0",
+    "NMC|25C|0-100|ch0.5|dis2.0",
+    "NMC|25C|0-100|ch0.5|dis3.0",
+    "NMC|35C|0-100|ch0.5|dis1.0",
+    "NMC|35C|0-100|ch0.5|dis2.0"
+   ]
+  },
+  "4": {
+   "test_conditions": [
+    "LFP|15C|0-100|ch0.5|dis2.0",
+    "NCA|25C|0-100|ch0.5|dis0.5",
+    "NCA|25C|20-80|ch0.5|dis0.5",
+    "NMC|15C|0-100|ch0.5|dis1.0",
+    "NMC|35C|0-100|ch0.5|dis1.0"
+   ],
+   "test_cells": [
+    "SNL_18650_LFP_15C_0-100_0.5-2C_b",
+    "SNL_18650_NCA_25C_0-100_0.5-0.5C_a",
+    "SNL_18650_NCA_25C_0-100_0.5-0.5C_b",
+    "SNL_18650_NCA_25C_20-80_0.5-0.5C_a",
+    "SNL_18650_NCA_25C_20-80_0.5-0.5C_b",
+    "SNL_18650_NCA_25C_20-80_0.5-0.5C_c",
+    "SNL_18650_NCA_25C_20-80_0.5-0.5C_d",
+    "SNL_18650_NMC_15C_0-100_0.5-1C_a",
+    "SNL_18650_NMC_15C_0-100_0.5-1C_b",
+    "SNL_18650_NMC_35C_0-100_0.5-1C_a",
+    "SNL_18650_NMC_35C_0-100_0.5-1C_b",
+    "SNL_18650_NMC_35C_0-100_0.5-1C_c",
+    "SNL_18650_NMC_35C_0-100_0.5-1C_d"
+   ],
+   "train_conditions": [
+    "LFP|25C|0-100|ch0.5|dis0.5",
+    "LFP|25C|0-100|ch0.5|dis1.0",
+    "LFP|25C|0-100|ch0.5|dis2.0",
+    "LFP|25C|0-100|ch0.5|dis3.0",
+    "LFP|35C|0-100|ch0.5|dis1.0",
+    "LFP|35C|0-100|ch0.5|dis2.0",
+    "NCA|15C|0-100|ch0.5|dis1.0",
+    "NCA|15C|0-100|ch0.5|dis2.0",
+    "NCA|25C|0-100|ch0.5|dis1.0",
+    "NCA|25C|0-100|ch0.5|dis2.0",
+    "NCA|35C|0-100|ch0.5|dis1.0",
+    "NCA|35C|0-100|ch0.5|dis2.0",
+    "NMC|15C|0-100|ch0.5|dis2.0",
+    "NMC|25C|0-100|ch0.5|dis0.5",
+    "NMC|25C|0-100|ch0.5|dis1.0",
+    "NMC|25C|0-100|ch0.5|dis2.0",
+    "NMC|25C|0-100|ch0.5|dis3.0",
+    "NMC|35C|0-100|ch0.5|dis2.0"
+   ]
+  }
+ },
+ "sha256_of_folds": "f9dba72d6373881f44fe5c6cf3e342b15dc7f9b46c6996804fc45dffe740d887"
+}

@@ -46,3 +46,4 @@
 - 03:23 writer fixed all audit-flagged sentences (7976c1a, 2ec4b95); 3 title-only JES cites added to the e-gateway list. QC drop rule time-scaled (3415db2; 0 flags). Status file has a one-minute summary.
 - 03:26 NC-1/NC-2 + seed rule + t_fc tests implemented (f3e0b2f; 205 tests pass; nc1_full synthetic demo max diff 0.0). Designer assembling PREREG_v3 (freeze-ready, blockers open).
 - 03:32 PREREG_v3 committed (24ac12c; FB-1..6, 8, 9, 10 open; freeze procedure section 18). Started: builder for pre-freeze code gaps (H3, H7 pieces, ZYK branch, 11a, sensitivity rows, PREREG_DEFAULT=v3); red team on v3 + package (D015).
+- 03:39 red team on v3: FATAL F1 (no demonstrable PINN/KAN benefit expected), F2 (outcome table open), 13 major. D015 recorded; D016 debate started (proposer). Builder filling code gaps.

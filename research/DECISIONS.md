@@ -230,3 +230,13 @@ Row format:
   9/9 flagged for each of two deliberate leaks.
 - **Proposer / opponent / judge:** statistician / builder's report of the failing demo / lead accepts (rule-level).
 - **Re-open if:** NC-1 at Samsung size at the frozen commit flags a clean run.
+
+### D015 Red team on PREREG_v3: two fatal findings open the freeze gate (2026-11-05, status: open)
+- **Decision:** the freeze is blocked until F1 (expected outcome shows no demonstrable benefit of PINN or KAN)
+  and F2 (outcome table not closed; "put to Shlok" rows) are resolved. F1 goes to debate D016 (proposer ->
+  Codex opponent -> judge) and to Shlok; F2 is closed by an outcome table Shlok approves in advance. The other
+  red-team demands (A10 settled with unread sources read; lab confound testable on Test B incl. A10; Holm
+  ordering by the tested statistic; type-I with shared fold/lab effects; README, stats step and draft aligned
+  with PREREG_v3; a window-information reference arm) are accepted as freeze conditions.
+- **Evidence:** debates/D015_redteam_v3/01_redteam.md.
+- **Proposer / opponent / judge:** red team (attack) / lead records / D016 judge and Shlok decide.

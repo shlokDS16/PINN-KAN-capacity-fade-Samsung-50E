@@ -117,6 +117,10 @@ it is a summary of the charge segment only. The `group` column holds an empty st
 
 **(A8) Oxford.** Eight 740 mAh Kokam pouch cells at 40 C with Artemis urban discharge; characterisation every 100 drive cycles (1C and pseudo-OCV curves); CC-CV charge. No stress factor varies, so it adds nothing to a stress law but is a popular PINN benchmark. ODbL licence; cite the dataset DOI and Birkl's thesis (the readme asks for both).
 
+## Author's Google Drive folder (resolved)
+
+`WebFetch` on the folder URL returned no IDs, but `https://drive.google.com/embeddedfolderview?id=<folder>#list`, opened in the browser pane, lists the items. Folder 1iJhcZ69Yd1TObWFx_Q7VdlLzB7InkILu ("EV Datasets") holds two folders: "CALCE Dataset" (1SdCq-Jzee6hS3wPfUruIPlo_8vTTRxEg) with `CALCE-EV Dataset.zip` (file id 15rQyJ5qgCIdHzdDPfp1plJaUDkWvj2a-, 5,614,245 bytes) and a folder CALCE/{Test,Train} that mirrors the zip; and "NASA Dataset" (1tsbv1wpiF42tsOl6T1WLZRjWXve3D-Bl) with `NASA-EV.zip` (file id 1Rw24D8Qb90nZBCx36tE1hhn3H7kpI4rV, 239,496,734 bytes) and a folder cleaned_dataset. Both zips were downloaded from `drive.usercontent.google.com` and verified. Neither is raw CALCE ageing data (the CALCE zip is dynamic-profile tests) and the NASA zip is a cleaned copy of the NASA PCoE batteries already downloaded from the original source.
+
 ## Choice guidance for the team (data only; not a decision)
 
 1. A degradation law "as a function of stress" needs per-cell stress labels and many conditions: A1 (63 conditions, 251 cells), A2 (71 conditions by design), A4 (temperature and window), and the CALCE PL set (SOC window by rate) fit; the author's feature table does not.

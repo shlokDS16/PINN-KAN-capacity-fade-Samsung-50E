@@ -1,8 +1,8 @@
-# Download status (updated 2026-11-04 22:12:11)
+# Download status (updated 2026-11-04 22:25:43)
 
 Resumes from the bytes on disk after every drop. Stop: create data/STOP_DOWNLOADS.
 
-Downloading Q_interpolated.zip: 2.3 of 47.8 MB.
+Downloading Q_interpolated.zip: 4.1 of 47.8 MB.
 
 | dataset | file | size MB | done MB | % | state |
 |---|---|---|---|---|---|
@@ -10,7 +10,7 @@ Downloading Q_interpolated.zip: 2.3 of 47.8 MB.
 | isu_ilcc_figshare_22582234 | process_data.py | 0.0 | 0.0 | 100 | verified |
 | isu_ilcc_figshare_22582234 | capacity_fade.zip | 0.1 | 0.1 | 100 | verified |
 | isu_ilcc_figshare_22582234 | README_V2.0.pdf | 0.6 | 0.6 | 100 | verified |
-| isu_ilcc_figshare_22582234 | Q_interpolated.zip | 47.8 | 2.3 | 5 | downloading |
+| isu_ilcc_figshare_22582234 | Q_interpolated.zip | 47.8 | 4.1 | 8 | downloading |
 | isu_ilcc_figshare_22582234 | RPT_json.zip | 929.4 | 0.0 | 0 | queued |
 | isu_ilcc_figshare_22582234 | Cycling_json.zip | 10208.1 | 0.0 | 0 | queued |
 | samsung50e_figshare_25975315 | experiments_meta.csv | 0.0 | 0.0 | 0 | queued |

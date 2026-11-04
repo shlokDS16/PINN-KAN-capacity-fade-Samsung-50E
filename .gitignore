@@ -6,3 +6,4 @@ refs/code/
 __pycache__/
 *.pyc
 runs/**/*.pt
+.venv/

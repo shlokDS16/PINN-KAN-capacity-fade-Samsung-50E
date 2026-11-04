@@ -57,3 +57,36 @@ Row format:
 - **Evidence:** Shlok, 21:35: network fluctuating; downloads must resume from where they stopped.
 - **Proposer / opponent / judge:** lead; rule-driven (no debate needed for logistics).
 - **Re-open if:** the dataset decision needs Samsung 50E, Stanford, MIT or the ISU cycling files.
+
+### D005 Topic, title, method, datasets and experiments of the JES paper (2026-11-04 night, status: revised)
+- **Decision:** debate D010, judge's verdict REVISE. The paper is a physics-informed neural network
+  (solution network F with residual; dynamics G = storage (time-driven, Arrhenius with KAN functions of
+  storage SOC) plus cycling (throughput-driven, hidden-layer KAN over T, SOC window, DoD, charge and
+  discharge rate)) trained jointly on storage and cycling cells, forecasting retention of cells at
+  held-out conditions from their first check-ups. Single claim: on held-out Samsung 50E cycling
+  conditions the PINN-KAN beats (i) the same network without the residual, (ii) the same PINN with the KAN
+  replaced by the best parametric/GAM/interaction-GAM/polynomial/MLP stress map, (iii) the best tuned
+  data-only learner (paired, condition units, Holm). Hard-ODE vs PINN preregistered with outcomes
+  A (PINN better) / B (tie, title 3) / C (hard better: framing choice to Shlok). Preferred title:
+  "Physics-informed neural networks with Kolmogorov-Arnold stress functions forecast calendar and cycle
+  ageing of lithium-ion cells at untested conditions". Datasets: Samsung INR21700-50E primary (storage +
+  cycling by design; check-up schema by range request tonight; full download by Shlok on a faster
+  network if needed), ISU-ILCC secondary (cyclic law, weeks + analytic throughput, 6 Cycling_json members),
+  Sandia SNL external check and development set. Identifiability reduced to one figure with misspecified
+  generators and thresholds fixed in the judge file. Pilots P0-P5 tonight, CPU only.
+- **Alternatives and why they lost:** proposal as written (no PINN in headline; KAN [3,2] = GAM; ISU
+  cannot separate calendar from cycle loss or test temperature; programme beyond a CPU week);
+  identifiability-first title of Codex (drops PINN and KAN; identifiability not novel enough to carry the
+  paper); SOH estimation on XJTU/TJU/HUST/MIT (crowded by PIKAN/PGKAN, cannot forecast; CONTRACT data
+  preference); ISU as primary (weaker physical claim; kept as fallback); retired topics excluded (no
+  protocol-comparison ratios, no interval calibration headline).
+- **Evidence:** debates/D010_topic/02_proposal.md, 03_opponent.md, 04_judge.md,
+  debates/codex_panel/turn02_response.md, debates/D010_topic/01_novelty_audit.md, notes/code/PIKAN.md,
+  notes/code/GAPS.md, data/INVENTORY.md, data/raw/samsung50e_meta/experiments_meta.csv (condition counts).
+- **Proposer / opponent / judge:** proposer agent / opponent agent (REVISE) and Codex panel (REVISE) /
+  judge agent.
+- **Re-open if:** Samsung check-ups not parsed by 07 Nov 09:00 (fallback: ISU primary, no calendar arm);
+  the novelty re-audit finds a neural model coupling calendar and cycle ageing with learned stress
+  functions forecasting unseen conditions (or prior modelling of Samsung 50E that pre-empts the claim);
+  Samsung cadence too sparse for a window; hard-ODE outcome C (framing to Shlok); P2 compute no-go
+  (re-plan arms); Shlok rejects the framing.

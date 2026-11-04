@@ -3,7 +3,7 @@
 Save each as `refs/pdf/<n>_<firstauthor><year>.pdf` (n = number in REFERENCES_FROM_SHLOK.md). Already in refs/pdf: 11 (arXiv preprint only), 23, 29, 33.
 Open-access items are listed too: the publishers block scripted downloads, a browser click works.
 
-## Elsevier / ScienceDirect (28)
+## Elsevier / ScienceDirect (27)
 
 - [1] SOH-KPINN: a wavelet-enhanced physics-informed kolmogorov–arnold network for multiscale battery (Li 2026). https://doi.org/10.1016/j.measurement.2025.119769 . paywalled
 - [3] Meta-learning driven small-sample lithium-ion battery state of health estimation based on Kolmo (Wang 2026). https://doi.org/10.1016/j.est.2026.122207 . paywalled
@@ -30,7 +30,6 @@ Open-access items are listed too: the publishers block scripted downloads, a bro
 - [28] Battery state of health estimation across electrochemistry and working conditions based on doma (Liu 2024). https://doi.org/10.1016/j.energy.2024.131294 . paywalled
 - [30] Advancing state of health estimation for electric vehicles: Transformer-based approach leveragi (Nakano 2024). https://doi.org/10.1016/j.adapen.2024.100188 . OPEN ACCESS, only bot-blocked: just click
 - [32] Battery state of charge estimation for electric vehicle using Kolmogorov-Arnold networks (Sulaiman 2024). https://doi.org/10.1016/j.energy.2024.133417 . paywalled
-- [33] Physics-informed neural network for lithium-ion battery degradation stable modeling and prognos (Wang 2024). https://doi.org/10.1038/s41467-024-48779-z . OPEN ACCESS, only bot-blocked: just click
 - [34] Predict the lifetime of lithium-ion batteries using early cycles: A review (Yang 2024). https://doi.org/10.1016/j.apenergy.2024.124171 . paywalled
 - [35] Specialized convolutional transformer networks for estimating battery health via transfer learn (Zhao 2024). https://doi.org/10.1016/j.ensm.2024.103668 . paywalled
 

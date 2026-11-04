@@ -177,5 +177,12 @@ if __name__ == "__main__":
     if a.aggregate:
         aggregate(a.out)
     else:
+        PC.write_config(a.out, "P5 (synthetic G1: hard ODE vs soft PINN)", {
+            "lambda_res_grid": LAMS, "hard_l2_grid": L2S, "pinn_l2": PINN_L2, "pinn_steps": PINN_STEPS, "hard_steps": HARD_STEPS,
+            "pinn_arch": "F = t g(t,x,z), g = tanh MLP 32x3, z in R^2; KAN [3,3,1] grid 5 in the law (same as hard ODE); Adam lr 5e-3 cosine to 10 %",
+            "collocation": "(a) 24 times per training cell from record end (primary) or from 0 (whole_axis) to t_max=1.8; (b) 256 hull LHS stress points x 16 times in [0,1.8]; "
+                           "512 + 256 rows resampled per step; no calendar twins (ISU has no storage arm)",
+            "window": "first 4 check-ups after the initial one", "draws_in_this_process": a.draws, "variants": a.variants,
+            "go_rule": "PINN forecast RMSE beyond the window below the hard ODE in >= 3 of 5 draws (primary variant record_end)"})
         for dr in [int(x) for x in a.draws.split(",")]:
             run_draw(dr, a.out, a.variants.split(","))

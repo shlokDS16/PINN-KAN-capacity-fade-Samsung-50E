@@ -108,3 +108,20 @@ def save_json(obj, path):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf8") as fh:
         json.dump(obj, fh, indent=1, default=lambda o: o.tolist() if hasattr(o, "tolist") else str(o))
+
+
+def write_config(out, pilot, extra):
+    cfg = {
+        "pilot": pilot, "device": "CPU only (CUDA_VISIBLE_DEVICES empty, torch.set_num_threads(1), at most 3 processes)",
+        "python": sys.version.split()[0], "torch": torch.__version__, "numpy": np.__version__,
+        "git": git_info(), "interpreter": ".venv/Scripts/python.exe -P",
+        "constants": {"SIGMA_Y": SG.SIGMA_Y, "TAU_DELTA": SG.TAU_DELTA, "FADE_TARGET_median_final_y_s": SG.FADE_TARGET, "T_SCALE_weeks": SG.T_SCALE, "REST_H": SG.REST_H,
+                      "T_MAX_N": SG.T_MAX_N, "K_WINDOW": K_WINDOW, "MIN_PTS_scored_cell": MIN_PTS, "model_SIGMA": M.SIGMA, "model_TAU": M.TAU,
+                      "G2_GRID": SG.G2_GRID, "G1_GRID": SG.G1_GRID, "G1_KNEE_W": SG.G1_KNEE_W, "G1_T_REF": SG.G1_T_REF},
+        "seeds": {"draw_params": "default_rng([20261104, kind(1=G1,2=G2), draw])", "offsets_and_noise": "default_rng([20261104, 100+kind, draw])",
+                  "split": "default_rng([20261104, 7, draw]) -> 12 of 63 conditions held out", "inner_folds": "default_rng([20261104, 9, draw])",
+                  "trials": "default_rng([20261104, 11, seed])", "lhs500": "scipy LatinHypercube seed 12345 (rejection to the hull)", "lhs256_collocation": 777},
+        "design": "63 ISU conditions x 251 cells, per-cell check-up weeks of data/processed/isu_capacity.csv (columns cell, group, week only)",
+    }
+    cfg.update(extra)
+    save_json(cfg, os.path.join(out, "config.json"))

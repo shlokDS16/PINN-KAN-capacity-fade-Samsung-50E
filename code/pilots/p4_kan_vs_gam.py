@@ -180,12 +180,17 @@ def aggregate(out):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--draws", default="0,1,2,3,4")
-    ap.add_argument("--trials", type=int, default=5)
+    ap.add_argument("--trials", type=int, default=8)
     ap.add_argument("--out", default=os.path.join(ROOT, "runs", "pilot_P4"))
     ap.add_argument("--aggregate", action="store_true")
     a = ap.parse_args()
     if a.aggregate:
         aggregate(a.out)
     else:
+        PC.write_config(a.out, "P4 (synthetic G2: KAN vs additive GAM vs free G)", {
+            "spaces": SPACES, "fit_steps": STEPS, "optimiser": "Adam lr 0.02 (free G 0.01), cosine to 5 %", "n_trials_per_arm": a.trials, "inner_folds": 2, "draws_in_this_process": a.draws,
+            "window": "first 4 check-ups after the initial one; delta_c / z_c fitted on the window with the model frozen",
+            "endpoint": "nRMSE of recovered log-rate surface vs truth on lhs500 (primary); forecast RMSE pp on held-out conditions (secondary)",
+            "go_rule": "KAN lower nRMSE than additive GAM in >= 4 of 5 draws AND KAN-structured below free G in >= 4 of 5 draws"})
         for dr in [int(x) for x in a.draws.split(",")]:
             run_draw(dr, a.trials, a.out)

@@ -1,0 +1,8 @@
+data/raw/
+data/processed/
+refs/pdf/
+refs/exemplars/pdf/
+refs/code/
+__pycache__/
+*.pyc
+runs/**/*.pt

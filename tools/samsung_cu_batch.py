@@ -62,12 +62,18 @@ def order():
     return out
 
 
-def wanted(names):
-    et = sorted(n for n in names if "_ET_" in n and n.endswith("_meta.txt"))[:1]
-    return [n for n in names if n.endswith("_CU.csv") or n.endswith("_CU_meta.txt")] + et
+def wanted(names, phase=1):
+    """Phase 1: check-ups (CU) and their meta, plus one ET meta (start date), for every cell.
+    Phase 2 (after phase 1 is complete for all cells): the 23 C entry and final tests and the
+    extended check-ups, which give the fresh-cell capacity and the remaining trajectory points."""
+    if phase == 1:
+        et = sorted(n for n in names if "_ET_" in n and n.endswith("_meta.txt"))[:1]
+        return [n for n in names if n.endswith("_CU.csv") or n.endswith("_CU_meta.txt")] + et
+    keep = ("_ET_T23.csv", "_ET_T23_meta.txt", "_AT_T23.csv", "_AT_T23_meta.txt", "_exCU.csv", "_exCU_meta.txt")
+    return [n for n in names if n.endswith(keep)]
 
 
-def do_cell(serial, url):
+def do_cell(serial, url, phase=1):
     os.makedirs(LISTS, exist_ok=True)
     lst = os.path.join(LISTS, f"{serial}.txt")
     hf = HttpRangeFile(url)
@@ -79,7 +85,7 @@ def do_cell(serial, url):
                 for i in zf.infolist() if not i.filename.endswith("/")]
         open(lst, "w", encoding="utf8").write("\n".join("\t".join(r) for r in rows))
     info = {r[0]: r for r in rows}
-    todo = [n for n in wanted(list(info)) if not os.path.exists(os.path.join(OUT, serial, os.path.basename(n)))]
+    todo = [n for n in wanted(list(info), phase) if not os.path.exists(os.path.join(OUT, serial, os.path.basename(n)))]
     if not todo:
         return True
     os.makedirs(os.path.join(OUT, serial), exist_ok=True)
@@ -124,20 +130,25 @@ def status(cells, done):
 
 
 def main():
-    cells, done = order(), set()
+    cells = order()
     log(f"start: {len(cells)} cells")
-    while len(done) < len(cells) and not os.path.exists(STOP):
-        for serial, url in cells:
-            if serial in done or os.path.exists(STOP):
-                continue
-            try:
-                if do_cell(serial, url):
-                    done.add(serial)
-            except Exception as e:
-                log(f"error {serial}: {type(e).__name__}: {e}")
-                time.sleep(60)
-            status(cells, done)
-    log("finished" if len(done) == len(cells) else "stopped")
+    for phase in (1, 2):
+        done = set()
+        while len(done) < len(cells) and not os.path.exists(STOP):
+            for serial, url in cells:
+                if serial in done or os.path.exists(STOP):
+                    continue
+                try:
+                    if do_cell(serial, url, phase):
+                        done.add(serial)
+                except Exception as e:
+                    log(f"error {serial} (phase {phase}): {type(e).__name__}: {e}")
+                    time.sleep(60)
+                status(cells, done)
+        log(f"phase {phase} complete" if len(done) == len(cells) else f"phase {phase} stopped")
+        if os.path.exists(STOP):
+            break
+    log("finished" if not os.path.exists(STOP) else "stopped")
 
 
 if __name__ == "__main__":

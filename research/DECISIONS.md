@@ -109,3 +109,17 @@ Row format:
 - **Re-open if:** JES 182, 125097 (Zhang) or the Hallinger SSRN preprint (both cite the dataset, unread)
   contain a neural calendar + cycle model with learned stress functions; PIKAN/PGKAN/JECS addd4e full
   texts (unread) contain an operating-condition dynamics model.
+
+### D007 Contrast (iii) on ISU and SNL is non-inferiority (2026-11-05 00:15, status: accepted, rule-driven)
+- **Decision:** per the judge's pre-set P3 rule (04_judge.md section 7), contrast (iii) (PINN-KAN vs best tuned
+  data-only learner) is preregistered as NON-INFERIORITY on ISU and on SNL: best flexible learner / replicate
+  floor = 0.90 on ISU (W = 4 weeks; CI [0.78, 1.08]) and 1.13 on SNL (W = 100 cycles; CI [0.81, 1.62]), both
+  below the 1.2 gate (runs/pilot_P3/RESULT.md). Samsung is decided by the same rule once its data are in.
+  The paper's superiority claims then rest on contrasts (i) residual and (ii) KAN vs alternatives, and on
+  the held-out-condition tests; the abstract cannot say "beats all data-driven models".
+- **Alternatives and why they lost:** keep superiority for (iii) (contradicts the pre-set rule; likely
+  fails); change the floor definition after seeing P3 (post hoc).
+- **Evidence:** runs/pilot_P3/RESULT.md, results.json; splits committed first (runs/splits/, commit 16a9da4).
+- **Proposer / opponent / judge:** rule fixed by the judge in advance; applied by the lead.
+- **Re-open if:** the statistician rules the floor is mis-defined (P3 concern: learners see the held-out
+  cell's window, the floor does not), with a rule fixed before any Samsung data are scored.

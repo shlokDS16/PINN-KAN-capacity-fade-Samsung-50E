@@ -1,0 +1,221 @@
+{
+ "n_draws": 5,
+ "draws": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "kan_lower_nrmse_than_gam_draws": 4,
+ "kan_lower_nrmse_than_free_draws": 5,
+ "gam_lower_nrmse_than_free_draws": 5,
+ "best_structured_lower_than_free_draws": 5,
+ "rule_kan_vs_gam": "KAN lower nRMSE than additive GAM in >= 4 of 5 draws: 4 of 5",
+ "rule_structured_vs_free": "KAN-structured below free G in >= 4 of 5 draws: 5 of 5",
+ "go_kan_vs_gam": true,
+ "go_structured_vs_free": true,
+ "median_nrmse": {
+  "kan": 0.08101694308100796,
+  "gam": 0.10338831109432818,
+  "free": 0.14110976232471342
+ },
+ "median_nrmse_centered": {
+  "kan": 0.07802876059140679,
+  "gam": 0.10151119770799256,
+  "free": 0.10217363245620176
+ },
+ "median_forecast_rmse_pp": {
+  "kan": 0.8939999515811602,
+  "gam": 0.9584921648104986,
+  "free": 1.0394003770568154
+ },
+ "median_ratio_kan_over_free": 0.6071882928884836,
+ "median_ratio_gam_over_free": 0.7580770416309917,
+ "median_ratio_kan_over_gam": 0.8113508563731313,
+ "kan_forecast_lower_than_gam_draws": 4,
+ "kan_forecast_lower_than_free_draws": 5,
+ "per_draw": [
+  {
+   "draw": 0,
+   "additive_floor": 0.050236329978198345,
+   "kan_nrmse": 0.07846270311624333,
+   "gam_nrmse": 0.09670625537635373,
+   "free_nrmse": 0.10027844773631878,
+   "kan_forecast_pp": 0.82244657386433,
+   "gam_forecast_pp": 0.9149929935281927,
+   "free_forecast_pp": 1.0394003770568154,
+   "kan_params": 193,
+   "gam_params": 28,
+   "free_params": 1314,
+   "kan_hp": {
+    "hidden": 4,
+    "grid": 8,
+    "l2": 0.001
+   },
+   "gam_hp": {
+    "grid": 5,
+    "l2": 0.01
+   },
+   "free_hp": {
+    "width": 32,
+    "wd": 0.001
+   },
+   "params": {
+    "b1": 0.5,
+    "b2": -0.15,
+    "b3": 0.3,
+    "q": 0.3,
+    "H": 1.2,
+    "c0h": -0.2,
+    "c1h": -0.6,
+    "P": 0.5
+   }
+  },
+  {
+   "draw": 1,
+   "additive_floor": 0.07048492489343874,
+   "kan_nrmse": 0.10104570525654323,
+   "gam_nrmse": 0.11898661846485148,
+   "free_nrmse": 0.15695847774106642,
+   "kan_forecast_pp": 0.9555642008781433,
+   "gam_forecast_pp": 0.9584921648104986,
+   "free_forecast_pp": 1.0164524515469868,
+   "kan_params": 113,
+   "gam_params": 28,
+   "free_params": 1314,
+   "kan_hp": {
+    "hidden": 4,
+    "grid": 3,
+    "l2": 0.001
+   },
+   "gam_hp": {
+    "grid": 5,
+    "l2": 0.0001
+   },
+   "free_hp": {
+    "width": 32,
+    "wd": 0.0001
+   },
+   "params": {
+    "b1": 0.3,
+    "b2": 0.15,
+    "b3": 0.5,
+    "q": 0.3,
+    "H": 0.8,
+    "c0h": -0.2,
+    "c1h": -0.3,
+    "P": 0.8
+   }
+  },
+  {
+   "draw": 2,
+   "additive_floor": 0.07358695441502897,
+   "kan_nrmse": 0.07892674936684824,
+   "gam_nrmse": 0.14210358883849875,
+   "free_nrmse": 0.20986184949127534,
+   "kan_forecast_pp": 0.8864539762338003,
+   "gam_forecast_pp": 0.9252975086371104,
+   "free_forecast_pp": 1.154677410920461,
+   "kan_params": 145,
+   "gam_params": 43,
+   "free_params": 1314,
+   "kan_hp": {
+    "hidden": 4,
+    "grid": 5,
+    "l2": 0.0001
+   },
+   "gam_hp": {
+    "grid": 10,
+    "l2": 0.001
+   },
+   "free_hp": {
+    "width": 32,
+    "wd": 0.001
+   },
+   "params": {
+    "b1": 0.3,
+    "b2": 0.15,
+    "b3": 0.3,
+    "q": 0.3,
+    "H": 0.8,
+    "c0h": 0.2,
+    "c1h": -0.6,
+    "P": 0.5
+   }
+  },
+  {
+   "draw": 3,
+   "additive_floor": 0.06569514278436839,
+   "kan_nrmse": 0.08199120134177049,
+   "gam_nrmse": 0.07915355201240046,
+   "free_nrmse": 0.14110976232471342,
+   "kan_forecast_pp": 1.0686322992498225,
+   "gam_forecast_pp": 1.030155517838218,
+   "free_forecast_pp": 1.369390151717446,
+   "kan_params": 57,
+   "gam_params": 28,
+   "free_params": 402,
+   "kan_hp": {
+    "hidden": 2,
+    "grid": 3,
+    "l2": 0.001
+   },
+   "gam_hp": {
+    "grid": 5,
+    "l2": 0.01
+   },
+   "free_hp": {
+    "width": 16,
+    "wd": 0.0001
+   },
+   "params": {
+    "b1": 0.3,
+    "b2": -0.15,
+    "b3": 0.5,
+    "q": 0.3,
+    "H": 1.2,
+    "c0h": 0.2,
+    "c1h": -0.6,
+    "P": 0.8
+   }
+  },
+  {
+   "draw": 4,
+   "additive_floor": 0.0647552836290115,
+   "kan_nrmse": 0.08101694308100796,
+   "gam_nrmse": 0.10338831109432818,
+   "free_nrmse": 0.13342968570029323,
+   "kan_forecast_pp": 0.8939999515811602,
+   "gam_forecast_pp": 0.9616774072249731,
+   "free_forecast_pp": 0.9229446773727735,
+   "kan_params": 193,
+   "gam_params": 43,
+   "free_params": 1314,
+   "kan_hp": {
+    "hidden": 4,
+    "grid": 8,
+    "l2": 0.0001
+   },
+   "gam_hp": {
+    "grid": 10,
+    "l2": 0.001
+   },
+   "free_hp": {
+    "width": 32,
+    "wd": 0.0001
+   },
+   "params": {
+    "b1": 0.5,
+    "b2": -0.15,
+    "b3": 0.3,
+    "q": 0.3,
+    "H": 1.2,
+    "c0h": 0.2,
+    "c1h": -0.6,
+    "P": 0.8
+   }
+  }
+ ],
+ "seconds_total_sum": 1331.3201588999946
+}

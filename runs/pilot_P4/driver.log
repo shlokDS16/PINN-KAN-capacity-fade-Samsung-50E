@@ -1,0 +1,15 @@
+draw 0 kan: nRMSE 0.078  forecast 0.82 pp  hp {'hidden': 4, 'grid': 8, 'l2': 0.001}  25 s
+draw 0 gam: nRMSE 0.097  forecast 0.91 pp  hp {'grid': 5, 'l2': 0.01}  14 s
+draw 0 free: nRMSE 0.100  forecast 1.04 pp  hp {'width': 32, 'wd': 0.001}  222 s
+draw 1 kan: nRMSE 0.101  forecast 0.96 pp  hp {'hidden': 4, 'grid': 3, 'l2': 0.001}  27 s
+draw 1 gam: nRMSE 0.119  forecast 0.96 pp  hp {'grid': 5, 'l2': 0.0001}  17 s
+draw 1 free: nRMSE 0.157  forecast 1.02 pp  hp {'width': 32, 'wd': 0.0001}  246 s
+draw 2 kan: nRMSE 0.079  forecast 0.89 pp  hp {'hidden': 4, 'grid': 5, 'l2': 0.0001}  26 s
+draw 2 gam: nRMSE 0.142  forecast 0.93 pp  hp {'grid': 10, 'l2': 0.001}  16 s
+draw 2 free: nRMSE 0.210  forecast 1.15 pp  hp {'width': 32, 'wd': 0.001}  214 s
+draw 3 kan: nRMSE 0.082  forecast 1.07 pp  hp {'hidden': 2, 'grid': 3, 'l2': 0.001}  25 s
+draw 3 gam: nRMSE 0.079  forecast 1.03 pp  hp {'grid': 5, 'l2': 0.01}  15 s
+draw 3 free: nRMSE 0.141  forecast 1.37 pp  hp {'width': 16, 'wd': 0.0001}  227 s
+draw 4 kan: nRMSE 0.081  forecast 0.89 pp  hp {'hidden': 4, 'grid': 8, 'l2': 0.0001}  24 s
+draw 4 gam: nRMSE 0.103  forecast 0.96 pp  hp {'grid': 10, 'l2': 0.001}  15 s
+draw 4 free: nRMSE 0.133  forecast 0.92 pp  hp {'width': 32, 'wd': 0.0001}  217 s

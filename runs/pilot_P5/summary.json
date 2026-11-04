@@ -1,0 +1,110 @@
+{
+ "n_draws": 5,
+ "draws": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "pinn_record_end": {
+  "pinn_lower_than_hard_draws": 4,
+  "go": true,
+  "median_forecast_pp": 4.71992202238603,
+  "median_ratio_pinn_over_hard": 0.9556171343585552,
+  "chosen_lambda": [
+   1.0,
+   0.1,
+   0.1,
+   0.1,
+   1.0
+  ]
+ },
+ "pinn_whole_axis": {
+  "pinn_lower_than_hard_draws": 5,
+  "go": true,
+  "median_forecast_pp": 4.645269890626271,
+  "median_ratio_pinn_over_hard": 0.8430551184550464,
+  "chosen_lambda": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ]
+ },
+ "hard_median_forecast_pp": 5.37317967414856,
+ "per_draw": [
+  {
+   "draw": 0,
+   "params": {
+    "b1": 0.3,
+    "b2": 0.15,
+    "b3": 0.5,
+    "z0": 0.9,
+    "z1": 0.25,
+    "K": 1.6
+   },
+   "hard": 5.37317967414856,
+   "pinn_record_end": 4.71992202238603,
+   "pinn_whole_axis": 4.781935930252075
+  },
+  {
+   "draw": 1,
+   "params": {
+    "b1": 0.5,
+    "b2": 0.15,
+    "b3": 0.3,
+    "z0": 1.0,
+    "z1": 0.25,
+    "K": 1.6
+   },
+   "hard": 5.878222644329071,
+   "pinn_record_end": 6.278830627600352,
+   "pinn_whole_axis": 4.955665687719981
+  },
+  {
+   "draw": 2,
+   "params": {
+    "b1": 0.3,
+    "b2": -0.15,
+    "b3": 0.3,
+    "z0": 0.9,
+    "z1": 0.15,
+    "K": 1.6
+   },
+   "hard": 5.626117308934529,
+   "pinn_record_end": 5.3764141003290815,
+   "pinn_whole_axis": 4.645269890626271
+  },
+  {
+   "draw": 3,
+   "params": {
+    "b1": 0.5,
+    "b2": 0.15,
+    "b3": 0.3,
+    "z0": 1.1,
+    "z1": 0.15,
+    "K": 0.8
+   },
+   "hard": 4.570875146172264,
+   "pinn_record_end": 4.425061827356165,
+   "pinn_whole_axis": 4.114983233538541
+  },
+  {
+   "draw": 4,
+   "params": {
+    "b1": 0.3,
+    "b2": 0.15,
+    "b3": 0.3,
+    "z0": 0.9,
+    "z1": 0.25,
+    "K": 1.2
+   },
+   "hard": 4.739807864030202,
+   "pinn_record_end": 4.098397970199585,
+   "pinn_whole_axis": 3.827945371468862
+  }
+ ],
+ "seconds_total_sum": 1159.4642401000601
+}

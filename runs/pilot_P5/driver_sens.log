@@ -1,0 +1,10 @@
+{'draw': 0, 'variant': 'record_end', 'lambda_res': 10.0, 'forecast_rmse_pp_cell_cond_mean': 5.775547981262207, 'train_rmse_pp': 3.910882301261081}
+{'draw': 0, 'variant': 'whole_axis', 'lambda_res': 10.0, 'forecast_rmse_pp_cell_cond_mean': 5.554309975017201, 'train_rmse_pp': 5.32630389238446}
+{'draw': 1, 'variant': 'record_end', 'lambda_res': 10.0, 'forecast_rmse_pp_cell_cond_mean': 6.6333735684553785, 'train_rmse_pp': 4.178701979771744}
+{'draw': 1, 'variant': 'whole_axis', 'lambda_res': 10.0, 'forecast_rmse_pp_cell_cond_mean': 6.192186812559764, 'train_rmse_pp': 5.229049649645404}
+{'draw': 2, 'variant': 'record_end', 'lambda_res': 10.0, 'forecast_rmse_pp_cell_cond_mean': 6.410686691602071, 'train_rmse_pp': 4.534951868306532}
+{'draw': 2, 'variant': 'whole_axis', 'lambda_res': 10.0, 'forecast_rmse_pp_cell_cond_mean': 6.316804677248001, 'train_rmse_pp': 5.596589555815008}
+{'draw': 3, 'variant': 'record_end', 'lambda_res': 10.0, 'forecast_rmse_pp_cell_cond_mean': 5.573680595918135, 'train_rmse_pp': 3.227953747123997}
+{'draw': 3, 'variant': 'whole_axis', 'lambda_res': 10.0, 'forecast_rmse_pp_cell_cond_mean': 5.1359054175290195, 'train_rmse_pp': 4.983814835835878}
+{'draw': 4, 'variant': 'record_end', 'lambda_res': 10.0, 'forecast_rmse_pp_cell_cond_mean': 5.634876211484273, 'train_rmse_pp': 3.5601536151205715}
+{'draw': 4, 'variant': 'whole_axis', 'lambda_res': 10.0, 'forecast_rmse_pp_cell_cond_mean': 5.3572467764218645, 'train_rmse_pp': 4.862678521122684}

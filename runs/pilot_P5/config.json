@@ -1,0 +1,116 @@
+{
+ "pilot": "P5 (synthetic G1: hard ODE vs soft PINN)",
+ "device": "CPU only (CUDA_VISIBLE_DEVICES empty, torch.set_num_threads(1), at most 3 processes)",
+ "python": "3.14.3",
+ "torch": "2.11.0+cu130",
+ "numpy": "2.4.2",
+ "git": {
+  "commit": "992b5b404266afea668275ee7324d345357b3176",
+  "dirty_code_files": ""
+ },
+ "interpreter": ".venv/Scripts/python.exe -P",
+ "constants": {
+  "SIGMA_Y": 0.05,
+  "TAU_DELTA": 0.15,
+  "FADE_TARGET_median_final_y_s": 2.0,
+  "T_SCALE_weeks": 50.0,
+  "REST_H": 0.5,
+  "T_MAX_N": 1.8,
+  "K_WINDOW": 4,
+  "MIN_PTS_scored_cell": 8,
+  "model_SIGMA": 0.05,
+  "model_TAU": 0.15,
+  "G2_GRID": {
+   "b1": [
+    0.3,
+    0.5
+   ],
+   "b2": [
+    -0.15,
+    0.15
+   ],
+   "b3": [
+    0.3,
+    0.5
+   ],
+   "q": [
+    0.3
+   ],
+   "H": [
+    0.8,
+    1.2
+   ],
+   "c0h": [
+    -0.2,
+    0.2
+   ],
+   "c1h": [
+    -0.6,
+    -0.3
+   ],
+   "P": [
+    0.5,
+    0.8
+   ]
+  },
+  "G1_GRID": {
+   "b1": [
+    0.3,
+    0.5
+   ],
+   "b2": [
+    -0.15,
+    0.15
+   ],
+   "b3": [
+    0.3,
+    0.5
+   ],
+   "z0": [
+    0.9,
+    1.0,
+    1.1
+   ],
+   "z1": [
+    0.15,
+    0.25
+   ],
+   "K": [
+    0.8,
+    1.2,
+    1.6
+   ]
+  },
+  "G1_KNEE_W": 0.08,
+  "G1_T_REF": 0.4
+ },
+ "seeds": {
+  "draw_params": "default_rng([20261104, kind(1=G1,2=G2), draw])",
+  "offsets_and_noise": "default_rng([20261104, 100+kind, draw])",
+  "split": "default_rng([20261104, 7, draw]) -> 12 of 63 conditions held out",
+  "inner_folds": "default_rng([20261104, 9, draw])",
+  "trials": "default_rng([20261104, 11, seed])",
+  "lhs500": "scipy LatinHypercube seed 12345 (rejection to the hull)",
+  "lhs256_collocation": 777
+ },
+ "design": "63 ISU conditions x 251 cells, per-cell check-up weeks of data/processed/isu_capacity.csv (columns cell, group, week only)",
+ "lambda_res_grid": [
+  0.01,
+  0.1,
+  1.0
+ ],
+ "hard_l2_grid": [
+  0.0001,
+  0.001,
+  0.01
+ ],
+ "pinn_l2": 0.001,
+ "pinn_steps": 2500,
+ "hard_steps": 1200,
+ "pinn_arch": "F = t g(t,x,z), g = tanh MLP 32x3, z in R^2; KAN [3,3,1] grid 5 in the law (same as hard ODE); Adam lr 5e-3 cosine to 10 %",
+ "collocation": "(a) 24 times per training cell from record end (primary) or from 0 (whole_axis) to t_max=1.8; (b) 256 hull LHS stress points x 16 times in [0,1.8]; 512 + 256 rows resampled per step; no calendar twins (ISU has no storage arm)",
+ "window": "first 4 check-ups after the initial one",
+ "draws_in_this_process": "0,1,2",
+ "variants": "record_end,whole_axis",
+ "go_rule": "PINN forecast RMSE beyond the window below the hard ODE in >= 3 of 5 draws (primary variant record_end)"
+}

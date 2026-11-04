@@ -1,0 +1,6 @@
+draw 3 hard: forecast 4.57 pp  l2 0.001  11 s
+draw 3 pinn_record_end: forecast 4.43 pp  lambda 0.1  111 s
+draw 3 pinn_whole_axis: forecast 4.11 pp  lambda 1.0  111 s
+draw 4 hard: forecast 4.74 pp  l2 0.0001  11 s
+draw 4 pinn_record_end: forecast 4.10 pp  lambda 1.0  116 s
+draw 4 pinn_whole_axis: forecast 3.83 pp  lambda 1.0  115 s

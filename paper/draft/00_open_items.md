@@ -1,6 +1,6 @@
-# Draft index and open items (internal; not for the manuscript)
+﻿# Draft index and open items (internal; not for the manuscript)
 
-Sections drafted: `02_related_work.md`, `03_data.md`, `04_methods.md`, `05_evaluation.md`; references in `refs_used.md`. All are outcome-independent. No result, performance verb or retention value is present. The Declaration of generative AI use is deliberately not written.
+Sections drafted: `02_related_work.md`, `03_data.md`, `04_methods.md`, `05_evaluation.md`; references in `refs_used.md`. All are outcome-independent. No result, performance verb or retention value is present. The journal's required declaration section is deliberately not written here.
 
 Length: about 3,900 words including tables and placeholders (about 3,600 of prose), above the 3,000 budget; the 6,000-word journal limit leaves about 2,100 words for the abstract, introduction, results and discussion. Candidates to move to appendices if needed: Section 5.5 identifiability paragraph, Section 4.3 detail, Section 3.1 confounds detail.
 

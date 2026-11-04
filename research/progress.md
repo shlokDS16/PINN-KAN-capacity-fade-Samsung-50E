@@ -40,3 +40,4 @@
 - 02:35 figure scripts done (1a8c95f; 8 figures, 2 tables, graphical abstract; synthetic demos watermarked; lead render-checked fig1/fig2, notes in D-figures.md). Builder adding figure-input emitters + stats step (sign test). Prior-art full reading started (PiDDM, arXiv 2607.16864, KA-CRNN).
 - 02:45 prior art read in full (notes/papers/priorart_*.md, PRIORART_SUMMARY.md): claim only the combination.
 - 03:00 run writer emits all figure inputs; stats step implements D012/D009/Holm/H2; 170 tests pass (35b242a); figures regenerate end to end on synthetic outputs. Open: negative-control criteria may fail on leak-free pipeline -> statistician ruling (NEGCONTROL_RULING.md). Manuscript writer drafting outcome-independent sections (paper/draft/).
+- 03:20 manuscript draft sections 2-5 (paper/draft/, 9da10dc, d46b7b2; about 3,900 words; A10 equations TO VERIFY; appendices A-C to write). Started: causal QC outlier fix (review m1), citation audit of the draft.

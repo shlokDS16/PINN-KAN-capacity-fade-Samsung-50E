@@ -59,3 +59,12 @@ annotations), colour-blind safe (Okabe-Ito, cividis for temperature; method iden
 - Shlok saves the paywalled PIKAN, PGKAN, Stroebl and Zhang papers (BLUEPRINT note): compare Fig. 5 and Table 1 with their forms and revise.
 - The confirmatory runs: a figure that looks weaker than its exemplar on real data (for example Fig. 3 with all three lines overlapping) is redone, not published.
 - The editor requires a different single-column width: scripts take the width from `pk_style.W_FULL`.
+
+## Lead render check (2026-11-05 02:30; synthetic demos, fig1 and fig2 PNG viewed)
+- Fig 1 schematic: clear flow, legible at full width; the throughput symbol in the law (v(t)) reads as a Latin v:
+  use a distinct symbol (e.g. dTheta/dt or nu with a serif math font). Keep.
+- Fig 2 design map: panels a-f legible; in b and c points at the lowest DoD (5 %) and C_dch (0.2 C) sit on the
+  axis lines: add axis padding. Panel d counts come from metadata only (allowed before the freeze).
+- Open for the post-results pass: figure inputs the run writer does not yet produce (window.csv,
+  stress_functions.json, residual_map.npz, superposition.csv, contrasts_<test>.json, reference.json,
+  controls.json, H7 summary.json) must be added to the run writer / statistics step before the confirmatory run.

@@ -21,4 +21,10 @@ Apply together with the freeze blockers FB-1..FB-8 of PREREG_v2 section 17; each
 7. **D012:** primary test = exact one-sided sign test on ln(S_comp/S_PINN) per held-out condition (median
    estimand); Test C descriptive; sign-flip p-values reported nowhere as primary (the run code's placeholder RNG
    seed for the sign-flip p-value is irrelevant to primary inference; fix or drop the field).
-8. **Smoke re-run** of runs/build_v1 at the freeze commit (code changed after the smoke runs).
+
+8. **Figure inputs (figure-smith, 1a8c95f):** the run writer / statistics step must emit window.csv,
+   stress_functions.json, residual_map.npz, superposition.csv, contrasts_<test>.json, reference.json,
+   controls.json and the H7 summary.json (formats in code/figures/README.md); PREREG_v2 section 9.3 still
+   names the sign-flip rule and must say sign test (D012); Fig. 4 shows median ln-ratio with exact
+   order-statistic interval plus a mean paired pp column (BCa), tiers read from the statistics step.
+9. **Smoke re-run** of runs/build_v1 at the freeze commit (code changed after the smoke runs).

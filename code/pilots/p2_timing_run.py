@@ -17,6 +17,7 @@ ap.add_argument("--model", choices=["hard", "pinn"], required=True)
 ap.add_argument("--threads", type=int, required=True)
 ap.add_argument("--variant", choices=["base", "scale279", "fullcycle"], default="base")
 ap.add_argument("--steps", type=int, default=2000)
+ap.add_argument("--m_obs", type=int, default=80, help="max observed points per cell (uniform in cycle index)")
 ap.add_argument("--seed", type=int, default=0)
 ap.add_argument("--lr", type=float, default=5e-3)
 ap.add_argument("--out", required=True)
@@ -40,7 +41,7 @@ t_load = time.perf_counter()
 kw = {"base": {}, "scale279": {"tile_to": 279}, "fullcycle": {"per_cycle_all": True}}[a.variant]
 if a.model == "hard" and a.variant == "fullcycle":
     sys.exit("hard-ODE full per-cycle variant is not defined (one RK4 node per cycle = ~1500 sequential steps); not run")
-d, info = build_fit_data(a.root, seed=a.seed, **kw)
+d, info = build_fit_data(a.root, m_obs=a.m_obs, seed=a.seed, **kw)
 t_load = time.perf_counter() - t_load
 C = info["n_cells"]
 model = HardODE(C) if a.model == "hard" else PINN(C)
@@ -60,7 +61,7 @@ for step in range(a.steps):
 fit_s = time.perf_counter() - t0
 mi = proc.memory_info()
 res = {
-    "model": a.model, "variant": a.variant, "threads": a.threads, "steps": a.steps, "seed": a.seed, "lr": a.lr,
+    "model": a.model, "variant": a.variant, "m_obs": a.m_obs, "threads": a.threads, "steps": a.steps, "seed": a.seed, "lr": a.lr,
     "fit_seconds": fit_s, "seconds_per_step": fit_s / a.steps, "data_build_seconds": t_load,
     "peak_working_set_mb": getattr(mi, "peak_wset", float("nan")) / 1e6,
     "peak_pagefile_mb": getattr(mi, "peak_pagefile", float("nan")) / 1e6,

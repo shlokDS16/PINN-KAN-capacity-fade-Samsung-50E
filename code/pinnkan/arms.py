@@ -10,6 +10,7 @@ import torch
 
 from . import baselines, semi
 from .data import prepare_many
+from . import free
 from .hard import fit_hard, predict_hard
 from .law import batch_from_cells
 from .pinn import fit_data_only, fit_pinn, predict_data_only, predict_pinn
@@ -19,7 +20,7 @@ DECADES = [1e-5, 1e-4, 1e-3, 1e-2]
 LAM = [1e-2, 1e-1, 1.0, 10.0, 100.0]
 PLACE = ["record_end", "whole_axis"]
 
-BASE_STEPS = {"hard": 1200, "pinn": 2000, "data": 1500}
+BASE_STEPS = {"hard": 1200, "pinn": 2000, "data": 1500, "free": 1000}
 
 
 @dataclass
@@ -46,8 +47,11 @@ ARMS = {
     "A4": ArmDef("A4", "PINN, additive GAM", "pinn", {"grid": ("cat", [3, 5, 10, 20, 30]), "l2": ("cat", [1e-5, 1e-4, 1e-3, 1e-2, 1e-1]), "lam_res": ("cat", LAM), "placement": ("cat", PLACE)}, map_kind="gam"),
     "A5": ArmDef("A5", "PINN, interaction GAM", "pinn", {"grid": ("cat", [3, 5, 10, 20, 30]), "l2": ("cat", [1e-5, 1e-4, 1e-3, 1e-2, 1e-1]), "lam_res": ("cat", LAM),
                                                        "placement": ("cat", PLACE), "igrid": ("cat", [3, 5])}, map_kind="igam"),
+    "A6": ArmDef("A6", "PINN, degree-2 log-polynomial (DROPPED by the prereg; optional, no numbers reported)", "pinn", {"l2": ("cat", [1e-5, 1e-4, 1e-3, 1e-2, 1e-1]), "lam_res": ("cat", LAM),
+                                                                                                       "placement": ("cat", PLACE)}, map_kind="poly"),
     "A7": ArmDef("A7", "PINN, MLP stress map (PiDDM-style)", "pinn", {"width": ("cat", [4, 8, 16, 32]), "depth": ("cat", [1, 2, 3]), "l2": ("cat", DECADES), "lam_res": ("cat", LAM),
                                                                     "placement": ("cat", PLACE)}, map_kind="mlp"),
+    "A8": ArmDef("A8", "free G (synthetic H7 only)", "free", {"width": ("cat", [16, 32, 64]), "wd": ("cat", DECADES)}),
     "A9": ArmDef("A9", "data-only F (lambda = 0)", "data", {"width": ("cat", [16, 32, 64, 128]), "depth": ("cat", [2, 3, 4]), "wd": ("cat", DECADES), "zdim": ("cat", [1, 2, 3])}),
     "A10": ArmDef("A10", "Stroebl semi-empirical (PROVISIONAL form)", "semi", tuned=False),
     "A11": ArmDef("A11", "GP-ARD", "p3", {"nu": ("cat", [1.5, 2.5, -1.0]), "noise_lo": ("logu", 1e-6, 1e-2), "fs": ("cat", ["full", "min"])}),
@@ -137,6 +141,16 @@ class DataOnlyArm(Arm):
         return predict_data_only(self.model, self.spec, wcells)
 
 
+class FreeArm(Arm):
+    def fit(self, train_cells):
+        self.model = free.fit_free(batch_from_cells(self.spec, train_cells), self.spec, self.hp, self.seed, steps=self.steps("free"))
+        self.n_params = sum(p.numel() for p in self.model.net.parameters()) + 1
+        return self
+
+    def predict(self, wcells):
+        return free.predict_free(self.model, self.spec, wcells)
+
+
 class SemiArm(Arm):
     def fit(self, train_cells):
         self.form = semi.SemiForm(self.spec)
@@ -166,7 +180,7 @@ class RefArm(Arm):
         return baselines.persistence(wcells) if self.arm_id == "R1" else baselines.window_linear(wcells)
 
 
-_CLS = {"pinn": PINNArm, "hard": HardArm, "data": DataOnlyArm, "semi": SemiArm, "p3": P3Arm, "ref": RefArm}
+_CLS = {"free": FreeArm, "pinn": PINNArm, "hard": HardArm, "data": DataOnlyArm, "semi": SemiArm, "p3": P3Arm, "ref": RefArm}
 
 
 def make_arm(arm_id, spec, hp, seed, ctx):

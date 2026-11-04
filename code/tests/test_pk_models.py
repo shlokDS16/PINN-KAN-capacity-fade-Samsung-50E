@@ -168,6 +168,16 @@ def test_generator_levels_and_design(g0):
     assert len({c.cond for c in tr} & {c.cond for c in te}) == 0
 
 
+def test_g1_misspecified_time_law_generates_and_differs_from_g0():
+    g1, g0_ = synth.make_synthetic("G1", seed=2), synth.make_synthetic("G0", seed=2)
+    f1 = np.median([10.0 * (1.0 - c.ret[-1]) for c in g1.cells])
+    assert 1.3 < f1 < 2.7 and all(np.isfinite(c.ret).all() for c in g1.cells)
+    # the exponent z(T) != 1 makes y non-proportional to the closed-form drive: ratio of mid to final y differs from G0 for the same design
+    r1 = np.mean([(1 - c.ret[len(c.t) // 2]) / (1 - c.ret[-1]) for c in g1.cells if c.kind == "cycling"])
+    r0 = np.mean([(1 - c.ret[len(c.t) // 2]) / (1 - c.ret[-1]) for c in g0_.cells if c.kind == "cycling"])
+    assert abs(r1 - r0) > 0.005
+
+
 def test_g2_surface_is_not_additive_and_g0_is_():
     rng = np.random.default_rng(0)
     raw = np.column_stack([rng.choice([23., 35., 45.], 800), rng.uniform(.3, .7, 800), rng.uniform(.05, .6, 800), rng.uniform(.2, 1, 800), rng.uniform(.2, 2, 800)])
@@ -315,7 +325,7 @@ def test_arm_table_matches_prereg_dimensions():
     assert set(arms.ARMS["A1"].space["lam_res"][1]) == {1e-2, 1e-1, 1.0, 10.0, 100.0} and arms.ARMS["A1"].space["placement"][1] == ["record_end", "whole_axis"]
 
 
-@pytest.mark.parametrize("aid", ["A1", "A2", "A3", "A4", "A5", "A7", "A9", "A10", "A13", "A14", "R1", "R2"])
+@pytest.mark.parametrize("aid", ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A13", "A14", "R1", "R2"])
 def test_every_arm_fits_and_predicts_on_synthetic(aid, g0):
     S, tr, te = g0
     rule = WindowRule.for_spec(SPEC)

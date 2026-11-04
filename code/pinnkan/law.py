@@ -172,6 +172,23 @@ class ParamMap(nn.Module):
         return (self.w ** 2).sum()
 
 
+class PolyMap(nn.Module):
+    """A6 (dropped from the essential set by the prereg; kept as an optional arm): degree-2 polynomial of the normalised stress,
+    d linear + d(d+1)/2 quadratic and cross terms, ridge via spline_l2."""
+
+    def __init__(self, d):
+        super().__init__()
+        self.idx = [(i, j) for i in range(d) for j in range(i, d)]
+        self.w = nn.Parameter(torch.zeros(d + len(self.idx)))
+
+    def forward(self, s):
+        cols = [s[:, i] for i in range(s.shape[1])] + [s[:, i] * s[:, j] for i, j in self.idx]
+        return torch.stack(cols, 1) @ self.w
+
+    def spline_l2(self):
+        return (self.w ** 2).sum()
+
+
 class MLPMap(nn.Module):
     """A7 (PiDDM-style): small tanh MLP of the stress vector."""
 
@@ -211,6 +228,8 @@ def build_stress_map(kind, spec: DatasetSpec, hp):
         return IGAMMap(d, int(hp.get("grid", 5)), pairs, int(hp.get("igrid", 3)))
     if kind == "param":
         return ParamMap(spec)
+    if kind == "poly":
+        return PolyMap(d)
     if kind == "mlp":
         width, depth = int(hp.get("width", 8)), int(hp.get("depth", 2))
         cap = max(kan_param_count(d, 8, 12), 1)

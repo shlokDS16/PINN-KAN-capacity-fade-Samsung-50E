@@ -1,0 +1,19 @@
+{
+  "pilot": "P2 (seconds per fit)",
+  "date": "2026-11-04",
+  "device": "CPU only (CUDA_VISIBLE_DEVICES set to empty in every process; no .cuda() call); 24 logical cores on the machine, torch.set_num_threads(1 or 3), interop threads 1",
+  "software": "Python 3.14.3 (.venv, system site packages), torch 2.11.0+cu130 (CPU execution), numpy 2.4.2",
+  "data": "SNL mirror via data/processed/snl_cycles.csv and snl_cells.csv (P1 output); ALL 61 cells; no train/test split exists or is used",
+  "state_and_time": "y_s = 10*(1 - Q/Q0,c) with Q0,c the cell's first valid cycle capacity; t_n = days since the cell's first cycle / 500",
+  "observed_points": "variant base: up to m_obs (default 80; also 20 and 40) points per cell, uniform in cycle index, always including the first (y=0, exact) -> 4819 points at 80; fullcycle: every valid cycle (96,341 points); scale279: the 61 cells tiled to 279 cells (timing proxy for the 279-cell Samsung set)",
+  "law": "dy/dt = [r_cal(s) + r_cyc(s,delta_c) * nu_c] * 1/(1+y/1); r_cal = exp(log_cal + a(SOC) + E(SOC) x_arr(T)), KAN [1,2]; r_cyc = exp(log_cyc + f(s) + delta_c), KAN [5,3,1] on (T, SOC mid, DoD, C_ch, C_dch); nu_c = equivalent full cycles per day / median over cells, constant per cell; one state factor, no backbone tournament",
+  "kan": "own compact B-spline KAN in torch (code/models/kan_spline.py), cubic, grid 5, silu base term; NOT pykan (pykan 0.2.8 is installed but its MultKAN bookkeeping was not used)",
+  "hard_ode": "vectorised RK4 over all cells, one RK4 step per interval between consecutive observed nodes (M-1 sequential steps, padded nodes have dt=0); loss = masked MSE + 1e-3*mean(delta^2); params: KANs + 2 log-scales + 61 delta_c",
+  "pinn": "F(t,s,z) = t*g(t,s,z), g = MLP 64x3 tanh on (t, 5 stress, 2-dim per-cell latent z_c) -> hard IC; loss = MSE at all observed points + lam_res(1.0) * mean R^2 + 1e-3*mean(delta^2); R = dF/dt - A*h(F) by autograd (create_graph); per step 768 collocation rows from set (a) (61 cells x 32 times to the fixed horizon 575 d = longest record; KAN amplitude once per cell) and 256 rows from the fixed union of (b) 256 Latin-hypercube stress points and (c) 128 calendar twins (nu=0), KAN on those rows",
+  "optimiser": "Adam lr 5e-3, 2000 steps (fixed), full-batch data term, no early stopping, no lr schedule, no tuning",
+  "timing": "fit_seconds = wall clock of the 2000-step loop (perf_counter), data tensors built before the clock; one fresh process per fit; peak RAM = Windows peak working set of the process (includes ~690 MB for importing torch)",
+  "seeds": [0, 1, 2],
+  "git_commits": {"base_runs (run_p2.sh)": "2966c59441c25c625ca19e28cd403cfe75e416bb", "cadence runs (run_p2_cadence.sh, m_obs option)": "c06a110bd782b381ac0e24e3e9310400c0d25b7f"},
+  "unit_tests": "python -m pytest code/tests/test_p2_units.py -q -> 8 passed before any timing run (B-spline partition of unity, KAN gradients, RK4 order and exactness, hard IC, autograd derivative vs finite difference, law positivity and storage-cell limit)",
+  "files": {"raw_per_run": "runs/pilot_P2/raw/*.json", "aborted_first_launch": "runs/pilot_P2/raw_aborted/ (driver was killed after 1 run when its shell exited; kept, not used in the summary)", "summary": "runs/pilot_P2/summary.json, summary.md"}
+}

@@ -99,3 +99,13 @@ CSV is read whole into memory before the filter (the test rows are dropped, not 
 `CUDA_VISIBLE_DEVICES= .venv/Scripts/python.exe -P code/pilots/p3_headroom.py . isu 4 20 1` (then `snl 100`, `isu 6`, `snl 200`).
 `config.json` records the HEAD commit at launch (61bb730); the code file was committed afterwards with unchanged content
 (sha above); the commit of this result carries the prefix "P3:".
+
+## Errata (2026-11-05, from GATE_pilots_audit.md)
+
+Original text above is unchanged.
+
+1. **Sensitivity ratios and intervals (audit N5).** Original (line after the verdict table): "ISU W = 6 weeks 0.79 [0.68, 0.98]; SNL W = 200 cycles 0.93 [0.65, 1.35]." The interval in each case belongs to the pooled-condition ratio, not to the fold-mean ratio printed beside it, and the endpoints are rounded wrongly. Corrected:
+   - ISU W6: fold-mean ratio **0.79** (judge-literal primary, 0.792); pooled-condition ratio **0.78**, 95 % CI **[0.67, 0.97]** (60 conditions).
+   - SNL W200: fold-mean ratio **0.93** (0.925); pooled-condition ratio **0.92**, 95 % CI **[0.64, 1.35]** (20 conditions).
+
+   Evidence: `runs/pilot_P3/isu_W6/results.json` and `runs/pilot_P3/snl_W200/results.json`, fields `summary.ratio_primary` and `summary.pooled_condition_level` (cluster bootstrap by condition, 10,000 draws).

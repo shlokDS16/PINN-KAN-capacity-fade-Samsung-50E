@@ -316,7 +316,7 @@ D005's date stands: if Samsung check-ups are not parsed by **07 Nov 09:00**, the
 16. §16: recompute the compute table for the essential arm set (7 PINN-type + 1 hard in Test B; Test C 5 arms; S2 4).
 17. §17: replace by the preconditions and checklist of section 7; record OPEN-2..6 rulings of section 5.
 18. §18: run-record spec of C7; change log row "v2 2026-11-05: D011 rulings".
-19. Errata (C4) are appended to the RESULT.md files, not to the prereg.
+19. Errata (C4) are appended to the RESULT.md files, not to the prereg. Status 2026-11-05: appended to `runs/pilot_P0`, `pilot_P1` and `pilot_P3` RESULT.md from `runs/GATE_pilots_audit.md` (N1, N3, N5, the P0 labels; N2 and two labels marked "not verified"). Not covered by this item: N4 (`runs/samsung_pipeline/RESULT.md`, outside pilot_P*) and the prereg corrections.
 
 ---
 

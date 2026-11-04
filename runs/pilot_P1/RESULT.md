@@ -42,3 +42,9 @@ capacity and throughput. **No-go**: fix transcription; drop duplicated SNL cells
 
 Files: `config.json`, `isu_table_check.json`, `snl_duplicates.json`, `README_V2.0.md`; code in `code/data/`.
 Scratch numbers in the proposer's folder are not used.
+
+## Errata (2026-11-05, from GATE_pilots_audit.md)
+
+Original text above is unchanged.
+
+1. **Cells below 80 % of first-cycle capacity (audit N3).** Original (section (b), Quality): "30 of 61 cells fall below 80 % of their first-cycle capacity within the record." Corrected: **35 of 61 cells.** Method: capacity = max(q_dis_ah, q_chg_ah) per cycle; reference = cycle 1; the 90 invalid rows (q_dis_ah <= 0.05 Ah, cell `SNL_18650_LFP_25C_0-100_0.5-1C_b`, cycles 2622-2711) are dropped, the same rule as `code/pilots/p3_headroom.py` line 48. If those rows are kept, the count is 36. Evidence: `data/processed/snl_cycles.csv` (recounted 2026-11-05). Descriptive only; no verdict depends on it.

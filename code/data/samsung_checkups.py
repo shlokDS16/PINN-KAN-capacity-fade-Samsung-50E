@@ -50,7 +50,7 @@ OUT_CELLS = OUT_DIR / "samsung_cells.csv"
 CACHE = OUT_DIR / ".samsung_file_cache.json"
 RUN_DIR = ROOT / "runs" / "samsung_pipeline"
 
-CODE_VERSION = "2026-11-05.3"  # bump to invalidate the per-file cache
+CODE_VERSION = "2026-11-05.5"  # bump to invalidate the per-file cache
 
 # ---- constants taken from the dataset paper (notes/papers/samsung50e_dataset_paper.md, Table 3) ----
 Q_NOM_AH = 4.9                    # rated capacity; C-rates refer to it
@@ -480,6 +480,13 @@ def process_cell(serial: str, cond: pd.Series | None, folder: Path, analysed: di
             pv = rows[i - 1][col] if i > 0 else 0.0
             r[col.replace("_cum", "_interval")] = (r[col] - pv) if np.isfinite(r[col]) and np.isfinite(pv) else np.nan
 
+    for i, r in enumerate(rows):
+        if i == 0:
+            r["n_skipped_events_prev"] = r["n_events_before"]
+        else:
+            pr = rows[i - 1]
+            r["n_skipped_events_prev"] = r["n_events_before"] - pr["n_events_before"] - (1 if pr["kind"] in ("CU", "exCU") else 0)
+
     # ---- quality flag: outliers among the 23 C series (AT excluded: contaminated by 10/45 C tests) ----
     base_ok = np.array([not r["_flags"] and np.isfinite(r["q_mean_ah"]) for r in rows], bool)
     series = np.array([r["kind"] != "AT" for r in rows], bool)
@@ -627,7 +634,7 @@ def resolve_design(serial: str, metas: list[dict], design: pd.DataFrame) -> tupl
 def name_of_folder(folder: Path) -> str:
     names = [FILE_RE.match(p.name).group("serial") for p in folder.iterdir() if FILE_RE.match(p.name)]
     if not names:
-        return folder.name
+        return folder.name.split("__")[0]
     return max(set(names), key=names.count)
 
 
@@ -644,7 +651,7 @@ def build(jobs: int = 2, use_cache: bool = True):
                     cap_paths.append(p)
     analysed = analyse_all(cap_paths, jobs, use_cache)
 
-    all_rows, cells, seen_ids = [], [], {}
+    all_rows, cells, seen_ids, mapping = [], [], {}, []
     for f in folders:
         serial = name_of_folder(f)
         if serial != f.name.split("__")[0]:
@@ -659,6 +666,26 @@ def build(jobs: int = 2, use_cache: bool = True):
         if cell_id in seen_ids:
             issues.append({"serial": serial, "file": f.name, "issue": "two_folders_same_cell", "detail": f"{cell_id}: {seen_ids[cell_id]} and {f.name}"})
         seen_ids[cell_id] = f.name
+        # cross-check against the design with an independent field: the chamber set point of ZYK (cycling) files
+        # is the ageing temperature of the test point; ET / CU files are at 10 / 23 / 45 / 23 C regardless
+        checks = []
+        if cond is not None:
+            for (i_, k_, t_), pth in classify_files(f)["meta"].items():
+                if k_ == "ZYK":
+                    sp = read_meta_file(pth)["setpoint_c"]
+                    if sp is not None and abs(sp - float(cond["amb_temp_tp"])) > 0.5:
+                        issues.append({"serial": serial, "file": pth.name, "issue": "zyk_setpoint_differs_from_design", "detail": f"{sp} vs {cond['amb_temp_tp']}"})
+                        checks.append("zyk_setpoint_MISMATCH")
+                    elif sp is not None:
+                        checks.append("zyk_setpoint_ok")
+                    break
+        dts = [m["date"] for m in metas if m["date"]]
+        mapping.append({"folder": f.name, "serial": serial, "stage": int(cond["stage"]) if cond is not None else "", "cell_id": cell_id,
+                        "assigned_by": how, "lab_meta": ",".join(sorted({m["lab"] for m in metas if m["lab"]})),
+                        "internal_serial_meta": ",".join(sorted({m["internal_serial"] for m in metas if m["internal_serial"]})),
+                        "internal_serial_design": cond["serial_internal"] if cond is not None else "",
+                        "first_meta_date": min(dts).isoformat() if dts else "", "last_meta_date": max(dts).isoformat() if dts else "",
+                        "design_T_C": cond["amb_temp_tp"] if cond is not None else "", "notes": "; ".join(notes + checks)})
         rows, cell = process_cell(serial, cond, f, analysed, issues)
         for r in rows:
             for a, b in (("T_C", "amb_temp_tp"), ("SOC_max", "soc_max_tp"), ("DoD", "dod_tp"), ("C_ch", "c_ch_tp"), ("C_dch", "c_dch_tp"),
@@ -673,7 +700,8 @@ def build(jobs: int = 2, use_cache: bool = True):
             r["efc_method"] = ("analytic: FEC/h = C_ch*C_dch/(C_ch+C_dch), CC only, zero rest, exposure = 7 d at the first check-up (design schedule) + calendar gaps - check-up file durations "
                                "(CU measured, exCU 30 h); NOT validated against ZYK") if r["type"] == "z" else ""
             all_rows.append(r)
-        cell.update({"cell_id": cell_id, "stage_match": how, "folder": f.name})
+        cell.update({"cell_id": cell_id, "stage_match": how, "folder": f.name,
+                     "endpoint_only_cell": bool(cond is not None and cond["type"] == "k" and int(cond["cell"]) >= 4)})
         if cond is not None:
             cell.update({"type": cond["type"], "lab": cond["lab"], "tp": int(cond["tp"]), "cell": int(cond["cell"]), "stage": int(cond["stage"]),
                          "T_C": cond["amb_temp_tp"], "SOC_max": cond["soc_max_tp"], "DoD": cond["dod_tp"], "C_ch": cond["c_ch_tp"], "C_dch": cond["c_dch_tp"],
@@ -684,7 +712,7 @@ def build(jobs: int = 2, use_cache: bool = True):
     cells_df = pd.DataFrame(cells)
     cols = ["cell_id", "serial", "stage_match", "type", "lab", "tp", "cell", "stage", "sampling", "T_C", "SOC_max", "DoD", "C_ch", "C_dch",
             "kind", "file_idx", "cu_idx", "test_temp_c", "meas_start_date", "first_test_date", "first_test_source",
-            "elapsed_days", "gap_days_prev", "exposure_days_est", "exposure_anchor", "exposure_days_est_et_route", "interval_exposure_days_est", "n_events_before", "events_kinds_assumed",
+            "elapsed_days", "gap_days_prev", "exposure_days_est", "exposure_anchor", "exposure_days_est_et_route", "interval_exposure_days_est", "n_events_before", "n_skipped_events_prev", "events_kinds_assumed",
             "q_dch_ah", "q_ch_ah", "q_mean_ah", "q_ref_ah", "ref_kind", "retention", "retention_vs_first_cu",
             "efc_est_interval", "efc_est_cum", "efc_est_interval_rest300s", "efc_est_cum_rest300s", "efc_method",
             "dur_dch_h", "dur_ch_h", "i_dch_med_a", "file_hours", "active_hours", "t_surf_dch_start_c", "t_surf_dch_mean_c", "amb_median_c", "chamber_setpoint_c",
@@ -693,6 +721,7 @@ def build(jobs: int = 2, use_cache: bool = True):
         df = df[cols].sort_values(["type", "cell_id", "file_idx"]).reset_index(drop=True)
     else:
         df = pd.DataFrame(columns=cols)
+    build.mapping = pd.DataFrame(mapping)
     return df, cells_df, issues, design, folders
 
 
@@ -754,6 +783,21 @@ def summarise(df, cells, issues, design) -> dict:
     return s
 
 
+def conditions_table(cells: pd.DataFrame, design: pd.DataFrame) -> pd.DataFrame:
+    """Per condition: cells in the design, cells downloaded, cells with >= 3 quality-passed check-ups."""
+    key = ["type", "T_C", "SOC_max", "DoD", "C_ch", "C_dch"]
+    d = design.rename(columns={"amb_temp_tp": "T_C", "soc_max_tp": "SOC_max", "dod_tp": "DoD", "c_ch_tp": "C_ch", "c_dch_tp": "C_dch"})
+    t = d.groupby(key).agg(cells_in_design=("serial_internal", "size"), stages=("stage", lambda x: ",".join(map(str, sorted(set(x)))))).reset_index()
+    if len(cells):
+        c = cells.groupby(key).agg(cells_downloaded=("cell_id", "size"), cells_with_rows=("n_capacity_rows", lambda x: int((x > 0).sum())),
+                                   cells_traj_ge3=("n_qc_pass", lambda x: int((x >= 3).sum())), capacity_rows=("n_capacity_rows", "sum")).reset_index()
+        t = t.merge(c, on=key, how="left")
+    for col in ("cells_downloaded", "cells_with_rows", "cells_traj_ge3", "capacity_rows"):
+        if col in t:
+            t[col] = t[col].fillna(0).astype(int)
+    return t.sort_values(key).reset_index(drop=True)
+
+
 def git_head() -> str:
     try:
         return subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--short", "HEAD"], capture_output=True, text=True, timeout=20).stdout.strip()
@@ -783,6 +827,8 @@ def main(argv=None):
         "output_sha256": {OUT_CHECKUPS.name: hashlib.sha256(OUT_CHECKUPS.read_bytes()).hexdigest()}}, indent=2), encoding="utf-8")
     pd.DataFrame(issues, columns=["serial", "file", "issue", "detail"]).to_csv(RUN_DIR / "issues.csv", index=False)
     cells_full.to_csv(RUN_DIR / "cells_summary.csv", index=False)
+    conditions_table(cells_full, design).to_csv(RUN_DIR / "conditions_summary.csv", index=False)
+    build.mapping.to_csv(RUN_DIR / "folder_mapping.csv", index=False)
     print(json.dumps({k: summ[k] for k in ("cells_in_design", "cells_dirs_present", "cells_with_capacity_rows", "checkup_rows", "qc_pass_rows")}, indent=2))
     return df, cells_full, issues
 

@@ -27,17 +27,39 @@ def log(msg):
 
 
 def order():
+    """Every per-cell zip (279: serial names repeat across the two stages, with different cells and
+    conditions). Folder key = <serial>__f<figshare file id>. Download order: one replicate of each
+    (type, stage, condition) first. Stage of a URL is assumed from upload order (lower file id =
+    stage 1); this only affects download order, the pipeline assigns stages from the measured dates."""
     meta = list(csv.DictReader(open(os.path.join(DATA, "raw", "samsung50e_meta", "experiments_meta.csv"), encoding="utf8")))
-    urls = {r["file"].rsplit(".", 1)[0]: r["url"] for r in
-            csv.DictReader(open(os.path.join(DATA, "DEFERRED_URLS.tsv"), encoding="utf8"), delimiter="\t")
-            if r["dataset"].startswith("samsung")}
-    key = lambda m: (m["amb_temp_tp"], m["soc_max_tp"], m["dod_tp"], m["c_ch_tp"], m["c_dch_tp"])
+    by_name = {}
+    for r in csv.DictReader(open(os.path.join(DATA, "DEFERRED_URLS.tsv"), encoding="utf8"), delimiter="\t"):
+        if r["dataset"].startswith("samsung") and r["file"].startswith("TP_"):
+            by_name.setdefault(r["file"].rsplit(".", 1)[0], []).append(r["url"])
+    fid = lambda u: int(u.rstrip("/").rsplit("/", 1)[1])
+    for v in by_name.values():
+        v.sort(key=fid)
+    key = lambda m: (m["type"], m["stage"], m["amb_temp_tp"], m["soc_max_tp"], m["dod_tp"], m["c_ch_tp"], m["c_dch_tp"])
     first, rest, seen = [], [], set()
-    for ty in ("z", "k"):
-        for m in sorted((m for m in meta if m["type"] == ty), key=lambda m: m["serial"]):
-            (rest if (ty, key(m)) in seen else first).append(m["serial"])
-            seen.add((ty, key(m)))
-    return [(s, urls[s]) for s in first + rest if s in urls]
+    for m in sorted(meta, key=lambda m: (m["type"] != "z", m["stage"], m["serial"])):
+        urls = by_name.get(m["serial"], [])
+        if not urls:
+            continue
+        u = urls[min(int(m["stage"]), len(urls)) - 1]
+        item = (f"{m['serial']}__f{fid(u)}", u)
+        (rest if key(m) in seen else first).append(item)
+        seen.add(key(m))
+    out, have = [], set()
+    for item in first + rest:  # every URL exactly once, even if the stage guess pairs badly
+        if item[1] not in have:
+            out.append(item)
+            have.add(item[1])
+    for name, urls in by_name.items():
+        for u in urls:
+            if u not in have:
+                out.append((f"{name}__f{fid(u)}", u))
+                have.add(u)
+    return out
 
 
 def wanted(names):

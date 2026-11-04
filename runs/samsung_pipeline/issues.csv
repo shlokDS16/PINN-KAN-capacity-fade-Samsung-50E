@@ -1,0 +1,5 @@
+serial,file,issue,detail
+TP_z01_01,TP_z01_01_15_CU.csv,meta_missing,
+TP_z01_01,,no_entry_test_date,elapsed days measured from the first capacity row
+TP_z10_01,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT028'] vs INT037
+TP_z15_01,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT043'] vs INT052

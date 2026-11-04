@@ -9,3 +9,54 @@
 [isu W=4.0] fold 2 persist: inner-CV 13.103 pp (floor median 6.094, mean 6.181) 0s
 [isu W=4.0] fold 2 pl: inner-CV 6.522 pp (floor median 6.094, mean 6.181) 1s
 [isu W=4.0] fold 2 lgb: inner-CV 5.188 pp (floor median 6.094, mean 6.181) 4s
+[isu W=4.0] fold 2 gp: inner-CV 5.142 pp (floor median 6.094, mean 6.181) 524s
+[isu W=4.0] fold 3 persist: inner-CV 13.218 pp (floor median 5.655, mean 6.343) 0s
+[isu W=4.0] fold 3 pl: inner-CV 6.531 pp (floor median 5.655, mean 6.343) 1s
+[isu W=4.0] fold 3 lgb: inner-CV 5.264 pp (floor median 5.655, mean 6.343) 7s
+[isu W=4.0] fold 3 gp: inner-CV 5.450 pp (floor median 5.655, mean 6.343) 412s
+[isu W=4.0] fold 4 persist: inner-CV 13.393 pp (floor median 5.099, mean 6.078) 0s
+[isu W=4.0] fold 4 pl: inner-CV 7.382 pp (floor median 5.099, mean 6.078) 1s
+[isu W=4.0] fold 4 lgb: inner-CV 5.324 pp (floor median 5.099, mean 6.078) 5s
+[isu W=4.0] fold 4 gp: inner-CV 5.494 pp (floor median 5.099, mean 6.078) 338s
+{
+ "ratio_primary": 0.8970417585932584,
+ "ratio_like_for_like_mean": 0.8294114400655055,
+ "ratio_repartition": 0.897743646120983,
+ "per_fold_ratio": [
+  0.8504127977983382,
+  0.816101052460239,
+  0.8436598387249362,
+  0.9309039876744878,
+  1.0441311163082905
+ ],
+ "min_fold_ratio": 0.816101052460239,
+ "mean_best_error_pp": 5.133056104805361,
+ "mean_floor_median_pp": 5.753279370589207,
+ "mean_floor_mean_pp": 6.188699967961712,
+ "mean_inner_cv_persist_pp": 13.21782271173861,
+ "ratio_persist": 2.3084467343331774,
+ "mean_inner_cv_pl_pp": 6.66991812450802,
+ "ratio_pl": 1.1680377221203526,
+ "mean_inner_cv_gp_pp": 5.2441322636087415,
+ "ratio_gp": 0.9168311342526863,
+ "mean_inner_cv_lgb_pp": 5.205724046344137,
+ "ratio_lgb": 0.909449052349875,
+ "pooled_condition_level": {
+  "n_conditions": 61,
+  "ratio_judge_literal": 0.9006520337762787,
+  "ci95_judge_literal": [
+   0.7796531266408147,
+   1.075915183908994
+  ],
+  "ratio_like_for_like": 0.829409658855435,
+  "ci95_like_for_like": [
+   0.7665225781259318,
+   0.9000908079053673
+  ],
+  "mean_error_pp": 5.134367229028344,
+  "median_floor_pp": 5.700722406078214,
+  "mean_floor_pp": 6.190387553616924
+ },
+ "verdict_rule": "ratio_primary > 1.2: superiority winnable; <= 1.2: contrast (iii) preregistered as non-inferiority",
+ "verdict": "NON-INFERIORITY"
+}

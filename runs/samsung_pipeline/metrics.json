@@ -1,0 +1,68 @@
+{
+  "generated": "2026-11-05T00:06:10",
+  "code_version": "2026-11-05.3",
+  "cells_in_design": 279,
+  "cells_dirs_present": 19,
+  "cells_with_capacity_rows": 19,
+  "checkup_rows": 157,
+  "rows_by_kind": {
+    "CU": 157
+  },
+  "qc_pass_rows": 156,
+  "rows_by_type": {
+    "k": 1,
+    "z": 156
+  },
+  "flag_counts": {
+    "no_start_date": 1
+  },
+  "info_counts": {
+    "long_file": 23,
+    "voltage_glitch_below_2V": 40
+  },
+  "cells_complete_cu": 16,
+  "cells_without_member_list": 0,
+  "cells_meta_cu_without_csv": 1,
+  "cells_with_trajectory_ge3": {
+    "z": 18
+  },
+  "cells_with_trajectory_ge5": {
+    "z": 16
+  },
+  "conditions_in_design": 59,
+  "conditions_with_trajectory_ge3": 17,
+  "conditions_with_trajectory_ge3_by_type": {
+    "z": 17
+  },
+  "conditions_present_by_type": {
+    "k": 1,
+    "z": 17
+  },
+  "cadence_gap_days_by_type": {
+    "z": {
+      "n": 137,
+      "median": 29.0,
+      "min": 7.0,
+      "max": 78.0,
+      "q25": 17.0,
+      "q75": 45.0
+    }
+  },
+  "first_checkup_elapsed_days_by_type": {
+    "k": {
+      "median": 49.0,
+      "min": 49.0,
+      "max": 49.0
+    },
+    "z": {
+      "median": 26.0,
+      "min": 0.0,
+      "max": 77.0
+    }
+  },
+  "issue_counts": {
+    "meta_internal_serial_differs_from_table": 2,
+    "meta_missing": 1,
+    "no_entry_test_date": 1
+  }
+}

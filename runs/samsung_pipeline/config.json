@@ -1,0 +1,42 @@
+{
+  "code_version": "2026-11-05.3",
+  "git_commit": "61bb730",
+  "raw_dir": "C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\data\\raw\\samsung50e_members",
+  "thresholds": {
+    "dch_dur_h": [
+      0.45,
+      1.35
+    ],
+    "ch_dur_h": [
+      0.9,
+      2.8
+    ],
+    "dch_current_a": [
+      4.4,
+      5.4
+    ],
+    "ch_current_a": [
+      2.2,
+      2.7
+    ],
+    "cap_range_ah": [
+      2.0,
+      5.2
+    ],
+    "ch_dch_mismatch": 0.03,
+    "step_gap_s": 60.0,
+    "outlier_rel": 0.01,
+    "rise_rel": 0.005,
+    "rest_sensitivity_s": 300.0
+  },
+  "nominal_durations_h": {
+    "ET": 220.0,
+    "AT": 200.0,
+    "exCU": 30.0,
+    "CU": 15.0
+  },
+  "q_nom_ah": 4.9,
+  "output_sha256": {
+    "samsung_checkups.csv": "9ff50bd651fa2640c925f54e2581357ab2722bed1369fb6a302c645b4c6ebb75"
+  }
+}

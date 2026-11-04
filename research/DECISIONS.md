@@ -137,3 +137,21 @@ Row format:
 - **Evidence:** runs/pilot_P0/RESULT.md, runs/pilot_P2/RESULT.md, runs/GATE_pilots_audit.md (conditions).
 - **Proposer / opponent / judge:** lead / gate auditor (flagged missing row) / to be confirmed by the D011 judge.
 - **Re-open if:** Samsung cells need more than 40 integration nodes, or the fetch disturbs other sessions.
+
+### D009 Statistical ruling: the 1.2 headroom gate is retired; one hierarchical rule (2026-11-05 00:45, status: accepted; supersedes the gate in D007)
+- **Decision:** per runs/prereg/STATS_RULING.md: the replicate floor is renamed "replicate spread" (descriptive
+  only, with a window-aware replicate predictor, also descriptive); no gate. Every primary contrast is tested
+  non-inferiority first, then superiority (hierarchical), with margins relative to the comparator's
+  training-side inner-CV error E per outer fold (superiority 0.02 E, non-inferiority 0.10 E). Holm family =
+  H1a (residual), H1b (KAN vs best alternative stress map), H1c (best data-only learner), H6 (dataset authors'
+  semi-empirical model, Stroebl et al.), one-sided 0.025. H2 (hard ODE vs soft PINN) gatekept on the family.
+  Unit = held-out condition; paired exact Wilcoxon + BCa bound; lab and stage as sensitivity rows; 5 seeds
+  averaged within condition; abstract reports pp difference, 95% interval, relative reduction, tier, n.
+  D007's wording consequence stands: "beats all data-driven models" only if H1c reaches superiority.
+- **Alternatives and why they lost:** D007's 1.2 gate (floor not a lower bound; SNL ratio flips between
+  definitions); margin = one replicate floor (unreachable for superiority).
+- **Evidence:** runs/prereg/STATS_RULING.md and runs/prereg/stats_ruling/ (power: with 40 conditions the
+  detectable relative gain at 80% power is about 10-19% depending on assumed error correlation; Test C,
+  13 conditions, about 17%+); simulated type-I error 1.6-2.3x nominal under strong left skew (open).
+- **Proposer / opponent / judge:** statistician / gate audit and Codex turn 3 / D011 judge to confirm.
+- **Re-open if:** the D011 judge or a re-run of the type-I simulation changes the test.

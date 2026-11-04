@@ -1,0 +1,16 @@
+skew 40 rho0.95 done 38 s
+skew 40 rho0.90 done 77 s
+skew 40 rho0.75 done 119 s
+skew 27 rho0.95 done 155 s
+skew 27 rho0.90 done 190 s
+skew 27 rho0.75 done 228 s
+skew 13 rho0.95 done 261 s
+skew 13 rho0.90 done 295 s
+skew 13 rho0.75 done 332 s
+normal 40 rho0.95 done 369 s
+normal 40 rho0.90 done 408 s
+normal 40 rho0.75 done 448 s
+size skew 488 s
+size skew_left 527 s
+size normal 566 s
+done 587

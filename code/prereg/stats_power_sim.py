@@ -12,7 +12,7 @@ inner-CV RMSE in pp). Assumptions (none is a Samsung number):
   - seed noise: each arm's condition score is a mean over S seeds with per-seed SD sigma_s = 0.05 E, so the
     difference gets variance 2 sigma_s^2 / S (S = 5);
   - decision rule exactly as stats_rule.tier (exact Wilcoxon AND BCa lower limit, both at the Holm step level).
-Usage: python -P stats_power_sim.py <ROOT> [nsim] [B]
+Usage: python -P stats_power_sim.py <ROOT> [nsim] [B] [family alpha, one-sided, default 0.025]
 """
 import os, sys, json, time
 os.environ.setdefault("OMP_NUM_THREADS", "1")
@@ -21,13 +21,14 @@ import numpy as np, pandas as pd
 ROOT = sys.argv[1]
 NSIM = int(sys.argv[2]) if len(sys.argv) > 2 else 1500
 B = int(sys.argv[3]) if len(sys.argv) > 3 else 1000
+A_FAM = float(sys.argv[4]) if len(sys.argv) > 4 else 0.025      # family-wise one-sided alpha (= two-sided 0.05)
 sys.path.insert(0, f"{ROOT}/code/prereg")
 import stats_rule as R
 
 OUT = f"{ROOT}/runs/prereg/stats_ruling"
 S_SEEDS, SIG_S = 5, 0.05
 D_SUP, D_NI = 0.02, 0.10
-ALPHAS = {"holm4_first": 0.0125, "holm3_first": 0.05 / 3, "holm_last": 0.05}
+ALPHAS = {"holm4_first": A_FAM / 4, "holm3_first": A_FAM / 3, "holm_last": A_FAM}
 
 cond = pd.read_csv(f"{OUT}/cond_isu_W4.csv").dropna()
 emp = (cond["pl"] - cond["lgb"]).values
@@ -71,9 +72,9 @@ def conj(n, mu, sig, rho_c, m_family, rng):
             ps.append(R.wilcoxon_p(d, D_SUP))
         ps = sorted(ps)
         if m_family == 4:
-            thr = [0.05 / 3, 0.05 / 2, 0.05]          # the 4th hypothesis is rejected first at 0.05/4, rest as Holm-3
+            thr = [A_FAM / 3, A_FAM / 2, A_FAM]          # the 4th hypothesis is rejected first at A_FAM/4, rest as Holm-3
         else:
-            thr = [0.05 / 3, 0.05 / 2, 0.05]
+            thr = [A_FAM / 3, A_FAM / 2, A_FAM]
         ok += all(p <= t for p, t in zip(ps, thr))
     return ok / NSIM
 
@@ -116,7 +117,7 @@ def main():
             res["conj"].append(dict(n=40, rho=sname, mu=mu, rho_contrasts=0.5,
                                     all3_pass_holm=conj(40, mu, sig_map[sname], 0.5, 3, rng)))
     res["seconds"] = time.time() - t0
-    json.dump(res, open(f"{OUT}/power_sim.json", "w"), indent=1)
+    json.dump(res, open(f"{OUT}/power_sim_alpha{A_FAM}.json", "w"), indent=1)
     print("done", round(time.time() - t0), flush=True)
 
 

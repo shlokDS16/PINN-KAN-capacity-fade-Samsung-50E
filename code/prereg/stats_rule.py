@@ -8,14 +8,15 @@ import numpy as np
 from scipy import stats
 
 Z = stats.norm
+ALPHA_FAMILY = 0.025      # one-sided family-wise level (= two-sided 0.05 for a directional claim)
 
 
-def holm_thresholds(m):
-    """Step-down thresholds alpha/m, alpha/(m-1), ..., alpha for the sorted p-values (alpha = 0.05)."""
-    return [0.05 / (m - i) for i in range(m)]
+def holm_thresholds(m, alpha=ALPHA_FAMILY):
+    """Step-down thresholds alpha/m, alpha/(m-1), ..., alpha for the sorted p-values."""
+    return [alpha / (m - i) for i in range(m)]
 
 
-def holm_reject(pvals, alpha=0.05):
+def holm_reject(pvals, alpha=ALPHA_FAMILY):
     """Holm step-down. pvals: dict name -> p. Returns dict name -> (adjusted p, rejected) and the step level used."""
     names = sorted(pvals, key=pvals.get)
     m = len(names)
@@ -68,16 +69,22 @@ def tier(d, delta_sup, delta_ni, alpha_step, B=10000, rng=None, boot=None):
     return ("N" if nI else "-"), lo
 
 
-def effect_summary(d, e_comp, B=10000, seed=0):
-    """Numbers for tables/abstract: mean paired difference (pp), BCa 95% interval, relative reduction vs the
-    comparator's mean score, rank-biserial r (matched pairs), share of conditions won."""
-    d = np.asarray(d, float)
+def effect_summary(s_comp, s_pinn, B=10000, seed=0):
+    """Numbers for tables and the abstract, from the condition-level scores (seed-averaged RMSE, pp) of the
+    comparator and PINN-KAN: mean paired difference (pp) with BCa 95 % interval, relative reduction
+    mean(d)/mean(s_comp) with a percentile interval from the same condition resamples, matched-pairs rank-biserial
+    r, share of conditions won."""
+    s_comp, s_pinn = np.asarray(s_comp, float), np.asarray(s_pinn, float)
+    d = s_comp - s_pinn
     n = len(d)
     rng = np.random.default_rng(seed)
-    boot = d[rng.integers(0, n, (B, n))].mean(1)
+    idx = rng.integers(0, n, (B, n))
+    boot = d[idx].mean(1)
+    rel = boot / s_comp[idx].mean(1)
     lo, hi = bca_lower(d, 0.025, boot=boot), -bca_lower(-d, 0.025, boot=-boot)
     nz = d[d != 0]
     ranks = stats.rankdata(np.abs(nz))
     rb = (ranks[nz > 0].sum() - ranks[nz < 0].sum()) / ranks.sum() if len(nz) else 0.0
-    return dict(n=n, mean_pp=float(d.mean()), ci95=[lo, hi], rel_reduction=float(d.mean() / e_comp),
-                rel_ci95=[lo / e_comp, hi / e_comp], rank_biserial=float(rb), share_won=float((d > 0).mean()))
+    return dict(n=n, mean_pp=float(d.mean()), ci95=[lo, hi], rel_reduction=float(d.mean() / s_comp.mean()),
+                rel_ci95=[float(np.quantile(rel, 0.025)), float(np.quantile(rel, 0.975))],
+                rank_biserial=float(rb), share_won=float((d > 0).mean()))

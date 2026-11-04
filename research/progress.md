@@ -41,3 +41,4 @@
 - 02:45 prior art read in full (notes/papers/priorart_*.md, PRIORART_SUMMARY.md): claim only the combination.
 - 03:00 run writer emits all figure inputs; stats step implements D012/D009/Holm/H2; 170 tests pass (35b242a); figures regenerate end to end on synthetic outputs. Open: negative-control criteria may fail on leak-free pipeline -> statistician ruling (NEGCONTROL_RULING.md). Manuscript writer drafting outcome-independent sections (paper/draft/).
 - 03:20 manuscript draft sections 2-5 (paper/draft/, 9da10dc, d46b7b2; about 3,900 words; A10 equations TO VERIFY; appendices A-C to write). Started: causal QC outlier fix (review m1), citation audit of the draft.
+- 03:45 citation audit (80f17d2): 26 refs real, 4 corrected; gate FAILS on sentence support (sec 2.2 dataset claims, sec 3 count attributions, A10 source); writer fixing. QC drop rule ruled time-scaled (V3 edit 5).

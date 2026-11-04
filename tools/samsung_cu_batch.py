@@ -6,7 +6,7 @@ fetch every *_CU.csv and *_CU_meta.txt plus the first *_ET_*_meta.txt (start dat
 exist, so it resumes after any drop or restart. Stops on data/STOP_SAMSUNG; pauses 00:05-00:30.
 Status: data/SAMSUNG_CU_STATUS.md; log: data/logs/samsung_cu.log.
 """
-import csv, datetime as dt, io, os, sys, time, zipfile
+import csv, datetime as dt, io, os, struct, sys, time, zipfile, zlib
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))  # our own folder only
@@ -47,27 +47,41 @@ def wanted(names):
 def do_cell(serial, url):
     os.makedirs(LISTS, exist_ok=True)
     lst = os.path.join(LISTS, f"{serial}.txt")
-    zf = None
+    hf = HttpRangeFile(url)
     if os.path.exists(lst):
-        names = open(lst, encoding="utf8").read().split()
+        rows = [l.split("\t") for l in open(lst, encoding="utf8").read().splitlines() if "\t" in l]
     else:
-        zf = zipfile.ZipFile(io.BufferedReader(HttpRangeFile(url), buffer_size=1 << 16))
-        names = [i.filename for i in zf.infolist() if not i.filename.endswith("/")]
-        open(lst, "w", encoding="utf8").write("\n".join(names))
-    todo = [n for n in wanted(names) if not os.path.exists(os.path.join(OUT, serial, os.path.basename(n)))]
+        zf = zipfile.ZipFile(io.BufferedReader(hf, buffer_size=1 << 16))
+        rows = [[i.filename, str(i.header_offset), str(i.compress_size), str(i.compress_type), str(i.CRC)]
+                for i in zf.infolist() if not i.filename.endswith("/")]
+        open(lst, "w", encoding="utf8").write("\n".join("\t".join(r) for r in rows))
+    info = {r[0]: r for r in rows}
+    todo = [n for n in wanted(list(info)) if not os.path.exists(os.path.join(OUT, serial, os.path.basename(n)))]
     if not todo:
         return True
-    zf = zf or zipfile.ZipFile(io.BufferedReader(HttpRangeFile(url), buffer_size=1 << 16))
     os.makedirs(os.path.join(OUT, serial), exist_ok=True)
     for n in todo:
         if os.path.exists(STOP):
             return False
         while dt.time(0, 5) <= dt.datetime.now().time() <= dt.time(0, 30):
             time.sleep(60)
+        _, off, csize, method, crc = info[n]
+        off, csize, method, crc = int(off), int(csize), int(method), int(crc)
+        # one range request per member: local header (30 bytes + name + extra) plus the data
+        blob = hf._get(off, min(off + 30 + len(n.encode()) + 2048 + csize, hf.size - 1))
+        if blob[:4] != b"PK\x03\x04":
+            raise ValueError(f"bad local header for {n}")
+        ln, lx = struct.unpack("<HH", blob[26:30])
+        start = 30 + ln + lx
+        data = blob[start:start + csize]
+        if len(data) < csize:
+            data += hf._get(off + start + len(data), off + start + csize - 1)
+        raw = zlib.decompressobj(-15).decompress(data) if method == 8 else data
+        if zlib.crc32(raw) != crc:
+            raise ValueError(f"CRC mismatch for {n}")
         dst = os.path.join(OUT, serial, os.path.basename(n))
-        with zf.open(n) as src, open(dst + ".part", "wb") as out:
-            while chunk := src.read(1 << 16):
-                out.write(chunk)
+        with open(dst + ".part", "wb") as out:
+            out.write(raw)
         os.replace(dst + ".part", dst)
     log(f"done {serial} ({len(todo)} files)")
     return True

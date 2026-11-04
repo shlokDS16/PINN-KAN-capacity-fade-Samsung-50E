@@ -28,3 +28,6 @@ Apply together with the freeze blockers FB-1..FB-8 of PREREG_v2 section 17; each
    names the sign-flip rule and must say sign test (D012); Fig. 4 shows median ln-ratio with exact
    order-statistic interval plus a mean paired pp column (BCa), tiers read from the statistics step.
 9. **Smoke re-run** of runs/build_v1 at the freeze commit (code changed after the smoke runs).
+10. **D014 (negative control):** replace PREREG_v2 section 10 gate G with NC-1 (label invariance, gating) and NC-2
+    (stress-permutation sign test on Test B, non-gating); seed rule SeedSequence([20261105, crc32(label)]);
+    apply section 6 of runs/prereg/NEGCONTROL_RULING.md.

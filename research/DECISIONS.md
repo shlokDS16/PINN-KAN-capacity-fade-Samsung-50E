@@ -216,3 +216,17 @@ Row format:
   extend a grid whose optimum is at an edge; the data-only arm (A9, lam = 0) remains a separate contrast (H1a),
   so the extension does not favour A1. If the tuned optimum on Samsung training folds lands at 1e-3 the
   residual adds little, and H1a will show it; that is a result, not a reason to restrict the grid.
+
+### D014 Negative control redefined: label-invariance gate (NC-1) + stress-attribution check (NC-2) (2026-11-05 03:30, status: accepted)
+- **Decision:** per runs/prereg/NEGCONTROL_RULING.md (70aaf5a): gate G detects leakage only, by label invariance:
+  every held-out cell's post-window labels are replaced with garbage and predictions plus tuning records must be
+  bit-identical (NC-1). "Stress functions carry the gain" is a separate, non-gating check (NC-2): permuting stress
+  must raise A1's error, exact one-sided sign test per condition (Test B only; not run on Test C, about 0.39 power
+  at n = 13). Monte Carlo seeds: SeedSequence([20261105, crc32(label)]).
+- **Alternatives and why they lost:** the draft criteria (A1 vs A9 and A1 vs R2 under permuted stress): no valid
+  null on a leak-free pipeline; on 9 synthetic leak-free datasets they failed the clean pipeline 9/9 and each
+  leaking variant 9/9, so they cannot discriminate.
+- **Evidence:** NEGCONTROL_RULING.md; NC-1 on the real code (synthetic, builder-demo budgets): 0/9 clean flagged,
+  9/9 flagged for each of two deliberate leaks.
+- **Proposer / opponent / judge:** statistician / builder's report of the failing demo / lead accepts (rule-level).
+- **Re-open if:** NC-1 at Samsung size at the frozen commit flags a clean run.

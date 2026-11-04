@@ -3,6 +3,19 @@
 Folder: `C:\Users\Shlok\Downloads\PINN KAN battery paper` (own git repo). Budget: weekly usage 5% at
 start, 6% at 22:00 (see the end of this file for the latest); Fable 0%. CPU only, no GPU used.
 
+## 0. In one minute (read this first; details below)
+- **Topic fixed by debate:** a PINN whose physics combines calendar ageing (Arrhenius x KAN of SOC) and
+  cycle ageing (KAN over temperature, SOC window, DoD, C-rates), trained on storage + cycling cells of the
+  Samsung INR21700-50E dataset, forecasting held-out conditions from early check-ups. ISU and Sandia support.
+- **Honest expectation:** it should beat the dataset authors' own model; the physics residual should help
+  or tie; the KAN likely ties the best simpler stress function; it will probably not beat tuned data-only
+  learners. So the likely title is the descriptive one (section 6). Tell us if you want a different framing.
+- **Built overnight:** preregistration v2 (frozen only after the items below), full model + baseline code
+  (204 tests, test folds locked), statistics step, all 8 figure scripts + 2 tables + graphical abstract on
+  synthetic demos, draft manuscript sections 2-5 with an audited citation list.
+- **Needed from you:** (1) e-gateway PDFs, Zhang JES 182, 125097 first; (2) the full Samsung download on a
+  fast network; (3) a yes or a change to the framing. Nothing runs on real test data until these are done.
+
 ## 1. What is decided (all rows in research/DECISIONS.md, with alternatives and reasons)
 - **Topic and title (D005, after a full debate: proposer, opponent, Codex panel, judge).** A PINN
   (solution network with a physics residual) whose dynamics add a calendar-ageing term (Arrhenius in
@@ -34,7 +47,9 @@ start, 6% at 22:00 (see the end of this file for the latest); Fable 0%. CPU only
    and must be read before any claim; (b) Stroebl et al., JES 142, 119552 (dataset authors' model, CC BY);
    (c) PGKAN (10.1016/j.est.2026.124768, CC BY); (d) PIKAN (10.1016/j.est.2026.120860); (e) KA-CRNN
    (Koenig and Deng, JES 158, 121853: Arrhenius parameters as KAN functions of SOC in a neural ODE, on
-   thermal-abuse data; our nearest method precedent); then the rest of the list.
+   thermal-abuse data; our nearest method precedent); (f) three JES papers the draft cites from their
+   titles only, which must be read before submission (keys fan2025, chen2025pinn, ren2024 in
+   paper/draft/refs_used.md); then the rest of the list.
 2. **Samsung 50E data on a fast network (if the overnight fetch is incomplete; see section 4).** Full
    release is 10.29 GB at https://doi.org/10.6084/m9.figshare.25975315 ("Download all"); put the zip
    files in `data/raw/samsung50e_full/`. Tonight the link ran at 2-75 KB/s, so only the small check-up

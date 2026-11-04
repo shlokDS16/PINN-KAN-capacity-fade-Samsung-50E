@@ -43,3 +43,4 @@
 - 03:20 manuscript draft sections 2-5 (paper/draft/, 9da10dc, d46b7b2; about 3,900 words; A10 equations TO VERIFY; appendices A-C to write). Started: causal QC outlier fix (review m1), citation audit of the draft.
 - 03:20 citation audit (80f17d2): 26 refs real, 4 corrected; gate FAILS on sentence support (sec 2.2 dataset claims, sec 3 count attributions, A10 source); writer fixing. QC drop rule ruled time-scaled (V3 edit 5).
 - note: lead timestamps between 02:30 and 03:20 were estimated and partly too late; corrected where found; from 03:20 all times are taken from the system clock.
+- 03:23 writer fixed all audit-flagged sentences (7976c1a, 2ec4b95); 3 title-only JES cites added to the e-gateway list. QC drop rule time-scaled (3415db2; 0 flags). Status file has a one-minute summary.

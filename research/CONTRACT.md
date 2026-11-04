@@ -62,6 +62,23 @@ One file per paper: `ROOT/notes/papers/<ref-number>_<firstauthor><year>.md`, wit
 Write findings to files. Reply to the lead in at most 5 lines: what you wrote (paths) and the single
 most important finding or blocker.
 
+## 6a. Figures and tables: results AND form (Shlok, 2026-11-04)
+Figures must show strong results and also take the best form used by the top papers in JES.
+1. **Figure-form catalogue.** The exemplar dissection records, for every figure and table of the
+   strongest recent JES papers (plus 2-3 top-venue papers closest to our method), its form: plot type
+   (trajectory overlay, parity plot, error heat map, violin/box, radar, Sankey, spline/activation
+   panel, architecture schematic...), panel layout, colour scheme, annotation and insets, the
+   message it carries, and the table style. File: `ROOT/notes/exemplars/FIGURE_FORMS.md`, with
+   page/figure pointers.
+2. **Figure plan debate.** Each planned figure and table gets a row in
+   `ROOT/debates/D-figures.md`: the claim it supports, the chosen form, and why this form and not
+   at least two alternatives from the catalogue (clarity at 13-17 cm width, information density,
+   what the reviewer will look for). JES limit: about 8-10 figures and/or tables in the main text.
+3. **Build and check.** Figures are generated only from `runs/` files by scripts in `ROOT/code/figures/`,
+   then rendered and compared side by side with the exemplar forms: legibility at column width,
+   colour-blind safety, consistent fonts and units, no overlap. A figure that looks weaker than its
+   exemplar counterpart is redone.
+
 ## 6. Evaluation standards for experiments
 - Splits are by cell (no cycle of a test cell in training or tuning). Splits fixed in
   `ROOT/runs/splits/` before any model sees data.

@@ -30,3 +30,13 @@ Row format:
 - **Evidence:** memories laptop-gpu-crashes, parallel-research-sessions; `nvidia-smi` at 20:30.
 - **Proposer / opponent / judge:** lead; rule-driven.
 - **Re-open if:** Shlok gives a GPU go-ahead, or RAM frees up.
+
+### D003 Figure and table form follows the best JES exemplars (2026-11-04, status: accepted)
+- **Decision:** add a figure-form stage: catalogue the figure and table forms of the strongest JES
+  papers, debate the form of each of our figures against that catalogue, build from run files,
+  render-check against the exemplars (CONTRACT.md section 6a).
+- **Alternatives and why they lost:** default matplotlib forms chosen by the implementer (looks
+  weaker than what JES prints); forms copied from one exemplar (may not fit our claims).
+- **Evidence:** Shlok's instruction, 2026-11-04 evening.
+- **Proposer / opponent / judge:** Shlok (author's instruction).
+- **Re-open if:** never dropped; the forms themselves are debated per figure.

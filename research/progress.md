@@ -14,3 +14,4 @@
 - 20:35 folder, contract, decisions ledger created; sign-in list sent to Shlok.
 - 21:00 lead prior-art scan: PINN+KAN SOH with symbolic discovery is taken (PIKAN, PGKAN in JES 2026,
   PI-EKAN). See notes/PRIOR_ART_SCAN_lead.md.
+- 21:15 Shlok: figure and table FORM must match the best JES papers; added CONTRACT 6a, D003, figure-form catalogue in the exemplar step. Codex panel thread live (debates/codex_panel/SESSION.md).

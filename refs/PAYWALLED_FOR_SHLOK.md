@@ -50,3 +50,15 @@ Open-access items are listed too: the publishers block scripted downloads, a bro
 
 - [11] SOH-KLSTM: published JES version (doi 10.1016/j.est.2025.116541) if you want the final text; arXiv preprint is already saved. A corrigendum exists (10.1016/j.est.2025.116868).
 - Exemplars (refs/exemplars/JES_CANDIDATES.csv): only 1 of 40 had a downloadable OA copy; the others need the same route. Priority: rank 1 (10.1016/j.est.2026.124768, PGKAN) and rank 2 (10.1016/j.est.2026.120860, PIKAN).
+
+## Exemplars (added 2026-11-04, exemplar dissection; save as PDF into `refs/exemplars/pdf/`)
+
+Script requests to ScienceDirect return HTTP 403, so even the CC-BY ones need a browser. Priority order:
+
+1. **Stroebl et al., JES 142, 119552** (the Samsung 50E authors' own JES paper; CC-BY, free in a browser): https://doi.org/10.1016/j.est.2025.119552 . Needed for: their calendar and cycle model forms, the 71-condition count, figure and table forms.
+2. **Zhang et al., JES 182, 125097** (cites the Samsung dataset, uses a PINN; closed; e-gateway): https://doi.org/10.1016/j.est.2026.125097 . No abstract exists in any open index; must be read before the novelty claim is written.
+3. **PGKAN, Zhao et al., JES 182, 124768** (CC-BY, free in a browser): https://doi.org/10.1016/j.est.2026.124768
+4. **PIKAN, Liu et al., JES 153, 120860** (closed; e-gateway; PII S2352152X26005244): https://doi.org/10.1016/j.est.2026.120860
+5. **KA-CRNN, Koenig and Deng, JES 158, 121853** (published version, for Highlights and final figure numbering; arXiv v2 already read): https://doi.org/10.1016/j.est.2026.121853
+6. Optional, published versions of already-read arXiv papers (Highlights, graphical abstract): PINEAPPLE 10.1016/j.est.2026.120944 ; CDUA 10.1016/j.est.2026.124592 .
+7. Optional, same dataset, other venue: Cui, Stroebl, Uppaluri, Lam et al., J. Electrochem. Soc. 2025, https://doi.org/10.1149/1945-7111/adde16 (calendar aging models, extrapolation); Li et al., Applied Energy 2025, https://doi.org/10.1016/j.apenergy.2025.125703 (capacity-fade model coupled with ML, cites the Samsung dataset).

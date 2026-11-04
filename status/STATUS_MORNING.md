@@ -28,9 +28,13 @@ start, 6% at 22:00 (see the end of this file for the latest); Fable 0%. CPU only
 
 ## 2. Needs you (sign-in or yes)
 1. **VIT e-gateway: save PDFs into `refs/pdf/`.** List with links: `refs/PAYWALLED_FOR_SHLOK.md`
-   (31 of your 35 references, plus exemplars). Most urgent, in this order: PIKAN (doi
-   10.1016/j.est.2026.120860), PGKAN (10.1016/j.est.2026.124768), Stroebl et al. JES 142, 119552 and
-   their 2026 JES follow-up, JES 182, 125097 (cites our dataset), then the rest of the list.
+   (31 of your 35 references, plus exemplars). Most urgent, in this order:
+   (a) **Zhang, JES 182, 125097** (doi 10.1016/j.est.2026.125097 to confirm): it cites our Samsung
+   dataset and uses a PINN; its abstract is not in any open index, so it could pre-empt our novelty
+   and must be read before any claim; (b) Stroebl et al., JES 142, 119552 (dataset authors' model, CC BY);
+   (c) PGKAN (10.1016/j.est.2026.124768, CC BY); (d) PIKAN (10.1016/j.est.2026.120860); (e) KA-CRNN
+   (Koenig and Deng, JES 158, 121853: Arrhenius parameters as KAN functions of SOC in a neural ODE, on
+   thermal-abuse data; our nearest method precedent); then the rest of the list.
 2. **Samsung 50E data on a fast network (if the overnight fetch is incomplete; see section 4).** Full
    release is 10.29 GB at https://doi.org/10.6084/m9.figshare.25975315 ("Download all"); put the zip
    files in `data/raw/samsung50e_full/`. Tonight the link ran at 2-75 KB/s, so only the small check-up
@@ -48,6 +52,9 @@ start, 6% at 22:00 (see the end of this file for the latest); Fable 0%. CPU only
   ODE (synthetic): running.
 - Downloads: Samsung check-up files for all 279 cells by range requests (status:
   data/SAMSUNG_CU_STATUS.md; log data/logs/samsung_cu.log). Bulk downloader paused (data/STOP_DOWNLOADS)
-  because of the slow link.
+  because of the slow link. At 23:20 the fetch ran at about one file per 30 s (figshare request latency),
+  about 6 min per cycling cell, so the night covers roughly the first 60 cells: the fetch order puts one
+  replicate of every cycling and storage condition first. **The full set needs your download on a fast
+  network (item 2 of section 2).** To stop the fetch: create an empty file `data/STOP_SAMSUNG`.
 - References read in full so far: 8 (refs 8, 11, 15, 23, 29, 30, 31, 33), plus the Samsung dataset paper
   and the ISU dataset paper; notes in notes/papers/.

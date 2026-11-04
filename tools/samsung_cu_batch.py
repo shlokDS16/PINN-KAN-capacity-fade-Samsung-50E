@@ -7,6 +7,7 @@ exist, so it resumes after any drop or restart. Stops on data/STOP_SAMSUNG; paus
 Status: data/SAMSUNG_CU_STATUS.md; log: data/logs/samsung_cu.log.
 """
 import csv, datetime as dt, io, os, struct, sys, time, zipfile, zlib
+from concurrent.futures import ThreadPoolExecutor
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))  # our own folder only
@@ -60,11 +61,12 @@ def do_cell(serial, url):
     if not todo:
         return True
     os.makedirs(os.path.join(OUT, serial), exist_ok=True)
-    for n in todo:
-        if os.path.exists(STOP):
-            return False
-        while dt.time(0, 5) <= dt.datetime.now().time() <= dt.time(0, 30):
-            time.sleep(60)
+    while dt.time(0, 5) <= dt.datetime.now().time() <= dt.time(0, 30):
+        time.sleep(60)
+    if os.path.exists(STOP):
+        return False
+
+    def one(n):  # requests are latency-bound, so members are fetched in parallel threads
         _, off, csize, method, crc = info[n]
         off, csize, method, crc = int(off), int(csize), int(method), int(crc)
         # one range request per member: local header (30 bytes + name + extra) plus the data
@@ -83,6 +85,9 @@ def do_cell(serial, url):
         with open(dst + ".part", "wb") as out:
             out.write(raw)
         os.replace(dst + ".part", dst)
+
+    with ThreadPoolExecutor(max_workers=4) as ex:
+        list(ex.map(one, todo))  # re-raises the first error, so the cell is retried later
     log(f"done {serial} ({len(todo)} files)")
     return True
 

@@ -1,3 +1,7 @@
 2026-11-04 22:36:30 start: 279 cells
 2026-11-04 23:05:37 done TP_z01_01 (3 files)
 2026-11-04 23:05:56 start: 279 cells
+2026-11-04 23:12:00 start: 279 cells
+2026-11-04 23:17:07 done TP_z02_01 (16 files)
+2026-11-04 23:20:30 done TP_z03_01 (23 files)
+2026-11-04 23:20:42 error TP_z04_01: HTTPError: HTTP Error 403: Forbidden

@@ -26,13 +26,27 @@ from . import ROOT as _ROOT
 from . import guard, margins, metrics, semi, synth, tuning
 from .arms import ARMS, H1B_POOL, NEURAL, default_hp, make_arm
 from .data import WindowRule, load_split, prepare_many, sha256_file
+from .law import TAU
 from .specs import SPECS
 
 torch.set_num_threads(1)
 
 DEFAULTS = {"mode": "inner", "test": "B", "fold": 0, "arms": ["A1", "A2", "A9", "R1", "R2"], "seeds": [0, 1, 2, 3, 4], "n_trials": 20, "inner_k": 3,
             "backbone": "self_limiting", "steps_scale": 1.0, "window": {}, "oracle_throughput": False, "per_cell_factor": True, "twins": "auto",
-            "refit_timing": False, "overwrite": False, "retain_all": False, "throughput": "analytic", "target_kind": "cycling", "auto_budget": False}
+            "refit_timing": False, "overwrite": False, "retain_all": False, "throughput": "analytic", "target_kind": None, "auto_budget": False, "permute_stress": False, "pinn": {}, "diagnostics": True}
+TARGET_BY_TEST = {"B": "cycling", "C": "cycling", "A": "cycling", "S2": "storage", "S3": "storage"}   # the tuned task is the scored task (review M3)
+
+
+class ConfigError(RuntimeError):
+    pass
+
+
+class DeviceError(RuntimeError):
+    pass
+
+
+class ScoredRunError(RuntimeError):
+    """an outer-test-scored run would be replaced or repeated (stop rules 4 and 6)"""
 
 
 def git_info(root):
@@ -118,21 +132,38 @@ def build_data(cfg, root, role):
     sv = load_split(ds, cfg["test"], cfg["fold"], role=role, root=root, retain_all=cfg["retain_all"], throughput=cfg["throughput"])
     return {"spec": sv.spec, "train": sv.train, "test": sv.test_cells, "sv": sv,
             "split": {"file": os.path.relpath(sv.split_file, root).replace("\\", "/"), "sha256_file": sv.split_sha256, "fold_hash_stored": sv.fold_hash_stored,
-                      "fold_hash_recomputed": sv.fold_hash_recomputed, "fold_hash_ok": sv.hash_ok, "test_conditions": sv.test_conditions,
+                      "fold_hash_recomputed": sv.fold_hash_recomputed, "fold_hash_ok": sv.hash_ok, "pinned_at_freeze": sv.pinned, "missing_train_conditions": sv.missing_train_conditions, "test_conditions": sv.test_conditions,
                       "n_train_cells": len(sv.train), "n_train_conditions": len(sv.train_conditions)}, "manifest": sv.input_files}
 
 
 def run(cfg_in, root=None, runs_dir=None):
     cfg = {**DEFAULTS, **cfg_in}
+    if torch.cuda.is_available():            # D013 C4: a wrong environment must not silently produce GPU numbers
+        raise DeviceError("CUDA is available to torch: runs are CPU only (CUDA_VISIBLE_DEVICES=-1 is forced by the package); no GPU use without the lead's instruction")
     root = root or _ROOT
     runs_dir = runs_dir or os.path.join(root, "runs")
     run_id = cfg["run_id"]
     run_dir = os.path.join(runs_dir, run_id)
-    if os.path.exists(run_dir) and not cfg["overwrite"]:
-        raise FileExistsError(run_dir)
-    os.makedirs(run_dir, exist_ok=True)
     ds, mode = cfg["dataset"], cfg["mode"]
-    blinded = ds == "samsung" and not guard.is_frozen(root)
+    tk = "cycling" if ds == "synthetic" else TARGET_BY_TEST.get(cfg["test"], "cycling")
+    if cfg.get("target_kind") not in (None, tk):
+        raise ConfigError(f"target_kind {cfg['target_kind']!r} contradicts test {cfg['test']!r} (scored kind is {tk!r})")
+    cfg["target_kind"] = tk
+    chash = None
+    if mode == "confirmatory" and ds != "synthetic":      # checks before anything is created or read (review M2)
+        if cfg["steps_scale"] != 1.0:
+            raise ConfigError("steps_scale != 1 is not allowed in a confirmatory run on real data")
+        if cfg["overwrite"]:
+            raise ConfigError("overwrite is not allowed in a confirmatory run on real data (stop rule 4)")
+        guard.require_frozen("confirmatory run", root)
+        chash = guard.check_config_frozen({**DEFAULTS, **cfg_in}, root)     # hash of the config as written (DEFAULTS + file keys)
+    if os.path.exists(run_dir):
+        if os.path.exists(os.path.join(run_dir, "condition_scores.json")):
+            raise ScoredRunError(f"{run_dir} holds a scored outer-test run; it is never replaced")
+        if not cfg["overwrite"]:
+            raise FileExistsError(run_dir)
+    os.makedirs(run_dir, exist_ok=True)
+    blinded = ds == "samsung" and not guard.is_valid_freeze(root)
     if blinded and mode not in ("timing", "confirmatory"):
         mode = "timing"        # retention blinding before the freeze: no retention-derived number is written under runs/
         # (a confirmatory request is NOT downgraded: it goes to the guard, which refuses it)
@@ -147,29 +178,38 @@ def run(cfg_in, root=None, runs_dir=None):
     role = "test" if mode == "confirmatory" else "train"
     D = build_data(cfg, root, role)          # the test-fold guard is inside load_split (role != 'train')
     spec, train = D["spec"], D["train"]
+    if mode == "confirmatory" and D.get("sv") is not None and D["sv"].missing_train_conditions:
+        raise ConfigError(f"incomplete training set, missing conditions {D['sv'].missing_train_conditions[:3]} (complete download required)")
+    if cfg["permute_stress"]:                              # negative control: separate permutations of train and test stress vectors
+        train = metrics.permute_stress(train, spec, cfg["fold"])
+        if D["test"] is not None:
+            D["test"] = metrics.permute_stress(D["test"], spec, cfg["fold"] + 1000)
     _json(os.path.join(run_dir, "split.json"), D["split"])
     _json(os.path.join(run_dir, "manifest.json"), D["manifest"])
     rec.log(f"run {run_id}: dataset {ds} test {cfg['test']} fold {cfg['fold']} mode {mode} (requested {cfg['mode']}) blinded={blinded}")
     rec.log(f"train cells {len(train)}: {sum(c.kind == 'cycling' for c in train)} cycling, {sum(c.kind == 'storage' for c in train)} storage; conditions {len({c.cond for c in train})}")
-    if D["split"].get("fold_hash_ok") is False:
-        rec.log("WARNING: stored fold hash differs from the recomputed one")
+    if D["split"].get("missing_train_conditions"):
+        rec.log(f"NOTE: {len(D['split']['missing_train_conditions'])} training conditions of the split have no cells on disk (partial download)")
     wk = cfg["window"]
     rule = WindowRule.for_spec(spec, k_cycling=wk.get("k_cycling"), k_storage=wk.get("k_storage"), W=wk.get("W"), shift=wk.get("shift", 0))
     extra = None
     if (cfg["twins"] == "c35") or (cfg["twins"] == "auto" and cfg["test"] == "C" and ds == "samsung"):
         extra = twins_from_conditions(D["split"].get("test_conditions", []))
     ctx = {"backbone": cfg["backbone"] if cfg["backbone"] != "tournament" else "self_limiting", "steps_scale": cfg["steps_scale"], "rule": rule, "extra_twin_raw": extra,
-           "oracle": cfg["oracle_throughput"], "per_cell_factor": cfg["per_cell_factor"], "a10_starts": cfg.get("a10_starts", 8)}
+           "oracle": cfg["oracle_throughput"], "per_cell_factor": cfg["per_cell_factor"], "a10_starts": cfg.get("a10_starts", 8), "pinn": cfg["pinn"]}
     arms = list(cfg["arms"])
     if mode == "confirmatory" and ds != "synthetic" and "A10" in arms:
         semi.require_verified()
     timings, metrics_out = {}, {"blinded": blinded, "mode": mode}
+    if mode != "timing":
+        metrics_out["n_train_cells"] = len(train)
+        metrics_out["n_train_scorable_cells"] = len(prepare_many(train, rule))      # A11/A12 train only on these (review m6)
     # ---------------------------------------------------------------- timing (and Samsung before the freeze)
     if mode == "timing":
         for a in arms:
             t0 = time.time()
             arm = make_arm(a, spec, default_hp(a) if ARMS[a].tuned else {}, 1000 + cfg["fold"], ctx).fit(train)
-            timings[a] = {"fit_seconds": time.time() - t0, "n_params": int(arm.n_params)}
+            timings[a] = {"fit_seconds": time.time() - t0, "n_params": int(arm.n_params), "n_train_used": arm.n_train_used}
             rec.log(f"timing {a}: {timings[a]['fit_seconds']:.1f} s, {arm.n_params} parameters")
         metrics_out["note"] = "timing only; no scoring, no predictions (retention blinding before the freeze)" if blinded else "timing only"
         _json(os.path.join(run_dir, "timings.json"), timings)
@@ -178,7 +218,17 @@ def run(cfg_in, root=None, runs_dir=None):
         rec.log(f"done in {time.time() - t_start:.0f} s")
         return run_dir
     # ---------------------------------------------------------------- tuning on training conditions
-    tk = cfg["target_kind"]
+    if cfg["auto_budget"]:                                  # N and inner folds are fixed BEFORE tuning from one timing fit per neural arm (review m8)
+        med = {}
+        for a in arms:
+            if a in NEURAL:
+                t0 = time.time()
+                make_arm(a, spec, default_hp(a) if ARMS[a].tuned else {}, 1000 + cfg["fold"], ctx).fit(train)
+                med[a] = time.time() - t0
+        bud = tuning.choose_budget(med)
+        cfg["n_trials"], cfg["inner_k"] = bud["n_trials"], bud["inner_k"]
+        _json(os.path.join(run_dir, "budget_rule.json"), {**bud, "median_fit_seconds": med})
+        rec.log(f"budget fixed before tuning: {bud}")
     if cfg["backbone"] == "tournament":
         tb = tuning.backbone_tournament(train, spec, rule, cfg["inner_k"], cfg["fold"], ctx, tk)
         ctx["backbone"] = tb["chosen"]
@@ -195,15 +245,18 @@ def run(cfg_in, root=None, runs_dir=None):
         rec.log(f"tuned {a}: inner-CV {r['inner_cv_pp']:.3f} pp, best {r['best_hp']}, median fit {r['median_fit_seconds']:.1f} s, failed {r['n_failed']}")
     inner = {a: {"inner_cv_pp": tuned[a]["inner_cv_pp"], "cond_scores": tuned[a]["cond_scores"], "best_hp": tuned[a]["best_hp"]} for a in arms}
     _json(os.path.join(run_dir, "tuning_done.json"), {"backbone": ctx["backbone"], "arms": inner, "budget": {"n_trials": cfg["n_trials"], "inner_k": cfg["inner_k"]}})
-    if cfg["auto_budget"]:
-        _json(os.path.join(run_dir, "budget_rule.json"), tuning.choose_budget({a: tuned[a]["median_fit_seconds"] for a in arms}))
     metrics_out["inner_cv_pp"] = {a: inner[a]["inner_cv_pp"] for a in arms}
+    if cfg["diagnostics"]:
+        diag = diagnostics(arms, tuned, train, spec, ctx, cfg["fold"])
+        _json(os.path.join(run_dir, "diagnostics.json"), diag)
+        metrics_out["diagnostics_file"] = "diagnostics.json"
+        rec.log("diagnostics: " + json.dumps({a: {k: round(v, 3) for k, v in d.items() if isinstance(v, float)} for a, d in diag["arms"].items()}))
     metrics_out["backbone"] = ctx["backbone"]
     if cfg["refit_timing"]:
         for a in arms:
             t0 = time.time()
             arm = make_arm(a, spec, tuned[a]["best_hp"], 0, ctx).fit(train)
-            timings[a].update(refit_seconds=time.time() - t0, n_params=int(arm.n_params))
+            timings[a].update(refit_seconds=time.time() - t0, n_params=int(arm.n_params), n_train_used=arm.n_train_used)
     if mode == "inner":
         for a in arms:
             if tuned[a]["rows"]:
@@ -222,27 +275,86 @@ def run(cfg_in, root=None, runs_dir=None):
     wc = [p.win for p in prep]
     if ds != "synthetic":
         guard.require_frozen("score outer test fold", root)      # the scoring side of the guard
+        guard.record_scoring(chash, run_id, git_info(root)["commit"], root)     # a second scoring of the same config is refused
+    bad = {c.kind for c in D["test"]} - {tk}
+    if bad:
+        raise ConfigError(f"test cells of kind {sorted(bad)} but the tuned and scored kind is {tk}")
     cond_scores_out, per_arm = {}, {}
     for a in arms:
-        per_seed_rows = []
+        per_seed_rows, per_seed_preds = [], []
         for s in cfg["seeds"]:
             t0 = time.time()
             arm = make_arm(a, spec, tuned[a]["best_hp"], s, ctx).fit(train)
             preds = arm.predict(wc)
             rows = metrics.score_prepared(preds, prep)
             per_seed_rows.append(rows)
+            per_seed_preds.append(preds)
             rec.add_preds("outer_test", a, s, rows)
             timings[a][f"refit_seed{s}_seconds"] = time.time() - t0
         cs, sd = metrics.seed_condition_scores(per_seed_rows)
         cond_scores_out[a] = cs
         per_arm[a] = {"primary_pp": float(np.mean(list(cs.values()))), "seed_sd_of_mean": sd, "n_conditions": len(cs),
                       "mae_pp_mean": float(np.mean([r["mae_pp"] for rows in per_seed_rows for r in rows])),
-                      "n_nonfinite": int(sum(r["n_nonfinite"] for rows in per_seed_rows for r in rows)), "n_params": int(arm.n_params)}
+                      "n_nonfinite": int(sum(r["n_nonfinite"] for rows in per_seed_rows for r in rows)), "n_params": int(arm.n_params),
+                      "n_train_used": arm.n_train_used, **outer_extras(prep, per_seed_preds, per_seed_rows)}
         rec.log(f"outer test {a}: {per_arm[a]['primary_pp']:.3f} pp (seed SD {sd:.3f}) over {len(cs)} conditions")
     metrics_out["outer_test"] = per_arm
+    if cfg["permute_stress"]:
+        metrics_out["negative_control"] = negative_control(cond_scores_out)
     _json(os.path.join(run_dir, "condition_scores.json"), cond_scores_out)
     _finish(rec, run_dir, timings, metrics_out, t_start)
     return run_dir
+
+
+LAM_GRID = ARMS["A1"].space["lam_res"][1]
+
+
+def diagnostics(arms, tuned, train, spec, ctx, fold):
+    """D013 C7, per fold: tuned lam_res and whether it sits on a grid edge; sd of the fitted delta_c on the training cells against TAU (flag outside [0.5, 2]);
+    share of clipped steps (A1, A9 and the other gradient-trained arms). One refit per arm at its tuned settings, seed 0, training cells only."""
+    out, lam_edges = {}, []
+    for a in arms:
+        hp = tuned[a]["best_hp"]
+        d = {}
+        if "lam_res" in hp:
+            lo, hi = min(LAM_GRID), max(LAM_GRID)
+            d.update(lam_res=hp["lam_res"], lam_res_at_lower_edge=bool(hp["lam_res"] == lo), lam_res_at_upper_edge=bool(hp["lam_res"] == hi))
+            lam_edges.append(d["lam_res_at_lower_edge"] or d["lam_res_at_upper_edge"])
+        if ARMS[a].family in ("pinn", "hard", "data"):
+            arm = make_arm(a, spec, hp, 0, ctx).fit(train)
+            d.update(arm.diagnostics())
+        if d:
+            out[a] = d
+    return {"arms": out, "lam_res_edge_share_over_arms": (float(np.mean(lam_edges)) if lam_edges else None), "lam_res_grid": list(LAM_GRID), "tau": TAU,
+            "outer_fold": fold, "tournament_table": "see backbone_tournament.json"}
+
+
+def outer_extras(prep, per_seed_preds, per_seed_rows, rul_level=0.8):
+    """secondary metrics of prereg 6, seed means: pooled R^2, MAPE, error by horizon after the window, RUL error (cells whose truth crosses the level)"""
+    r2 = float(np.mean([metrics.r2_pooled(p, prep) for p in per_seed_preds]))
+    mape = float(np.mean([r["mape_pct"] for rows in per_seed_rows for r in rows]))
+    hz = [metrics.horizon_errors([(metrics.clean_forecast(p[x.cell.cell_id], x.win.y_last)[0], x.fc_true) for x in prep]) for p in per_seed_preds]
+    hmean = {h: {"rmse_pp": float(np.mean([d[h]["rmse_pp"] for d in hz])), "n": hz[0][h]["n"]} for h in hz[0]}
+    rul = [[metrics.rul_error(x, metrics.clean_forecast(p[x.cell.cell_id], x.win.y_last)[0], rul_level) for x in prep] for p in per_seed_preds]
+    vals = [[v for v in seed if v is not None] for seed in rul]
+    return {"r2_pooled": r2, "mape_pct_mean": mape, "horizon_rmse_pp": hmean,
+            "rul": {"level": rul_level, "n_cells_crossing": len(vals[0]),
+                    "mean_abs_error_time_units": float(np.mean([np.mean(np.abs(v)) for v in vals if v])) if vals[0] else None}}
+
+
+def negative_control(cond_scores, margin=1.02):
+    """prereg 10 acceptance: A9 - A1 has mean L < ln(1.02) and the two-sided sign-flip p > 0.05; A1 does not beat R2 by more than the margin"""
+    out = {"required_arms": ["A1", "A9", "R2"], "complete": all(a in cond_scores for a in ("A1", "A9", "R2"))}
+    if not out["complete"]:
+        return out
+    L9 = metrics.log_ratio(cond_scores["A9"], cond_scores["A1"])
+    L2 = metrics.log_ratio(cond_scores["R2"], cond_scores["A1"])
+    m9, m2 = float(np.mean(list(L9.values()))), float(np.mean(list(L2.values())))
+    p = metrics.signflip_p_two_sided(list(L9.values()))
+    out.update(mean_L_A9_over_A1=m9, signflip_p_two_sided=p, mean_L_R2_over_A1=m2, ln_margin=float(np.log(margin)),
+               pass_residual_effect_vanishes=bool(m9 < np.log(margin) and p > 0.05), pass_A1_not_better_than_R2=bool(m2 <= np.log(margin)))
+    out["passed"] = out["pass_residual_effect_vanishes"] and out["pass_A1_not_better_than_R2"]
+    return out
 
 
 def _finish(rec, run_dir, timings, metrics_out, t_start):

@@ -7,6 +7,7 @@ import sys
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.insert(0, os.path.join(ROOT, "code"))
+sys.path.insert(0, os.path.join(ROOT, "code", "tests"))
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 import numpy as np
@@ -14,6 +15,7 @@ import pandas as pd
 import pytest
 
 from pinnkan import guard, data
+from pk_freeze import make_freeze
 from pinnkan.data import Cell, EFCCurve, WindowRule, prepare, window_rule_from_counts
 from pinnkan.specs import SPECS
 
@@ -21,11 +23,10 @@ REAL_FROZEN = guard.is_frozen()
 
 
 # ------------------------------------------------------------------------------------------------ guard
-def test_guard_refuses_without_flag_and_passes_with_it(tmp_path):
+def test_guard_refuses_without_flag_and_passes_with_it(tmp_path, monkeypatch):
     with pytest.raises(guard.TestFoldAccessError):
         guard.require_frozen("unit test", root=str(tmp_path))
-    os.makedirs(tmp_path / "runs" / "prereg")
-    (tmp_path / "runs" / "prereg" / "FROZEN").write_text("frozen by test")
+    make_freeze(tmp_path, monkeypatch)
     assert guard.require_frozen("unit test", root=str(tmp_path)) is True
     assert guard.guard_role("train", "x", root=str(tmp_path / "nowhere")) is True     # training role never needs the flag
     with pytest.raises(guard.TestFoldAccessError):
@@ -61,12 +62,12 @@ def test_load_split_train_role_never_contains_test_cells(tmp_path):
     assert sv.hash_ok
 
 
-def test_load_split_test_role_is_guarded(tmp_path):
+def test_load_split_test_role_is_guarded(tmp_path, monkeypatch):
     root = _mini_isu_root(tmp_path)
     with pytest.raises(guard.TestFoldAccessError):
         data.load_split("isu", "B", 0, role="test", root=root)
-    os.makedirs(tmp_path / "runs" / "prereg", exist_ok=True)
-    (tmp_path / "runs" / "prereg" / "FROZEN").write_text("x")
+    sp = json.load(open(tmp_path / "runs" / "splits" / "isu_testB.json"))
+    make_freeze(tmp_path, monkeypatch, splits={"isu:B": {"file_sha256": data.sha256_file(str(tmp_path / "runs" / "splits" / "isu_testB.json")), "fold_hash": sp["sha256_of_folds"]}})
     sv = data.load_split("isu", "B", 0, role="test", root=root)
     assert {c.cell_id for c in sv.test_cells} == {"G5C1", "G5C2", "G6C1", "G6C2"}
     assert not ({c.cell_id for c in sv.test_cells} & {c.cell_id for c in sv.train})

@@ -78,3 +78,30 @@ Stubs and open items (details in `code/README.md`):
 5. Not built: the 240-fit synthetic H7 batch driver, Kendall-tau importance, the G1 hard-versus-soft batch; physical-validation analyses (11a); lab-indicator, AT-included and forecast-failure sensitivity rows; figure scripts; the sign-flip / BCa / Holm / TOST tests (`code/prereg/stats_rule.py`, the other agent).
 6. Choices made without a prereg line, for the lead to confirm (README, "Decisions made while building"): one backbone for both terms; `delta_c` on the calendar term of storage cells; calendar KAN identical across pool arms; ISU and SNL interaction pairs; KAN sparsity as a parameter-magnitude proxy; ISU forcing without calibration; fixed A11/A12 sub-settings.
 7. Python `round` sends halves to even in `k = round(n_med/3)` (3.5 -> 4); say if the freeze wants half-up.
+
+## 4. Review fixes (2026-11-05; `CODE_REVIEW.md` M1-M4, m2-m8, D013 C1-C4 and C7)
+
+Tests: `code/tests/test_pk_review_fixes.py` (42 new tests, one or more per fix). Full suite: **155 passed, 2 failed**. The two failures are `test_samsung_checkups.py::test_probed_file_capacity_matches_probe` (older pipeline tests): `_find(name)` now meets two same-named
+CU files after the stage-aware fetch (stage 1 and stage 2 have the same zip names) and reads the other cell; they import no `pinnkan` code and need the pipeline owner to key the probe by `<serial>__f<id>`. No `FROZEN` and no `SCORED.jsonl` was created.
+
+| id | fix | test |
+|---|---|---|
+| M1 | stored vs recomputed fold hash now raises `SplitIntegrityError`; split file sha256 and fold hash are compared with the values pinned in FROZEN (also for the training role; a missing pin after the freeze fails closed); every loaded training condition must be listed in the split (`train_cycling_conditions` / `train_conditions`), conditions listed but absent are reported as `missing_train_conditions` and block a confirmatory run | `test_m1_*` (4) |
+| M2 | FROZEN is JSON (commit, prereg sha256, split pins, config hashes) and `verify_freeze` checks HEAD, a clean tracked tree under `code/` and `runs/prereg/`, the prereg hash; confirmatory real-data runs need a pinned config hash, `steps_scale = 1`, no `overwrite`, and are written to the append-only `SCORED.jsonl` (a second scoring of a config is refused); a folder with `condition_scores.json` is never replaced; Samsung un-blinds only on a valid freeze; `guard.build_freeze_payload` returns the dict for the lead and writes nothing | `test_m2_*` (5) |
+| M3 | `target_kind` derived from the test name (S2, S3 -> storage), contradiction raises `ConfigError`; inner folds and the CV assert that the partitioned kind is the scored kind; test cells of another kind raise | `test_m3_*` (2) |
+| M4 | `permute_stress` negative control (separate permutations of train and test stress vectors, no fixed points, design throughput recomputed, windows and forecasts untouched) with the acceptance checks of prereg 10 in `metrics.json`; R2, MAPE, error by horizon and RUL error are written for the outer test | `test_m4_*` (4) |
+| m1 | **not fixed**: the QC outlier rule is a preregistered rule (3.3(3)) in the pipeline module; documented in the README, left for the lead | - |
+| m2 | forecast-time list encodes the 70 % crossing: invariance test that every arm predicts a check-up identically whatever later times are queried (A8's grid excepted, synthetic only) | `test_m2_*` (8) |
+| m3 | one reference rule for all cells (ET only if ET exists for every analysed cell, else first CU for everybody; retention recomputed from `q_mean_ah`) | `test_m3_*` |
+| m4 | cumulative EFC forward-filled and made monotone (count of fixes in `meta`), time and EFC asserted non-decreasing; zero-width intervals get rate 0 | `test_m4_efc_*` |
+| m5 | inversion collocation seeded per (seed, cell id): a cell's prediction does not depend on its batch | `test_m5_*` |
+| m6 | not equalised (neural arms keep every cell): `n_train_used` per arm and `n_train_scorable_cells` are recorded; storage cells drop out of A11/A12 at window k-1 | `test_m6_*` (2) |
+| m7 | failed trials are redrawn until N valid ones exist; more than max(2, N/4) failures raise | `test_m7_*` |
+| m8 | A12 `mono=True` documented in the README; SNL inner folds stratified by temperature (`spec.strat_index`); `auto_budget` fixes N and inner folds before tuning; `log_ratio` raises on unequal condition sets | `test_m8_*` (4) |
+| D013 C1 | `GRAD_CLIP` 20 now in A2 and A9 as in the PINN arms (constants in `law.py`, `clip` configurable through `pinn: {clip, warmup, lr}`) | `test_d013_c1_*` (4) |
+| D013 C2 | SNL A5 pairs = T x discharge + chemistry flag x T + flag x discharge (7); ISU and Samsung unchanged; A5 still 5 dimensions | `test_d013_c2_*` |
+| D013 C3 | `lam_res` grid gains 1e-3 in A1, A3, A4, A5, A7, A13, A14 (still 6 dimensions for A1) | `test_d013_c3_*` |
+| D013 C4 | run-start `DeviceError` when CUDA is visible; older tests set `-1` | `test_d013_c4_*` |
+| D013 C7 | `diagnostics.json` per run: tuned `lam_res` with grid-edge flags and edge share, sd of fitted `delta_c` against TAU (flag outside [0.5, 2]), clipped-step fraction for A1, A9 and the other gradient-trained arms; tournament table in `backbone_tournament.json` | `test_d013_c7_*` |
+
+Not touched (lead assigns): D013 C5, C6, C8, C9 (prereg and paper text). The smoke runs of section 2 were made before these changes (A1 now has a 6-value `lam_res` grid and A2/A9 are clipped); re-run at the freeze.

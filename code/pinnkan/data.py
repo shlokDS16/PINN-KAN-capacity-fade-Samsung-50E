@@ -68,7 +68,8 @@ class EFCCurve:
         tq = np.asarray(tq, float)
         if len(self.t) < 2:
             return np.full(tq.shape, self.tail)
-        slopes = np.diff(self.e) / np.diff(self.t)
+        dt = np.diff(self.t)
+        slopes = np.where(dt > 0, np.diff(self.e) / np.where(dt > 0, dt, 1.0), 0.0)       # same-day check-ups: zero-width interval, rate 0
         j = np.clip(np.searchsorted(self.t, tq, side="right") - 1, 0, len(slopes) - 1)
         return np.where(tq >= self.t[-1], self.tail, slopes[j])
 
@@ -197,6 +198,14 @@ def _load_samsung(root, retain_all=False, throughput="analytic", include_at=Fals
         df = df[df["qc_pass"].astype(str).str.lower().isin(["true", "1"])]
     if not include_at:
         df = df[df["kind"] != "AT"]
+    # ONE reference rule for all analysed cells (prereg 3.3(2), review m3): ET_T23 capacity iff an ET row exists for every analysed cell,
+    # otherwise the first check-up of every cell (ET rows are then dropped for everybody). Decided from row existence only, no capacity value.
+    all_ids = set(df["cell_id"])
+    et_ids = set(df.loc[df["kind"] == "ET", "cell_id"])
+    et_all = bool(all_ids) and all_ids <= et_ids
+    if not et_all:
+        df = df[df["kind"] != "ET"]
+    reference = "ET" if et_all else "first_CU"
     cells = []
     for cid, g in df.groupby("cell_id", sort=True):
         g = g.sort_values(["elapsed_days", "file_idx"], kind="stable")
@@ -207,22 +216,27 @@ def _load_samsung(root, retain_all=False, throughput="analytic", include_at=Fals
             continue          # a filtered-out (test-side) cell is never turned into arrays
         t = g["elapsed_days"].to_numpy(float)
         t = t - t[0]
-        ret = g["retention"].to_numpy(float)
-        ret = ret / ret[0]
+        q = g["q_mean_ah"].to_numpy(float)
+        ret = q / q[0]                                   # q_mean of the (single-rule) reference row
         if throughput == "zyk":
             if "efc_zyk_cum" not in g.columns:
                 raise NotImplementedError("ZYK-logged throughput is not on disk yet (prereg 5, [FB-5]); use throughput='analytic'")
             e = g["efc_zyk_cum"].to_numpy(float)
         else:
             e = g["efc_est_cum"].to_numpy(float) if kind == "cycling" else np.zeros(len(g))
-        e = np.nan_to_num(e - e[0], nan=0.0)
+        e = pd.Series(e).ffill().fillna(0.0).to_numpy(float)     # forward-fill gaps (review m4), never zero them mid-record
+        e = e - e[0]
+        n_fix = int(np.sum(np.diff(e) < 0))
+        e = np.maximum.accumulate(e)
+        assert np.all(np.diff(e) >= 0) and np.all(np.diff(t) >= 0), f"{cid}: time or cumulative EFC not monotone"
         T, smax, dod, cch, cdch = (float(r0[c]) for c in ("T_C", "SOC_max", "DoD", "C_ch", "C_dch"))
         raw = np.array([T, smax - dod / 2.0, dod, cch, cdch]) if kind == "cycling" else np.array([T, smax, 0.0, 0.0, 0.0])
         fc_ok = g["kind"].isin(["CU", "exCU"]).to_numpy()
         fc_ok[0] = False
         cells.append(Cell(cid, "samsung", kind, cond, raw, t, ret, e, fc_ok,
                           lab=str(r0["lab"]), stage=str(int(r0["stage"])),
-                          meta={"cell_no": int(r0["cell"]), "tp": int(r0["tp"]), "n_incident_rows_dropped_dataset": n_incident}))
+                          meta={"cell_no": int(r0["cell"]), "tp": int(r0["tp"]), "n_incident_rows_dropped_dataset": n_incident,
+                                "reference": reference, "efc_decreases_fixed": n_fix}))
     return cells
 
 
@@ -304,6 +318,10 @@ def split_path(root, dataset, test):
     return os.path.join(root, "runs", "splits", f"{dataset}_test{test}.json")
 
 
+class SplitIntegrityError(RuntimeError):
+    """split file hash mismatch (stored vs recomputed, or vs the value pinned at freeze), or a loaded condition outside the split's training set"""
+
+
 @dataclass
 class SplitView:
     dataset: str
@@ -320,6 +338,8 @@ class SplitView:
     fold_hash_stored: str
     fold_hash_recomputed: str
     input_files: list
+    missing_train_conditions: list = field(default_factory=list)
+    pinned: bool = False
 
     @property
     def hash_ok(self):
@@ -350,6 +370,13 @@ def load_split(dataset, test, fold, role="train", root=None, retain_all=False, t
     else:
         fdef = block["folds"][str(fold)]
         stored, recomputed = block["sha256_of_folds"], _digest(block["folds"])
+        if stored != recomputed:
+            raise SplitIntegrityError(f"{path}: stored fold hash {stored[:12]} != recomputed {recomputed[:12]} (a regenerated or edited split)")
+    file_sha = sha256_file(path)
+    pin = guard.pinned_split(root, dataset, test)          # None before the freeze; after it a missing or different value is an error
+    if pin is not None:
+        if pin["file_sha256"] != file_sha or (stored and pin["fold_hash"] != stored):
+            raise SplitIntegrityError(f"{path}: split file or fold hash differs from the value pinned in FROZEN")
     spec = SPECS[dataset]
     tc = {str(c) for c in fdef.get("test_conditions", [])}
     tids = {str(c) for c in fdef.get("test_cells", [])}
@@ -372,9 +399,18 @@ def load_split(dataset, test, fold, role="train", root=None, retain_all=False, t
         return (_load_isu if dataset == "isu" else _load_snl)(root, keep=keep)
 
     train = build(keep_train)             # outer-test cells are filtered out before any array is built
+    expected = None
+    if dataset == "samsung" and test in ("B", "C"):
+        expected = set(fdef["train_cycling_conditions"])
+    elif dataset in ("isu", "snl") and fdef.get("train_conditions"):
+        expected = {str(c) for c in fdef["train_conditions"]}
+    loaded = {c.cond for c in train if c.kind == "cycling"}
+    if expected is not None and loaded - expected:         # fail closed: every loaded training condition must be listed in the split
+        raise SplitIntegrityError(f"loaded training conditions outside the split's training set: {sorted(loaded - expected)[:3]}")
+    missing = sorted(expected - loaded) if expected is not None else []
     test_cells = None
     if role != "train":
         guard.require_frozen(f"release of test cells ({dataset} test {test} fold {fold})", root)
         test_cells = build(keep_test)
     return SplitView(dataset, test, int(fold), spec, train, test_cells, sorted({c.cond for c in train}), sorted(tc), sorted(tids), path,
-                     sha256_file(path), stored, recomputed, _input_manifest(root, dataset))
+                     file_sha, stored, recomputed, _input_manifest(root, dataset), missing, pin is not None)

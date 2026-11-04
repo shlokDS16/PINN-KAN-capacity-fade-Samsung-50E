@@ -35,7 +35,8 @@ def inner_folds(cells, k, seed, spec, target_kind="cycling"):
     temp = {}
     for c in cells:
         if c.kind == target_kind:
-            temp[c.cond] = float(c.raw[spec.t_index]) if spec.t_index is not None else 0.0
+            temp[c.cond] = float(c.raw[spec.strat_index]) if spec.strat_index is not None else 0.0
+    assert temp, f"no {target_kind} cells to partition: the tuned task must be the scored task (review M3)"
     rng = np.random.default_rng([20261106, 21, int(seed)])
     order = []
     for T in sorted(set(temp.values())):
@@ -48,6 +49,7 @@ def inner_folds(cells, k, seed, spec, target_kind="cycling"):
 def cv_rows(arm_id, hp, cells, fold_of, k, spec, rule, seed, ctx, target_kind="cycling"):
     """out-of-fold per-cell rows over the k inner folds; also seconds spent in fits"""
     rows, secs, nfit = [], 0.0, 0
+    assert {c.kind for c in cells if c.cond in fold_of} == {target_kind}, "inner folds partition cells of another kind than the scored one"
     for f in range(k):
         val = [c for c in cells if c.kind == target_kind and fold_of.get(c.cond) == f]
         tr = [c for c in cells if not (c.kind == target_kind and fold_of.get(c.cond) == f)]
@@ -85,8 +87,15 @@ def tune(arm_id, cells, spec, rule, n_trials, inner_k, outer_fold, ctx, target_k
         return v if np.isfinite(v) else BIG
 
     study = optuna.create_study(direction="minimize", sampler=optuna.samplers.TPESampler(seed=int(outer_fold)))
-    study.optimize(objective, n_trials=n_trials, catch=(Exception,))
-    done = [t for t in study.trials if t.state.name == "COMPLETE"]
+    max_failed = max(2, n_trials // 4)       # equal-budget rule (review m7): failed trials are redrawn until N valid ones exist, up to a cap
+    while True:
+        done = [t for t in study.trials if t.state.name == "COMPLETE"]
+        failed = len(study.trials) - len(done)
+        if len(done) >= n_trials:
+            break
+        if failed > max_failed:
+            raise RuntimeError(f"{arm_id}: {failed} failed tuning trials (cap {max_failed}); the arm cannot receive the same N valid trials as the others")
+        study.optimize(objective, n_trials=n_trials - len(done), catch=(Exception,))
     if not done:
         raise RuntimeError(f"{arm_id}: every tuning trial failed")
     best = min(done, key=lambda t: t.value)

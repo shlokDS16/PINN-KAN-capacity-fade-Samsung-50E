@@ -28,6 +28,11 @@ cd "C:\Users\Shlok\Downloads\PINN KAN battery paper"
 | `oracle_throughput` | logged throughput after the window (sensitivity row) |
 | `per_cell_factor` | A10 per-cell factor on/off (off = "A10 as published") |
 | `retain_all`, `throughput` | keep every check-up regardless of QC flags (sensitivity); `analytic` (default) or `zyk` ([FB-5] stub) |
+| `target_kind` | derived from `test` (B, C, A: cycling; S2, S3: storage); a contradicting value raises `ConfigError` |
+| `permute_stress` | negative control (prereg 10): stress vectors with their design throughput permuted among cycling conditions, separately in the training and the test set; run A1, A9, R2; `metrics.json` gets `negative_control` with the acceptance checks |
+| `pinn` | `{clip, warmup, lr}` overrides of the optimiser recipe (D013); `clip` also reaches A2 and A9 |
+| `diagnostics` | default true: one refit per gradient-trained arm at its tuned settings, written to `diagnostics.json` (tuned `lam_res` and grid-edge flag, sd of fitted `delta_c` against TAU, clipped-step fraction) |
+| `auto_budget` | N and inner folds are fixed from one timing fit per neural arm BEFORE tuning (`budget_rule.json`) |
 | `twins` | `auto` (Test C adds the 35 C calendar twins from the held-out condition identifiers), `train`, `c35` |
 
 **Modes and the guard.** `inner` and `timing` build only the training side (`load_split(..., role="train")`: an outer-test cell or condition is filtered
@@ -37,6 +42,8 @@ conditions -> `tuning_done.json`, `margins_inputs.json`, `margins.json` -> refit
 Samsung before the freeze is **blinded**: any non-confirmatory request is forced to `timing` (fit seconds and parameter counts only; no score, no
 prediction, no retention-derived number under `runs/`; prereg 3.3(9)). Synthetic data have no outer test fold, so `confirmatory` works there (used by the tests).
 Confirmatory use of A10 on a real dataset raises `UnverifiedArmError` until `semi.A10_FORM["verified"]` is set after [FB-2].
+
+**FROZEN is a JSON file** (review M2): `{commit, prereg_file, prereg_sha256, splits: {"<ds>:<test>": {file_sha256, fold_hash}}, config_sha256s: [...]}`. `guard.verify_freeze` checks HEAD = commit, tracked files under `code/` and `runs/prereg/` clean, prereg hash; `load_split` checks the split file and fold hash against the pins (and always raises when the stored fold hash differs from the recomputed one, or when a loaded training condition is not listed in the split); a confirmatory run on real data also needs its canonical config hash among `config_sha256s`, `steps_scale = 1`, no `overwrite`, and is recorded in the append-only `runs/prereg/SCORED.jsonl` (a second scoring of the same config is refused; a folder holding `condition_scores.json` is never replaced). `guard.build_freeze_payload` returns the dict for the lead; nothing in the package writes the file. At run start the runner raises `DeviceError` if CUDA is visible.
 
 Run record in `runs/<run_id>/`: `config.json`, `env.json`, `git.json` (commit + dirty-file list), `split.json` (file, sha256, stored vs recomputed fold hash),
 `manifest.json` (input files: path, size, sha256), `seeds.json`, `guard.json` (every guard decision), `tuning_<arm>.json`, `tuning_done.json`,
@@ -78,12 +85,12 @@ logged inside the window, the window's mean rate afterwards) and keep the foreca
 2. Per-cell offset `delta_c` scales the cycling term of a cycling cell and the calendar term of a storage cell (storage cells have no cycling term).
 3. Calendar term of a cycling cell uses `(T, SOC_mid)`; calendar twins are `(T, SOC_mid)` of the training cycling conditions (+ the 35 C twins in Test C).
 4. Calendar KAN is the same in A3 to A7 (only the cyclic stress map differs between pool arms).
-5. PINN fit: Adam 5e-3 with cosine decay, residual weight ramped 0 -> `lam_res` over the first 40 % of steps, global gradient-norm clip 20. Without the clip the fit diverged
-   for `lam_res` 0.1 and 1 on a synthetic design (data MSE 1.7 and 34); with it all five grid values trained (forecast 0.7 to 3.5 pp on G0). Frozen with the commit.
+5. Optimiser recipe (D013 (d), accepted): Adam 5e-3 with cosine decay, global gradient-norm clip 20 in **every gradient-trained arm** (A1, A2, A3-A7, A9, A13, A14; `law.GRAD_CLIP`), residual weight ramped 0 -> `lam_res` over the first 40 % of steps in arms with a residual (`law.WARMUP`). Without the clip the PINN fit diverged
+   for `lam_res` 0.1 and 1 on a synthetic design (data MSE 1.7 and 34). Both stay configurable: config key `pinn: {clip, warmup, lr}` (clip 0 = off), default = the frozen constants. The clipped-step fraction is logged (`diagnostics.json`).
 6. KAN sparsity penalty (L1 + entropy) is computed on parameter magnitudes of each edge, a proxy for the activation-based penalty of Liu et al.
-7. ISU interaction pairs (charge x discharge, charge x DoD, discharge x DoD) and SNL pairs (T x charge, T x DoD, DoD x discharge) are my choice; the prereg names A5 for ISU without listing terms.
+7. A5 pair sets: Samsung the three preregistered pairs; ISU all three pairs (complete second-order GAM); SNL (D013 C2) T x discharge plus each chemistry flag x T and x discharge = 7 pairs, because in every Test B training fold the charge rate is constant and DoD has two levels.
 8. ISU forcing: analytic cycles per week with the pilots' 0.5 h rest; the calibration on the 6 `Cycling_json` members (prereg 3.4) is not done.
-9. A11 fixes `m = 4`, `tau_log = True`; A12 fixes subsample 0.8, column 0.8, no monotone constraint, so that the tuned dimensions are 3 and 5 as in the prereg table.
+9. A11 fixes `m = 4`, `tau_log = True`; A12 fixes subsample 0.8, column 0.8 and a monotone constraint on the horizon (`mono=True`: the predicted drop does not decrease with the horizon), so that the tuned dimensions are 3 and 5 as in the prereg table.
 10. Stress ranges for the [-1, 1] scaling are fixed physical ranges with a margin (Samsung T 5-50 C, SOC 0-1, DoD 0-0.8, C_ch 0-1.2, C_dch 0-2.2); inputs are clamped inside the spline grid.
 11. Incident files of prereg 3.3(4) are dropped by `(serial, file number, kind)` for both stages (the paper does not name the stage; over-drop is possible).
 
@@ -96,6 +103,10 @@ logged inside the window, the window's mean rate afterwards) and keep the foreca
 - **Reference Q0,c** [FB-3]: the loader uses the pipeline's `retention` (ET_T23 if present, else first CU) and renormalises to the first retained check-up.
 - **Consecutive-file incident drops** (prereg 3.3(4), second sentence) and the stage mapping of each named incident file [FB-4]: not implemented (`INCIDENT_CONSECUTIVE_DROPS_IMPLEMENTED = False`).
 - **A8** (free G) for the synthetic H7 figure, the G1 hard-versus-soft batch, the Kendall-tau / variance-importance metrics and the 240-fit synthetic driver: the generator, the recovery metric (nRMSE on a hull sample) and the arms A1, A2, A4 exist; the batch driver does not.
+- **Review m1 (left for the lead)**: the pipeline's isolated-outlier QC rule (`code/data/samsung_checkups.py`, prereg 3.3(3)) looks at the next capacity, so whether the last window point survives depends on the first post-window value. Changing it (preceding neighbours only) changes a preregistered rule and a pipeline output; not done here.
+- **Review m2**: the forecast-time list of ISU/SNL still ends at the 70 % crossing (it is the scored set); every arm predicts pointwise and `test_m2_forecast_does_not_depend_on_where_the_query_list_ends` pins that predictions at a check-up do not depend on later query times (A8's integration grid does; synthetic only).
+- **Review m6**: A11/A12 train on the cells that have enough window and forecast points; the other arms on all cells. `n_train_used` and `n_train_scorable_cells` are in the run record; with the secondary window k-1 all storage cells drop out of A11/A12 (k_sto = 1 gives 2 window points < 3).
 - **Statistics** (sign-flip test, BCa, Holm, TOST) belong to `code/prereg/stats_rule.py`; `margins.py` only prepares the margin inputs.
+- Implemented after review: the negative control (`permute_stress`, with the acceptance checks of prereg 10; the sign-flip p uses a placeholder RNG seed), and the secondary metrics R^2, MAPE, error by horizon and RUL error in the outer-test `metrics.json`.
 - **Physical validation analyses** of prereg 11a (activation energy, SOC slope, superposition check) and the figure scripts are not part of this build.
 - Sensitivity rows implemented as options: windows (`shift`), oracle throughput, A10 as published, retain-every-check-up. Not implemented: lab-indicator rows, AT-included (`include_at` exists in `load_split`), forecast-failure rule, lab-stratified bootstraps.

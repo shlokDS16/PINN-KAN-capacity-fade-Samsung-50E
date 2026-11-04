@@ -322,7 +322,7 @@ def test_arm_table_matches_prereg_dimensions():
     assert dims["A1"] == 6 and dims["A2"] == 4 and dims["A3"] == 3 and dims["A4"] == 4 and dims["A5"] == 5 and dims["A7"] == 5
     assert dims["A9"] == 4 and dims["A10"] == 0 and dims["A11"] == 3 and dims["A12"] == 5 and dims["A13"] == 6 and dims["A14"] == 4
     assert arms.H1B_POOL == ("A3", "A4", "A5", "A7")
-    assert set(arms.ARMS["A1"].space["lam_res"][1]) == {1e-2, 1e-1, 1.0, 10.0, 100.0} and arms.ARMS["A1"].space["placement"][1] == ["record_end", "whole_axis"]
+    assert set(arms.ARMS["A1"].space["lam_res"][1]) == {1e-3, 1e-2, 1e-1, 1.0, 10.0, 100.0} and arms.ARMS["A1"].space["placement"][1] == ["record_end", "whole_axis"]
 
 
 @pytest.mark.parametrize("aid", ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A13", "A14", "R1", "R2"])

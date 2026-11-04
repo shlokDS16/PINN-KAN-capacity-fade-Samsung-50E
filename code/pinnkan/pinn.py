@@ -7,6 +7,7 @@ Residual (D010 section 2):  R = dF/dt_n - [ a_cal + a_cyc * nu(t) ] * h(F)  by a
   (c) at the calendar twins (T, SOC_mid) of cycling conditions with nu = 0 (+ any extra design points passed in, e.g. 35 C in Test C).
 Loss = (data + lam_res * mean R^2) / SIGMA^2 + prior(delta_c) + prior(z_c) + map regularisation.
 Test time: z_c and delta_c are fitted to the window plus the residual over the forecast horizon (causal; network and law frozen)."""
+import zlib
 from dataclasses import dataclass
 
 import numpy as np
@@ -18,10 +19,8 @@ from torch import nn
 from models.ageing_models import SolutionNet  # noqa: E402  (pilot module, imported not edited)
 
 from .hard import make_law, split_by_cell
-from .law import SIGMA, TAU, Batch, Law, batch_forecast_query, batch_from_windows, retention_from_y, state_factor
-
-
-GRAD_CLIP = 20.0   # global gradient-norm clip of the PINN fit (loss is scaled by 1/SIGMA^2 = 400); frozen with the code commit
+from .law import (GRAD_CLIP, SIGMA, TAU, WARMUP, Batch, Law, batch_forecast_query, batch_from_windows, clip_and_count, clip_fraction, new_clip_stats, retention_from_y,
+                  state_factor)
 
 
 @dataclass
@@ -145,7 +144,7 @@ class PINNModel(nn.Module):
         return tot, data, res
 
 
-def fit_pinn(b: Batch, spec, hp, backbone, seed, steps=2000, lr=5e-3, extra_twin_raw=None, warmup=0.4, clip=GRAD_CLIP):
+def fit_pinn(b: Batch, spec, hp, backbone, seed, steps=2000, lr=5e-3, extra_twin_raw=None, warmup=WARMUP, clip=GRAD_CLIP):
     torch.manual_seed(seed)
     law = make_law(spec, b, hp, backbone)
     m = PINNModel(spec, law, b.C, backbone, width=32, depth=3, zdim=2)
@@ -157,17 +156,18 @@ def fit_pinn(b: Batch, spec, hp, backbone, seed, steps=2000, lr=5e-3, extra_twin
     gen = torch.Generator().manual_seed(seed + 17)
     lam, l2, sp = float(hp.get("lam_res", 1.0)), float(hp.get("l2", 1e-4)), float(hp.get("sparsity", 0.0))
     last = (float("nan"), float("nan"))
+    stats = new_clip_stats()
     for it in range(steps):
         opt.zero_grad(set_to_none=True)
         ramp = min(1.0, (it + 1) / max(warmup * steps, 1.0))     # residual weight ramps 0 -> lam_res over the first 40 % of steps (data-first warm-up)
         L, data, res = m.loss(b, col, lam * ramp, l2, sp, gen)
         L.backward()
-        if clip:
-            torch.nn.utils.clip_grad_norm_(m.parameters(), clip)
+        clip_and_count(m.parameters(), clip, stats)
         opt.step()
         sch.step()
         last = (float(data.detach()), float(res.detach()))
     m.train_data_mse, m.train_res_msq = last
+    m.clip_fraction = clip_fraction(stats)
     return m
 
 
@@ -178,8 +178,8 @@ def invert_pinn(m: PINNModel, bw: Batch, lam, seed, n_col=16, steps=200, lr=0.05
     for p in m.parameters():
         p.requires_grad_(False)
     Ct = bw.C
-    g = torch.Generator().manual_seed(seed)
-    u = torch.rand(Ct, n_col, generator=g)
+    # per-cell collocation draws seeded by (seed, cell id): a cell's prediction does not depend on its position in the batch (review m5)
+    u = torch.tensor(np.stack([np.random.default_rng([int(seed), zlib.crc32(cid.encode())]).random(n_col) for cid in bw.ids]), dtype=torch.float32)
     tc = (bw.t_end.unsqueeze(1) + u * (m.col_t_max - bw.t_end).clamp_min(0.0).unsqueeze(1))
     to_n = spec.t_scale / spec.efc_scale
     nu = torch.stack([torch.tensor(bw.curves[c].rate(tc[c].numpy() * spec.t_scale) * to_n, dtype=torch.float32) for c in range(Ct)])
@@ -226,19 +226,22 @@ class DataOnlyF(nn.Module):
         return sum((p ** 2).sum() for n, p in self.net.named_parameters() if n.endswith("weight"))
 
 
-def fit_data_only(b: Batch, spec, hp, seed, steps=1500, lr=5e-3):
+def fit_data_only(b: Batch, spec, hp, seed, steps=1500, lr=5e-3, clip=GRAD_CLIP):
     torch.manual_seed(seed)
     m = DataOnlyF(spec, b.C, int(hp.get("width", 32)), int(hp.get("depth", 3)), int(hp.get("zdim", 2)))
     opt = torch.optim.Adam(m.parameters(), lr=lr)
     sch = torch.optim.lr_scheduler.CosineAnnealingLR(opt, steps, eta_min=lr * 0.1)
     wd = float(hp.get("wd", 1e-4))
+    stats = new_clip_stats()
     for _ in range(steps):
         opt.zero_grad(set_to_none=True)
         r = m.F(b.obs_t, b.s[b.obs_cell], m.z[b.obs_cell]) - b.obs_y
         n = r.numel()
         ((r ** 2).mean() / SIGMA ** 2 + (m.z ** 2).sum() / n + wd * m.weight_l2()).backward()
+        clip_and_count(m.parameters(), clip, stats)       # same clip as the PINN arms (D013 C1): no optimiser-recipe confound in H1a
         opt.step()
         sch.step()
+    m.clip_fraction = clip_fraction(stats)
     return m
 
 

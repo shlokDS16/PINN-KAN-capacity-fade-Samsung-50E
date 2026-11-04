@@ -28,6 +28,8 @@ SIGMA = 0.05   # nominal observation noise in y_s units (0.5 pp); same constant 
 TAU = 0.15     # nominal sd of per-cell log-rate offsets (as P4/P5)
 Y0 = 1.0       # self-limiting scale, y_s units
 GAMMA = 0.3    # accelerating exponent, 1 / y_s units
+GRAD_CLIP = 20.0   # recipe constant (D013 C1): global gradient-norm clip of EVERY gradient-trained arm (A1, A2, A3-A7, A9, A13, A14); loss is scaled by 1/SIGMA^2 = 400
+WARMUP = 0.4       # residual-weight ramp 0 -> lam_res over this fraction of the steps (arms with a residual only)
 BACKBONES = ("constant", "self_limiting", "accelerating")   # order = simplicity order for the tournament
 _EPS = 1e-4
 
@@ -63,6 +65,22 @@ def drive_to_state(phi, kind):
     if kind == "accelerating":
         return -torch.log((1.0 - GAMMA * phi).clamp_min(_EPS)) / GAMMA
     raise ValueError(kind)
+
+
+def clip_and_count(params, clip, stats):
+    """clip the global gradient norm (if clip) and count the steps where the norm exceeded it (D013 C7: clipped fraction)"""
+    stats["steps"] += 1
+    if clip:
+        gn = torch.nn.utils.clip_grad_norm_(params, clip)
+        stats["clipped"] += int(float(gn) > clip)
+
+
+def new_clip_stats():
+    return {"steps": 0, "clipped": 0}
+
+
+def clip_fraction(stats):
+    return stats["clipped"] / max(stats["steps"], 1)
 
 
 def rk4_reference(a_cal, a_cyc, curve: EFCCurve, t_query_n, spec: DatasetSpec, backbone, sub=40):

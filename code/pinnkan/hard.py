@@ -3,7 +3,7 @@ offsets delta_c fitted on the training records, and MAP-inferred from the window
 import torch
 from torch import nn
 
-from .law import (SIGMA, TAU, Law, Batch, batch_forecast_query, batch_from_cells, batch_from_windows, build_stress_map, drive_to_state,
+from .law import (GRAD_CLIP, SIGMA, TAU, clip_and_count, clip_fraction, new_clip_stats, Law, Batch, batch_forecast_query, batch_from_cells, batch_from_windows, build_stress_map, drive_to_state,
                   init_levels, retention_from_y)
 
 
@@ -29,18 +29,21 @@ def make_law(spec, batch, hp, backbone):
     return Law(spec, build_stress_map(hp.get("map", "kan"), spec, hp), grid_cal=int(hp.get("grid_cal", 5)), log_cal0=cal0, log_cyc0=cyc0)
 
 
-def fit_hard(batch: Batch, spec, hp, backbone, seed, steps=1200, lr=0.02):
+def fit_hard(batch: Batch, spec, hp, backbone, seed, steps=1200, lr=0.02, clip=GRAD_CLIP):
     torch.manual_seed(seed)
     m = HardODE(spec, make_law(spec, batch, hp, backbone), batch.C, backbone)
     opt = torch.optim.Adam(m.parameters(), lr=lr)
     sch = torch.optim.lr_scheduler.CosineAnnealingLR(opt, steps, eta_min=lr * 0.05)
     l2, sp = float(hp.get("l2", 1e-4)), float(hp.get("sparsity", 0.0))
+    stats = new_clip_stats()
     for _ in range(steps):
         opt.zero_grad(set_to_none=True)
         L = m.loss(batch, l2, sp)
         L.backward()
+        clip_and_count(m.parameters(), clip, stats)       # D013 C1: one recipe for all gradient-trained arms (measured inert on A2)
         opt.step()
         sch.step()
+    m.clip_fraction = clip_fraction(stats)
     return m
 
 

@@ -15,7 +15,7 @@ Apply together with the freeze blockers FB-1..FB-8 of PREREG_v2 section 17; each
 5. **Code review m1 (lead ruling 02:12):** the Samsung capacity outlier rule (code/data/samsung_checkups.py,
    neighbour range 1 %) is made causal: a check-up is compared with preceding check-ups only, so window
    membership never depends on a post-window label. Small effect, same for all arms; stated in 3.3.
-   Lead ruling 03:40 after checking flagged points: rises flagged at > 1 % above the max of the 2 preceding valid
+   Lead ruling (about 03:15) after checking flagged points: rises flagged at > 1 % above the max of the 2 preceding valid
    check-ups; drops flagged only beyond a time-scaled allowance (3 x latest fall rate x elapsed days + 1 %), so
    accelerating fade (knees) is never removed; a per-check-up allowance had flagged a point matching its replicate.
 6. **Code review m6 (disclosure):** A11/A12 drop storage cells with fewer than 2 window points at k-1; the

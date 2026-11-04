@@ -217,7 +217,7 @@ Row format:
   so the extension does not favour A1. If the tuned optimum on Samsung training folds lands at 1e-3 the
   residual adds little, and H1a will show it; that is a result, not a reason to restrict the grid.
 
-### D014 Negative control redefined: label-invariance gate (NC-1) + stress-attribution check (NC-2) (2026-11-05 03:30, status: accepted)
+### D014 Negative control redefined: label-invariance gate (NC-1) + stress-attribution check (NC-2) (2026-11-05 about 03:05, status: accepted)
 - **Decision:** per runs/prereg/NEGCONTROL_RULING.md (70aaf5a): gate G detects leakage only, by label invariance:
   every held-out cell's post-window labels are replaced with garbage and predictions plus tuning records must be
   bit-identical (NC-1). "Stress functions carry the gain" is a separate, non-gating check (NC-2): permuting stress

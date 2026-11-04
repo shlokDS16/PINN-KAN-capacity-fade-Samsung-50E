@@ -1,0 +1,3 @@
+# Bandwidth cap for the downloader (curl --limit-rate), re-read at every (re)start of a file.
+# 22:06: the whole link measured about 50 KB/s; keep half free for agent traffic. Delete this file to remove the cap.
+30k

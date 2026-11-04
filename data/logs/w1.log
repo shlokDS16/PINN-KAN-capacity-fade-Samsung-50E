@@ -1,2 +1,17 @@
 curl: (28) Operation too slow. Less than 2000 bytes/sec transferred the last 60 seconds
 attempt 1 rc=28
+curl: (56) schannel: server closed abruptly (missing close_notify)
+attempt 2 rc=56
+curl: (56) schannel: server closed abruptly (missing close_notify)
+attempt 3 rc=56
+curl: (28) Operation too slow. Less than 2000 bytes/sec transferred the last 60 seconds
+attempt 4 rc=28
+done SNL.zip
+curl: (28) Operation too slow. Less than 2000 bytes/sec transferred the last 60 seconds
+attempt 1 rc=28
+curl: (56) schannel: server closed abruptly (missing close_notify)
+attempt 2 rc=56
+curl: (56) schannel: server closed abruptly (missing close_notify)
+attempt 3 rc=56
+curl: (28) Operation too slow. Less than 2000 bytes/sec transferred the last 60 seconds
+attempt 4 rc=28

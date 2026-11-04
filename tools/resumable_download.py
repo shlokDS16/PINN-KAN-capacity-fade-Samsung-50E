@@ -101,9 +101,12 @@ def write_status(rows, current=None, note=""):
         pct = 100 * have / size if size else 0
         lines.append(f"| {r['dataset']} | {r['file']} | {size/1e6:.1f} | {have/1e6:.1f} | {pct:.0f} | {state} |")
     tmp = STATUS + ".tmp"
-    with open(tmp, "w", encoding="utf8") as f:
-        f.write("\n".join(lines) + "\n")
-    os.replace(tmp, STATUS)
+    try:  # a reader holding the file must never stop the download
+        with open(tmp, "w", encoding="utf8") as f:
+            f.write("\n".join(lines) + "\n")
+        os.replace(tmp, STATUS)
+    except OSError:
+        pass
 
 
 def fetch(r, rows):
@@ -130,8 +133,16 @@ def fetch(r, rows):
         write_status(rows, r, f"Downloading {r['file']} from {have/1e6:.1f} MB.")
         log(f"start {r['file']} at {have} of {size}")
         cmd = ["curl", "-L", "-sS", "-A", UA, "-C", "-", "--connect-timeout", "30",
-               "--speed-limit", "2000", "--speed-time", "120", "-o", part, r["url"]]
-        rc = subprocess.run(cmd, capture_output=True, text=True)
+               "--speed-limit", "500", "--speed-time", "180", "-o", part, r["url"]]
+        rate = read_list("DOWNLOAD_RATE.txt", [])  # e.g. "30k": leaves bandwidth for the agents
+        if rate:
+            cmd[1:1] = ["--limit-rate", rate[0]]
+        proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True)
+        while proc.poll() is None:  # refresh the status file while curl runs
+            time.sleep(30)
+            now = os.path.getsize(part) if os.path.exists(part) else 0
+            write_status(rows, r, f"Downloading {r['file']}: {now/1e6:.1f} of {size/1e6:.1f} MB.")
+        rc = subprocess.CompletedProcess(cmd, proc.returncode, "", proc.stderr.read() if proc.stderr else "")
         have = os.path.getsize(part) if os.path.exists(part) else 0
         log(f"curl rc={rc.returncode} {r['file']} now {have} {rc.stderr.strip()[:200]}")
         if rc.returncode == 33:  # server refused range: start over once

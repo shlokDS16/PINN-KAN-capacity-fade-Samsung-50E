@@ -1,0 +1,28 @@
+40 40 40
+23 23 23
+cells 251 reach80 251
+npts quartiles [ 2. 11. 15. 19. 28. 35. 80.]
+t80 weeks quartiles [ 0.85986887  6.11840597  8.62533138 12.02747153 16.94701479 25.71301172
+ 58.15764898]
+Q0 range 0.2762138888888889 0.292086453333333
+cells/group Counter({4: 62, 3: 1})
+within-condition sd log t80: n groups 63 median 0.19096639790826211 p90 0.31681585709343035
+between all sd log t80 0.6777578786729184
+G 1 cond (0.5, 0.5, 25.9) npts 52 last t 57.6 ret 0.457 t80 44.05
+G 5 cond (1, 0.5, 97.54) npts 14 last t 14.8 ret 0.291 t80 11.72
+G 9 cond (2, 0.5, 96.93) npts 7 last t 6.7 ret 0.702 t80 5.24
+G 12 cond (3, 0.5, 28.6) npts 19 last t 20.8 ret 0.602 t80 12.46
+G 26 cond (1.4, 2.2, 4.16) npts 28 last t 32.1 ret 0.611 t80 29.28
+G 45 cond (1.125, 1.725, 80.26) npts 15 last t 14.8 ret 0.422 t80 7.65
+----
+40 40 40
+23 23 23
+LORO condition-median |log err| median 0.151 mean 0.196
+W=2 powerlaw per-cell: n=173 skipped=78 median |log err| 0.626
+W=4 powerlaw per-cell: n=238 skipped=13 median |log err| 0.434
+W=6 powerlaw per-cell: n=228 skipped=23 median |log err| 0.339
+cells>=10pts 232 frac with later 3rd mean rate > first 3rd 0.8448275862068966
+W 2 median #pts incl t=0 3.0
+W 4 median #pts incl t=0 5.0
+W 6 median #pts incl t=0 7.0
+frac cells with t80<=4w 0.05179282868525897 <=2w 0.02390438247011952

@@ -20,25 +20,60 @@ Cycles to EOL: for (a), (b), (c), (d) taken from `feature_tables_summary.csv` of
 | e | NASA PCoE (S3 file 5) | none stated | 34 | LCO 18650 | yes: 4, 22/24, 43, 44 C | yes: 1, 2, 4 A, square wave | cut-off voltage 2.0-2.7 V (DoD proxy) | 25-197 discharge cycles per cell (many stop before 30% fade) | 209.7 MB | weak to moderate: 34 cells, conditions confounded in groups, but full curves | no | DOWNLOADED, verified |
 | e2 | NASA PCoE randomized usage (file 11) | none stated | 28 (not verified) | LCO 18650 | yes | random load steps | not stated | not in record | 1.07 GB | moderate (variable loads) | no | deferred |
 | e3 | NASA PCoE HIRF (file 15) | none stated | not verified | not verified | not verified | not verified | not verified | not in record | 1.09 GB | unknown | no | deferred |
-| f | CALCE CS2 (official) | none stated | 4 fetched (CS2_34/35/36/38) of 15 listed | LiCoO2 prismatic | room | per cell, see CALCE articles | per cell | see PARSE_REPORT (cycle index per cell) | 4 x ~40 MB | weak (few cells) | no | DOWNLOADED |
-| f2 | CALCE PL pouch (official /pl/) | none stated | 8 conditions (cells per condition not stated) | graphite/LiCoO2 pouch | room | 0.5C and 2C | SOC 0-60, 0-100, 20-80, 40-60, 40-100 | not stated | 658 MB (8 zips) | good for SOC window and rate (small, clean grid) | no | partly downloaded (files under 100 MB only) |
+| f | CALCE CS2 (official) | none stated | 3 verified (CS2_35, 36, 38); CS2_34 partial; 15 listed | LiCoO2 prismatic | room | per cell, see CALCE articles | per cell | about 936, 976, 1082 cycles (sum of distinct cycle indices per workbook; boundary cycles may count twice) | 3 x ~40 MB | weak (few cells) | no | DOWNLOADED (35, 36, 38); CS2_34 partial (33.1 of 43.8 MB) |
+| f2 | CALCE PL pouch (official /pl/) | none stated | 8 conditions (cells per condition not stated) | graphite/LiCoO2 pouch | room | 0.5C and 2C | SOC 0-60, 0-100, 20-80, 40-60, 40-100 | not stated | 658 MB (8 zips) | good for SOC window and rate (small, clean grid) | no | NOT complete: the CALCE server ran at about 2 KB/s; partials kept as .part, resume rows in DEFERRED_URLS.tsv |
 | D1 | Drive CALCE-EV Dataset.zip | author's | - | NMC/LFP profiles | 0, 25, 45 C | DST, FUDS, US06, BJDST | start-SOC tag | not ageing data | 5.6 MB | none (no ageing labels) | no | DOWNLOADED, verified |
 | D2 | Drive NASA-EV.zip | derived from NASA PCoE | 34 | LCO | as e | as e | as e | as e | 239.5 MB | as e (same cells) | no | DOWNLOADED, verified |
 | A1 | ISU-ILCC (figshare 22582234) | CC BY 4.0 | 251 | NMC/graphite pouch | no (room) | yes: charge and discharge rate | yes: DoD | not in record | 11.19 GB (summaries 48 MB) | strong: 63 conditions over three stresses | no | summaries downloaded; rest by lead |
-| A2 | Samsung 50E DoE (figshare 25975315) | CC BY 4.0 | 279 | NCA/Gr 21700 | yes | yes | yes (SOC/DoD) | not in record | 10.29 GB | strongest: space-filling design, 71 conditions, calendar + cycle | no | conditions table only |
+| A2 | Samsung 50E DoE (figshare 25975315) | CC BY 4.0 | 279 (147 cycling, 132 calendar) | NCA/Gr 21700 | yes: 10, 23, 35, 45 C | yes: charge 0.2-1C, discharge 0.2-2C | yes: DoD 0.05-0.6, max SOC 0.05-1.0 | not in record | 10.29 GB | strongest: space-filling design, 71 conditions, calendar + cycle | no | conditions table DOWNLOADED (experiments_meta.csv, 279 rows) |
 | A3 | Stanford dynamic cycling (SDR td676xr4322) | CC BY 4.0 | 92 | SiOx-graphite / NCA 21700 | no | discharge profile dynamics | not stated | not in record | 17.1 GB (summaries about 4 MB) | moderate: 4 profile types, not a classic grid | no | deferred |
 | A4 | SNU (Mendeley zn82y35zr8) | CC BY 4.0 | 60 | NCA/Gr-Si 18650 (3 Ah) | yes: 10, 25, 45, 60 C | yes: low/high charge rate | voltage window groups | not in record | 1.42 GB | strong for T and window; 60 cells | no | deferred |
 | A5 | Dynamic sequences (Mendeley h2y7mj4kt7) | CC BY 4.0 | 80 | NMC811/Gr-SiOx 18650 | no (25 C) | yes, stage-wise | yes, stage-wise | 600-cycle sequences (design), EOL not stated | 0.67 GB | strong for history-dependent (path) laws | no | deferred |
-| A6 | Sandia SNL (mirror SNL.zip; original batteryarchive.org) | mirror CC BY 4.0 | see PARSE_REPORT | LFP, NCA, NMC 18650 | yes (several) | yes | yes | to EOL 80% by design | 115 MB | strong (T x DoD x rate, three chemistries) | no | downloading |
+| A6 | Sandia SNL (mirror SNL.zip, Zenodo 19688272; original batteryarchive.org) | mirror CC BY 4.0 | 61 pickles (LFP 18, NCA 22, NMC 21) | LFP, NCA, NMC 18650 | yes: 15, 25, 35 C (9, 34, 18 cells) | charge 0.5C; discharge 0.5, 1, 2, 3C | 0-100% (57 cells), 20-80% (4 cells) in this mirror | cycles recorded: LFP median 3598 (3038-4569), NCA 784 (464-1509), NMC 698 (389-1321) | 115 MB | strong for T x discharge rate x chemistry; DoD only 2 levels in the mirror (original has more, to be checked) | no | DOWNLOADED, verified |
 | A7 | CMU eVTOL (figshare 14226830) | CC BY 4.0 | 22 | Li-ion pouch | yes (ambient) | charge current, power | cruise length | mission data | 1.54 GB | moderate (22 cells) | no | deferred |
-| A8 | Oxford Degradation 1 (ORA) | ODbL | 8 | Kokam 740 mAh pouch | no (40 C) | no | no | not stated; characterisation every 100 drive cycles | 254 MB | none (one condition) | no | downloading |
+| A8 | Oxford Degradation 1 (ORA) | ODbL | 8 | Kokam 740 mAh pouch | no (40 C) | no | no | not stated; characterisation every 100 drive cycles | 254 MB | none (one condition) | no | readme + example file only; main file deferred (server cannot resume) |
 | A9 | TRI aging matrix (data.matr.io/11) | not verified | 359 | NCA/Gr+SiOx 21700 | not verified | 207 protocols | not verified | not verified | - | likely strong; portal offline | no | unreachable |
 | A10 | WMG calendar LGM50 (Zenodo 14577286) | CC BY 4.0 | 39 conditions | NMC | storage T | no | storage SOC | calendar only | 10.3 GB | calendar part of a law only | no | not fetched |
 
 Notes on rows that did not go as planned.
 - data.matr.io serves a page whose API address placeholder is unfilled (`%REACT_APP_API_URL%`); the front end loads empty, so the MIT/Stanford originals, the "Stanford" set (data.matr.io/8) and the aging matrix (data.matr.io/11) cannot be listed or fetched from this machine today. The BatteryLife mirror on Zenodo carries the MATR data in processed form (pickle files).
 - batteryarchive.org and some Mendeley/figshare API calls failed on DNS at times; those lookups were retried.
-- The Oxford main file listed on the ORA page is 253.8 MB; a first attempt stopped at 49 MB without an error and was deleted (the server ignores range requests, so a restart is needed).
+- The Oxford main file listed on the ORA page is 253.8 MB; two attempts stopped (49 MB with no error, then 35 MB after a stall) and were deleted. The server ignores range requests, so every restart begins at zero; it is left deferred (it varies no stress factor anyway).
+
+
+## Sandia (SNL) mirror: conditions and replicates (verified 2026-11-04)
+
+`SNL.zip` is complete: 115,187,861 bytes, MD5 900a5bb283ffb0b3255da618118510b7 (matches the value given by the lead), SHA-256 1ce27dc94d5d3a9a10ed875805a880c9c0701833915f1b78b09a759c72cfd57a, zip CRC test ok.
+Opened only through the allowlist loader (static opcode scan first; 61 of 61 pickles passed, no blocked global). Counts below come from `PARSE_REPORT.batterylife_processed_snl.json`.
+
+- 61 cells, 23 conditions (chemistry x temperature x SOC window x charge-discharge rate). Replicate letters a to d are in the cell names.
+- Temperature levels: 15, 25 and 35 C (9, 34 and 18 cells). Charge rate 0.5C throughout; discharge 0.5, 1, 2, 3C (8, 28, 17, 8 cells).
+- SOC window: 0-100% for 57 cells; 20-80% for 4 cells (NCA, 25 C, 0.5C/0.5C, replicates a to d).
+- Replicates per condition: 1 cell in 3 conditions, 2 in 11, 4 in 9.
+- LFP (18 cells): 25 C at 0.5/1/2/3C discharge; 35 C at 1 and 2C; 15 C only one cell (2C).
+- NCA (22 cells): 15, 25, 35 C at 1 and 2C (25 C also 0.5C); the 20-80% window only at 25 C.
+- NMC (21 cells): 15 C at 1 and 2C (2 cells each); 25 C at 0.5 (1 cell), 1, 2, 3C; 35 C at 1 and 2C.
+- Cycles recorded per cell: LFP 3038-4569, NCA 464-1509, NMC 389-1321.
+- Caution: several different cells share identical cycle counts (for example LFP 25 C 0.5-1C cells c and d both 3038; NMC 35 C 0.5-1C a, b, d all 786). This is expected if ageing was stopped at a common cycle step, but may also mean duplicated records in the mirror; compare with the original batteryarchive data before relying on cell-level independence.
+- The temperature design is unbalanced (15 C has 9 cells, no 15 C cell at 0.5C discharge or in the 20-80% window) and temperature is crossed with rate only partly. A stress-conditioned model trained on it can interpolate within 15-35 C but cannot separate temperature from window at 20-80%.
+
+## Downloaded and verified tonight
+
+Everything below passed the size check against the repository value, SHA-256 recorded in `CHECKSUMS.sha256` (`sha256sum -c` run from ROOT: all OK), zip CRC test, and a parse check (`PARSE_REPORT.json`, produced by `code/data_audit/verify_raw.py` run with `python -I`; nothing extracted to disk, no shipped code run).
+
+| Directory under data/raw | Files | Bytes |
+|---|---|---|
+| nasa_pcoe_battery | 5.Battery_Data_Set.zip (34 cells, 6 inner zips) | 209,708,670 |
+| drive_nasa_ev | NASA-EV.zip (7,565 CSV; 34 batteries) | 239,496,734 |
+| drive_calce_ev | CALCE-EV_Dataset.zip (24 CSV, 209,161 rows) | 5,614,245 |
+| calce_cs2 | CS2_35.zip (25 workbooks), CS2_36.zip (26), CS2_38.zip (28) | 37,056,519; 37,881,685; 42,811,100 |
+| batterylife_processed_snl | SNL.zip (61 cells) | 115,187,861 |
+| isu_ilcc_small | Valid_cells.csv, README_V2.0.pdf, capacity_fade.zip, Q_interpolated.zip, process_data.py.txt (never run) | 1,727; 640,953; 140,256; 47,797,453; 9,769 |
+| samsung50e_meta | experiments_meta.csv | 30,658 |
+| oxford_degradation_1 | Readme.txt, ExampleDC_C1.mat (first cycle only) | 5,643; 72,593 |
+
+Total about 0.74 GB. Partial files kept as `*.part` (not in the checksum list): CS2_34 (33.1 MB of 43.8), CALCE pouch SOC_0-100_HalfC (40.0 of 67.5), SOC_20-80_2C (62.6 of 74.6), SOC_0-100_2C (0.5 of 57.6), SOC_40-60_HalfC (0.3 of 72.8).
+NASA: discharge cycles per cell 25 to 197; B0050 and B0052 contain records with an empty field (the cleaned copy in NASA-EV lists 25 discharge cycles for each).
 
 ## Author's PINN4SOH feature table (read only, not modified)
 
@@ -64,11 +99,11 @@ it is a summary of the charge segment only. The `group` column holds an empty st
 
 **(e) NASA PCoE.** `5.+Battery+Data+Set.zip` from the PCoE repository (209,708,670 bytes), six inner zips with 34 `.mat` batteries (B0005 to B0056 with gaps). Per-cycle charge, discharge and impedance records with full voltage/current/temperature curves; ambient temperatures seen: 4, 22, 24, 43, 44 C; discharge current and cut-off voltage vary by group (README texts are in `drive_nasa_ev`). Number of discharge cycles per cell ranges from 25 to 197 (see PARSE_REPORT.json). Two cells (B0050, B0052) have records with an empty field that needed tolerant parsing. No licence text is published on the repository page; cite the PCoE repository and Saha and Goebel. Not in the author's earlier tables. Randomized-usage (1.07 GB) and HIRF (1.09 GB) files are listed in the same repository and deferred.
 
-**(f) CALCE.** The official page offers CS2 and CX2 (prismatic LiCoO2), A123 LFP and INR18650-20R dynamic-profile sets, PL pouch SOC-window sets and storage sets; no licence is stated, only open access and a request to cite the CALCE articles. CS2_34, 35, 36, 38 (one xlsx per test date, raw cycler log with `Cycle_Index`, current, voltage, capacities) were fetched as the smallest typical cells; CS2_3, 5, 7, 21, 25, 37 and the CX2 files timed out on a size probe and are listed unsized. The eight PL pouch zips (SOC window by C-rate) are the cleanest official stress-variation set on the page and are queued. The Drive "CALCE-EV Dataset.zip" is a different thing: 24 CSV files of dynamic-profile tests, not ageing data.
+**(f) CALCE.** The official page offers CS2 and CX2 (prismatic LiCoO2), A123 LFP and INR18650-20R dynamic-profile sets, PL pouch SOC-window sets and storage sets; no licence is stated, only open access and a request to cite the CALCE articles. CS2_35, 36, 38 (one xlsx per test date, raw cycler log with `Cycle_Index`, current, voltage, capacities) were fetched as the smallest typical cells; CS2_3, 5, 7, 21, 25, 37 and the CX2 files timed out on a size probe and are listed unsized. The eight PL pouch zips (SOC window by C-rate) are the cleanest official stress-variation set on the page and are queued. The Drive "CALCE-EV Dataset.zip" is a different thing: 24 CSV files of dynamic-profile tests, not ageing data.
 
 **(A1) ISU-ILCC.** 251 NMC/graphite pouch cells, 63 cycling conditions varying charge rate, discharge rate and depth of discharge, reference tests about weekly. Downloaded and verified: `Valid_cells.csv` (251 names), `README_V2.0.pdf`, `capacity_fade.zip` (251 CSV, 2 to 80 capacity points per cell, median 19), `Q_interpolated.zip` (251 CSV, 47.8 MB, four columns per file) and the shipped `process_data.py` stored as `.txt` (never run). Per-cycle data (`Cycling_json.zip`, 10.2 GB) and `RPT_json.zip` (929 MB) are deferred. This is the best candidate for learning degradation as a function of three stresses, but only the weekly capacity points are on disk so far. It is a strong alternative to the four PINN4SOH sets.
 
-**(A2) Samsung INR21700-50E.** 279 cells, 71 aging conditions from full-factorial, Latin-hypercube and model-based optimal designs over temperature, depth of discharge and C-rates, with calendar and cycle ageing (Scientific Data 2024, figshare 25975315, CC BY 4.0). 10.29 GB as 278 per-cell zips; only the conditions table is local (when the download completed). Best fit to "learn a law over stress", because the design is a space-filling design rather than a few groups.
+**(A2) Samsung INR21700-50E.** 279 cells, 71 aging conditions from full-factorial, Latin-hypercube and model-based optimal designs over temperature, depth of discharge and C-rates, with calendar and cycle ageing (Scientific Data 2024, figshare 25975315, CC BY 4.0). 10.29 GB as 278 per-cell zips; only the conditions table (`experiments_meta.csv`, 278 data rows) is local. It shows 132 calendar-ageing cells (type k, no cycling) and 147 cycling cells (type z), ambient temperature 10, 23, 35, 45 C (30, 93, 39, 117 cells), maximum SOC from 0.05 to 1.0 (0.8 most common, 105 cells), depth of discharge 0.05 to 0.6, charge rate 0.2 to 1C and discharge rate 0.2 to 2C. The paper must be read to map test-point numbers to the 71 conditions. Best fit to "learn a law over stress", because the design is a space-filling design rather than a few groups.
 
 **(A3) Stanford dynamic cycling.** Geslin et al., Nature Energy 2025, Stanford Digital Repository td676xr4322, CC BY 4.0: SiOx-graphite/NCA 21700 cells under constant and dynamic discharge profiles; per-cell `aging_summary_*.csv` (25 to 74 KB) and `raw_data_*.csv` (60 to 434 MB). 17.1 GB in total; bulk transfer is intended through Globus. Individual files download through `https://stacks.stanford.edu/file/druid:td676xr4322/<basename>`. A `diagnostic_capacities.pkl` is also present and was not fetched.
 
@@ -76,7 +111,7 @@ it is a summary of the charge segment only. The `group` column holds an empty st
 
 **(A5) Dynamic operating sequences.** 80 LG INR18650-MJ1 (NMC811/Gr-SiOx, 3.5 Ah) cells at 25 C: 72 cells in 24 sequences x 3 replicates (four 150-cycle stages with changing conditions) and 8 highly dynamic cells (condition changes every 25 cycles). Suited to path-dependent (history-dependent) degradation laws, which a static stress law cannot represent. 80 CSV, 674,610,935 bytes. Deferred.
 
-**(A6) Sandia (SNL).** Preger et al., J. Electrochem. Soc. 2020: commercial LFP (A123), NCA (Panasonic) and NMC (LG) 18650 cells cycled at several temperatures, depths of discharge and discharge rates (charge always C/2). The original is hosted at batteryarchive.org, which did not resolve from this machine; the Zenodo mirror in BatteryLife processed format (`SNL.zip`, 115,187,861 bytes) was queued. See SNL status in PARSE_REPORT.json.
+**(A6) Sandia (SNL).** Preger et al., J. Electrochem. Soc. 2020: commercial LFP (A123), NCA (Panasonic) and NMC (LG) 18650 cells cycled at several temperatures, depths of discharge and discharge rates (charge always C/2). The original is hosted at batteryarchive.org, which did not resolve from this machine; the Zenodo mirror in BatteryLife processed format (`SNL.zip`, 115,187,861 bytes, SHA-256 1ce27dc9...fd57a) was downloaded and verified: 61 BatteryML pickles, scanned statically and loaded only through the allowlist loader (no blocked globals). Names encode chemistry, temperature, SOC window and rates, e.g. `SNL_18650_LFP_15C_0-100_0.5-2C_b`. LFP 18 cells (15, 25, 35 C), NCA 22, NMC 21; charge 0.5C, discharge 0.5, 1, 2 or 3C; windows 0-100% (57 cells) and 20-80% (4); cycles recorded per cell 389 to 4569. The mirror holds fewer depth-of-discharge levels than the original study, so the original should be checked before claiming a DoD axis.
 
 **(A7) CMU eVTOL.** 22 cells (VAH01..VAH30) under eVTOL duty cycles with ambient temperature, cruise length, power and charge current varied; per-cell CSV (20 to 138 MB) plus impedance CSVs; 1.54 GB. Mission-profile rather than lifetime-to-80% data. Deferred.
 

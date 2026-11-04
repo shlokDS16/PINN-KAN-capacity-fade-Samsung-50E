@@ -48,5 +48,6 @@ before the 22:50 cut-off, and the lead capped tonight's volume (mobile data).
 
 ## Interrupted tonight: complete or restart
 
-- Oxford main file `Oxford_Battery_Degradation_Dataset_1.mat` (253.8 MB per the ORA page): https://ora.ox.ac.uk/objects/uuid:03ba4b01-cfed-46d3-9b1a-7d4a7bdf6fac/files/m5ac36a1e2073852e4f1f7dee647909a7 . The server ignores range requests, so a stopped transfer restarts from zero. A first copy ended at 49 MB without an error and was deleted.
-- Any CALCE pouch or SNL file that shows a smaller size than listed in `data/PARSE_REPORT.json` is incomplete and was left out of `CHECKSUMS.sha256`.
+- Oxford main file `Oxford_Battery_Degradation_Dataset_1.mat` (253.8 MB per the ORA page): https://ora.ox.ac.uk/objects/uuid:03ba4b01-cfed-46d3-9b1a-7d4a7bdf6fac/files/m5ac36a1e2073852e4f1f7dee647909a7 . The server ignores range requests, so a stopped transfer restarts from zero; two attempts (49 MB, then 35 MB) were deleted. Needs one uninterrupted run on a good link. Lowest priority: all eight cells are at 40 C.
+- CALCE (web.calce.umd.edu) ran at about 2 KB/s from 21:50. Resumable partials are saved as `.part` in `data/raw/calce_cs2/` (CS2_34, 33,095,680 of 43,836,986 bytes) and `data/raw/calce_pl_pouch/` (SOC_0-100_HalfC 39,960,576 of 67,460,712; SOC_20-80_2C 62,603,264 of 74,575,680; two near-empty). Resume: rename `x.zip.part` to `x.zip` and run `curl -L -C - -o x.zip <url>` (urls in `DEFERRED_URLS.tsv`). Not started: SOC_40-60_2C (57.7 MB), SOC_0-60_HalfC (89.4 MB).
+- Nothing else is half-done: SNL and the Samsung conditions table completed and verified.

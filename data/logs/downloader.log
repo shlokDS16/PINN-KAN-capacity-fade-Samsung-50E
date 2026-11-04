@@ -22,3 +22,9 @@
 2026-11-04 21:47:26 restart loop: downloader exited, restarting in 60 s
 2026-11-04 21:47:57 downloader started
 2026-11-04 21:48:10 start README_V2.0.pdf at 466944 of 640953
+2026-11-04 21:49:40 curl rc=0 README_V2.0.pdf now 640953 
+2026-11-04 21:49:40 verified README_V2.0.pdf
+2026-11-04 21:49:51 error PermissionError: [WinError 5] Access is denied: 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\data\\DOWNLOAD_STATUS.md.tmp' -> 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\data\\DOWNLOAD_STATUS.md'
+2026-11-04 21:51:00 start Q_interpolated.zip at 0 of 47797453
+2026-11-04 22:01:37 downloader started
+2026-11-04 22:01:40 start Q_interpolated.zip at 815104 of 47797453

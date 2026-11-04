@@ -1,98 +1,18 @@
-# Download status (updated 2026-11-04 21:48:10)
+# Download status (updated 2026-11-04 22:12:11)
 
 Resumes from the bytes on disk after every drop. Stop: create data/STOP_DOWNLOADS.
 
-Downloading README_V2.0.pdf from 0.5 MB.
+Downloading Q_interpolated.zip: 2.3 of 47.8 MB.
 
 | dataset | file | size MB | done MB | % | state |
 |---|---|---|---|---|---|
 | isu_ilcc_figshare_22582234 | Valid_cells.csv | 0.0 | 0.0 | 100 | verified |
 | isu_ilcc_figshare_22582234 | process_data.py | 0.0 | 0.0 | 100 | verified |
 | isu_ilcc_figshare_22582234 | capacity_fade.zip | 0.1 | 0.1 | 100 | verified |
-| isu_ilcc_figshare_22582234 | README_V2.0.pdf | 0.6 | 0.5 | 73 | downloading |
-| isu_ilcc_figshare_22582234 | Q_interpolated.zip | 47.8 | 0.0 | 0 | queued |
+| isu_ilcc_figshare_22582234 | README_V2.0.pdf | 0.6 | 0.6 | 100 | verified |
+| isu_ilcc_figshare_22582234 | Q_interpolated.zip | 47.8 | 2.3 | 5 | downloading |
 | isu_ilcc_figshare_22582234 | RPT_json.zip | 929.4 | 0.0 | 0 | queued |
-| isu_ilcc_figshare_22582234 | Cycling_json.zip | 10208.1 | 0.0 | 0 | skipped (needs decision) |
-| tju_zenodo_6405084 | Impedance raw data and fitting data.zip | 1.3 | 0.0 | 0 | queued |
-| tju_zenodo_6405084 | Dataset_3_NCM_NCA_battery.zip | 356.1 | 0.0 | 0 | queued |
-| tju_zenodo_6405084 | Dataset_1_NCA_battery.zip | 579.6 | 0.0 | 0 | queued |
-| tju_zenodo_6405084 | Dataset_2_NCM_battery.zip | 737.0 | 0.0 | 0 | queued |
-| hust_mendeley_nsc7hnsg4s_v2 | our_data.zip | 1188.1 | 0.0 | 0 | queued |
-| xjtu_zenodo_10963339 | Battery Dataset.zip | 2438.8 | 0.0 | 0 | queued |
-| calce_official | CS2_3.zip | 0.0 | 0.0 | 0 | queued |
-| calce_official | CS2_5.zip | 0.0 | 0.0 | 0 | queued |
-| calce_official | CS2_7.zip | 0.0 | 0.0 | 0 | queued |
-| calce_official | CS2_21.zip | 0.0 | 0.0 | 0 | queued |
-| calce_official | CS2_25.zip | 0.0 | 0.0 | 0 | queued |
-| calce_official | CS2_37.zip | 0.0 | 0.0 | 0 | queued |
-| calce_official | CX2_3.zip | 0.0 | 0.0 | 0 | queued |
-| calce_official | CX2_4.zip | 0.0 | 0.0 | 0 | queued |
-| calce_official | CX2_32.zip | 0.0 | 0.0 | 0 | queued |
-| calce_official | CX2_34.zip | 0.0 | 0.0 | 0 | queued |
-| calce_official | CX2_35.zip | 0.0 | 0.0 | 0 | queued |
-| calce_official | CX2_36.zip | 0.0 | 0.0 | 0 | queued |
-| calce_official | CS2_8.zip | 4.4 | 0.0 | 0 | queued |
-| calce_official | CX2_31.zip | 11.9 | 0.0 | 0 | queued |
-| calce_official | CS2_33.zip | 45.3 | 0.0 | 0 | queued |
-| calce_official | CX2_37.zip | 53.3 | 0.0 | 0 | queued |
-| calce_official | CX2_38.zip | 70.0 | 0.0 | 0 | queued |
-| calce_official | CX2_8.zip | 79.9 | 0.0 | 0 | queued |
-| calce_official | CX2_33.zip | 86.7 | 0.0 | 0 | queued |
-| calce_official | SOC_40-100_HalfC.zip | 106.6 | 0.0 | 0 | queued |
-| calce_official | CX2_16.zip | 114.8 | 0.0 | 0 | queued |
-| calce_official | CS2_24.zip | 127.5 | 0.0 | 0 | queued |
-| calce_official | SOC_20-80_HalfC.zip | 132.7 | 0.0 | 0 | queued |
-| calce_official | CS2_6.zip | 154.5 | 0.0 | 0 | queued |
-| calce_official | CS2_9.zip | 163.2 | 0.0 | 0 | queued |
-| snu_mendeley_zn82y35zr8_v4 | Battery raw data.zip | 1418.4 | 0.0 | 0 | queued |
-| nasa_pcoe_hirf_battery | 15.+HIRF+Battery+Data+Set.zip | 1088.9 | 0.0 | 0 | queued |
-| nasa_pcoe_randomized_battery | 11.+Randomized+Battery+Usage+Data+Set.zip | 1065.8 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH07_impedance.csv | 0.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH16_impedance.csv | 0.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH22_impedance.csv | 0.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH25_impedance.csv | 0.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH15_impedance.csv | 0.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH27_impedance.csv | 0.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH20_impedance.csv | 0.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH02_impedance.csv | 0.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH23_impedance.csv | 0.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH24_impedance.csv | 0.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH01_impedance.csv | 0.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH30_impedance.csv | 0.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH06_impedance.csv | 0.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH17_impedance.csv | 0.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH13_impedance.csv | 0.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH09_impedance.csv | 0.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH28_impedance.csv | 0.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH11_impedance.csv | 0.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH10_impedance.csv | 0.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH05_impedance.csv | 0.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH12_impedance.csv | 0.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | README.txt | 0.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH07.csv | 20.9 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH16.csv | 34.7 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH15.csv | 36.9 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH22.csv | 39.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH27.csv | 39.5 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH20.csv | 39.7 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH25.csv | 40.3 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH23.csv | 52.9 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH30.csv | 59.5 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH24.csv | 65.0 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH13.csv | 65.1 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH17.csv | 65.6 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH09.csv | 68.8 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH26.csv | 72.1 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH28.csv | 77.4 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH06.csv | 80.5 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH10.csv | 95.1 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH05.csv | 101.6 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH02.csv | 102.4 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH01.csv | 110.9 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH12.csv | 133.3 | 0.0 | 0 | queued |
-| evtol_cmu_figshare_14226830 | VAH11.csv | 138.4 | 0.0 | 0 | queued |
-| tbsi_sunwoda_zenodo_10715209 | ProcessedData.zip | 152.1 | 0.0 | 0 | queued |
-| tbsi_sunwoda_zenodo_10715209 | RawData.zip | 727.0 | 0.0 | 0 | queued |
+| isu_ilcc_figshare_22582234 | Cycling_json.zip | 10208.1 | 0.0 | 0 | queued |
 | samsung50e_figshare_25975315 | experiments_meta.csv | 0.0 | 0.0 | 0 | queued |
 | samsung50e_figshare_25975315 | TP_k01_05.zip | 7.0 | 0.0 | 0 | queued |
 | samsung50e_figshare_25975315 | TP_k02_06.zip | 7.1 | 0.0 | 0 | queued |
@@ -373,3 +293,83 @@ Downloading README_V2.0.pdf from 0.5 MB.
 | samsung50e_figshare_25975315 | TP_z04_02.zip | 78.9 | 0.0 | 0 | queued |
 | samsung50e_figshare_25975315 | TP_z04_01.zip | 78.9 | 0.0 | 0 | queued |
 | samsung50e_figshare_25975315 | TP_z06_03.zip | 80.3 | 0.0 | 0 | queued |
+| snu_mendeley_zn82y35zr8_v4 | Battery raw data.zip | 1418.4 | 0.0 | 0 | queued |
+| calce_official | CS2_3.zip | 0.0 | 0.0 | 0 | queued |
+| calce_official | CS2_5.zip | 0.0 | 0.0 | 0 | queued |
+| calce_official | CS2_7.zip | 0.0 | 0.0 | 0 | queued |
+| calce_official | CS2_21.zip | 0.0 | 0.0 | 0 | queued |
+| calce_official | CS2_25.zip | 0.0 | 0.0 | 0 | queued |
+| calce_official | CS2_37.zip | 0.0 | 0.0 | 0 | queued |
+| calce_official | CX2_3.zip | 0.0 | 0.0 | 0 | queued |
+| calce_official | CX2_4.zip | 0.0 | 0.0 | 0 | queued |
+| calce_official | CX2_32.zip | 0.0 | 0.0 | 0 | queued |
+| calce_official | CX2_34.zip | 0.0 | 0.0 | 0 | queued |
+| calce_official | CX2_35.zip | 0.0 | 0.0 | 0 | queued |
+| calce_official | CX2_36.zip | 0.0 | 0.0 | 0 | queued |
+| calce_official | CS2_8.zip | 4.4 | 0.0 | 0 | queued |
+| calce_official | CX2_31.zip | 11.9 | 0.0 | 0 | queued |
+| calce_official | CS2_33.zip | 45.3 | 0.0 | 0 | queued |
+| calce_official | CX2_37.zip | 53.3 | 0.0 | 0 | queued |
+| calce_official | CX2_38.zip | 70.0 | 0.0 | 0 | queued |
+| calce_official | CX2_8.zip | 79.9 | 0.0 | 0 | queued |
+| calce_official | CX2_33.zip | 86.7 | 0.0 | 0 | queued |
+| calce_official | SOC_40-100_HalfC.zip | 106.6 | 0.0 | 0 | queued |
+| calce_official | CX2_16.zip | 114.8 | 0.0 | 0 | queued |
+| calce_official | CS2_24.zip | 127.5 | 0.0 | 0 | queued |
+| calce_official | SOC_20-80_HalfC.zip | 132.7 | 0.0 | 0 | queued |
+| calce_official | CS2_6.zip | 154.5 | 0.0 | 0 | queued |
+| calce_official | CS2_9.zip | 163.2 | 0.0 | 0 | queued |
+| tju_zenodo_6405084 | Impedance raw data and fitting data.zip | 1.3 | 0.0 | 0 | queued |
+| tju_zenodo_6405084 | Dataset_3_NCM_NCA_battery.zip | 356.1 | 0.0 | 0 | queued |
+| tju_zenodo_6405084 | Dataset_1_NCA_battery.zip | 579.6 | 0.0 | 0 | queued |
+| tju_zenodo_6405084 | Dataset_2_NCM_battery.zip | 737.0 | 0.0 | 0 | queued |
+| hust_mendeley_nsc7hnsg4s_v2 | our_data.zip | 1188.1 | 0.0 | 0 | queued |
+| xjtu_zenodo_10963339 | Battery Dataset.zip | 2438.8 | 0.0 | 0 | queued |
+| nasa_pcoe_hirf_battery | 15.+HIRF+Battery+Data+Set.zip | 1088.9 | 0.0 | 0 | queued |
+| nasa_pcoe_randomized_battery | 11.+Randomized+Battery+Usage+Data+Set.zip | 1065.8 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH07_impedance.csv | 0.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH16_impedance.csv | 0.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH22_impedance.csv | 0.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH25_impedance.csv | 0.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH15_impedance.csv | 0.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH27_impedance.csv | 0.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH20_impedance.csv | 0.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH02_impedance.csv | 0.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH23_impedance.csv | 0.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH24_impedance.csv | 0.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH01_impedance.csv | 0.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH30_impedance.csv | 0.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH06_impedance.csv | 0.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH17_impedance.csv | 0.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH13_impedance.csv | 0.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH09_impedance.csv | 0.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH28_impedance.csv | 0.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH11_impedance.csv | 0.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH10_impedance.csv | 0.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH05_impedance.csv | 0.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH12_impedance.csv | 0.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | README.txt | 0.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH07.csv | 20.9 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH16.csv | 34.7 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH15.csv | 36.9 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH22.csv | 39.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH27.csv | 39.5 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH20.csv | 39.7 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH25.csv | 40.3 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH23.csv | 52.9 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH30.csv | 59.5 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH24.csv | 65.0 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH13.csv | 65.1 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH17.csv | 65.6 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH09.csv | 68.8 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH26.csv | 72.1 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH28.csv | 77.4 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH06.csv | 80.5 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH10.csv | 95.1 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH05.csv | 101.6 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH02.csv | 102.4 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH01.csv | 110.9 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH12.csv | 133.3 | 0.0 | 0 | queued |
+| evtol_cmu_figshare_14226830 | VAH11.csv | 138.4 | 0.0 | 0 | queued |
+| tbsi_sunwoda_zenodo_10715209 | ProcessedData.zip | 152.1 | 0.0 | 0 | queued |
+| tbsi_sunwoda_zenodo_10715209 | RawData.zip | 727.0 | 0.0 | 0 | queued |

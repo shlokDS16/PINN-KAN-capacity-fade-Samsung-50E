@@ -50,6 +50,7 @@ EXPECTED = {
     "calce_pl_pouch/SOC_20-80_HalfC.zip": 132710443,
     "oxford_degradation_1/ExampleDC_C1.mat": 72593,
     "oxford_degradation_1/Readme.txt": 5643,
+    "samsung50e_meta/experiments_meta.csv": 30658,
 }
 
 

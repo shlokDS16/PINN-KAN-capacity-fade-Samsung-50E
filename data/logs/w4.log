@@ -1,0 +1,48 @@
+curl: (28) Operation too slow. Less than 2000 bytes/sec transferred the last 60 seconds
+attempt 1 rc=28
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 2 rc=33
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 3 rc=33
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 4 rc=33
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 5 rc=33
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 6 rc=33
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 7 rc=33
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 8 rc=33
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 9 rc=33
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 10 rc=33
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 11 rc=33
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 12 rc=33
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 13 rc=33
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 14 rc=33
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 15 rc=33
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 16 rc=33
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 17 rc=33
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 18 rc=33
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 19 rc=33
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 20 rc=33
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 21 rc=33
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 22 rc=33
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 23 rc=33
+curl: (33) HTTP server does not seem to support byte ranges. Cannot resume.
+attempt 24 rc=33

@@ -1,0 +1,887 @@
+2026-11-04T16:15:45.542644Z ERROR codex_models_manager::manager: failed to refresh available models: request timed out
+OpenAI Codex v0.162.1
+--------
+workdir: C:\Users\Shlok\Downloads\PINN KAN battery paper\debates\codex_panel
+model: gpt-6-luna
+provider: openai
+approval: never
+sandbox: read-only
+reasoning effort: medium
+reasoning summaries: none
+session id: 01a1a70f-11a9-7313-988d-5d4e85ad3047
+--------
+user
+Turn 2. Since your turn 1, the team did the following (read the files; they are on disk):
+- Full code reading of PIKAN (JES 153, 120860, 2026) and PINN4SOH: C:\Users\Shlok\Downloads\PINN KAN battery paper\notes\code\PIKAN.md, PINN4SOH.md, GAPS.md. Key: PIKAN picks its loss weights by test MAPE; every cell's features and cycle index are min-max scaled over that cell's whole life (time = life fraction, so no forecasting); its symbolic laws differ sharply by dataset and collapse when coefficients are rounded; PINN4SOH feeds u_t into G so its residual can vanish trivially.
+- Novelty audit: ...\debates\D010_topic\01_novelty_audit.md (most dangerous prior work: PiDDM arXiv 2607.29095; identifiability of learned laws judged the only NOVEL slice).
+- The proposer's full proposal: ...\debates\D010_topic\02_proposal.md (identifiable stress laws of capacity fade; ISU-ILCC 63 conditions x 4 replicates primary; Sandia secondary; KAN as stress-to-log-rate map inside a two-mechanism throughput ODE with per-cell offsets inferred from the first 4 weeks; synthetic identifiability programme; free-G PIKAN-style contrast; strict PINN only as a control).
+
+Your role this turn: an independent second panel (battery electrochemist, PINN specialist, KAN specialist, statistician, hostile JES reviewer). A separate opponent agent is also attacking it; do not coordinate, think for yourselves. Answer:
+1. Accept, revise or reject this topic for a one-week JES paper, and why. Be concrete about what a JES editor and two reviewers would say.
+2. The author asked for "PINN + KAN". Is a hard-constrained ODE with a KAN stress map acceptable as the headline, or must a genuine PINN (collocation residual, solution network) be central? If central, design the version where the PINN does real work (where the collocation points are, what the residual enforces that the data cannot, why it helps forecasting beyond the observed window), still within one week on CPU.
+3. Is ISU-ILCC the right primary dataset versus Samsung INR21700-50E (figshare 25975315: 279 cells, 71 conditions over temperature, DoD, C-rate; 10.3 GB) or Sandia, for both identifiability and JES appeal? Which combination would you choose?
+4. Where can the KAN genuinely beat a GAM/polynomial on such a map, and how would you show it fairly?
+5. What is the single sharpest title and claim you would bet on? What figures would make it look like a top JES paper?
+6. The biggest remaining risk and the cheapest pilot that would kill or confirm it tonight.
+Keep it under 1500 words. No invented numbers or citations; mark "unverified" where unsure.
+
+warning: clamping SessionEnd hook timeout to 3s in C:\Users\Shlok\.codex\plugins\cache\openai-codex\codex\1.0.6\hooks\hooks.json
+2026-11-04T16:15:46.188811Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer realm=\"OAuth\", resource_metadata=\"https://mcp.canva.com/.well-known/oauth-protected-resource/mcp\", error=\"invalid_token\", error_description=\"Missing or invalid access token\"" })
+2026-11-04T16:15:46.334118Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://mcp.supabase.com/.well-known/oauth-protected-resource/mcp\"" })
+2026-11-04T16:15:46.430686Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://huggingface.co/.well-known/oauth-protected-resource/mcp?login\"" })
+2026-11-04T16:15:46.546757Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://mcp.figma.com/.well-known/oauth-protected-resource\",scope=\"mcp:connect\",authorization_uri=\"https://api.figma.com/.well-known/oauth-authorization-server\"" })
+2026-11-04T16:15:46.674550Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://mcp.supabase.com/.well-known/oauth-protected-resource/mcp\"" })
+2026-11-04T16:15:46.803318Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer realm=\"OAuth\", resource_metadata=\"https://mcp.canva.com/.well-known/oauth-protected-resource/mcp\", error=\"invalid_token\", error_description=\"Missing or invalid access token\"" })
+2026-11-04T16:15:46.932716Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer error=\"invalid_token\", error_description=\"No authorization provided\", resource_metadata=\"https://mcp.vercel.com/.well-known/oauth-protected-resource\"" })
+2026-11-04T16:15:47.218925Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when UnexpectedServerResponse("HTTP 404: \n<!DOCTYPE html>\n<html>\n  <head>\n    <meta charset=\"utf-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n    <title>404 - No instance here</title>\n    <link\n      href=\"https://fonts.googleapis.com/css?family=Open Sans\"\n      rel=\"stylesheet\"\n    />\n    <style>\n      html {\n        width: 100%;\n        height: 100%;\n      }\n\n      body {\n        height: 100%;\n        width: 100%;\n        background-color: #fbfcfe;\n        font-family: \"Open Sans\";\n        font-style: normal;\n        text-align: center;\n        color: #555555;\n        display: flex;\n        flex-direction: column;\n        align-items: center;\n        font-weight: 400;\n      }\n\n      body * {\n        margin-block-start: 0;\n        margin-block-end: 5px;\n      }\n\n      .container {\n        display: flex;\n        flex-direction: column;\n        align-items: center;\n        height: 100%;\n        max-width: 350px;\n        margin-top: 48px;\n      }\n\n      h1 {\n        font-weight: 400;\n        font-size: 28px;\n        line-height: 35px;\n        color: #555555;\n        margin-top: 64px;\n      }\n\n      h2 {\n        font-weight: 400;\n        font-size: 20px;\n        line-height: 26px;\n      }\n\n      p {\n        font-size: 14px;\n        line-height: normal;\n        color: #7d7d87;\n      }\n\n      a {\n        color: #fd4d21;\n        text-decoration: none;\n        text-align: center;\n        font-weight: 400px;\n      }\n\n      .subheading {\n        margin-top: 24px;\n      }\n    </style>\n  </head>\n  <body>\n    <div class=\"container\">\n      <svg\n        xmlns=\"http://www.w3.org/2000/svg\"\n        width=\"120\"\n        height=\"32\"\n        viewBox=\"0 0 120 32\"\n        fill=\"none\"\n      >\n        <path\n          fill-rule=\"evenodd\"\n          clip-rule=\"evenodd\"\n          d=\"M55.1998 12.8C52.2177 12.8 49.7119 10.7604 49.0014 8H41.666C40.1017 8 38.7667 9.13092 38.5096 10.6739L38.2465 12.2522C37.9968 13.7506 37.2388 15.0548 36.1668 16C37.2388 16.9452 37.9968 18.2494 38.2465 19.7478L38.5096 21.3261C38.7667 22.8691 40.1017 24 41.666 24H42.6014C43.3119 21.2396 45.8177 19.2 48.7998 19.2C52.3344 19.2 55.1998 22.0654 55.1998 25.6C55.1998 29.1346 52.3344 32 48.7998 32C45.8177 32 43.3119 29.9604 42.6014 27.2H41.666C38.5374 27.2 35.8674 24.9382 35.3531 21.8522L35.0901 20.2739C34.8329 18.7309 33.4979 17.6 31.9336 17.6H29.3982C28.6877 20.3604 26.1819 22.4 23.1998 22.4C20.2177 22.4 17.7119 20.3604 17.0014 17.6H13.3982C12.6877 20.3604 10.1819 22.4 7.1998 22.4C3.66518 22.4 0.799805 19.5346 0.799805 16C0.799805 12.4654 3.66518 9.6 7.1998 9.6C10.1819 9.6 12.6877 11.6396 13.3982 14.4H17.0014C17.7119 11.6396 20.2177 9.6 23.1998 9.6C26.1819 9.6 28.6877 11.6396 29.3982 14.4H31.9336C33.4979 14.4 34.8329 13.2691 35.0901 11.7261L35.3531 10.1478C35.8674 7.06184 38.5374 4.8 41.666 4.8L49.0014 4.8C49.7119 2.03964 52.2177 0 55.1998 0C58.7344 0 61.5998 2.86538 61.5998 6.4C61.5998 9.93462 58.7344 12.8 55.1998 12.8ZM55.1998 9.6C56.9671 9.6 58.3998 8.16731 58.3998 6.4C58.3998 4.63269 56.9671 3.2 55.1998 3.2C53.4325 3.2 51.9998 4.63269 51.9998 6.4C51.9998 8.16731 53.4325 9.6 55.1998 9.6ZM7.1998 19.2C8.96712 19.2 10.3998 17.7673 10.3998 16C10.3998 14.2327 8.96712 12.8 7.1998 12.8C5.43249 12.8 3.9998 14.2327 3.9998 16C3.9998 17.7673 5.43249 19.2 7.1998 19.2ZM26.3998 16C26.3998 17.7673 24.9671 19.2 23.1998 19.2C21.4325 19.2 19.9998 17.7673 19.9998 16C19.9998 14.2327 21.4325 12.8 23.1998 12.8C24.9671 12.8 26.3998 14.2327 26.3998 16ZM51.9998 25.6C51.9998 27.3673 50.5671 28.8 48.7998 28.8C47.0325 28.8 45.5998 27.3673 45.5998 25.6C45.5998 23.8327 47.0325 22.4 48.7998 22.4C50.5671 22.4 51.9998 23.8327 51.9998 25.6Z\"\n          fill=\"#EA4B71\"\n        />\n        <path\n          fill-rule=\"evenodd\"\n          clip-rule=\"evenodd\"\n          d=\"M100.004 13.8366V13.6841C101.121 13.1249 102.237 12.1591 102.237 10.2529C102.237 7.508 99.9791 5.85596 96.8579 5.85596C93.6606 5.85596 91.3768 7.60966 91.3768 10.3038C91.3768 12.1337 92.4426 13.1249 93.6099 13.6841V13.8366C92.3157 14.2941 90.7678 15.6665 90.7678 17.954C90.7678 20.7243 93.0516 22.656 96.8325 22.656C100.613 22.656 102.821 20.7243 102.821 17.954C102.821 15.6665 101.299 14.3195 100.004 13.8366ZM96.8325 8.19423C98.1013 8.19423 99.0402 9.00755 99.0402 10.38C99.0402 11.7525 98.0759 12.5658 96.8325 12.5658C95.5892 12.5658 94.5488 11.7525 94.5488 10.38C94.5488 8.98213 95.5384 8.19423 96.8325 8.19423ZM96.8325 20.216C95.3608 20.216 94.1681 19.2756 94.1681 17.6744C94.1681 16.2257 95.1578 15.1328 96.8072 15.1328C98.4312 15.1328 99.4208 16.2003 99.4208 17.7252C99.4208 19.2756 98.2789 20.216 96.8325 20.216Z\"\n          fill=\"#101330\"\n        />\n        <path\n          d=\"M106.736 22.4018H109.984V15.514C109.984 13.252 111.354 12.2608 112.902 12.2608C114.425 12.2608 115.617 13.2774 115.617 15.3616V22.4018H118.865V14.7007C118.865 11.3712 116.937 9.43962 113.917 9.43962C112.014 9.43962 110.948 10.2021 110.187 11.1933H109.984L109.705 9.69378H106.736V22.4018Z\"\n          fill=\"#101330\"\n        />\n        <path\n          d=\"M77.9839 22.4018H74.7358V9.69378H77.7048L77.9839 11.1933H78.1869C78.9481 10.2021 80.0139 9.43962 81.9171 9.43962C84.9367 9.43962 86.8653 11.3712 86.8653 14.7007V22.4018H83.6172V15.3616C83.6172 13.2774 82.4246 12.2608 80.9021 12.2608C79.3542 12.2608 77.9839 13.252 77.9839 15.514V22.4018Z\"\n          fill=\"#101330\"\n        />\n      </svg>\n\n      <h1>No instance here</h1>\n      <h2><a href=\"https://app.n8n.cloud/magic-link\">Open Cloud console</a></h2>\n      <h2></h2>\n      <p class=\"subheading\">\n        If the instance exists, the owner can manage it from the Cloud console.\n      </p>\n    </div>\n  </body>\n</html>")
+2026-11-04T16:15:48.578593Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer error=\"invalid_request\", error_description=\"No access token was provided in this request\", resource_metadata=\"https://api.githubcopilot.com/.well-known/oauth-protected-resource/mcp/\"" })
+2026-11-04T16:15:52.598113Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://mcp.context7.com/.well-known/oauth-protected-resource/mcp\"" })
+warning: Exceeded skills context budget. All skill descriptions were removed and 254 additional skills were not included in the model-visible skills list.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Failed
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+hook: UserPromptSubmit Completed
+codex
+I’ll read the code audit and proposal first, then assess the premise independently. I’ll focus on whether the proposed experiment can support a defensible identifiability claim and fit the one-week schedule.
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command "Get-Content -Raw 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\notes\\code\\PIKAN.md'; Get-Content -Raw 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\notes\\code\\PINN4SOH.md'; Get-Content -Raw 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\notes\\code\\GAPS.md'; Get-Content -Raw 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\debates\\D010_topic\\01_novelty_audit.md'; Get-Content -Raw 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\debates\\D010_topic\\02_proposal.md'" in C:\Users\Shlok\Downloads\PINN KAN battery paper\debates\codex_panel
+ succeeded in 451ms:
+# PIKAN (USTC-AI4EEE) �?" code and method note
+
+**reading: full text of the released repository** (every Python source of the method: `Model/*.py`, `dataloader/dataloader.py`, `utils/util.py`, the four `main_our_models_optimize_*.py`, the four `main_comparision_*.py`, `main_our_models_fine_tuning.py`, `count_parameters.py`, `results_analysis_code/*` skimmed for aggregation logic, README, and the code cells and outputs of 5 of the 16 notebooks in full: `XJTU_Dataloader`, `PIKAN_XJTU_Var2`, `PIKAN_XJTU_Var2_PDEAutoDiscovery`, `KAN_XJTU_Var2` (metrics cells), plus the formula/metric outputs of the HUST, MIT, TJU `*_PDEAutoDiscovery` notebooks). Not read: the vendored pykan library in `kan/` (112 KB `MultKAN.py`, treated as upstream code), the plotting scripts, 11 other notebook bodies, binary `.pt`/`.pth` files (pickle; never loaded), image/video outputs. Repo: `refs/code/PIKAN`, commit c8087c41e2a31831f9f6518fb03858c38e711bee (2026-04-13, 380 MB).
+**The journal paper itself was NOT read** (paywalled): Liu L, Huang J, Peng B, Li Y, Wang P, Wang X, Zhao H, Li B (USTC), "Physics-informed and interpretable state of health estimation framework for lithium-ion batteries", **Journal of Energy Storage 153, 120860 (issued 2026-04)**, DOI 10.1016/j.est.2026.120860 (verified on Crossref: title, journal, volume, article number, 8 authors match; ScienceDirect PII S2352152X26005244). The same journal as our target. Request an e-gateway download so that the paper's own tables, its ablation, its transfer numbers and its claims about "electrochemical similarity" can be read. Everything below that is "reported" comes from the repo README (which reproduces the abstract and two result tables) and the notebook outputs.
+
+## 1. The model as equations
+Names: the repo calls the solution network `solution_u` (F in the notebooks' plot labels, `F(.)`), the dynamics network `dynamical_F` (G in the notebooks, `G(.)`). Same as Wang et al. (Nat. Commun. 2024) F and G.
+
+- **Inputs.** One row per (cell, cycle k): 16 charge-segment health indicators x_k plus a 17th column "cycle index" t_k. After per-cell min-max scaling both lie in [-1, 1] (see section 3). Label y_k = SOH = capacity / nominal capacity.
+- **Solution network** (`Model/PIKAN_opt.py:11-23,74`): u_k = F(x_k, t_k) = KAN_pred(KAN_enc([x_k, t_k])), encoder widths 17-60-60-32 and predictor 32-32-1 (efficient-kan, `:14-15`). Output is SOH.
+- **Dynamics network** (`:75`): G = KAN [34, 60, 60, 1]. Input is the concatenation [x_k, t_k, u_k, u_x] (16 + 1 + 1 + 16 = 34; comment at `:75` says it is deliberately not 35, "does not include the partial derivative of u with respect to t"); `:167`.
+- **Autograd derivatives** (`:152-165`): u_t = dF/dt at fixed x_k, u_x = dF/dx (16-vector), both with `create_graph=True`.
+- **Residual actually implemented** (`:167-169`):
+  f(x_k, t_k) = u_t(x_k, t_k) - G(x_k, t_k, u_k, u_x(x_k, t_k)).
+- **Loss** (`:183-193`), with a pair (k, k+1) of consecutive stored cycles of one cell as one sample:
+  - L_data = 0.5 MSE(u_k, y_k) + 0.5 MSE(u_{k+1}, y_{k+1})  (`:183`)
+  - L_PDE = 0.5 MSE(f_k, 0) + 0.5 MSE(f_{k+1}, 0)  (`:186-187`)
+  - L_phys = sum over the batch of ReLU[ (u_{k+1} - u_k) (y_k - y_{k+1}) ]  (`:190`; a **sum**, not a mean, so its weight scales with batch size 256/512)
+  - L = L_data + alpha L_PDE + beta L_phys  (`:193`)
+- **Weights.** Default alpha = 0.7, beta = 0.2 (`main_our_models_optimize_XJTU.py:248-249`) but **never used as defaults in the reported runs**: every reported run searches the 7 x 7 grid {1e-3, 1e-2, 1e-1, 1, 10, 100, 1e3} for both (`:250-251`, loops at `:121-122`) �?" see section 6.
+- **Constraint semantics.** L_phys is not the monotonicity penalty of the PINN4SOH paper (ReLU(u_{k+1} - u_k)). It multiplies the predicted difference by the **true** label difference, so it penalises "predicted step has the opposite sign to the true step", in both directions: it penalises a predicted decline when the label rises (capacity regeneration) as well as a predicted rise when the label falls. It therefore uses test-time-unavailable information (label differences) and encourages the network to reproduce label noise and regeneration spikes in training. It is not a monotonicity constraint on the model (inference of mine from `:190`; the code comment says "considering capacity regeneration").
+- **Difference from PINN4SOH.** PINN4SOH feeds u_t into G as well (35 inputs; `refs/code/_dl_PINN4SOH/raw/Model/Model.py:232`), which makes the PDE residual trivially solvable by G = identity on u_t. PIKAN removes u_t from G's input, so its residual is not trivially zero. This is a real fix, credit it, and it is where the PIKAN "physics" first differs.
+
+## 2. Which KAN, where, and sizes
+| Item | Value | Location |
+|---|---|---|
+| Large model ("PIKAN (ours)" in README tables) | F: efficient-kan [17,60,60,32] + [32,32,1]; G: [34,60,60,1]; 75,960 + 57,000 parameters | `Model/PIKAN_opt.py:14-15,75`; README table 7.3 |
+| Medium ("PIKAN (medium)") | F: [17,34,1]; G: [34,17,17,1]; 6,120 + 8,840 parameters | `Model/PIKAN_medium.py:56-57`; README table 7.3 |
+| Small (interpretable) | F: [2,4] + [4,1]; G: [4,2,1] (input = x, t, u, u_x with a single x) | `Model/PIKAN_small.py:14-15,75` |
+| KAN implementation (all of the above) | **efficient-kan** (Blealtan), vendored `Model/efficient_kan.py` (source line 1). grid_size = 5, spline_order = 3, grid range [-1, 1] (fixed), base activation SiLU, scale_noise 0.1, grid_eps 0.02. Edge function = SiLU base term + B-spline term. Parameters per edge = 5+3 spline coefficients + base weight + spline scaler = 10 | `efficient_kan.py:9-22,242-254` |
+| Interpretability notebooks | **pykan** (official KAN 2.0 `MultKAN`, vendored in `kan/`), `KAN(width=[2,4,1], grid=3, k=3, seed=25)` for F and `KAN(width=[4,2,1], grid=3, k=3)` for G (AutoPIKAN prior-guided variant: G width [1,2,1], input u only) | `Notebooks/PIKAN_XJTU_Var2.ipynb` cell 6; `PIKAN_XJTU_Var2_PDEAutoDiscovery.ipynb` AutoPIKAN class |
+| Where KAN replaces the MLP | **Both F and G.** The PINN baseline uses sine-activation MLPs with dropout 0.2 (`Model/PINN_opt.py:9-61,66-68`); PIKAN has no dropout | |
+| Regularisation | **None.** No l1/entropy (`regularization_loss` defined in efficient_kan.py but never called), no weight decay, no dropout, no grid update/refinement (`update_grid` never called; no `refine`/`lamb` use in any notebook). Only pruning (`prune()`) in the notebooks | grep over `*.py`, `Notebooks/*.ipynb` |
+
+**Symbolic extraction or interpretation: YES, but only in the notebooks on 2-input models, never in the main experiments.** Flow (XJTU, batch 1, `PIKAN_XJTU_Var2.ipynb`): train pykan F[2,4,1], G[4,2,1] with the PIKAN loss �+' `prune()` (cells 11, 13) �+' retrain �+' `auto_symbolic()` (cells 20-21) with an extended library (bessel_j0, erf, sinc, softmax, sigmoid, relu, cosh, sinh, arcsinh, arccosh; cell 19) �+' `symbolic_formula()` (cells 25-26). Prior-guided variant (`*_PDEAutoDiscovery.ipynb`): G is given only u as input, the top suggested function is chosen by hand (`fix_symbolic(0,0,0,'x')`, `fix_symbolic(1,0,0,'x^2')`, cell 23) and the resulting parabola is re-expressed as a Verhulst (logistic) law, markdown cell 29: du/dt = r(u-C)(1-(u-C)/(K-C)) with a = coefficient, giving r, C, K in cell 30.
+
+## 3. Data
+- **Datasets** (README section 4, `Data/`): XJTU (55 cells, 6 batches/protocols, NCM), TJU (130 cell files in 3 batches NCA / NCM / NCM+NCA), MIT/Severson (125 files, 3 batches, LFP), HUST (77 files, LFP). I.e. the four PINN4SOH feature tables; no other dataset is used anywhere in the repo.
+- **Feature files:** per-cell CSVs with 16 columns + `capacity` (header in every file, checked): voltage mean, std, kurtosis, skewness, CC Q, CC charge time, voltage slope, voltage entropy, current mean, std, kurtosis, skewness, CV Q, CV charge time, current slope, current entropy. These are the Wang et al. features: statistics of voltage in [V_end - 0.2 V, V_end] and of CV-stage current from 0.5 A to 0.1 A (Wang et al. 2024, Methods "Feature extraction"). The 17th input is "cycle index".
+- **Label:** SOH = capacity / nominal capacity with nominal 2.0 (XJTU), 1.1 (HUST, MIT), [3.5, 3.5, 2.5] (TJU batches) (`dataloader.py:57,191-194,268-270,316-318`).
+- **Normalisation (`dataloader.py:44-67`, called per file):** `df.insert(..., 'cycle index', arange(n))` at `:51`, 3-sigma row deletion `:53`, then **per cell** min-max `2*(f-min)/(max-min)-1` over **all 17 input columns including cycle index, using that cell's own whole-life min and max** (`:58-65`; default `--normalization_method min-max` in every main script, e.g. `main_our_models_optimize_XJTU.py:232`). The XJTU_Dataloader notebook output (cell 5) prints the normalised cycle index running linearly from -1.000 to +1.000 over 371 cycles. Hence **t_k = -1 + 2k/(N-1) = fraction of the cell's total life**, and every test cell is scaled by its own end-of-life cycle count and its own whole-life feature ranges. (The dataloader's own `__main__` default is z-score, `:359`, not used by the scripts.)
+- **3-sigma filter (`:18-42`):** drops any row where **any** column, including `capacity` (the label), lies beyond mean A� 3 sd of that cell. Applied to test cells too, so the scored cycle set is chosen with test labels, and "consecutive" pairs (k, k+1) may skip deleted cycles.
+- **Train / test cells (cell-level split, hard-coded):**
+  - XJTU (`main_our_models_optimize_XJTU.py:18-24`): within one batch, any file name containing the character '4' or '8' is test, all else train. For 2C, R2.5, R3, RW, satellite that is cells 4 and 8 (2 test, 6 train); for 3C it also catches `3C_battery-14`, giving 3 test cells (12 train). Train and test are the same protocol (same batch). Test set per batch is 2-3 cells.
+  - HUST (`main_our_models_optimize_HUST.py:13-17`): 20 listed ids are test, the remaining 57 train.
+  - MIT (`main_our_models_optimize_MIT.py:20-25`): per batch, cell id divisible by 5 is test.
+  - TJU (`main_our_models_optimize_TJU.py:13-33`): units digit 5/9 (batches 1, 3) or 4/8 (batch 2) of the file order index (OS directory order) is test, within batch.
+  - small sample (`train_list[:small_sample]`, n = 1..4): first n files of an unsorted `os.listdir`, i.e. an OS-dependent and unreported choice of cells.
+- **Can test-cell data reach training, tuning or early stopping?**
+  1. Training/validation: both come from **training cells only**; the validation set is a **random 20 % of consecutive-cycle pairs** of the training cells (`dataloader.py:158-159`, `random_state=420`), so validation pairs are neighbours of training pairs from the same cell. Early stopping and checkpoint choice use this near-duplicate validation MSE (`PIKAN_opt.py:224-228,243`), not test. Test cells do not enter training.
+  2. **Hyper-parameter selection uses the test set** (confirmed, `main_our_models_optimize_XJTU.py:121-145`): for each seed, 49 (alpha, beta) pairs are trained and the pair with the lowest **test MAPE** is kept (`if metrics[1] < best_MAPE`, `:138`); its test predictions, parameters and hyper-parameters are saved as `best_results`, and the README tables are the mean of those (aggregation `results_analysis_code/Model_optimize_XJTU_results.py:31` reads `best_results`). The same pattern is in the HUST, MIT, TJU scripts. Authors also released per-group means over all 49 pairs (`*_group_mean.xlsx`), see section 5.
+  3. Per-cell normalisation, 3-sigma filtering and the t-feature (above) use whole-life information of each test cell.
+  4. Transfer: the per-target fine-tuning learning rates are hard-coded per pair without any stated selection rule (`main_our_models_fine_tuning.py:244,257`; the fine-tuning early-stop patience is 10, `:315`), selection method unknown.
+
+## 4. Training
+- Optimiser: Adam for F with the schedule 30 warm-up epochs from 2e-3 to 1e-2 then cosine to 2e-4 over the remaining epochs of 200 (`Model/PIKAN_opt.py:31-57,78,81-86`; defaults `main_...XJTU.py:235-241`); Adam for G with constant lr_F = 1e-3 (`:79`; XJTU, `:241`; fine-tuning uses 1e-2, `main_our_models_fine_tuning.py:320`). Because early stopping (patience 20 on validation MSE, `:243`) will usually stop before epoch 200, the cosine tail may rarely be reached (not checked per run).
+- Batch size 256 (XJTU), 512 (HUST, MIT, TJU), 128 for small-sample (`main_our_models_optimize_XJTU.py:231,168`). Epoch = full pass over training pairs. No gradient clipping.
+- Early stopping criterion: validation MSE of F on the random-pair validation split (`:135-148,224-246`); the test set is also evaluated each time validation improves, only for logging and for saving the test predictions (`:228-234`).
+- Seeds: `set_seed(e)` for e = 0..9 �+' 10 seeds (`main_...XJTU.py:111-112`); `utils/util.py:21-35` also sets cudnn deterministic. Interpretability notebooks use seed 25 (single run). README gives means only, no standard deviation; the released xlsx contain per-seed rows so a spread can be recomputed.
+- Baselines (`main_comparision_*.py`): MLP, CNN, KAN (same 17-60-60-32-32-1), KAN-medium, Transformer, trained once per seed, **single configuration, no (alpha, beta)-type search, early-stopping patience 10 vs 20 for PIKAN/PINN** (`main_comparision_XJTU.py:103`; PIKAN `--early_stop` default 20, `main_our_models_optimize_XJTU.py:236`). The PINN baseline is the same 49-point test-selected search as PIKAN (`Model/PINN_opt.py`, run through `main_our_models_optimize_*`).
+
+## 5. Reported results (README only; paper not read)
+All numbers are mean over 10 seeds; as found in `README.md:154-194`. SOH is on a 0-1 scale (0.0031 = 0.31 %).
+- Regular (cell-level, within batch), PIKAN (ours) MAPE / RMSE: XJTU batches 1-6 MAPE 0.0031, 0.0089, 0.0067, 0.0057, 0.0085, 0.0045, RMSE 0.0040, 0.0096, 0.0082, 0.0070, 0.0102, 0.0068; TJU batches 1-3 MAPE 0.0088, 0.0118, 0.0054; MIT 0.0060; HUST 0.0057 (README 7.1). PINN: XJTU 0.0060, 0.0105, 0.0066, 0.0074, 0.0083, 0.0066; KAN (data-only, same size): 0.0041, 0.0126, 0.0081, 0.0064, 0.0157, 0.0062.
+- Small sample, XJTU batch 1 / HUST, 1-4 training cells, PIKAN RMSE 0.0040, 0.0048, 0.0045, 0.0041 / 0.0124, 0.0116, 0.0112, 0.0104; PINN 0.0083 �?� / 0.0339 �?� (README 7.2). The abstract's "maximum 63.4 % RMSE reduction" is reproduced by me as (0.0339 - 0.0124)/0.0339 = 63.4 %: it is against PINN on HUST with one training cell (versus the data-only KAN it would be 74 %).
+- **The PIKAN repo's own PINN baseline is much stronger than the published PINN4SOH numbers:** XJTU batch 1 with 1 cell, PINN RMSE 0.0083 in the PIKAN README versus 0.0184 in Wang et al. Table 3 (PINN4SOH small-sample, XJTU batch 1, 1 battery: MAPE 0.0141 / RMSE 0.0184; HUST 1 battery: 0.0446 / 0.0485). The difference is plausibly the 49-point test-selected (alpha, beta) search; so the "63.4 %" headline is measured against a test-tuned PINN. Cause not verified.
+- Transfer (zero-/few-shot) numbers are not in the repo README; they are in the paper (not read) and in `processed_results/results_fine-tuning/`. Not extracted.
+- Interpretability notebooks (single run, seed 25, XJTU batch 1 2-input models), cell outputs: PIKAN MAPE 0.003580 / RMSE 0.004525 (`PIKAN_XJTU_Var2` cell 8); symbolic formula MAPE 0.00418 (full-precision coefficients, "Symbolic forecast 1") but **0.1458 / RMSE 0.137 when the same formula is rounded to 4 digits** (cell 29). The other datasets, rounded formula MAPE: HUST 0.215, TJU 0.072, XJTU AutoPIKAN 0.101, MIT 0.0076 (full precision 0.0089, 0.0083, 0.0058, 0.0076 respectively).
+- Plain data-only KAN, same 2-input setting (`KAN_XJTU_Var2` cell 8): MAPE 0.003724 / RMSE 0.004485 versus PIKAN 0.003580 / 0.004525. i.e. no accuracy gain from the physics terms in this one run (MAPE 4 % lower, RMSE 1 % higher).
+
+## 6. Hidden assumptions, bugs and weaknesses (concrete)
+1. **Test-set hyper-parameter selection.** Best of 49 (alpha, beta) per seed by test MAPE (`main_our_models_optimize_XJTU.py:121-145`, the other three datasets likewise). The authors' own `group_mean` workbooks (`processed_results/results_soh-estimation/PIKAN_opt/PIKAN_opt_*_results_group_mean.xlsx`, columns idx / MAE / MAPE / RMSE, my summary with a stdlib xlsx reader, all means over 10 seeds): for the best README row 0.0031 (XJTU b1) the median group is 0.0042 and the mean 0.0049; XJTU b2 best 0.0089, median 0.0125; HUST best 0.0057, median 0.0083; TJU b1 0.0088 vs median 0.0106. For the PINN baseline the gap is far larger (XJTU b1 best 0.0060, median 0.0242; HUST best 0.0078, median 0.0202). Best-of-grid is selected on the test cells, so the published row is optimistic by an unknown amount; the group medians show PIKAN is far less sensitive to (alpha, beta) than the sine-MLP PINN.
+2. **Physics terms add little.** With alpha = beta = 1e-3 (group 1; essentially no physics) PIKAN's mean test MAPE is 0.0037, 0.0126, 0.0077, 0.0068, 0.0100, 0.0062 on XJTU b1-6, 0.0065 HUST, 0.0061 MIT, 0.0102 / 0.0136 / 0.0058 TJU b1-3, versus the data-only KAN row of the README (0.0041, 0.0126, 0.0081, 0.0064, 0.0157, 0.0062; HUST 0.0064; MIT 0.0060). The "best group" per batch picks alpha/beta all over the grid (e.g. XJTU b1 alpha = 0.01 beta = 0.1; b2 alpha = 100 beta = 10; b3 alpha = 0.001 beta = 0.1) with no consistent pattern. Together with the single-run KAN vs PIKAN comparison in section 5 this suggests most of the gain over PINN comes from replacing a sine-MLP by a KAN (and 10x more parameters), not from the physics; the repo contains no controlled ablation for it (the paper may; not read).
+3. **The "PDE" residual is not a battery physics law.** G is a free network trained by the same optimiser; the residual forces F's �^,/�^,t at fixed features to agree with G's output. Nothing ties G to an observed �^,SOH/�^,cycle. The cell's SOH changes with k both through t and through the drifting features x_k, so the physically meaningful rate is the total derivative u_t + u_x . dx/dk, not u_t alone at fixed x. The pair (x_k, x_{k+1}) is available in the data loader but is not used to build a total-derivative residual (inference from `PIKAN_opt.py:152-170`, `dataloader.py:77-83`).
+4. **Time variable is life fraction, not cycles.** Per-cell min-max (`dataloader.py:58-65`; notebook cell 5 output) makes t = -1 + 2k/(N-1). Consequences: (a) the model needs each test cell's end-of-life cycle count N (and whole-life feature ranges) to scale its inputs, i.e. estimation is not causal/online; (b) �^,u/�^,t and the discovered G are rates per unit **normalised life**, so a cell that lives twice as long has half the rate; "dynamics shared across cells/batteries" and "cross-battery transferability" of an equation are then comparing rates in different time units; (c) a 2-input model [one HI, t] already reaches MAPE 0.36 % on XJTU b1, which says life fraction alone carries much of the signal; the repo has no t-only baseline. (I treat (c) as a control we must run in our own work, not as our contribution.)
+5. **The discovered "degradation laws" are not stable across datasets.** Prior-guided G(u), fitted per dataset (`*_PDEAutoDiscovery.ipynb` cell 28): XJTU 0.3067 (u + 0.6144)^2 - 0.7876; HUST 0.5289 (0.0146 - u)^2 - 0.6422; MIT 9.9945 (u - 0.9476)^2 - 0.0092; TJU 0.4035 (0.2592 u - 1)^2 - 0.3959. The Verhulst parameters computed for XJTU (cell 30) are r = -0.983, C = -2.217, K = 0.988: a lower asymptote C = -2.2 is not a physical SOH asymptote. Curvature, vertex and sign differ strongly between datasets (and the MIT curvature is 30 times the XJTU one). The README's "structural similarity to existing electrochemical models" is a claim about a parabola in u, chosen by hand (`fix_symbolic(...,'x^2')`, "Best value at boundary" printed).
+6. **Symbolic formulas are numerically fragile and not interpretable.** The direct-symbolisation F is a sum of four sinh/cosh terms with coefficients of order 1e-4 to 5e-3 and arguments near -9 (cell 25), nested bessel/sinc/arcsinh; rounding to 4-5 digits changes MAPE from 0.0042 to 0.146 (XJTU direct symbolisation, `PIKAN_XJTU_Var2` cell 29), and for the prior-guided variant from 0.0058 to 0.101 (XJTU), 0.0089 to 0.215 (HUST), 0.0083 to 0.072 (TJU); MIT is unaffected (0.0076). No sparsity regulariser is used during training, so the pykan symbolic step operates on a dense, unpenalised network.
+7. **Metric argument order bug (all tables).** `utils/util.py:80` defines `eval_metrix(true_label, pred_label)` but every call site passes `(pred_label, true_label)` (e.g. `Model/PIKAN_opt.py:231`, `main_our_models_optimize_XJTU.py:80`), so sklearn's MAPE divides by the prediction instead of the truth. MAE and RMSE are unaffected. Small numerical effect for SOH in 0.7-1.0 but it is selection-relevant, because MAPE is the criterion that picks the best (alpha, beta). The same call order appears in PINN4SOH, so published baselines share it. The notebooks call `eval_metrix(true_label, pred_label)` correctly in the symbolic comparison cells but incorrectly in `Test` cells.
+8. **Validation = neighbours of training pairs** (random pair split, `dataloader.py:158-159`), so validation MSE is almost a training metric and early stopping behaves as a training-loss stopper (consistent with the model fitting without overfitting alarms). PINN4SOH's paper says it divides "training, validation and test batteries" 6:2:2 (Wang et al. text near Table 2) while the released code splits validation by pair, not by cell: paper and code disagree there.
+9. **Unequal tuning in the headline comparisons** (section 4): PIKAN and PINN get a 49-point search on test; MLP, CNN, KAN, Transformer get none, and a shorter patience of 10.
+10. **Tiny test sets**: 2-3 XJTU test cells per batch, test cells fixed by file name; the 10 seeds vary only initialisation and the pair shuffle, so the stated stability is not cell-sampling variance. No confidence intervals or paired tests anywhere.
+11. **Seed-dependent, OS-dependent selection of small-sample training cells** (`os.listdir` order, then `[:n]`).
+12. **Unsafe artefacts:** `.pt` / `.pth` files are pickles loaded with `torch.load` (default, no `weights_only`), do not load them; the environment file pins old versions (`pikan.yaml`, python 3.10, pinned pip list, Chinese mirror).
+13. **Code state not matching README claims**: `main()` in `main_our_models_optimize_XJTU.py:108` runs only batch index 5 ('satellite', `range(5,6)`), `main_2()` only batch 0; the README tables for batches 1-6 imply editing the loops (the repo state is a mid-experiment snapshot). Default `model_name` argparse `choices` omit `PIKAN_opt` (`:220`), but the code sets the attribute afterwards.
+
+## 7. What the method cannot do
+- **No forecasting.** It maps features of the charge segment of cycle k (and t_k) to SOH_k. It cannot predict a future trajectory, EOL, or RUL; and since t is life fraction it cannot even be applied to a cell whose total life is unknown. (Their abstract says "estimation", the notebooks call the estimates "forecast".)
+- **No extrapolation beyond observed cycles** (inputs normalised by whole-life range; nothing generates unseen cycles; the G network is never integrated forward).
+- **No interpretable degradation law in a usable sense**: the symbolic G is a dataset-specific parabola, F's symbolic form is a fragile sum of hyperbolic functions (section 6, items 5-6).
+- No temperature, C-rate, DOD or protocol inputs (all that is encoded is 16 summary statistics), no uncertainty output, no handling of cells with missing charge-segment data.
+- Needs full charge to V_end and CV down to 0.1 A (feature definition), so partial charging cannot be handled.
+
+## 8. Licence
+**No LICENSE file in the repository** (checked `git ls-files`): all rights reserved by default. The vendored `kan/` (pykan) and `Model/efficient_kan.py` (efficient-kan) are third-party MIT projects but their licence texts are not included. Do not copy code verbatim into our repository; reimplement. Data in `Data/` are redistributions of XJTU / TJU / HUST / MIT, each with its own licence (Zenodo 10963339, Zenodo 6405084, Mendeley nsc7hnsg4s, data.matr.io); check before reuse.
+
+## 9. Pointers for our paper
+Section-by-section file:line anchors above. GAPS in `notes/code/GAPS.md`. Companion notes: `PINN4SOH.md`, `kan_review.md`.
+
+# PINN4SOH (wang-fujin) �?" code and method note
+
+**reading: full text of the repository's method code** (`Model/Model.py`, `dataloader/dataloader.py`, `utils/util.py`, `main_XJTU.py`, `main_HUST.py`, `main_MIT.py`, `main_TJU.py` (configuration, split and loop blocks), `main_comparision.py` (Trainer and early stopping), `main_adaptation - fine-tuning.py`, `fix.md`, README, and the processed result workbooks `results analysis/processed results/{Ours,MLP,CNN}-*-results.xlsx` summarised with a stdlib reader). Not read: `Model/Compare_Models.py` body, `plotter/`, `results analysis/*.py`, raw `results/*.zip`, binary `pretrained model/*.pth` (pickles, never loaded).
+**Paper (Wang F, Zhai Z, Zhao Z, Di Y, Chen X, Nat. Commun. 15, 4332, 2024, DOI 10.1038/s41467-024-48779-z; Crossref verified, CC BY 4.0): main text read (reading: partial �?" full Results and Methods sections, Discussion; abstract; figures not viewed; Supplementary Notes 1-3 and Tables S2-S6, which hold the network details, hyper-parameters, per-battery results and the split lists, NOT read).** Local copy: `refs/pdf/wang2024_pinn4soh.pdf`, text `refs/md/wang2024_pinn4soh.md`.
+Repo: `refs/code/PINN4SOH`, commit cc3cc5053caf38f04e0665f7f88cb109144d035e (2026-09-02). Code also on Zenodo, DOI 10.5281/zenodo.11046967 (per the paper's Code availability; not opened). Note: `git clone` of this repo was unreliable on this network; the first attempts failed and the successful clone came after retries (clone is a normal `--depth 1` clone; the files in `refs/code/_dl_PINN4SOH` are a partial duplicate download of the same repo and can be deleted).
+
+## 1. The model as equations
+Paper notation: u = SOH, t = cycle, x = health indicators. Paper Eq. (1) u = f(t, x); Eq. (2) du/dt = g(t, x, u; ...) "explicit PDE"; Eq. (3)-(4): g is replaced by a network G, and H := dF/dt - G(t, x, u, u_t, u_x; theta) is the residual, with F(t, x) the solution network (text of Methods, "Physics-informed neural network"). Eq. (5) SOH_k = Q_k / Q_0. Eq. (6) L_PDE = sum_i H(t_i, x_i)^2. Eq. (7) L_data = sum (u_i - u_hat_i)^2. Eq. (8) L_mono = sum_j sum_k ReLU(u_hat_{k+1} - u_hat_k) (text extraction of the PDF is partly garbled; read as the sum over batteries j and cycles k). Eq. (9) L = L_data + alpha L_PDE + beta L_mono.
+
+Implementation (`Model/Model.py`):
+- **Solution network** (`:64-77`): encoder = MLP 17 -> 60 -> 60 -> 32 with **sin** activations and dropout 0.2 between hidden layers, then a predictor Dropout(0.2) - Linear(32,32) - sin - Linear(32,1) (`:51-62`). Input = 16 features + cycle index (all scaled to [-1,1], see section 3). Output u = SOH. Xavier-normal initialisation (`:79-86`).
+- **Dynamics network** (`:138-141`): `MLP(input_dim=35, output_dim=1, layers_num=3, hidden_dim=60, dropout 0.2)`, with sin activations. Input is `cat([xt, u, u_x, u_t])` = 17 + 1 + 16 + 1 = 35 (`:232`).
+- **Derivatives** (`:216-235`): `u_t = grad(u.sum(), t)`, `u_x = grad(u.sum(), x)`, `create_graph=True`; residual `f = u_t - G(...)` (`:234`).
+- **Losses per pair of consecutive stored cycles (k, k+1)** (`:247-258`):
+  - L_data = 0.5 MSE(u_k, y_k) + 0.5 MSE(u_{k+1}, y_{k+1})
+  - L_PDE = 0.5 MSE(f_k, 0) + 0.5 MSE(f_{k+1}, 0)
+  - L_phys = sum over the batch of ReLU[(u_{k+1} - u_k)(y_k - y_{k+1})]  (`:255`, a **sum**, label-dependent; differs from the paper's Eq. (8), see weaknesses)
+  - L = L_data + alpha L_PDE + beta L_phys  (`:258`)
+- Weights (alpha, beta) per script default: XJTU 0.7 / 0.2 (`main_XJTU.py:99-100`), HUST 0.6 / 0.1, MIT 0.5 / 0.01 (`main_MIT.py:30-31`), TJU 0.1 / 0.1 (`main_TJU.py:38-39`); small-sample XJTU uses alpha 0.5, beta 10 (`main_XJTU.py:56-57`). `main_MIT.py:85-97` keeps a `grid_search()` function (grid reduced to one point), so a grid search existed; selection criterion not visible. `fix.md` (Chinese, dated 2026-09) says the initial code version had bugs which were fixed, "so that the alpha and beta values are not consistent with those in the Supplementary File; other code unchanged". The bug is not identified.
+- Monotonicity or other constraints: only L_phys above; no architectural monotonicity.
+- Optimiser etc. are the same as PIKAN (see below); PIKAN's code is a direct fork.
+
+## 2. KAN
+None. (Sine-activation MLPs with dropout 0.2.) PIKAN replaced both F and G by efficient-kan networks and removed u_t from G's input (see `PIKAN.md`).
+
+## 3. Data
+- **Datasets** (paper "Data generation", Table 1): XJTU (new, 55 NCM cells, 6 charge/discharge protocols, batches 1-6; 8 cells per batch except batch 2 with 15; LISHEN 2000 mAh, 4.2-2.5 V, room temperature), TJU (Zhu et al.: NCA, NCM, NCM+NCA; 25/35/45 C; 0.25-4 C), HUST (Ye et al.: 77 LFP cells, one charge protocol), MIT (Severson et al.: LFP fast charging, 30 C). Paper counts 310,705 samples of 387 cells (the repo file counts, checked in the PIKAN copy of the same CSVs, are XJTU 55, TJU 130, MIT 125, HUST 77 = 387, consistent with the paper).
+- **Features** (paper "Feature extraction", `data/*/*.csv`): from the last 0.2 V of the constant-current charge voltage curve (V_end - 0.2 V to V_end) and the CV-stage current between 0.5 A and 0.1 A: mean, std, kurtosis, skewness, charge time, accumulated charge (CC Q / CV Q), curve slope, curve entropy for voltage and for current = 16 features. Plus cycle index. Columns in the files: voltage mean, voltage std, voltage kurtosis, voltage skewness, CC Q, CC charge time, voltage slope, voltage entropy, current mean, current std, current kurtosis, current skewness, CV Q, CV charge time, current slope, current entropy, capacity (checked in `refs/code/PIKAN/Data`, which redistributes the same CSVs).
+- **Label:** SOH = capacity / nominal capacity (nominal 2.0, 1.1, 1.1, [3.5, 3.5, 2.5] Ah; `dataloader.py` same as PIKAN's).
+- **Normalisation:** identical dataloader to PIKAN (the PIKAN version differs only by `.to(device)`, diffed): `read_one_csv` inserts `cycle index = arange(n)`, drops any row with a 3-sigma outlier in any column **including capacity**, then min-max scales all input columns **per cell** with that cell's whole-life min and max (`dataloader/dataloader.py:44-67`). So t is life fraction and the scaling of a test cell uses its end-of-life. The paper states only "min-max normalization is performed on the features ... in [-1,1]" (text under "SOH estimation"); the per-cell, whole-life nature of it is not stated there.
+- **Split (cell-level):** XJTU: within a batch, files whose name contains '4' or '8' are test (`main_XJTU.py:14-18`), others train; HUST: 20 listed ids (`main_HUST.py:42-`); MIT: id % 5 == 0 (`main_MIT.py:42-46`); TJU: index units digit 5/9 or 4/8 (`main_TJU.py:57`). The paper says train / validation / test batteries are split about 6:2:2 and test batteries are "evenly distributed" (Tables S2-S6, not read); **in code the validation set is a random 20 % of consecutive-cycle pairs of the training cells** (`dataloader.py:158-159`, `train_test_split(..., test_size=0.2, random_state=420)`), not separate batteries. Test cells never enter training; validation does not have independent cells.
+- Leakage-type issues: per-cell whole-life scaling and 3-sigma filtering with test labels; test metrics are computed whenever validation improves (logging only, `Model/Model.py:293-298`). Hyper-parameters alpha, beta, lr per dataset were chosen by an unreported rule (a `grid_search` function exists). Treat the published numbers as in-protocol and slightly optimistic; do not use this repo's protocol as ours.
+
+## 4. Training
+Adam for F: warm-up 30 epochs 2e-3 -> 1e-2 then cosine to 2e-4 (200 epochs max) (`Model/Model.py:94-120`, `main_XJTU.py:86-91`); Adam for G with constant lr_F (1e-3 XJTU, 5e-4 HUST, 1e-3 MIT/TJU); batch 256 (XJTU) / 512 (others) / 128 (small-sample); early stopping patience 20 on validation MSE of F (`Model.py:308`); best state kept at lowest validation MSE. **No random seed is set anywhere** (`utils/util.py` has no seeding function; each run is "repeated 10 times", paper text "Fig. 4b"), so reported means are not exactly reproducible (the README says so itself). Baselines MLP, CNN: same optimiser/schedule, one configuration, patience 10 (`main_comparision.py:106`).
+Fine-tuning (`main_adaptation - fine-tuning.py`): load source model, freeze G, fine-tune F only on one target-domain cell (`small_sample=1`, `:220`) with a hand-set learning rate per target (`:242,254,268,276,297`), early-stop patience 10.
+
+## 5. Reported results
+Paper text: average test MAPE of the PINN on the four datasets "0.85 %, 1.21 %, 0.65 % and 0.78 %" versus MLP "2.60 %, 1.72 %, 0.83 %, 0.83 %" (Results, "SOH estimation", just after Table 2). Mapping to datasets (XJTU, TJU, MIT, HUST) is mine, from the released workbook `Ours-*-results.xlsx` (columns idx / MAE / MAPE / RMSE / R2; mean over 10 runs): PINN XJTU batches 1-6 MAPE 0.0070, 0.0113, 0.0086, 0.0071, 0.0105, 0.0063 (mean 0.85 %), TJU batches 1-3 0.0164, 0.0119, 0.0080 (1.21 %), HUST 0.0078, MIT 0.0065. Released MLP workbook: XJTU mean 2.22 %, TJU 1.68 %, MIT 0.79 %, HUST 0.80 % (paper text 2.60, 1.72, 0.83, 0.83): the MLP numbers in the text and in the released workbook differ although the README says the released results "correspond exactly" to the manuscript; not resolved (the "Ours" rows do match).
+Table 3 (small sample, XJTU batch 1 and HUST), PINN MAPE / RMSE with 1, 2, 3, 4 training batteries: XJTU 0.0141 / 0.0184, 0.0105 / 0.0134, 0.0069 / 0.0096, 0.0056 / 0.0076; HUST 0.0446 / 0.0485, 0.0178 / 0.0202, 0.0154 / 0.0181, 0.0144 / 0.0173 (MLP XJTU 1 battery 0.0343 / 0.0390). Text: on HUST and MIT, which have many training samples, MLP and CNN are "comparable" to the PINN (confirmed in the workbooks: HUST 0.0078 vs MLP 0.0080 vs CNN 0.0074 MAPE; MIT 0.0065 vs 0.0079 vs 0.0065). Fine-tuning Table 4 (4 datasets pairwise, G frozen) not extracted.
+Note that PIKAN's own PINN baseline in its README (XJTU batch 1, 1 cell: RMSE 0.0083) is much better than this Table 3 value (0.0184).
+
+## 6. Hidden assumptions, bugs and weaknesses
+1. **Degenerate PDE loss.** G receives u_t as an input (`Model.py:138,232`; paper Eq. 4 lists u_t among G's arguments) and the residual is u_t - G(...). G can satisfy L_PDE = 0 by copying that input, independent of any degradation physics. The paper's claim that G "learns the degradation dynamics" and "is independent of protocols and datasets" (frozen in transfer, Methods) is therefore not guaranteed by the loss. PIKAN removed u_t from G's input.
+2. **Paper vs code: monotonicity loss.** Paper Eq. (8) penalises any predicted increase; code `Model.py:255` penalises sign disagreement with the true label step, in both directions, and is a sum over the batch. The paper does mention capacity regeneration, but the code term needs labels.
+3. **Paper vs code: validation.** Paper: validation batteries (6:2:2 by battery). Code: random pair split inside the training cells.
+4. **Not seeded**; alpha, beta, lr hand-set per dataset; post-publication bug fix (`fix.md`) with changed alpha/beta, so published supplementary hyper-parameters do not reproduce the released code.
+5. **Per-cell whole-life min-max incl. cycle index** (same dataloader as PIKAN): t equals life fraction; needs end-of-life of the test cell. Shared with PIKAN (see `PIKAN.md` section 6.4).
+6. **Features are summaries of a 0.2 V charge window and CV tail:** needs a full charge to V_end and CV down to 0.1 A. CC Q and CC charge time are collinear at constant current (the PIKAN notebook comment says "CC Q is equivalent to CC charge time at constant-current charging"), so the 16-feature input has duplicated information; high feature-SOH correlation within a dataset (paper Fig. 3b) is a within-dataset property, not a cross-chemistry one: the paper itself reports that correlation signs flip between NCM/NCA and LFP datasets (feature 9-10 and 11-16).
+7. **Test-set evaluation at each validation improvement** (logging only) and small test sets (XJTU 2-3 cells per batch).
+8. **Gains are concentrated in small-data settings:** the authors state that with many training samples (HUST, MIT) a same-size MLP or CNN performs comparably; the headline superiority is for XJTU and the 1-4 cell small-sample runs, whose test sets are 2-3 cells per batch.
+9. **Metric argument order:** `eval_metrix(true_label, pred_label)` (`utils/util.py:42`) called as `eval_metrix(pred_label, true_label)` (`Model.py:296`), so MAPE divides by the prediction (MAE, RMSE unaffected). PIKAN inherits it.
+10. Pickled `.pth` files; no LICENSE file in the repository (checked: none in `git ls-files`).
+
+## 7. What the method cannot do
+Same as PIKAN: no forecasting of future SOH or RUL, no use without the features of the target cycle, no extrapolation beyond observed cycles, no explicit degradation law (G is a black-box network; "stable modelling and prognosis" in the title refers to estimation stability; the paper's "prognosis" is not demonstrated as forecasting in the sections I read). No temperature, current-rate or protocol covariates beyond the 16 summaries. No uncertainty.
+
+## 8. Licence
+No LICENSE file in the repository. Paper is CC BY 4.0 (Crossref licence field). Data licences belong to the four dataset sources. XJTU dataset: Zenodo 10.5281/zenodo.10963339 (from README).
+
+# Gaps left by PIKAN + PINN4SOH that a JES paper could close
+
+Basis: `notes/code/PIKAN.md` and `notes/code/PINN4SOH.md` (full code reading; PIKAN journal paper NOT read, PINN4SOH Supplement NOT read). Retired topics are not proposed: nothing below is about how the evaluation split changes accuracy, or about conformal / uncertainty calibration. Leakage-free cell-level evaluation (all hyper-parameters tuned on training cells only, 5+ seeds, paired comparisons) is our standard practice; where a gap needs a control from the evidence (e.g. a t-only baseline), that control is part of the method study, not a claimed contribution. Each gap states a test whose outcome could be negative. Numbers cited are from the repo files named; none comes from a run of ours.
+
+1. **Residual along the trajectory instead of at fixed features.** Both codes penalise u_t = dF/dt at fixed x (`PIKAN/Model/PIKAN_opt.py:152-170`; `PINN4SOH/Model/Model.py:216-235`), but SOH moves with k through both t and the drifting features, so the physical rate is the total derivative u_t + u_x . dx/dk. The consecutive pairs needed for a finite-difference total derivative are already built (`PIKAN/dataloader/dataloader.py:77-83`) and unused. Test: replace L_PDE by a total-derivative residual (and variants with a physics-informed G form), compare with the original residual at identical training cells, seeds and budget; endpoint: test RMSE/MAPE and whether the learned G now matches the finite-difference dSOH/dk of the data. Could fail if G stays unconstrained.
+
+2. **Cycle-unit time and a causal formulation (forecast, RUL).** Both repos scale time per cell by whole-life min-max (`dataloader.py:58-65`; PIKAN notebook `XJTU_Dataloader` cell 5 prints t running -1 to +1 over 371 cycles), so the method needs each test cell's end of life and gives rates per unit life fraction. Neither can forecast (PIKAN.md section 7). Test: train with t in physical cycles and features from a causal window only, integrate G forward from the last observed cycles, report error at fixed horizons and RUL error in cycles against PIKAN-style estimation re-implemented under the same inputs. Needs a dataset with long trajectories (see 8).
+
+3. **Mechanistic G with a KAN correction, with identifiable parameters.** PIKAN's G is a free KAN, and the prior-guided symbolic G differs wildly by dataset: XJTU 0.3067(u+0.6144)^2-0.7876, HUST 0.5289(0.0146-u)^2-0.6422, MIT 9.9945(u-0.9476)^2-0.0092, TJU 0.4035(0.2592u-1)^2-0.3959; Verhulst C = -2.217 for XJTU (`Notebooks/PIKAN_*_Var2_PDEAutoDiscovery.ipynb` cells 28-30). Test: constrain G to a known family (power-law / sqrt-time SEI growth with Arrhenius factor, logistic, knee model) in physical cycle units and let a small KAN learn only the residual; endpoint: are the fitted physical parameters stable across cells of one protocol (variance across cells and seeds, interval overlap), and does accuracy match the free G? Fails if parameters are not identifiable.
+
+4. **Symbolic extraction that survives rounding.** In the PIKAN notebooks the extracted formula is a dense sum of sinh/cosh/bessel/sinc terms with coefficients 1e-4..5e-3; rounding to 4 digits moves MAPE from 0.0042 to 0.1458 (XJTU direct), 0.0058 to 0.1013 (XJTU prior-guided), 0.0089 to 0.2152 (HUST), 0.0083 to 0.0725 (TJU) (`PIKAN_XJTU_Var2.ipynb` cell 29; `*_PDEAutoDiscovery.ipynb` cell 33). No l1/entropy regulariser is used in training (PIKAN.md section 2). Test: train with sparsity regularisation and a restricted symbolic library (low-degree polynomial, exp, power) and report symbolic-to-network MAPE ratio after rounding to 3 significant digits, together with formula length; success criterion fixed in advance (e.g. ratio below 1.1).
+
+5. **KAN basis ablation at matched parameters and tuning.** PIKAN uses one KAN family (efficient-kan B-spline, grid 5, order 3, ~10 parameters per edge) and 75,960 + 57,000 parameters against 7,781 + 5,821 for the PINN (`PIKAN/README.md` table 7.3); its own medium model (6,120 + 8,840) is roughly as accurate (README 7.1). kan-review lists ready implementations: Chebyshev (ChebyKAN), Gaussian RBF (fast-kan), Fourier, wavelet (Wav-KAN), Jacobi, rational (`kan-review/README.md` section 6). Test: same data, same inner-loop tuning on training cells, parameter-matched MLP vs 4-5 KAN variants in the PINN framework; endpoint: paired RMSE differences with confidence intervals across seeds. May show the KAN advantage is a capacity or smoothness effect.
+
+6. **Does the physics help beyond a KAN? (attribution with a pre-specified endpoint).** In the released group means, PIKAN with alpha = beta = 1e-3 is close to the data-only KAN: XJTU b1-b6 MAPE 0.0037, 0.0126, 0.0077, 0.0068, 0.0100, 0.0062 vs KAN 0.0041, 0.0126, 0.0081, 0.0064, 0.0157, 0.0062 (`processed_results/.../PIKAN_opt_XJTU_results_group_mean.xlsx`, README 7.1), and the single-run 2-input comparison is 0.003580 vs 0.003724 MAPE (`PIKAN_XJTU_Var2.ipynb` cell 8 vs `KAN_XJTU_Var2.ipynb` cell 8). The repo has no controlled ablation. Test: factorial ablation (no physics / residual only / monotone-type term only / both), alpha and beta chosen by inner CV on training cells, multiple cell-level folds so the number of test cells is not 2-3.
+
+7. **Loss-weight selection without a test-based grid.** PIKAN trains 49 (alpha, beta) pairs per seed and keeps the best on test MAPE; the gap between best and median group is 0.0031 vs 0.0042 (XJTU b1) and 0.0057 vs 0.0083 (HUST) for PIKAN, but 0.0060 vs 0.0242 (XJTU b1) and 0.0078 vs 0.0202 (HUST) for the PINN, so the method's practical value depends on sensitivity to the weights (`processed_results/results_soh-estimation/*group_mean.xlsx`, my summary). Test: adaptive weighting (self-adaptive residual weights, gradient-norm balancing, uncertainty weighting; kan-review 7.1 lists ssRBA) with weights fixed from training data only; endpoint: median-over-seeds performance and spread without any search, compared with the best-of-grid inner-CV choice.
+
+8. **A dataset outside the four PINN4SOH tables.** Everything in both repos uses the same 16 charge-window features on XJTU, TJU, HUST, MIT (`PIKAN/README.md` section 4). Shlok's list names NASA PCoE and CALCE (raw curves, capacity regeneration in NASA, different protocols). Test: extract features from raw curves under a documented rule, run the best method from 5-7; endpoint: does the gain over a data-only KAN and over the PINN survive, and are the regeneration spikes captured? Required for the cycle-unit forecasting in gap 2 as well. Licence and cell counts to be checked by the data steward.
+
+9. **Label-free handling of capacity regeneration.** PIKAN's physics term multiplies the predicted step by the true label step (`PIKAN_opt.py:190`), so it needs labels and rewards matching regeneration noise; PINN4SOH's paper states a different (pure monotone) form (paper Eq. 8). Test: compare (a) none, (b) pure non-increasing penalty with a learned slack for regeneration events, (c) the PIKAN term, on a dataset with real regeneration (NASA/CALCE), with endpoint error on the cycles around regeneration events and monotonicity violation rate on test cells.
+
+10. **Identifiability of G from synthetic ground truth.** The PIKAN paper (abstract in README) claims that the discovered equation has "structural similarity to existing electrochemical models", yet the repo contains no synthetic experiment where the generating law is known (not found in the code I read; the paper itself may). Test: simulate cells from known laws (Verhulst, power-law, knee) with realistic noise, feed the PINN4SOH/PIKAN/our method, and measure recovery error of the law's parameters and of the functional form (e.g. after symbolic extraction). Cheap on CPU. Also tests the PINN4SOH degeneracy (G fed u_t, `Model.py:232`) by an ablation with and without u_t in G's input. A negative result (G not identifiable from SOH data of this kind) would itself be reportable.
+
+Notes for the lead
+- Items 1, 3, 4, 10 give the method novelty; 5-7 give the strong-baseline and attribution evidence a JES reviewer will ask for; 2, 8, 9 widen the scope (forecasting, new data, regeneration).
+- PIKAN is in the target journal (JES 153, 120860, 2026-04) and its paper is unread; before committing to 1-4 the novelty auditor should confirm the paper does not already do them (the repo says it does not, but the paper may contain extra experiments not in the repo).
+
+# D010 novelty audit of candidates C1-C4 (2026-11-04)
+
+Auditor: novelty-auditor (checks only, proposes nothing; no rescue suggestions).
+Reading depth: **FT** full text; **FT-partial** full text, some sections; **AB** abstract only (paywalled or not downloaded); **CODE** released repo read by the lead (`notes/code/PIKAN.md`), journal paper unread.
+Tools: OpenAlex (search, cites filter), Crossref, arXiv API, WebSearch. **Exa was unavailable** (OAuth not authorised). Semantic Scholar returned nothing (rate limit). **OpenReview (ICLR 2027, NeurIPS 2026) was not searched** (no tool). arXiv was searched by date to 2026-11-02, which covers the last 90 days.
+
+## 0. Verdicts
+
+| Cand. | Verdict | Conf. | Most dangerous prior work |
+|---|---|---|---|
+| C1 stress-conditioned PI-KAN rate law, early-cycle forecast | **INCREMENTAL** (model class occupied; KAN correction plus causal first-K forecast of an unseen cell is the open slice) | 0.70 | PiDDM, arXiv 2607.29095 |
+| C2 identifiability of KAN-discovered laws | **NOVEL as a question**; contribution type is an audit | 0.65 | PGKAN (JES 182, 124768) and Gasper 2021/2022 |
+| C3 what the physics residual does | **INCREMENTAL, leaning TAKEN** as a standalone paper | 0.60 | PIKAN's own JES paper (ablation in the paper unread) |
+| C4 merge | **INCREMENTAL overall**; coherent only if identifiability is the headline and C3 is reduced to a control table | 0.65 | PiDDM (model), PGKAN (discovered-law claim) |
+
+## 1. The single most dangerous prior work: PiDDM
+
+Chen, Jian, Sigdel, Xiong, Wang, Luo, "PiDDM: Physics-Informed Differentiable Degradation Modeling for Lithium-Ion Battery State-of-Health Prediction", arXiv 2607.29095v1, 2026-07-31 (arXiv API verified). Reading: **FT-partial** (PDF converted; read Sections 1, 2.1 to 2.4.6, introductions of 3.1 and 3.2, conclusion; not every table).
+Does (from the PDF):
+- Rate law (Eq. 1): dQ/dn = -[kSEI exp(-ESEI/RT) t^alpha + kLLI exp(-ELLI/RT) DoD^b1 Ah^b2]; negative by construction.
+- A 3x60 MLP maps 16 charge-segment features of cycle n to five "effective, cycle-dependent kinetic parameters" (ESEI, alpha, ELLI, b1, b2); kSEI and kLLI are global trainable scalars; known operating variables z_n = (T_n, t_n, DoD_n, Ah_n) enter the rate law. Forward Euler on the cycle coordinate from the measured Q0 (Eqs. 2 to 3).
+- XJTU, 55 cells, 6 protocols, cell-level split (43 train, 12 test). "Extrapolation" = train on the first 90 percent of each training cell, evaluate complete test trajectories; baselines MLP and Wang-style PINN (Tables 3, 4).
+Does not: no KAN; no early-cycle-only forecast (the test cell's charge features are inputs at every cycle, including the extrapolated region); no identifiability or stability analysis (the paper says the five outputs "should not be interpreted as independently measured electrochemical parameters"); no symbolic law; code "available upon request"; preprint, not peer reviewed. Whether T varies across XJTU cells was not checked.
+Consequence: "Arrhenius/throughput rate law with neural parameters, integrated in cycle units, negative by construction, on XJTU" is public since July 2026.
+
+## 2. C1
+
+Claim: dQ/dN = -r(Q, N, s), r >= 0, mechanistic backbone plus small KAN correction, cycle units, causal normalisation; forecasts a held-out cell's remaining trajectory and EOL from its first K cycles plus stress s. S = same, P = partial, D = different.
+
+| Work (id) | Question | Mechanism | Method | Evidence | Scale | Result |
+|---|---|---|---|---|---|---|
+| PiDDM, arXiv 2607.29095 (FT-partial) | P | S | D (MLP) | D (XJTU, 12 test cells) | P | not comparable |
+| E Lixin et al., J. Electrochem. Soc. 2025, doi 10.1149/1945-7111/addd4e (AB, OpenAlex) | P (trajectory plus RUL) | P (multi-factor aging model with knee; DOD, temperature, C-rate; LSTM PINN) | D (CNN+LSTM) | P (132 LFP cells, fast-charge protocols) | P | RUL RMSE 75.62 cycles; trajectory RMSE cut 38 to 85 percent vs no-physics ablations |
+| Guo, Vilsen, Stroe et al., arXiv 2607.16864 (AB) | S ("trajectory and lifetime ... using only 2 percent early-life observations") | P (particle-cracking mechanism as soft constraint, latent design parameters) | D | P | ? | 6 to 8 times error cut vs ML baselines |
+| Kuzhiyil, Damoulas, Planella, Widanage, Applied Energy 382, 125221 (2025), Crossref verified (AB) | P | S in spirit (NN inside a physics state equation, UDE) | D | D (calendar ageing, 39 storage conditions) | D | calendar fade only |
+| Gasper, Collath, Hesse, Jossen, J. Electrochem. Soc. 2022, doi 10.1149/1945-7111/ac86a8 (AB, OpenAlex); Gasper, Gering, Dufek, Smith, J. Electrochem. Soc. 168, 020502 (2021), doi 10.1149/1945-7111/abdde1 (AB, Crossref) | P | S (algebraic stress-factor law; converted to state-equation form and validated on cells under varying loads) | D (bilevel symbolic regression) | P (LFP/Gr) | P | half the MAE of an expert model; bootstrap UQ |
+| Navidi, Bajarunas, Arias Chao, Hu, eTransportation 25, 100432 (2025), Crossref verified (AB via search summary) | S (capacity forecast, different usage, two-cell training) | P (aging-aware electrochemical model + RNN) | D | P | P | 40 to 70 percent RMSE cut |
+| Wang, Ma, Gao, Chen, Reliab. Eng. Syst. Saf. 260, 111003 (2025), Crossref verified (AB: title + search snippet) | P (neural ODE with KAN for degradation states, solid-state RUL) | P | P (KAN in an ODE) | ? | ? | not extractable |
+
+What each closest work does not do relative to C1:
+1. PiDDM: see Section 1.
+2. JECS addd4e: already puts DOD, temperature and C-rate into a physics-informed degradation model and predicts trajectory and RUL; no KAN; early-K causal protocol and identifiability not stated in the abstract.
+3. arXiv 2607.16864: early-life to trajectory and lifetime under a physics constraint; constraint is a latent mechanism, not a stress-conditioned rate law; no KAN.
+4. Kuzhiyil 2025: "known state equation plus learned correction" is public (calendar ageing, UDE); C1 is that idea for cycling with a KAN correction.
+5. Gasper 2021/2022: the stress-dependent algebraic law and its state-equation form are public; a mandatory baseline.
+6. RESS 260, 111003: shows KAN plus neural ODE for battery degradation states exists; not a stress-conditioned rate law with a physics backbone, as far as the snippet shows.
+
+PIKAN and PGKAN for C1: neither forecasts, neither uses operating conditions in the dynamics (Section 6).
+
+**Verdict C1: INCREMENTAL, 0.70.** Not found in any search: a KAN correction on a structured backbone with a causal first-K forecast of an unseen cell under held-out stress. Each ingredient is public.
+
+## 3. C2
+
+Claim: symbolic laws extracted from physics-informed KANs on SOH data are not stable across seeds, folds and cells, do not survive rounding, and do not recover a known generating law, unlike a structured backbone plus KAN correction.
+
+| Work | Question | Mechanism | Method | Evidence | Scale | Result |
+|---|---|---|---|---|---|---|
+| PGKAN, J. Energy Storage 182, 124768 (AB) | P (claims "dominant degradation PDEs governing each dataset"; stability tests, if any, unread) | S | S | D (4 datasets, 387 cells) | S | MAPE 8.5 to 19.7 percent better |
+| PIKAN, J. Energy Storage 153, 120860 (README abstract, CODE) | P (claims "structural similarity to electrochemical models"; repo has no synthetic recovery or seed test) | S | S | P | S | rounding to 4 digits: MAPE 0.0042 to 0.1458 (XJTU); per-dataset parabolas differ (lead's reading, PIKAN.md 6.5 and 6.6) |
+| Gasper 2021 / 2022 (AB) | P (rediscovery of known relations; cross-validation, sensitivity, bootstrap UQ) | D (algebraic SR) | D | D | P | identifiability-adjacent, not a KAN test |
+| Ghosh and Roy, arXiv 2604.00400 (AB) | D | S (KAN closed-form SoH) | S | D (one eVTOL cell) | D | no stability test stated |
+| TIDE, arXiv 2607.14640 (AB) | D | P (symbolic distillation of a trained backbone) | D | ? | ? | no identifiability test stated |
+
+Found: no battery paper (2019 to 2026-11) that tests seed/fold/cell stability, rounding survival, or synthetic recovery of a KAN- or PINN-discovered degradation equation. Absence is weak evidence; PGKAN and PIKAN full texts are unread.
+**Verdict C2: NOVEL as a question, 0.65.** A hostile reviewer will note the audit targets two papers of one group and rests partly on a repo the lead found to be a mid-experiment snapshot.
+
+## 4. C3
+
+Claim: in Wang-2024-family models the fixed-feature partial-derivative residual (and u_t inside G) adds nothing measurable beyond the data-only network; a total-derivative residual changes that, under training-cell-only tuning.
+
+| Work | Question | Mechanism | Method | Evidence | Scale | Result |
+|---|---|---|---|---|---|---|
+| PIKAN, JES 153 (CODE) | P (paper may hold an ablation; code already removes u_t from G, fixing the PINN4SOH degeneracy) | S | P | P | S | physics at alpha=beta=1e-3 close to data-only KAN in released means |
+| PI-EKAN, Energy and AI 26, 100928, Crossref verified (AB: "component ablation identifies bounded adaptive weighting as key") | P | S | P | P | 8 datasets | ablation exists |
+| PiDDM (FT-partial) | P (own physics structure vs Wang-style PINN and MLP) | D | D | D | D | beats baseline PINN, Table 3 |
+| Navidi, Thelen, Li, Hu, Energy Storage Mater. 2024, doi 10.1016/j.ensm.2024.103343 (title only; arXiv 2404.04429) | P (comparison of physics-informed methods for degradation diagnostics) | D | D | D | D | not extractable |
+
+**Verdict C3: INCREMENTAL, leaning TAKEN as a standalone paper, 0.60.** Every Wang-family follow-up reports a component ablation. The total-versus-partial-derivative point was not found stated in any paper I found; that is weak evidence.
+
+## 5. C4
+
+**Verdict: INCREMENTAL, 0.65.**
+Hostile-reviewer judgement, coherent or glued:
+- C1 and C2 are linked by one thing: the stress-conditioned law has named parameters (activation energy, throughput exponent) whose recovery can be tested, a free-G KAN has none. That link is real; C1+C2 can be one paper.
+- C3 asks about the residual in a different model family (estimation, Wang-style PDE). A forecasting model without that residual has nothing for C3 to attribute; as described it is glued on. A control table of the proposed model's own components (structure on/off, KAN correction on/off) is a different, in-scope thing.
+- Two-paper risk: forecasting accuracy and identifiability compete for the same 8 to 10 JES figures; each can end up thin.
+
+Sharpest novel claim surviving this audit (what is new, not advice): a stress-conditioned learned degradation law, evaluated on held-out cells from their first K cycles, is tested for recovery of known stress exponents on synthetic cells and for parameter stability across seeds, cells and folds, and a PIKAN-style free-G KAN law fails the same tests. The model is not new (PiDDM, JECS addd4e, Kuzhiyil); the unoccupied part is the identifiability test on such a law together with causal early-K forecasting.
+
+## 6. PIKAN and PGKAN
+
+| Item | PIKAN (JES 153, 120860) | PGKAN (JES 182, 124768) |
+|---|---|---|
+| Reading | README abstract plus full repo code; journal text unread (ScienceDirect 403) | AB (Crossref/OpenAlex). Abstract says code "will be available"; no PGKAN repo among the 6 popular of 34 repos on github.com/USTC-AI4EEE (only those 6 were visible) |
+| Forecasts a trajectory | No: SOH_k from charge features of cycle k; time is life fraction (CODE) | "SOH estimation"; no forecast stated |
+| Operating conditions in the dynamics | No (16 summary features) (CODE) | none stated |
+| Identifiability | none in repo; dataset-specific parabola, rounding collapse (CODE) | claims discovered PDEs per dataset and spline-to-term alignment; stability not mentioned |
+
+Corrections to `PRIOR_ART_SCAN_lead.md`: PGKAN is volume 182 (issued 2026-12; article 124768; Crossref); PI-EKAN is evaluated on eight datasets, first author Zekariyas Yohannes Abebe (Crossref family name "Yohannes").
+
+## 7. Wang et al. 2024 follow-ups (OpenAlex W4398164319)
+
+cited_by_count 902; 914 records retrieved and scanned by title/abstract keywords. KAN users: SOH-KLSTM (JES, doi 10.1016/j.est.2025.116541; KAN+LSTM, not physics); Wei et al., Expert Syst. Appl. 296, 128969 (title only); SOH-KPINN (Measurement 259, 119769); Liu et al. Energies 18, 5865 (Verhulst KAN-PINN); PGKAN; PI-EKAN. Trajectory/path users: Yang et al., Applied Energy 398, 126427 (2025), multi-task transformer PINN with SOH, RUL and "short-term degradation path" (AB via search summary; voltage/current around CV; no stress dynamics, no KAN); Navidi et al. (above). Found no follow-up combining KAN with early-cycle trajectory forecast. OpenAlex counted 1 citation for PIKAN JES and 0 for PGKAN.
+
+## 8. Other works checked
+
+- Severson et al., Nat. Energy 4 (2019), doi 10.1038/s41560-019-0356-8 (Crossref hit): cycle life, no trajectory, no physics.
+- Preger et al., J. Electrochem. Soc. 2020, doi 10.1149/1945-7111/abae37 (Crossref hit; volume not checked): Sandia dataset. arXiv 2410.14347 (Murgai et al., SciML UDE/NeuralODE forecasting of battery degradation; AB): the abstract names no dataset, so the lead's "Sandia NMC set" is unverified by me.
+- Zhang et al., Nat. Mach. Intell. 7, 270 (2025), doi 10.1038/s42256-024-00972-x (BatLiNet; AB): early-cycle lifetime across ageing conditions, no physics.
+- Zhang et al., Nature 2026, doi 10.1038/s41586-025-09951-7 (Discovery Learning; press summary only): cycle-life prediction with a physics simulator, not a trajectory.
+- Aitio and Howey, Joule 5, 3204 (2021), doi 10.1016/j.joule.2021.11.006 (Crossref): field-data end of life, lead-acid.
+- Sulzer et al. (Joule 2021, doi 10.1016/j.joule.2021.06.005): OpenAlex title hit "The challenge and opportunity of battery lifetime prediction from field data"; authorship not verified.
+- **Schofer et al. Adv. Sci. 2022: DOI unresolved** (Crossref and OpenAlex gave no match; only the lead's PMC9561774 pointer).
+- van Vlijmen et al., ChemRxiv 2023, doi 10.26434/chemrxiv-2023-zdl2n (363 cells, 218 protocols, interpretable ML on degradation modes; AB): data source and interpretability prior art, no rate law or KAN.
+- arXiv 2506.17755 (PIMOE, 207 cells, 77 conditions), 2607.11943 (BattVAE-GP, simulated, latent GP over cycle and C-rate), 2611.03150 (FlowBatt, 2026-11-02, flow-matching trajectory from early cycles, five public benchmarks): trajectory-from-early-cycles without a physics rate law; they set the accuracy baseline for that claim.
+- J. Power Sources, doi 10.1016/j.jpowsour.2025.238028 (knee, AB); Commun. Chem. 2026, doi 10.1038/s42004-026-02220-2 (Li-S physics-informed NeuralODE lifetime forecasting, AB).
+
+Query log: OpenAlex `search=` on ~35 strings covering physics-informed KAN trajectory/RUL/symbolic, neural ODE and UDE battery degradation, stress-dependent rate learning, early-cycle trajectory, hybrid semi-empirical plus NN, identifiability, SINDy, knee models, Gasper/Schofer/Aitio/Sulzer/Kuzhiyil names, KAN symbolic stability, "does the physics loss help", PINN critiques; OpenAlex `cites:W4398164319`; arXiv API date-sorted queries on KAN+battery, physics-informed+battery+trajectory, neural ODE+battery, identifiability, symbolic regression+fade, UDE+battery, early-cycle trajectory, Arrhenius+neural, Sandia, TIDE; WebSearch on PIKAN title, Discovery Learning, Yang 2025, Wang RESS 2025, Navidi 2025. About 300 titles screened, abstracts read for about 45, one closest paper (PiDDM) read in partial full text.
+
+## 9. Residual risk
+- Exa unavailable; OpenReview (ICLR 2027, NeurIPS 2026) not searched; a concurrent conference submission would be invisible.
+- PIKAN and PGKAN full texts unread: they may contain a seed-stability check, an operating-condition experiment or an ablation that weakens C2 or C3.
+- Eight "closest" works are abstract-only (JECS addd4e, arXiv 2607.16864, Gasper x2, Kuzhiyil, Navidi, Wang RESS, Yang 2025). Read JECS addd4e and arXiv 2607.16864 first; both claim physics-informed trajectory work under varying conditions.
+- Absence of a KAN-law identifiability paper is weak evidence; OpenAlex citation lists lag for mid-2026 onwards.
+
+# D010 proposal (proposer, 2026-11-04)
+
+Role: proposer. I do not validate this; the opponent and judge do. Decision to be taken: topic, title, method, datasets, experiments of the JES paper.
+
+**Reading depth (CONTRACT section 1).** I read in full: CONTRACT, 00_candidates, 01_novelty_audit, GAPS, PIKAN.md, PINN4SOH.md, Codex turn 01, the JES guide, INVENTORY.md, and the ISU-ILCC `README_V2.0.pdf` (converted, full text). I looked at the ISU `capacity_fade.zip` CSV text (251 cells) and the Oxford readme. I read **no paper** (PiDDM, PIKAN, PGKAN, JECS addd4e, arXiv 2607.16864, Gasper, ISU authors' arXiv 2307.08382 are all unread by me); every statement about them is the novelty auditor's or the lead's, and is marked as such. Numbers marked **[scratch]** come from `debates/D010_topic/pilot_scratch/` (scripts plus `output.txt`); they are not results and must be reproduced under `runs/` by scripts in `code/` before any use. The group-stress table of ISU (Table A1) was transcribed by hand from the README into the scratch script and must be re-checked against the PDF.
+
+## 1. Research question and claim
+
+**Question.** If battery capacity fade is written as a stress-conditioned rate law on a physics backbone, with the dependence of the rate on charge rate, discharge rate, depth of discharge (and temperature where measured) carried by a Kolmogorov-Arnold network, are the stress laws the network learns determined by the data (identifiable), and does the same model forecast the capacity trajectory and end of life of an unseen cell from its first few weeks of cycling?
+
+**Single claim (falsifiable).** At the size and cadence of public ageing matrices (63 conditions, 4 replicate cells, weekly reference tests), a physics-backbone model whose stress dependence is a KAN (a) recovers the exponents and shapes of known stress laws on synthetic cells with the same design, (b) returns stable, rounding-robust stress laws across seeds, bootstrap resamples of cells and condition-held-out folds on the real cells, and (c) forecasts held-out cells at least as accurately as the best flexible data-driven baseline and more accurately than the semi-empirical, PiDDM-style and PIKAN-style baselines, whereas a PIKAN-style free-G model of identical capacity fails (a) and (b).
+
+**What refutes it (stated now, fixed in the preregistration before confirmatory runs).**
+- R1: synthetic recovery error of the three principal stress slopes at the ISU design is above the threshold (proposal: median relative error above 25 percent with the well-specified generator; the "pass" threshold of 10 percent is fixed after pilot P3 and before any real-data confirmatory run).
+- R2: the free-G model recovers the stress laws as well as the structured model (paired difference not above the preregistered 2-fold margin).
+- R3: the primary endpoint (section 6) of the proposed model is not better than the best of {semi-empirical, PiDDM-style, PIKAN-style, Wang-style} by a paired test, or is worse than the best flexible baseline (LightGBM / GP on stress plus early-window summary) by more than the preregistered non-inferiority margin.
+- R4: a log-polynomial (GAM) stress map matches the KAN on every endpoint and is equally identifiable. Then the KAN is decoration; the paper's claim is rewritten without KAN superiority (the title would change; see section 2).
+If R1 or R2 occurs the novelty-bearing part (C2) is dead and the topic must be re-opened; the remainder is the incremental C1 slice that the audit rates INCREMENTAL.
+
+## 2. Titles
+
+1. **Identifiable stress laws of lithium-ion battery capacity fade from physics-informed Kolmogorov-Arnold networks** (preferred: it names the only part the audit judged novel and the model class).
+2. Forecasting capacity fade of unseen lithium-ion cells with learnable, identifiable stress-dependent rate laws
+3. Learning degradation laws from designed ageing matrices: a physics-informed Kolmogorov-Arnold approach with identifiability tests
+
+Preferred: 1. Fallback if R4 occurs: option 2 (no KAN in the title). The JES guide discourages naming optimisation techniques in the title; "Kolmogorov-Arnold" here is the model class, not a tuner.
+
+## 3. Method
+
+### 3.1 State, coordinate, data per cell
+- Cell c, rated stress vector s_c = (ln C_chg, ln C_dis, DoD), standardised with training-fold means and standard deviations only. For temperature datasets add u = 1/T (K^-1). ISU stress values per group are in the README (Table A1); the realised mean DoD is a measured property of each group.
+- Capacity retention x(I~) = Q_RPT(I~)/Q_0,c where Q_0,c is the cell's own week-0 reference capacity (known at time zero). State y = 1 - x.
+- **Time coordinate: equivalent full cycles I~ = cumulative discharged Ah / Q_0,c** (throughput). Rationale: groups differ by up to a factor of several in cycles per week, so a law in calendar weeks mixes cycle count and per-cycle damage. ISU gives weeks on test in `capacity_fade`; cycle counts need `Cycling_json` (10.2 GB, README section 4.1; per-cell file with per-cycle `capacity_discharge`). **Dependency D1** (needs the lead's yes; pilot P0 below fetches about 12 cells first). Fallback F1 if D1 is refused: weeks on test plus an analytic cycles-per-week from rates and DoD, with the error of that approximation checked on the 12 pilot cells; claims restricted to "per week of continuous cycling".
+- Constant 30 C in ISU (README 3.2): the primary dataset has no Arrhenius test; temperature is treated in the secondary dataset (section 5).
+
+### 3.2 Rate law (physics backbone)
+Two loss mechanisms, y = y_1 + y_2, integrated in I~ from y(0) = 0:
+
+- dy_1/dI~ = A_1 / (y_1 + y_0)  (self-limiting, SEI-type growth; sqrt(I~) law as y_0 �+' 0)
+- dy_2/dI~ = A_2 A� exp(I3 y)  (throughput-driven loss that accelerates with accumulated damage: knee / plating / active-material-loss surrogate)
+- ln A_i = f_i(s) + I'_{c,i} [+ Arrhenius term �^'(E_i/R)(1/T �^' 1/T_ref) where T is measured]
+
+Global parameters (shared by all cells): y_0 > 0 (softplus), I3 �%� 0 (softplus), E_1, E_2 �%� 0 (secondary dataset), observation noise I� (retention units), prior scales I�_I',1 and I�_I',2. Per-cell parameters: I'_c = (I'_c1, I'_c2), two log-rate offsets (cell-to-cell variability). The stress dependence f_i(s) is the KAN (3.3). Only the offsets I'_c are per cell; nothing else is cell-specific, which is what makes the stress law global and testable.
+
+Why this form. (i) It is a state-dependent rate law, not a curve fit: r(y, I~, s). (ii) Positivity and monotonicity hold **by architecture**: A_i = exp(A�) > 0, y_1 + y_0 > 0, so dy/dI~ > 0; no monotonicity penalty. (iii) of the 232 ISU cells with at least 10 reference points, 84 percent show a later-third mean fade rate above the first-third rate **[scratch, per week, not per I~]**, so an accelerating term is needed; a pure power law cannot represent it. (iv) Each term has a physical reading that reviewers recognise (diffusion-limited SEI growth; plating/knee feedback) without claiming mechanism identification, which is exactly what C2 tests.
+
+**Backbone tournament, decided on training cells only (inner CV, tie goes to the simpler):** B1 power law y = A I~^z (state form); B2 sqrt + linear (I3 = 0); B3 the form above; B4 B3 with a free third term. The preregistered main model is the winner of the tournament on the training folds of the first confirmatory fold; the other backbones are reported in the ablation table. This guards against "chosen after seeing the test cells".
+
+### 3.3 Where the KAN sits
+Primary: **the KAN is the stress-to-log-rate map**, f: R^3 �+' R^2 (R^4 with 1/T), small: width [3, 2] (additive, a log-additive generalised additive model with learned univariate edges) or [3, h, 2] with h �^^ {2, 3} (interactions). Width chosen by inner CV. This is the natural KAN use case (low-dimensional scientific map, edges inspectable, symbolic fitting feasible; Liu et al., arXiv 2404.19756 and the KAN 2.0 paper arXiv 2408.10205, both to verify), in contrast to PIKAN/PGKAN which feed 16 summary features and a free G.
+Secondary (ablation row, not the headline): a bounded KAN correction I�(y, I~, s) multiplying the total rate, ln R_total = ln R_backbone + I�, with L1 and a hard bound |I�| �% I�_max, to answer "does a correction help accuracy and what does it cost in identifiability?" (this gives an accuracy-identifiability frontier, one figure panel).
+
+**KAN variant.** B-spline KAN (pykan `MultKAN`, cubic splines, grid 4 to 8 with grid extension, SiLU base off or on by inner CV), for three reasons: PIKAN and PGKAN use B-spline KANs, so the contrast isolates how the KAN is used; pykan provides pruning and symbolic fitting with a user-defined library; B-splines allow local non-linearities such as a plating onset hinge. Ablation at matched parameters: Chebyshev KAN, Gaussian-RBF KAN, MLP, log-polynomial GAM (degree 2) and an additive-spline GAM (the R4 control). Implementation uses PyPI `pykan` (MIT upstream); pin the version after reading its README and API. The PIKAN repository has no licence, so no code is copied; I reimplement (PIKAN.md section 8).
+
+### 3.4 Positivity, monotonicity
+Architecture only (3.2 ii). The soft PINN-form (3.5) adds a collocation residual but still uses the same positive R, so it inherits positivity. Capacity regeneration and RPT noise are handled by the observation model N(0, I�A�) on retention, not by a constraint. (ISU is a set of reference-test capacities at C/5, so regeneration is minor; NASA-type regeneration is out of scope and said so.)
+
+### 3.5 The PINN element, stated plainly
+The primary model is **hard-physics**: the ODE is integrated, so the "residual" is identically zero and there is no loss weight to tune. That is physics-informed in structure (ODE-constrained learning), not in the strict PINN collocation sense. To meet the project brief and to answer "does the PINN residual add anything" (candidate C3, reduced to a control), I include the strict form as variant M_P:
+- Solution network y_I^(I~; s, I'_c) (small KAN or MLP) with hard initial condition y_I^(0) = 0 by construction.
+- Loss = data term at reference-test points + I�_ic term + I�_res A� mean over collocation points of [dy_I^/dI~ �^' R(y_I^, I~, s, I'I,_c)]A�.
+- **Collocation points:** 256 per training cell, log-uniform on (I~_K, I~_hor] where I~_K is the end of the early window and I~_hor is where the current model's own forecast crosses y = 0.4 (self-referential, uses no test label), resampled every optimiser step. Unlabelled points beyond the observed window are where a PINN has its argument (physics enforced in the forecast region).
+- I�_res chosen by inner CV on training cells (grid, 5 values on a log scale); the optimum at an edge triggers an extension of the grid.
+Decision rule: both hard and soft forms are reported; the headline model is the one that wins on inner CV, with ties to the hard form. If the lead requires a strict PINN as the headline, the soft form is promoted; the identifiability programme runs on both.
+
+### 3.6 Integrator and training
+Vectorised RK4 over all cells in one batch on CPU, log-spaced I~ steps (400 steps; converge-check by halving, relative tolerance 1e-4; Dormand-Prince via torchdiffeq as a check if the package is available; **API and install status to verify**). Initial rate scales as A_1 / y_0, so y_0 is bounded below (initial prior from the first reference test). Optimiser: Adam for 2,000 steps then L-BFGS refine, learning rate and weight decay tuned (nuisance); sparsity regularisation of the KAN edges (pykan-style L1 plus entropy, weights tuned by inner CV) so that pruning and symbolic fitting are meaningful (PIKAN used none, PIKAN.md section 2). Loss, joint MAP over training cells:
+L = I�_c I�_j (Q_obs,cj �^' QI,_cj)A� / (2I�A�) + I�_c �?-I'_c�?-A�_I�^-1 / 2 + I�_1 A� sparsity(f) + I�_s A� smoothness(f).
+
+### 3.7 Per-cell parameters for an unseen cell from its first K weeks (causal)
+Test-time: the cell's stress s_c and its early-window points (week 0 to W) are the only inputs. Estimate I'I,_c = argmax of the Gaussian likelihood of the window points under the integrated ODE plus the learned prior N(0, I�) (MAP, Gauss-Newton or L-BFGS, 2 unknowns, with 3 to 7 data points in the window [scratch: median number of points including t = 0 is 3, 5, 7 for W = 2, 4, 6 weeks]); then integrate forward. No quantity uses data after the window; Q_0 comes from week 0; scaling constants are global. The prior regularises the 2-dimensional problem; cells whose window has fewer than 2 points after t = 0 are excluded from that window's evaluation and counted. 
+Train-test alignment: the first version fits I'_c on the full trajectory of training cells (a posteriori) and applies window-MAP at test; the **amortisation gap** is measured by an ablation in which training cells' I'_c are themselves obtained by window-MAP (unrolled five Gauss-Newton steps, differentiable). Whichever is better on inner CV is the main model.
+Honest note: this is a nonlinear mixed-effects (hierarchical) formulation, standard outside batteries; the paper does not claim it as new, it claims the stress law and its identifiability.
+
+### 3.8 Symbolic extraction
+For the trained KAN (after sparsity-regularised training): (1) prune edges by attribution threshold chosen on training folds; (2) for each remaining univariate edge I+_ij(s_i) fit a symbolic form from a restricted library {aA�s + b, aA�sA� + bA�s + c, aA�ln(s)+b, aA�exp(b s)+c, power aA�s^p+b with p fitted, softplus/hinge max(0, s �^' s0) (onset)} with affine wrappers, via least squares on the edge's input-output samples; (3) choose per edge by an information criterion (not top RA� alone), with ties to the simpler form; (4) rounding: coefficients rounded to 2, 3 and 4 significant digits; the symbolic model is re-integrated and scored on training-fold validation cells. **Success criterion fixed in advance: forecast RMSE ratio (rounded symbolic / numeric KAN) �% 1.10 at 3 significant digits** (GAPS item 4), and formula length reported. Library is deliberately restricted; PIKAN's extended library (bessel, sinc, cosh) is not used because it produced fragile formulas (PIKAN.md section 6.6).
+
+## 4. Identifiability programme
+
+All of it is CPU-only and uses the real designs and noise, so it can run before anything is spent on real-data fits.
+
+### 4.1 Synthetic cells from known laws
+Generators (the ODE solved with a fine step, different from the training integrator, to avoid the inverse crime):
+- **S1 well-specified:** the section-3.2 backbone with known log-additive stress laws (power-law exponents on C_chg, C_dis and DoD; with 1/T for the temperature design), per-cell offsets I'_c drawn from a Gaussian.
+- **S2 hinge onset:** as S1 but ln A_2 has a threshold term max(0, ln C_chg �^' c0) (plating onset). Tests whether the KAN finds a shape that a quadratic GAM cannot (R4).
+- **S3 misspecified:** generator with a different knee mechanism (logistic accelerating term, or a Bacon-Watts two-regime power law) so the fit model is wrong; measures how recovery degrades and whether the stress ordering survives.
+- **S4 free-G generator:** dy/dI~ drawn from a smooth random positive function of (y, I~, s) (Gaussian-process draw), to check that the free-G model can fit trajectories without having a unique law.
+**Parameter ranges.** Principle: no literature numbers enter the headline. The ground-truth stress exponents, hinge location and noise are **anchored on the real data**: first fit the backbone to the ISU training cells, then use the fitted values (and fixed multiples of them) as truth; noise level and cadence are the observed ones (the replicate spread in `capacity_fade`; within-condition standard deviation of ln(time to 80 percent) median 0.19 over 63 conditions [scratch]). Literature cross-checks (only as "plausible range" statements, all **to verify** before use): Ah-throughput power-law exponent and Arrhenius energy for graphite/LFP in Wang et al., J. Power Sources 196 (2011) 3942 (doi 10.1016/j.jpowsour.2010.11.134, from memory); holistic NMC ageing model of Schmalstieg et al., J. Power Sources 257 (2014) 325 (doi 10.1016/j.jpowsour.2014.02.045, from memory); Gasper et al. (2021) doi 10.1149/1945-7111/abdde1 (Crossref per audit, abstract only). Activation-energy sweeps in the secondary design are design choices (grid), not literature claims.
+
+### 4.2 Design-size sweeps (the result a reader can use)
+Recovery error versus (number of conditions: 8, 16, 32, 63) A- (replicates: 1, 2, 4) A- (reference-test cadence: weekly, 2-weekly) A- (noise multiplier: 0.5, 1, 2) A- (window W). 20 draws of the synthetic experiment per cell of the grid. Output: the smallest design at which the exponents are recovered within the threshold, which doubles as guidance for designing ageing matrices (JES scope: "testing, test procedures").
+Design property already measured: the 63 ISU conditions are close to orthogonal in (ln C_chg, ln C_dis, DoD): pairwise correlations 0.00, �^'0.10, �^'0.34; condition number of the standardised design with intercept 1.44 **[scratch]**. Main effects are therefore estimable by design; the open question is whether the nonlinear two-mechanism law keeps them separable.
+
+### 4.3 Metrics
+- **Recovery:** relative error of each true log-slope (S1), curve distance �?-I+_ij �^' I+_ij^true�?- after removing the per-edge constant (S1, S2, S3), rank agreement of stress importance, top-1 symbolic-form accuracy (S2).
+- **Stability (synthetic and real):** coefficient of variation of each fitted slope across 5 initialisation seeds; across 200 cell-level bootstrap resamples of the training cells (cluster by condition on Test B); across the 7 condition-held-out folds; Kendall W of the importance ordering; Jaccard overlap of the selected symbolic forms; edge-curve envelope width.
+- **Local identifiability:** Fisher information eigen-spectrum and profile likelihood of the global parameters (y_0, I3, E_i, I�_I') for one synthetic design; condition number reported (Raue et al., Bioinformatics 2009, **to verify**).
+- **Rounding survival:** ratio defined in 3.8, on synthetic and real folds.
+
+### 4.4 PIKAN-style free-G comparison
+Free-G: dy/dI~ = G(y, I~, s) with G an unconstrained B-spline KAN of the same parameter count (widths matched), no positivity beyond a softplus output option shown separately, trained with the same shooting loss (variant 1) and with the Wang-family PDE residual with u_t removed from G as in PIKAN (variant 2, PIKAN.md section 1). Evaluate: (i) trajectory fit (should be as good or better); (ii) recovery of the stress dependence by partial dependence of G on s versus truth; (iii) seed/bootstrap/fold stability of that partial dependence; (iv) rounding survival of its symbolic extraction using the same restricted library and, as a replication of the PIKAN notebooks, an extended library; (v) a direct non-uniqueness test: distinct G with indistinguishable trajectories (Hausdorff distance of trajectories �% noise vs distance between laws). This is the tested hypothesis, not an assumption: the expected outcome is "fits equally, identifies worse"; if it is not, R2 applies.
+
+## 5. Datasets
+
+**Primary: ISU-ILCC (Iowa State; figshare 22582234; CC BY 4.0; arXiv 2307.08382 per the README).** 251 NMC/graphite 250 mAh pouch cells, 63 unique conditions, three stress factors varied: charge C-rate (0.5 to 3.0), discharge C-rate (0.5 to 2.475) and mean DoD (4 to 98 percent); 62 conditions with 4 cells and 1 with 3; constant 30 C; reference performance test (C/5 and C/2) about weekly (half-weekly early for groups 20 to 64); README Table A1 lists all 63 conditions. The `capacity_fade` curves and `Q_interpolated` Q-V curves are on disk; all 251 cells fall below 80 percent retention; median time to 80 percent is 12.0 weeks (quartiles 8.6 and 16.9), median number of reference points 19 (quartiles 15 and 28) [scratch]. Why this dataset: it is a designed stress matrix with replicates (replicates give a direct noise floor and a clean split for the "unseen cell"), it is not a PINN4SOH set, it is public (CC BY 4.0), and the arrival of 63 conditions is the thing a stress law needs; PiDDM used XJTU (6 protocols). Limits (to be said in the paper): one temperature, small pouch cells, weekly sampling, no calendar-cycle separation.
+**Held out.**
+- **Test A (unseen cells, seen conditions):** replicate-wise 4-fold with fixed random assignment (seed in `runs/splits/`, not the C-index, which may track the cycler site); each condition keeps 3 of 4 replicates in training. Expected: a strong "condition median of the other replicates" baseline: leave-one-replicate-out median absolute error of ln(time to 80 percent) is 0.151 [scratch], so ties and defeats are possible and will be reported.
+- **Test B (unseen conditions; primary):** 7 folds of 9 conditions, each fold stratified over the standardised stress space, test conditions inside the training range except in Test C; no cell of a test condition enters training or tuning.
+- **Test C (stress extrapolation):** train on conditions with charge rate �% 2.0 C, test on charge rate > 2.0 C (19 conditions, about 76 cells; condition count from Table A1 [scratch]); report separately; hinge-law recovery (S2) predicts the hardest extrapolation here.
+Test B and C are tests of the law's behaviour in stress space, not a study of how evaluation protocol changes accuracy (retired topic); no "inflation ratio between protocols" is reported or claimed.
+
+**Secondary: Sandia (SNL) cycling data, Preger et al., J. Electrochem. Soc. 2020, doi 10.1149/1945-7111/abae37 (Crossref per audit), via the BatteryLife processed release (`SNL.zip`, Zenodo 19688272).** Why: temperature (several levels, per INVENTORY: 15 to 35 C; **to verify**), DoD and discharge-rate variation on LFP, NCA, NMC 18650 cells, cycled to 80 percent by design, throughput known per cycle. Needed for the Arrhenius part of the backbone and for generality across chemistries. **Status: the local `SNL.zip` is truncated (111,586,886 of 115,187,861 bytes, central directory missing, download gave up on DNS failure); resume with `curl -C -` (expected MD5 900a5bb283ffb0b3255da618118510b7 from DEFERRED_URLS.tsv).** Cells per condition, replicates, cycle-level capacity noise and file schema are **unverified**; the processed release is pickle: parse only with the allowlist loader (`code/data_audit/verify_raw.py`), never `pickle.load`. Held out: same two tests if the replicate structure allows it, otherwise cell-wise only with held-out temperature levels as the stress-extrapolation test. Each chemistry is analysed separately (no pooled-chemistry claim).
+**Stretch / reserve (not in the plan, named for the rebuttal): Samsung INR21700-50E (figshare 25975315; 279 cells, 71 conditions over temperature, DoD, C-rate; 10.3 GB)**: the strongest design for the Arrhenius and temperature interaction test; use if SNL fails pilot P5 or if the opponent shows ISU+SNL insufficient. SNU (60 cells, four temperatures) is the second reserve.
+**Not used:** XJTU, TJU, HUST, MIT. They are the PINN4SOH sets (no stress columns in the author's feature tables; INVENTORY), and the audit says PIKAN and PGKAN own estimation on them. If a reviewer demands comparability with PIKAN on its own task, a reproduction note on XJTU is a possible appendix, not a claim. TJU (25/35/45 C) is the only one of these with a real temperature factor; it stays out unless SNL and Samsung both fail.
+
+## 6. Experiments and endpoints (preregistrable)
+
+**Common forecasting task, identical for every model.** Input: s_c, Q_0,c, the reference points in the first W weeks (the "window"); output: retention at every reference test after the window. Every model, physical or not, gets the same inputs and the same permission to adapt to the cell from its window (a per-cell scale for the semi-empirical model, the I'_c MAP for ours, the window summary as static input for learned baselines).
+- **Windows:** W �^^ {2, 4, 6} weeks; **primary W = 4** (5 points including t = 0 at the median; about a third of the median life). Cells whose life ends inside the window are excluded and counted (5.2 percent of cells have time to 80 percent �% 4 weeks, 2.4 percent �% 2 weeks [scratch]).
+- **Forecast set F_c:** reference tests after the window up to the first test below 70 percent retention (so the 80 percent end of life and the knee are inside).
+- **Primary endpoint (one):** cell-level RMSE of retention (percentage points) over F_c, macro-averaged over test conditions, **Test B, W = 4**, final frozen configuration, 5 seeds.
+- **Secondary:** (S1) the same on Test A and Test C; (S2) end-of-life error |ln(I~I,_80/I~_80)| and the share within A�20 percent (and weeks if F1); (S3) remaining-useful-life error at +2, +4, +8 weeks after the window; (S4) MAE, MAPE (retention in percent) and RA� for completeness, with the correct metric argument order (PIKAN.md section 6.7); (S5) forecast error versus W �^^ {2, 4, 6}; (S6) identifiability endpoints I1 to I3 below; (S7) SNL equivalents; (S8) wall-clock and parameter count.
+- **Identifiability endpoints.** I1: median relative error of the three principal stress slopes on S1 at the ISU design (pass threshold fixed after P3); I2: seed, bootstrap and fold CV of the slopes on real cells and their ranking agreement (Kendall W); I3: rounding ratio �% 1.10 at 3 significant digits on real validation cells; each compared with the free-G model by a paired test over synthetic draws.
+- **Tuning (all models, same rules).** Inner grouped CV on training cells only: by condition for Test B and C, by cell for Test A. TPE (Optuna) with 60 trials per model family for all families with more than 3 hyperparameters (30 to 300 trials, mixed space); closed-form or multi-start least squares for the semi-empirical models; same trial budget and search spaces reported; top-5 configurations reported; optimum at a search-space edge triggers an extension. No test cell is used for tuning, early stopping, backbone choice or threshold choice. Test folds are evaluated once per frozen configuration.
+- **Seeds and statistics.** 5 initialisation seeds for the final runs; search seeds distinct. Unit of analysis: condition (Test B and C) or condition-averaged cells (Test A; 63 units, to avoid pseudo-replication across replicates). Paired Wilcoxon signed-rank on the per-condition difference, paired mean difference and ratio with 10,000-resample cluster bootstrap 95 percent CI, Holm correction over the five preregistered primary contrasts (ours versus semi-empirical, PiDDM-style, PIKAN-style free-G, Wang-style PINN, best flexible baseline). Non-inferiority versus the best flexible baseline with a margin set after P1 (headroom pilot) and before confirmatory runs. Effect sizes always reported next to p-values.
+- **Preregistration.** Frozen files in `runs/prereg/` before the first confirmatory run: splits, windows, forecast set, primary endpoint, tournament rule, thresholds, contrasts.
+
+## 7. Baselines (each named; implementations in `code/baselines/`)
+| ID | Baseline | Role | Source / status |
+|---|---|---|---|
+| B0a | Condition median (other replicates), nearest-condition trajectory | trivial, Test A / B | defined here |
+| B0b | Per-cell power law on the window, extrapolated | "no stress information" | defined here; median |ln error| of EOL 0.43 at W = 4, 0.34 at W = 6 [scratch] |
+| B1 | Semi-empirical stress-life, Gasper-style: algebraic stress-factor law Q_loss = F(s)A�I~^z, �%� 3 published forms, best by inner CV, with per-cell scale from the window | physics-free-of-ML rival | Gasper et al. doi 10.1149/1945-7111/abdde1 and 10.1149/1945-7111/ac86a8, **abstract only read by the auditor; exact functional forms to be taken from the full texts** |
+| B2 | PiDDM-style: Eq. 1 (SEI ArrheniusA�t^I� plus LLI DoD^b1A�Ah^b2), 3A-60 MLP mapping inputs to the five kinetic parameters, forward Euler | closest prior model | arXiv 2607.29095; **re-implemented from the paper, code "upon request"**; inputs adapted to the ISU data (stress plus window summaries instead of 16 charge-segment features; E_SEI, E_LLI fixed or dropped at constant 30 C); adaptation disclosed |
+| B3 | PIKAN-style free-G: KAN G(y, I~, s) unconstrained, shooting and PDE-residual variants | identifiability contrast | JES 153, 120860 (doi 10.1016/j.est.2026.120860); **full text unread**; reimplemented from code reading, no code copied |
+| B4 | Wang-2024 PINN (sine-MLP F and G with PDE residual and monotone term), inputs (s, I~, window summary), no future features | task-adapted classic PINN | doi 10.1038/s41467-024-48779-z; code read, not run |
+| B5 | Data-only KAN and MLP, parameter-matched, plain and monotone-by-construction (integral of softplus) | separate "monotone prior" from "physics" | defined here |
+| B6 | LightGBM, GP regression (ARD kernel), ridge on (s, window summary, I~) | strong flexible tabular | tuned, same budget |
+| B7 | LSTM and Transformer trajectory forecaster conditioned on s and the window (CPU, tiny) | sequence-model rival | tuned, same budget |
+| B8 | Early-life lifetime: Severson-type elastic net on I"Q(V) features between early reference Q-V curves (from `Q_interpolated`) plus stress, target ln(EOL) | EOL endpoint only | doi 10.1038/s41560-019-0356-8; plus the ISU authors' own method (arXiv 2307.08382, unread) |
+| B9 | Recent trajectory-from-early-cycles models (FlowBatt arXiv 2611.03150, per audit; BatLiNet doi 10.1038/s42256-024-00972-x) | accuracy context only | run if code is public; otherwise discuss, no numbers quoted |
+| Ablations (table) | KAN �+' GAM / Chebyshev / RBF / MLP; backbone B1 to B4; hierarchy off; window-MAP vs full-trajectory I'; hard vs soft (PINN-form); correction I� on/off; sparsity off; Arrhenius form vs T-in-KAN | attribution and R4 | defined here |
+Every learned baseline receives the same window information and the same tuning budget; a baseline whose tuned optimum sits at the edge of its space is re-tuned.
+
+## 8. Figure plan (8 to 10 items, forms to be debated in D-figures)
+1. **Method schematic** (stress �+' KAN �+' log-rates �+' two-mechanism ODE with per-cell offsets and early-window MAP; equation inset). Claim: structure, causal inference, no future data.
+2. **Data and design** (63 conditions in stress space with replicates; fade curves for three contrasting conditions; replicate spread). Claim: designed, near-orthogonal stress variation and a measurable noise floor.
+3. **Forecast overlays** on held-out cells from low, middle and high stress with the window shaded, for the proposed model and 3 to 4 baselines. Claim: the knee is anticipated from the window and the stress.
+4. **Primary result:** per-model dot-and-whisker with cluster-bootstrap CIs (primary endpoint, Test A / B / C), or a ranked forest plot of paired differences. Claim: superiority, ties and losses shown.
+5. **End-of-life parity** (predicted versus true, log axes, A�20 percent band) for the proposed model and the two strongest baselines. Claim: EOL accuracy and where it fails.
+6. **Window and horizon efficiency:** error versus W and versus horizon, with CI. Claim: how much early information is needed.
+7. **Learned stress laws:** KAN edge functions I+_ij with seed, bootstrap and fold envelopes, symbolic fit overlaid (and synthetic truth in an adjacent panel). Claim: stable, compact laws.
+8. **Identifiability sweep (synthetic):** recovery error versus number of conditions A- replicates A- cadence, structured versus free-G, with the real ISU design marked. Claim: identifiable at the public design size; free-G is not.
+9. **Rounding survival and the accuracy-identifiability frontier:** forecast RMSE ratio versus significant digits for symbolic structured versus free-G; frontier from the optional correction I�. Claim: law survives rounding, flexibility costs identifiability.
+10. **Tables:** (a) main results with Test A / B / C and secondary dataset, (b) ablation and control table (R4, hard versus soft, backbone). If the limit binds, merge (b) into an appendix; detailed procedures and sensitivity analyses go to an Appendix per the JES supplementary policy.
+Secondary dataset (SNL) results and the Arrhenius panel are added as panels in 3, 4 and 7, not as new figures.
+
+## 9. The four debate questions
+
+### 9.1 Why this, and why not each alternative
+- **A1. C1 alone (forecasting with a stress-conditioned PI-KAN, no identifiability programme).** Loses: each ingredient is public (PiDDM, JECS addd4e, Kuzhiyil, Gasper); the audit rates it INCREMENTAL at 0.70 confidence. It would be won or lost on decimals of RMSE.
+- **A2. C3, audit of the Wang-family residual on the PINN4SOH sets.** Loses: audit rates it incremental leaning taken; every follow-up already has a component ablation; the strongest remaining point (total versus partial derivative, u_t inside G) is a short note, not a paper; and it uses the datasets the author prefers to avoid. Its useful part survives here as the hard-versus-soft and free-G control rows.
+- **A3. SOH estimation with a better PINN+KAN on XJTU/TJU/HUST/MIT.** Loses: crowded (PIKAN JES 153, PGKAN JES 182, PI-EKAN, KLSTM, Verhulst KAN-PINN), reported gains are within seed spread on HUST and MIT per the PINN4SOH authors' own text, and the task cannot forecast.
+- **A4. C2 alone as an audit of PIKAN/PGKAN.** Loses as a standalone: it targets two papers of one group and rests on an unread paper and a repo the lead found to be a mid-experiment snapshot; as an audit it lacks a constructive method and a forecasting result that a JES reviewer expects. Kept as the evidence inside this proposal (the free-G contrast on our synthetic and real data, not on their pipeline).
+- **A5. Path-dependent (history-dependent) laws on dynamic-sequence data (A5 dataset) or neural-ODE/UDE with latent state.** Loses for a one-week budget: data not downloaded, UDE/NeuralODE forecasting is occupied (arXiv 2410.14347, Kuzhiyil), and a static stress law is the necessary first step. Named as the follow-up.
+- **A6. Data-driven early-life models (BatLiNet-type, flow matching).** Loses: no physics, no JES novelty, and they set the accuracy baseline rather than offering a claim.
+Why this: it is the only candidate in which the audit found a NOVEL slice (identifiability of the learned stress law), it joins C1 and C2 through named parameters that can be recovered, and ISU supplies the one thing the question needs, a designed multi-stress matrix with replicates.
+
+### 9.2 Is it the best possible, or is there room?
+Not the best possible. Room: (i) a second temperature-bearing dataset with larger cells (Samsung 50E) to make the Arrhenius claim non-trivial; (ii) calendar-cycle separation (the ISU weekly cycle includes continuous cycling plus reference tests; no storage control); (iii) a strict PINN headline instead of a hard-physics one; (iv) predictive intervals (retired topic; excluded by design); (v) path-dependent protocols. The weakest link is that the identifiability claim is conditional on the model class even with S3 misspecification. I would state that in the paper rather than hide it.
+
+### 9.3 What we lack that a JES reviewer will hit
+- Single temperature in the primary data; Arrhenius demonstrated only on SNL (3 levels cannot test curvature of the Arrhenius law).
+- Small 250 mAh pouch cells at weekly resolution (about 19 points per cell); reviewers want EV-format cells and cycle-level data.
+- PiDDM code unavailable (re-implementation fidelity attack); PIKAN, PGKAN, JECS addd4e, arXiv 2607.16864, ISU authors' paper and Gasper full texts unread by anyone on the team; ISU authors' arXiv 2307.08382 was not in the audit's closest-work table and is the nearest prior art on this dataset: **the novelty auditor should read it first**.
+- `FIGURE_FORMS.md` (exemplar dissection of JES figure forms) is empty; the figure plan above is untested against the catalogue.
+- Cycle counts (D1) and SNL (truncated download) are not yet in hand.
+- No experiment in this proposal has been run on the models; the only measurements are the [scratch] profile numbers.
+
+### 9.4 What would make a reviewer reject it
+1. "Another PINN/KAN battery paper": mitigated only if identifiability results are crisp and the free-G contrast is clear.
+2. "KAN adds nothing over a polynomial or GAM" (R4): the most serious technical risk; the hinge-law synthetic S2 and the Test C extrapolation are the only places a KAN could win clearly; if they do not, say so.
+3. "Synthetic recovery is circular": answered by the misspecified generators S3 and S4 and anchoring of truth on real fits, only partly.
+4. "Hard ODE is not a PINN": answered by the soft variant and the explicit decision rule; the title says physics-informed, not PINN.
+5. "Single dataset, single temperature, small cells."
+6. "Unfair baselines": answered by the common task, common window information, common tuning budget and the disclosure of adaptation of PiDDM and Wang-style models.
+7. Hostile reading of the hierarchical window-MAP as "per-cell curve fitting with a prior": the answer is the held-out-condition test (Test B), where condition median is unavailable.
+
+## 10. One-week plan with go/no-go pilots
+
+All CPU. No GPU job is requested. Peak memory under 4 GB expected.
+
+| Day | Work | Gate (kills or reshapes) |
+|---|---|---|
+| 0-1 | **P0 data readiness.** Range-fetch `Cycling_json` for about 12 cells spanning the stress space (needs the lead's yes; whole set 10.2 GB for the confirmatory runs); compute cycles and throughput per week; check I~ versus calendar-week coordinates and the F1 approximation error. Resume `SNL.zip`. Re-check Table A1 against the PDF. | If cycle counts unobtainable �+' F1 and restate the claims in weeks. If SNL cannot be parsed �+' Samsung 50E subset or SNU as secondary. |
+| 1 | **P1 headroom (no physics).** Tuned LightGBM, GP, ridge on (s, window) for Test A / B at W = 2, 4, 6; B0a, B0b; replicate noise floor in retention units. | If the best flexible baseline already sits at the replicate noise floor on Test B (headroom ratio below about 1.3), the accuracy claim R3 cannot be won; reframe to identifiability-first (the claim still stands, the title changes to option 3) and tell the lead. |
+| 1-2 | **P3 synthetic identifiability (first modelling pilot, because it is cheap and kills the novel part).** Implement the backbone, KAN stress map, integrator, I' MAP; run S1 at the ISU design with real noise; recovery of the slopes, seed and bootstrap CV. | If median slope error > 25 percent (R1) �+' identifiability does not hold at ISU's design; stop, re-open topic. Otherwise fix the pass threshold and write it into `runs/prereg/`. |
+| 2 | **P4 free-G contrast on synthetic** (shooting and PDE-residual variants), same design. | If free-G is as well identified (R2) �+' the contrast claim is dead; the paper becomes a design-sufficiency study (title 3) or is stopped. |
+| 2-3 | **P2 backbone adequacy on real training cells** (tournament B1 to B4, folds of Test B): residual RMSE versus replicate noise floor; check D1-aligned I~. | If the best backbone misfits systematically (median training RMSE above about 1.5 times the noise floor) �+' reconsider the backbone before adding KAN capacity (otherwise identifiability is lost). |
+| 3 | Baselines B1 to B8 implemented and tuned (equal budget, nested), preregistration frozen (splits, thresholds, contrasts). | Gate-auditor check of leakage and equal-budget before any test fold is touched. |
+| 4 | Confirmatory runs ISU: Test A, B, C; 5 seeds; symbolic extraction; ablations (R4, hard/soft, hierarchy, backbone). | Report ties and losses as they are. |
+| 5 | SNL runs (Arrhenius backbone, T-in-KAN contrast), identifiability sweep (4.2) and rounding runs on real folds. | If SNL gives no usable replicate structure �+' cell-wise only; Arrhenius claim reduced to a point estimate. |
+| 6 | Figures from `runs/` only (`code/figures/`), tables, statistician pass, novelty re-audit (adds arXiv 2307.08382 and any new arXiv from the last week). | Figure form compared with the exemplar catalogue (CONTRACT 6a) once it exists. |
+| 7 | Buffer, gate audit, writing outline. Writing a 6,000-word JES manuscript is not inside this week. | |
+
+**Dependencies for the lead:** (D1) yes to the ISU `Cycling_json` fetch (pilot subset, then whole set 10.2 GB); (D2) resume of `SNL.zip`; (D3) e-gateway access to PIKAN and PGKAN full texts, JECS addd4e, Gasper 2021 and 2022, Preger 2020, and a task for the novelty auditor to read arXiv 2307.08382 and PiDDM Sections 3 and 4; (D4) confirmation of the PINN question in 3.5 (hard-physics headline with a soft control, or strict PINN headline).
+
+## Citation status (all must pass the citation validator before use)
+Verified by others per the audit or notes: PiDDM arXiv 2607.29095 (arXiv API); Wang et al. 2024, doi 10.1038/s41467-024-48779-z (Crossref); PIKAN, doi 10.1016/j.est.2026.120860 (Crossref); Kuzhiyil 2025 Applied Energy 382, 125221 (Crossref); Severson 2019, doi 10.1038/s41560-019-0356-8; Preger 2020, doi 10.1149/1945-7111/abae37; Gasper 2021, doi 10.1149/1945-7111/abdde1 and 2022, doi 10.1149/1945-7111/ac86a8 (abstract level). From the dataset README that I read: ISU associated preprint doi 10.48550/arXiv.2307.08382. **Not verified by anyone (from memory, to verify):** KAN arXiv 2404.19756 and 2408.10205; Wang 2011 doi 10.1016/j.jpowsour.2010.11.134; Schmalstieg 2014 doi 10.1016/j.jpowsour.2014.02.045; Raue 2009 (Bioinformatics); PGKAN DOI (JES 182, 124768, article known from Crossref, DOI not recorded).
+
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command "Get-Content 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\debates\\D010_topic\\02_proposal.md' -TotalCount 170" in C:\Users\Shlok\Downloads\PINN KAN battery paper\debates\codex_panel
+ succeeded in 251ms:
+# D010 proposal (proposer, 2026-11-04)
+
+Role: proposer. I do not validate this; the opponent and judge do. Decision to be taken: topic, title, method, datasets, experiments of the JES paper.
+
+**Reading depth (CONTRACT section 1).** I read in full: CONTRACT, 00_candidates, 01_novelty_audit, GAPS, PIKAN.md, PINN4SOH.md, Codex turn 01, the JES guide, INVENTORY.md, and the ISU-ILCC `README_V2.0.pdf` (converted, full text). I looked at the ISU `capacity_fade.zip` CSV text (251 cells) and the Oxford readme. I read **no paper** (PiDDM, PIKAN, PGKAN, JECS addd4e, arXiv 2607.16864, Gasper, ISU authors' arXiv 2307.08382 are all unread by me); every statement about them is the novelty auditor's or the lead's, and is marked as such. Numbers marked **[scratch]** come from `debates/D010_topic/pilot_scratch/` (scripts plus `output.txt`); they are not results and must be reproduced under `runs/` by scripts in `code/` before any use. The group-stress table of ISU (Table A1) was transcribed by hand from the README into the scratch script and must be re-checked against the PDF.
+
+## 1. Research question and claim
+
+**Question.** If battery capacity fade is written as a stress-conditioned rate law on a physics backbone, with the dependence of the rate on charge rate, discharge rate, depth of discharge (and temperature where measured) carried by a Kolmogorov-Arnold network, are the stress laws the network learns determined by the data (identifiable), and does the same model forecast the capacity trajectory and end of life of an unseen cell from its first few weeks of cycling?
+
+**Single claim (falsifiable).** At the size and cadence of public ageing matrices (63 conditions, 4 replicate cells, weekly reference tests), a physics-backbone model whose stress dependence is a KAN (a) recovers the exponents and shapes of known stress laws on synthetic cells with the same design, (b) returns stable, rounding-robust stress laws across seeds, bootstrap resamples of cells and condition-held-out folds on the real cells, and (c) forecasts held-out cells at least as accurately as the best flexible data-driven baseline and more accurately than the semi-empirical, PiDDM-style and PIKAN-style baselines, whereas a PIKAN-style free-G model of identical capacity fails (a) and (b).
+
+**What refutes it (stated now, fixed in the preregistration before confirmatory runs).**
+- R1: synthetic recovery error of the three principal stress slopes at the ISU design is above the threshold (proposal: median relative error above 25 percent with the well-specified generator; the "pass" threshold of 10 percent is fixed after pilot P3 and before any real-data confirmatory run).
+- R2: the free-G model recovers the stress laws as well as the structured model (paired difference not above the preregistered 2-fold margin).
+- R3: the primary endpoint (section 6) of the proposed model is not better than the best of {semi-empirical, PiDDM-style, PIKAN-style, Wang-style} by a paired test, or is worse than the best flexible baseline (LightGBM / GP on stress plus early-window summary) by more than the preregistered non-inferiority margin.
+- R4: a log-polynomial (GAM) stress map matches the KAN on every endpoint and is equally identifiable. Then the KAN is decoration; the paper's claim is rewritten without KAN superiority (the title would change; see section 2).
+If R1 or R2 occurs the novelty-bearing part (C2) is dead and the topic must be re-opened; the remainder is the incremental C1 slice that the audit rates INCREMENTAL.
+
+## 2. Titles
+
+1. **Identifiable stress laws of lithium-ion battery capacity fade from physics-informed Kolmogorov-Arnold networks** (preferred: it names the only part the audit judged novel and the model class).
+2. Forecasting capacity fade of unseen lithium-ion cells with learnable, identifiable stress-dependent rate laws
+3. Learning degradation laws from designed ageing matrices: a physics-informed Kolmogorov-Arnold approach with identifiability tests
+
+Preferred: 1. Fallback if R4 occurs: option 2 (no KAN in the title). The JES guide discourages naming optimisation techniques in the title; "Kolmogorov-Arnold" here is the model class, not a tuner.
+
+## 3. Method
+
+### 3.1 State, coordinate, data per cell
+- Cell c, rated stress vector s_c = (ln C_chg, ln C_dis, DoD), standardised with training-fold means and standard deviations only. For temperature datasets add u = 1/T (K^-1). ISU stress values per group are in the README (Table A1); the realised mean DoD is a measured property of each group.
+- Capacity retention x(I~) = Q_RPT(I~)/Q_0,c where Q_0,c is the cell's own week-0 reference capacity (known at time zero). State y = 1 - x.
+- **Time coordinate: equivalent full cycles I~ = cumulative discharged Ah / Q_0,c** (throughput). Rationale: groups differ by up to a factor of several in cycles per week, so a law in calendar weeks mixes cycle count and per-cycle damage. ISU gives weeks on test in `capacity_fade`; cycle counts need `Cycling_json` (10.2 GB, README section 4.1; per-cell file with per-cycle `capacity_discharge`). **Dependency D1** (needs the lead's yes; pilot P0 below fetches about 12 cells first). Fallback F1 if D1 is refused: weeks on test plus an analytic cycles-per-week from rates and DoD, with the error of that approximation checked on the 12 pilot cells; claims restricted to "per week of continuous cycling".
+- Constant 30 C in ISU (README 3.2): the primary dataset has no Arrhenius test; temperature is treated in the secondary dataset (section 5).
+
+### 3.2 Rate law (physics backbone)
+Two loss mechanisms, y = y_1 + y_2, integrated in I~ from y(0) = 0:
+
+- dy_1/dI~ = A_1 / (y_1 + y_0)  (self-limiting, SEI-type growth; sqrt(I~) law as y_0 �+' 0)
+- dy_2/dI~ = A_2 A� exp(I3 y)  (throughput-driven loss that accelerates with accumulated damage: knee / plating / active-material-loss surrogate)
+- ln A_i = f_i(s) + I'_{c,i} [+ Arrhenius term �^'(E_i/R)(1/T �^' 1/T_ref) where T is measured]
+
+Global parameters (shared by all cells): y_0 > 0 (softplus), I3 �%� 0 (softplus), E_1, E_2 �%� 0 (secondary dataset), observation noise I� (retention units), prior scales I�_I',1 and I�_I',2. Per-cell parameters: I'_c = (I'_c1, I'_c2), two log-rate offsets (cell-to-cell variability). The stress dependence f_i(s) is the KAN (3.3). Only the offsets I'_c are per cell; nothing else is cell-specific, which is what makes the stress law global and testable.
+
+Why this form. (i) It is a state-dependent rate law, not a curve fit: r(y, I~, s). (ii) Positivity and monotonicity hold **by architecture**: A_i = exp(A�) > 0, y_1 + y_0 > 0, so dy/dI~ > 0; no monotonicity penalty. (iii) of the 232 ISU cells with at least 10 reference points, 84 percent show a later-third mean fade rate above the first-third rate **[scratch, per week, not per I~]**, so an accelerating term is needed; a pure power law cannot represent it. (iv) Each term has a physical reading that reviewers recognise (diffusion-limited SEI growth; plating/knee feedback) without claiming mechanism identification, which is exactly what C2 tests.
+
+**Backbone tournament, decided on training cells only (inner CV, tie goes to the simpler):** B1 power law y = A I~^z (state form); B2 sqrt + linear (I3 = 0); B3 the form above; B4 B3 with a free third term. The preregistered main model is the winner of the tournament on the training folds of the first confirmatory fold; the other backbones are reported in the ablation table. This guards against "chosen after seeing the test cells".
+
+### 3.3 Where the KAN sits
+Primary: **the KAN is the stress-to-log-rate map**, f: R^3 �+' R^2 (R^4 with 1/T), small: width [3, 2] (additive, a log-additive generalised additive model with learned univariate edges) or [3, h, 2] with h �^^ {2, 3} (interactions). Width chosen by inner CV. This is the natural KAN use case (low-dimensional scientific map, edges inspectable, symbolic fitting feasible; Liu et al., arXiv 2404.19756 and the KAN 2.0 paper arXiv 2408.10205, both to verify), in contrast to PIKAN/PGKAN which feed 16 summary features and a free G.
+Secondary (ablation row, not the headline): a bounded KAN correction I�(y, I~, s) multiplying the total rate, ln R_total = ln R_backbone + I�, with L1 and a hard bound |I�| �% I�_max, to answer "does a correction help accuracy and what does it cost in identifiability?" (this gives an accuracy-identifiability frontier, one figure panel).
+
+**KAN variant.** B-spline KAN (pykan `MultKAN`, cubic splines, grid 4 to 8 with grid extension, SiLU base off or on by inner CV), for three reasons: PIKAN and PGKAN use B-spline KANs, so the contrast isolates how the KAN is used; pykan provides pruning and symbolic fitting with a user-defined library; B-splines allow local non-linearities such as a plating onset hinge. Ablation at matched parameters: Chebyshev KAN, Gaussian-RBF KAN, MLP, log-polynomial GAM (degree 2) and an additive-spline GAM (the R4 control). Implementation uses PyPI `pykan` (MIT upstream); pin the version after reading its README and API. The PIKAN repository has no licence, so no code is copied; I reimplement (PIKAN.md section 8).
+
+### 3.4 Positivity, monotonicity
+Architecture only (3.2 ii). The soft PINN-form (3.5) adds a collocation residual but still uses the same positive R, so it inherits positivity. Capacity regeneration and RPT noise are handled by the observation model N(0, I�A�) on retention, not by a constraint. (ISU is a set of reference-test capacities at C/5, so regeneration is minor; NASA-type regeneration is out of scope and said so.)
+
+### 3.5 The PINN element, stated plainly
+The primary model is **hard-physics**: the ODE is integrated, so the "residual" is identically zero and there is no loss weight to tune. That is physics-informed in structure (ODE-constrained learning), not in the strict PINN collocation sense. To meet the project brief and to answer "does the PINN residual add anything" (candidate C3, reduced to a control), I include the strict form as variant M_P:
+- Solution network y_I^(I~; s, I'_c) (small KAN or MLP) with hard initial condition y_I^(0) = 0 by construction.
+- Loss = data term at reference-test points + I�_ic term + I�_res A� mean over collocation points of [dy_I^/dI~ �^' R(y_I^, I~, s, I'I,_c)]A�.
+- **Collocation points:** 256 per training cell, log-uniform on (I~_K, I~_hor] where I~_K is the end of the early window and I~_hor is where the current model's own forecast crosses y = 0.4 (self-referential, uses no test label), resampled every optimiser step. Unlabelled points beyond the observed window are where a PINN has its argument (physics enforced in the forecast region).
+- I�_res chosen by inner CV on training cells (grid, 5 values on a log scale); the optimum at an edge triggers an extension of the grid.
+Decision rule: both hard and soft forms are reported; the headline model is the one that wins on inner CV, with ties to the hard form. If the lead requires a strict PINN as the headline, the soft form is promoted; the identifiability programme runs on both.
+
+### 3.6 Integrator and training
+Vectorised RK4 over all cells in one batch on CPU, log-spaced I~ steps (400 steps; converge-check by halving, relative tolerance 1e-4; Dormand-Prince via torchdiffeq as a check if the package is available; **API and install status to verify**). Initial rate scales as A_1 / y_0, so y_0 is bounded below (initial prior from the first reference test). Optimiser: Adam for 2,000 steps then L-BFGS refine, learning rate and weight decay tuned (nuisance); sparsity regularisation of the KAN edges (pykan-style L1 plus entropy, weights tuned by inner CV) so that pruning and symbolic fitting are meaningful (PIKAN used none, PIKAN.md section 2). Loss, joint MAP over training cells:
+L = I�_c I�_j (Q_obs,cj �^' QI,_cj)A� / (2I�A�) + I�_c �?-I'_c�?-A�_I�^-1 / 2 + I�_1 A� sparsity(f) + I�_s A� smoothness(f).
+
+### 3.7 Per-cell parameters for an unseen cell from its first K weeks (causal)
+Test-time: the cell's stress s_c and its early-window points (week 0 to W) are the only inputs. Estimate I'I,_c = argmax of the Gaussian likelihood of the window points under the integrated ODE plus the learned prior N(0, I�) (MAP, Gauss-Newton or L-BFGS, 2 unknowns, with 3 to 7 data points in the window [scratch: median number of points including t = 0 is 3, 5, 7 for W = 2, 4, 6 weeks]); then integrate forward. No quantity uses data after the window; Q_0 comes from week 0; scaling constants are global. The prior regularises the 2-dimensional problem; cells whose window has fewer than 2 points after t = 0 are excluded from that window's evaluation and counted. 
+Train-test alignment: the first version fits I'_c on the full trajectory of training cells (a posteriori) and applies window-MAP at test; the **amortisation gap** is measured by an ablation in which training cells' I'_c are themselves obtained by window-MAP (unrolled five Gauss-Newton steps, differentiable). Whichever is better on inner CV is the main model.
+Honest note: this is a nonlinear mixed-effects (hierarchical) formulation, standard outside batteries; the paper does not claim it as new, it claims the stress law and its identifiability.
+
+### 3.8 Symbolic extraction
+For the trained KAN (after sparsity-regularised training): (1) prune edges by attribution threshold chosen on training folds; (2) for each remaining univariate edge I+_ij(s_i) fit a symbolic form from a restricted library {aA�s + b, aA�sA� + bA�s + c, aA�ln(s)+b, aA�exp(b s)+c, power aA�s^p+b with p fitted, softplus/hinge max(0, s �^' s0) (onset)} with affine wrappers, via least squares on the edge's input-output samples; (3) choose per edge by an information criterion (not top RA� alone), with ties to the simpler form; (4) rounding: coefficients rounded to 2, 3 and 4 significant digits; the symbolic model is re-integrated and scored on training-fold validation cells. **Success criterion fixed in advance: forecast RMSE ratio (rounded symbolic / numeric KAN) �% 1.10 at 3 significant digits** (GAPS item 4), and formula length reported. Library is deliberately restricted; PIKAN's extended library (bessel, sinc, cosh) is not used because it produced fragile formulas (PIKAN.md section 6.6).
+
+## 4. Identifiability programme
+
+All of it is CPU-only and uses the real designs and noise, so it can run before anything is spent on real-data fits.
+
+### 4.1 Synthetic cells from known laws
+Generators (the ODE solved with a fine step, different from the training integrator, to avoid the inverse crime):
+- **S1 well-specified:** the section-3.2 backbone with known log-additive stress laws (power-law exponents on C_chg, C_dis and DoD; with 1/T for the temperature design), per-cell offsets I'_c drawn from a Gaussian.
+- **S2 hinge onset:** as S1 but ln A_2 has a threshold term max(0, ln C_chg �^' c0) (plating onset). Tests whether the KAN finds a shape that a quadratic GAM cannot (R4).
+- **S3 misspecified:** generator with a different knee mechanism (logistic accelerating term, or a Bacon-Watts two-regime power law) so the fit model is wrong; measures how recovery degrades and whether the stress ordering survives.
+- **S4 free-G generator:** dy/dI~ drawn from a smooth random positive function of (y, I~, s) (Gaussian-process draw), to check that the free-G model can fit trajectories without having a unique law.
+**Parameter ranges.** Principle: no literature numbers enter the headline. The ground-truth stress exponents, hinge location and noise are **anchored on the real data**: first fit the backbone to the ISU training cells, then use the fitted values (and fixed multiples of them) as truth; noise level and cadence are the observed ones (the replicate spread in `capacity_fade`; within-condition standard deviation of ln(time to 80 percent) median 0.19 over 63 conditions [scratch]). Literature cross-checks (only as "plausible range" statements, all **to verify** before use): Ah-throughput power-law exponent and Arrhenius energy for graphite/LFP in Wang et al., J. Power Sources 196 (2011) 3942 (doi 10.1016/j.jpowsour.2010.11.134, from memory); holistic NMC ageing model of Schmalstieg et al., J. Power Sources 257 (2014) 325 (doi 10.1016/j.jpowsour.2014.02.045, from memory); Gasper et al. (2021) doi 10.1149/1945-7111/abdde1 (Crossref per audit, abstract only). Activation-energy sweeps in the secondary design are design choices (grid), not literature claims.
+
+### 4.2 Design-size sweeps (the result a reader can use)
+Recovery error versus (number of conditions: 8, 16, 32, 63) A- (replicates: 1, 2, 4) A- (reference-test cadence: weekly, 2-weekly) A- (noise multiplier: 0.5, 1, 2) A- (window W). 20 draws of the synthetic experiment per cell of the grid. Output: the smallest design at which the exponents are recovered within the threshold, which doubles as guidance for designing ageing matrices (JES scope: "testing, test procedures").
+Design property already measured: the 63 ISU conditions are close to orthogonal in (ln C_chg, ln C_dis, DoD): pairwise correlations 0.00, �^'0.10, �^'0.34; condition number of the standardised design with intercept 1.44 **[scratch]**. Main effects are therefore estimable by design; the open question is whether the nonlinear two-mechanism law keeps them separable.
+
+### 4.3 Metrics
+- **Recovery:** relative error of each true log-slope (S1), curve distance �?-I+_ij �^' I+_ij^true�?- after removing the per-edge constant (S1, S2, S3), rank agreement of stress importance, top-1 symbolic-form accuracy (S2).
+- **Stability (synthetic and real):** coefficient of variation of each fitted slope across 5 initialisation seeds; across 200 cell-level bootstrap resamples of the training cells (cluster by condition on Test B); across the 7 condition-held-out folds; Kendall W of the importance ordering; Jaccard overlap of the selected symbolic forms; edge-curve envelope width.
+- **Local identifiability:** Fisher information eigen-spectrum and profile likelihood of the global parameters (y_0, I3, E_i, I�_I') for one synthetic design; condition number reported (Raue et al., Bioinformatics 2009, **to verify**).
+- **Rounding survival:** ratio defined in 3.8, on synthetic and real folds.
+
+### 4.4 PIKAN-style free-G comparison
+Free-G: dy/dI~ = G(y, I~, s) with G an unconstrained B-spline KAN of the same parameter count (widths matched), no positivity beyond a softplus output option shown separately, trained with the same shooting loss (variant 1) and with the Wang-family PDE residual with u_t removed from G as in PIKAN (variant 2, PIKAN.md section 1). Evaluate: (i) trajectory fit (should be as good or better); (ii) recovery of the stress dependence by partial dependence of G on s versus truth; (iii) seed/bootstrap/fold stability of that partial dependence; (iv) rounding survival of its symbolic extraction using the same restricted library and, as a replication of the PIKAN notebooks, an extended library; (v) a direct non-uniqueness test: distinct G with indistinguishable trajectories (Hausdorff distance of trajectories �% noise vs distance between laws). This is the tested hypothesis, not an assumption: the expected outcome is "fits equally, identifies worse"; if it is not, R2 applies.
+
+## 5. Datasets
+
+**Primary: ISU-ILCC (Iowa State; figshare 22582234; CC BY 4.0; arXiv 2307.08382 per the README).** 251 NMC/graphite 250 mAh pouch cells, 63 unique conditions, three stress factors varied: charge C-rate (0.5 to 3.0), discharge C-rate (0.5 to 2.475) and mean DoD (4 to 98 percent); 62 conditions with 4 cells and 1 with 3; constant 30 C; reference performance test (C/5 and C/2) about weekly (half-weekly early for groups 20 to 64); README Table A1 lists all 63 conditions. The `capacity_fade` curves and `Q_interpolated` Q-V curves are on disk; all 251 cells fall below 80 percent retention; median time to 80 percent is 12.0 weeks (quartiles 8.6 and 16.9), median number of reference points 19 (quartiles 15 and 28) [scratch]. Why this dataset: it is a designed stress matrix with replicates (replicates give a direct noise floor and a clean split for the "unseen cell"), it is not a PINN4SOH set, it is public (CC BY 4.0), and the arrival of 63 conditions is the thing a stress law needs; PiDDM used XJTU (6 protocols). Limits (to be said in the paper): one temperature, small pouch cells, weekly sampling, no calendar-cycle separation.
+**Held out.**
+- **Test A (unseen cells, seen conditions):** replicate-wise 4-fold with fixed random assignment (seed in `runs/splits/`, not the C-index, which may track the cycler site); each condition keeps 3 of 4 replicates in training. Expected: a strong "condition median of the other replicates" baseline: leave-one-replicate-out median absolute error of ln(time to 80 percent) is 0.151 [scratch], so ties and defeats are possible and will be reported.
+- **Test B (unseen conditions; primary):** 7 folds of 9 conditions, each fold stratified over the standardised stress space, test conditions inside the training range except in Test C; no cell of a test condition enters training or tuning.
+- **Test C (stress extrapolation):** train on conditions with charge rate �% 2.0 C, test on charge rate > 2.0 C (19 conditions, about 76 cells; condition count from Table A1 [scratch]); report separately; hinge-law recovery (S2) predicts the hardest extrapolation here.
+Test B and C are tests of the law's behaviour in stress space, not a study of how evaluation protocol changes accuracy (retired topic); no "inflation ratio between protocols" is reported or claimed.
+
+**Secondary: Sandia (SNL) cycling data, Preger et al., J. Electrochem. Soc. 2020, doi 10.1149/1945-7111/abae37 (Crossref per audit), via the BatteryLife processed release (`SNL.zip`, Zenodo 19688272).** Why: temperature (several levels, per INVENTORY: 15 to 35 C; **to verify**), DoD and discharge-rate variation on LFP, NCA, NMC 18650 cells, cycled to 80 percent by design, throughput known per cycle. Needed for the Arrhenius part of the backbone and for generality across chemistries. **Status: the local `SNL.zip` is truncated (111,586,886 of 115,187,861 bytes, central directory missing, download gave up on DNS failure); resume with `curl -C -` (expected MD5 900a5bb283ffb0b3255da618118510b7 from DEFERRED_URLS.tsv).** Cells per condition, replicates, cycle-level capacity noise and file schema are **unverified**; the processed release is pickle: parse only with the allowlist loader (`code/data_audit/verify_raw.py`), never `pickle.load`. Held out: same two tests if the replicate structure allows it, otherwise cell-wise only with held-out temperature levels as the stress-extrapolation test. Each chemistry is analysed separately (no pooled-chemistry claim).
+**Stretch / reserve (not in the plan, named for the rebuttal): Samsung INR21700-50E (figshare 25975315; 279 cells, 71 conditions over temperature, DoD, C-rate; 10.3 GB)**: the strongest design for the Arrhenius and temperature interaction test; use if SNL fails pilot P5 or if the opponent shows ISU+SNL insufficient. SNU (60 cells, four temperatures) is the second reserve.
+**Not used:** XJTU, TJU, HUST, MIT. They are the PINN4SOH sets (no stress columns in the author's feature tables; INVENTORY), and the audit says PIKAN and PGKAN own estimation on them. If a reviewer demands comparability with PIKAN on its own task, a reproduction note on XJTU is a possible appendix, not a claim. TJU (25/35/45 C) is the only one of these with a real temperature factor; it stays out unless SNL and Samsung both fail.
+
+## 6. Experiments and endpoints (preregistrable)
+
+**Common forecasting task, identical for every model.** Input: s_c, Q_0,c, the reference points in the first W weeks (the "window"); output: retention at every reference test after the window. Every model, physical or not, gets the same inputs and the same permission to adapt to the cell from its window (a per-cell scale for the semi-empirical model, the I'_c MAP for ours, the window summary as static input for learned baselines).
+- **Windows:** W �^^ {2, 4, 6} weeks; **primary W = 4** (5 points including t = 0 at the median; about a third of the median life). Cells whose life ends inside the window are excluded and counted (5.2 percent of cells have time to 80 percent �% 4 weeks, 2.4 percent �% 2 weeks [scratch]).
+- **Forecast set F_c:** reference tests after the window up to the first test below 70 percent retention (so the 80 percent end of life and the knee are inside).
+- **Primary endpoint (one):** cell-level RMSE of retention (percentage points) over F_c, macro-averaged over test conditions, **Test B, W = 4**, final frozen configuration, 5 seeds.
+- **Secondary:** (S1) the same on Test A and Test C; (S2) end-of-life error |ln(I~I,_80/I~_80)| and the share within A�20 percent (and weeks if F1); (S3) remaining-useful-life error at +2, +4, +8 weeks after the window; (S4) MAE, MAPE (retention in percent) and RA� for completeness, with the correct metric argument order (PIKAN.md section 6.7); (S5) forecast error versus W �^^ {2, 4, 6}; (S6) identifiability endpoints I1 to I3 below; (S7) SNL equivalents; (S8) wall-clock and parameter count.
+- **Identifiability endpoints.** I1: median relative error of the three principal stress slopes on S1 at the ISU design (pass threshold fixed after P3); I2: seed, bootstrap and fold CV of the slopes on real cells and their ranking agreement (Kendall W); I3: rounding ratio �% 1.10 at 3 significant digits on real validation cells; each compared with the free-G model by a paired test over synthetic draws.
+- **Tuning (all models, same rules).** Inner grouped CV on training cells only: by condition for Test B and C, by cell for Test A. TPE (Optuna) with 60 trials per model family for all families with more than 3 hyperparameters (30 to 300 trials, mixed space); closed-form or multi-start least squares for the semi-empirical models; same trial budget and search spaces reported; top-5 configurations reported; optimum at a search-space edge triggers an extension. No test cell is used for tuning, early stopping, backbone choice or threshold choice. Test folds are evaluated once per frozen configuration.
+- **Seeds and statistics.** 5 initialisation seeds for the final runs; search seeds distinct. Unit of analysis: condition (Test B and C) or condition-averaged cells (Test A; 63 units, to avoid pseudo-replication across replicates). Paired Wilcoxon signed-rank on the per-condition difference, paired mean difference and ratio with 10,000-resample cluster bootstrap 95 percent CI, Holm correction over the five preregistered primary contrasts (ours versus semi-empirical, PiDDM-style, PIKAN-style free-G, Wang-style PINN, best flexible baseline). Non-inferiority versus the best flexible baseline with a margin set after P1 (headroom pilot) and before confirmatory runs. Effect sizes always reported next to p-values.
+- **Preregistration.** Frozen files in `runs/prereg/` before the first confirmatory run: splits, windows, forecast set, primary endpoint, tournament rule, thresholds, contrasts.
+
+## 7. Baselines (each named; implementations in `code/baselines/`)
+| ID | Baseline | Role | Source / status |
+|---|---|---|---|
+| B0a | Condition median (other replicates), nearest-condition trajectory | trivial, Test A / B | defined here |
+| B0b | Per-cell power law on the window, extrapolated | "no stress information" | defined here; median |ln error| of EOL 0.43 at W = 4, 0.34 at W = 6 [scratch] |
+| B1 | Semi-empirical stress-life, Gasper-style: algebraic stress-factor law Q_loss = F(s)A�I~^z, �%� 3 published forms, best by inner CV, with per-cell scale from the window | physics-free-of-ML rival | Gasper et al. doi 10.1149/1945-7111/abdde1 and 10.1149/1945-7111/ac86a8, **abstract only read by the auditor; exact functional forms to be taken from the full texts** |
+| B2 | PiDDM-style: Eq. 1 (SEI ArrheniusA�t^I� plus LLI DoD^b1A�Ah^b2), 3A-60 MLP mapping inputs to the five kinetic parameters, forward Euler | closest prior model | arXiv 2607.29095; **re-implemented from the paper, code "upon request"**; inputs adapted to the ISU data (stress plus window summaries instead of 16 charge-segment features; E_SEI, E_LLI fixed or dropped at constant 30 C); adaptation disclosed |
+| B3 | PIKAN-style free-G: KAN G(y, I~, s) unconstrained, shooting and PDE-residual variants | identifiability contrast | JES 153, 120860 (doi 10.1016/j.est.2026.120860); **full text unread**; reimplemented from code reading, no code copied |
+| B4 | Wang-2024 PINN (sine-MLP F and G with PDE residual and monotone term), inputs (s, I~, window summary), no future features | task-adapted classic PINN | doi 10.1038/s41467-024-48779-z; code read, not run |
+| B5 | Data-only KAN and MLP, parameter-matched, plain and monotone-by-construction (integral of softplus) | separate "monotone prior" from "physics" | defined here |
+| B6 | LightGBM, GP regression (ARD kernel), ridge on (s, window summary, I~) | strong flexible tabular | tuned, same budget |
+| B7 | LSTM and Transformer trajectory forecaster conditioned on s and the window (CPU, tiny) | sequence-model rival | tuned, same budget |
+| B8 | Early-life lifetime: Severson-type elastic net on I"Q(V) features between early reference Q-V curves (from `Q_interpolated`) plus stress, target ln(EOL) | EOL endpoint only | doi 10.1038/s41560-019-0356-8; plus the ISU authors' own method (arXiv 2307.08382, unread) |
+| B9 | Recent trajectory-from-early-cycles models (FlowBatt arXiv 2611.03150, per audit; BatLiNet doi 10.1038/s42256-024-00972-x) | accuracy context only | run if code is public; otherwise discuss, no numbers quoted |
+| Ablations (table) | KAN �+' GAM / Chebyshev / RBF / MLP; backbone B1 to B4; hierarchy off; window-MAP vs full-trajectory I'; hard vs soft (PINN-form); correction I� on/off; sparsity off; Arrhenius form vs T-in-KAN | attribution and R4 | defined here |
+Every learned baseline receives the same window information and the same tuning budget; a baseline whose tuned optimum sits at the edge of its space is re-tuned.
+
+## 8. Figure plan (8 to 10 items, forms to be debated in D-figures)
+1. **Method schematic** (stress �+' KAN �+' log-rates �+' two-mechanism ODE with per-cell offsets and early-window MAP; equation inset). Claim: structure, causal inference, no future data.
+2. **Data and design** (63 conditions in stress space with replicates; fade curves for three contrasting conditions; replicate spread). Claim: designed, near-orthogonal stress variation and a measurable noise floor.
+3. **Forecast overlays** on held-out cells from low, middle and high stress with the window shaded, for the proposed model and 3 to 4 baselines. Claim: the knee is anticipated from the window and the stress.
+4. **Primary result:** per-model dot-and-whisker with cluster-bootstrap CIs (primary endpoint, Test A / B / C), or a ranked forest plot of paired differences. Claim: superiority, ties and losses shown.
+5. **End-of-life parity** (predicted versus true, log axes, A�20 percent band) for the proposed model and the two strongest baselines. Claim: EOL accuracy and where it fails.
+6. **Window and horizon efficiency:** error versus W and versus horizon, with CI. Claim: how much early information is needed.
+7. **Learned stress laws:** KAN edge functions I+_ij with seed, bootstrap and fold envelopes, symbolic fit overlaid (and synthetic truth in an adjacent panel). Claim: stable, compact laws.
+8. **Identifiability sweep (synthetic):** recovery error versus number of conditions A- replicates A- cadence, structured versus free-G, with the real ISU design marked. Claim: identifiable at the public design size; free-G is not.
+9. **Rounding survival and the accuracy-identifiability frontier:** forecast RMSE ratio versus significant digits for symbolic structured versus free-G; frontier from the optional correction I�. Claim: law survives rounding, flexibility costs identifiability.
+10. **Tables:** (a) main results with Test A / B / C and secondary dataset, (b) ablation and control table (R4, hard versus soft, backbone). If the limit binds, merge (b) into an appendix; detailed procedures and sensitivity analyses go to an Appendix per the JES supplementary policy.
+Secondary dataset (SNL) results and the Arrhenius panel are added as panels in 3, 4 and 7, not as new figures.
+
+## 9. The four debate questions
+
+### 9.1 Why this, and why not each alternative
+- **A1. C1 alone (forecasting with a stress-conditioned PI-KAN, no identifiability programme).** Loses: each ingredient is public (PiDDM, JECS addd4e, Kuzhiyil, Gasper); the audit rates it INCREMENTAL at 0.70 confidence. It would be won or lost on decimals of RMSE.
+- **A2. C3, audit of the Wang-family residual on the PINN4SOH sets.** Loses: audit rates it incremental leaning taken; every follow-up already has a component ablation; the strongest remaining point (total versus partial derivative, u_t inside G) is a short note, not a paper; and it uses the datasets the author prefers to avoid. Its useful part survives here as the hard-versus-soft and free-G control rows.
+- **A3. SOH estimation with a better PINN+KAN on XJTU/TJU/HUST/MIT.** Loses: crowded (PIKAN JES 153, PGKAN JES 182, PI-EKAN, KLSTM, Verhulst KAN-PINN), reported gains are within seed spread on HUST and MIT per the PINN4SOH authors' own text, and the task cannot forecast.
+- **A4. C2 alone as an audit of PIKAN/PGKAN.** Loses as a standalone: it targets two papers of one group and rests on an unread paper and a repo the lead found to be a mid-experiment snapshot; as an audit it lacks a constructive method and a forecasting result that a JES reviewer expects. Kept as the evidence inside this proposal (the free-G contrast on our synthetic and real data, not on their pipeline).
+- **A5. Path-dependent (history-dependent) laws on dynamic-sequence data (A5 dataset) or neural-ODE/UDE with latent state.** Loses for a one-week budget: data not downloaded, UDE/NeuralODE forecasting is occupied (arXiv 2410.14347, Kuzhiyil), and a static stress law is the necessary first step. Named as the follow-up.
+- **A6. Data-driven early-life models (BatLiNet-type, flow matching).** Loses: no physics, no JES novelty, and they set the accuracy baseline rather than offering a claim.
+Why this: it is the only candidate in which the audit found a NOVEL slice (identifiability of the learned stress law), it joins C1 and C2 through named parameters that can be recovered, and ISU supplies the one thing the question needs, a designed multi-stress matrix with replicates.
+
+### 9.2 Is it the best possible, or is there room?
+Not the best possible. Room: (i) a second temperature-bearing dataset with larger cells (Samsung 50E) to make the Arrhenius claim non-trivial; (ii) calendar-cycle separation (the ISU weekly cycle includes continuous cycling plus reference tests; no storage control); (iii) a strict PINN headline instead of a hard-physics one; (iv) predictive intervals (retired topic; excluded by design); (v) path-dependent protocols. The weakest link is that the identifiability claim is conditional on the model class even with S3 misspecification. I would state that in the paper rather than hide it.
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+## 1. Verdict: revise; do not commit to the proposal as written
+
+The identifiable-law question is the strongest novelty slice, but the proposal bundles too many hard problems for one week: a new two-mechanism ODE, hierarchical estimation, forecasting, KAN symbolic extraction, free-\(G\) and strict-PINN controls, synthetic recovery studies, several splits, and multiple datasets. That is a project plan, not a one-week paper plan.
+
+There is also a modeling risk before the ML begins. The proposed \(y_2\) term accelerates exponentially with accumulated damage; the author must show that it stays well behaved over the forecast horizon and does not simply create a fitted knee. The two-mechanism interpretation is a modeling assumption, not evidence that those mechanisms were separately measured or identified. The proposal’s own concern that only about three post-baseline points are available in the median four-week window makes per-cell estimation of two offsets questionable. **Unverified:** the stated point counts and preliminary recovery thresholds depend on scratch analyses, not reproduced confirmatory runs.
+
+A JES editor could say: “This is close to recent PINN/KAN degradation papers; what is the distinct contribution?” Reviewer 1 could say: “You call the laws identifiable, but the result is conditional on your chosen ODE and KAN class. Why do stable coefficients establish physical identifiability?” Reviewer 2 could say: “The model has many choices and baselines; show me a leakage-proof, held-out-condition experiment and a fair GAM comparison. Also, why use this two-term law?” The full text and methods of several cited papers remain unread per the proposal, so novelty is not yet secure.
+
+**Revision:** make the paper a focused test of *when a stress law is recoverable from a designed ageing matrix*. Keep forecast performance as a validation endpoint. Drop the claim that the KAN has discovered mechanisms. Start with one fixed, defensible rate-law family and one dataset; only add the second dataset after the pilot works.
+
+## 2. Must a genuine PINN be central?
+
+A hard-constrained ODE with a KAN stress map is a reasonable **physics-informed model**, but it is not a strict PINN. If “PINN + KAN” must be the headline, a solution-network PINN can be built:
+
+- **Solution network:** \(y_\theta(\tilde I,s,\eta_c)\), with \(y_\theta(0)=0\) imposed by construction. The KAN maps stress to positive rate parameters; \(\eta_c\) are cell offsets estimated from the early window.
+- **Residual:** at collocation points, penalize \(dy_\theta/d\tilde I-R(y_\theta,\tilde I,s;\eta_c)\). Place points along training-cell trajectories, including beyond the observed early window into the forecast interval. Fit data only at observed reference-test points; never collocate on or tune against held-out future labels.
+- **What it adds:** it can regularize a smooth solution between sparse observations and constrain the forecast region using a specified ODE. It cannot create evidence for the ODE beyond the window. If the same rate law is already integrated exactly, the hard ODE model enforces that constraint more directly and with fewer optimization choices.
+
+So I would **not** make the PINN central by default. Run it as a controlled comparison against the integrated ODE model. A soft residual does real work only if the learned solution differs meaningfully from numerical integration and the difference improves a preregistered held-out forecast without sacrificing law recovery. Otherwise, call the method physics-informed KAN, not PINN. CPU feasibility is plausible for a small network, but the proposal’s training plan and compute time are **unverified**; pilot that before promising a PINN result.
+
+## 3. Dataset choice
+
+For identifiability, designed variation and replication matter more than cell count alone. ISU-ILCC’s stated 63 conditions with replicates is attractive, but weekly sampling and small pouch cells limit the resolution of a continuous-time rate law. The author also says cycle counts require a large `Cycling_json` download; if equivalent full cycles cannot be computed promptly and reliably, the proposed throughput coordinate is a blocker.
+
+Samsung INR21700-50E appears more compelling for JES appeal if its stated 279 cells and 71 temperature/DoD/C-rate conditions are confirmed. Its 10.3 GB size and parse/runtime costs make it a risky one-week choice. **Unverified:** the available files, condition replication, and actual completeness of the release. Sandia is appealing for chemistry and stress breadth, but its usable replication structure and processed data status are also **unverified**.
+
+**My choice:** ISU primary only if the overnight data pilot confirms usable cycling exposure, per-condition replication, and enough post-window observations. Otherwise use Samsung only if it is already accessible and a small, nonselective data audit shows a viable design. Do not quietly substitute a convenient subset. Add Sandia as secondary only if it can be processed without consuming the core analysis time; do not make an Arrhenius claim from a dataset whose temperature metadata and coverage have not been checked.
+
+## 4. Can KAN beat a GAM or polynomial?
+
+Potentially, if the stress-to-rate relationship has a localized onset or interaction—for example, a charge-rate threshold whose effect changes with DoD. That is a hypothesis, not an established advantage here. With only three or four stress inputs and a designed condition matrix, an additive spline GAM may be more stable, simpler, and easier to interpret.
+
+Use identical splits and inputs, training-only scaling, comparable effective degrees of freedom, and equal tuning effort. Compare KAN against a degree-2 log-polynomial, additive spline GAM, and a GAM with prespecified interactions. Evaluate held-out conditions, not only held-out replicate cells; plot the learned map and uncertainty across stress-space coverage. If KAN does not improve held-out prediction or law recovery, report that plainly and remove KAN superiority from the claim.
+
+## 5. Title, claim, and figures
+
+**Title I would bet on:** *When Are Stress-Dependent Battery Degradation Laws Identifiable from Ageing Data?*
+
+It avoids promising that KAN is superior or that learned expressions are electrochemical mechanisms. The claim should be conditional: under specified model classes and tested stress designs, quantify whether law parameters and predictive stress-response shapes can be recovered and remain stable under resampling.
+
+A compelling paper needs four main figures:
+
+1. Dataset condition map, replicate fade curves, and observed noise/resolution.
+2. Synthetic recovery plot across the actual design and degraded designs, with structured and free-\(G\) models.
+3. Held-out-condition forecast curves with the observed fitting window marked, alongside the strongest simple and flexible baselines.
+4. Law stability: seed/fold/bootstrap envelopes and rounded symbolic law predictions against the numerical KAN, including regions where the design provides little support.
+
+Those figures matter more than a long architecture schematic or a leaderboard table.
+
+## 6. Biggest risk and tonight’s cheapest pilot
+
+**Biggest risk:** the identifiability headline may be circular or untestable in the real data. A structured model can recover parameters from synthetic data generated by the same structure, while real-data coefficient instability may reflect model misspecification and sparse sampling rather than a meaningful failure of identifiability. Stable predictions can also coexist with unstable equations.
+
+**Kill/confirm pilot tonight:** take a small, spread of conditions from the primary dataset; verify the per-cell time coordinate and observation cadence; fit the simplest proposed rate model and a log-polynomial/GAM using grouped condition holdouts. In parallel, generate synthetic data at that exact design with known stress slopes and realistic replicate noise, then recover the slopes across resamples. If the simpler model fits at the measurement-noise level, or slopes are not recoverable under the real design, stop the KAN-identifiability claim before building the larger model.
+hook: Stop
+hook: Stop
+hook: Stop Completed
+hook: Stop Failed
+tokens used
+111,668
+## 1. Verdict: revise; do not commit to the proposal as written
+
+The identifiable-law question is the strongest novelty slice, but the proposal bundles too many hard problems for one week: a new two-mechanism ODE, hierarchical estimation, forecasting, KAN symbolic extraction, free-\(G\) and strict-PINN controls, synthetic recovery studies, several splits, and multiple datasets. That is a project plan, not a one-week paper plan.
+
+There is also a modeling risk before the ML begins. The proposed \(y_2\) term accelerates exponentially with accumulated damage; the author must show that it stays well behaved over the forecast horizon and does not simply create a fitted knee. The two-mechanism interpretation is a modeling assumption, not evidence that those mechanisms were separately measured or identified. The proposal’s own concern that only about three post-baseline points are available in the median four-week window makes per-cell estimation of two offsets questionable. **Unverified:** the stated point counts and preliminary recovery thresholds depend on scratch analyses, not reproduced confirmatory runs.
+
+A JES editor could say: “This is close to recent PINN/KAN degradation papers; what is the distinct contribution?” Reviewer 1 could say: “You call the laws identifiable, but the result is conditional on your chosen ODE and KAN class. Why do stable coefficients establish physical identifiability?” Reviewer 2 could say: “The model has many choices and baselines; show me a leakage-proof, held-out-condition experiment and a fair GAM comparison. Also, why use this two-term law?” The full text and methods of several cited papers remain unread per the proposal, so novelty is not yet secure.
+
+**Revision:** make the paper a focused test of *when a stress law is recoverable from a designed ageing matrix*. Keep forecast performance as a validation endpoint. Drop the claim that the KAN has discovered mechanisms. Start with one fixed, defensible rate-law family and one dataset; only add the second dataset after the pilot works.
+
+## 2. Must a genuine PINN be central?
+
+A hard-constrained ODE with a KAN stress map is a reasonable **physics-informed model**, but it is not a strict PINN. If “PINN + KAN” must be the headline, a solution-network PINN can be built:
+
+- **Solution network:** \(y_\theta(\tilde I,s,\eta_c)\), with \(y_\theta(0)=0\) imposed by construction. The KAN maps stress to positive rate parameters; \(\eta_c\) are cell offsets estimated from the early window.
+- **Residual:** at collocation points, penalize \(dy_\theta/d\tilde I-R(y_\theta,\tilde I,s;\eta_c)\). Place points along training-cell trajectories, including beyond the observed early window into the forecast interval. Fit data only at observed reference-test points; never collocate on or tune against held-out future labels.
+- **What it adds:** it can regularize a smooth solution between sparse observations and constrain the forecast region using a specified ODE. It cannot create evidence for the ODE beyond the window. If the same rate law is already integrated exactly, the hard ODE model enforces that constraint more directly and with fewer optimization choices.
+
+So I would **not** make the PINN central by default. Run it as a controlled comparison against the integrated ODE model. A soft residual does real work only if the learned solution differs meaningfully from numerical integration and the difference improves a preregistered held-out forecast without sacrificing law recovery. Otherwise, call the method physics-informed KAN, not PINN. CPU feasibility is plausible for a small network, but the proposal’s training plan and compute time are **unverified**; pilot that before promising a PINN result.
+
+## 3. Dataset choice
+
+For identifiability, designed variation and replication matter more than cell count alone. ISU-ILCC’s stated 63 conditions with replicates is attractive, but weekly sampling and small pouch cells limit the resolution of a continuous-time rate law. The author also says cycle counts require a large `Cycling_json` download; if equivalent full cycles cannot be computed promptly and reliably, the proposed throughput coordinate is a blocker.
+
+Samsung INR21700-50E appears more compelling for JES appeal if its stated 279 cells and 71 temperature/DoD/C-rate conditions are confirmed. Its 10.3 GB size and parse/runtime costs make it a risky one-week choice. **Unverified:** the available files, condition replication, and actual completeness of the release. Sandia is appealing for chemistry and stress breadth, but its usable replication structure and processed data status are also **unverified**.
+
+**My choice:** ISU primary only if the overnight data pilot confirms usable cycling exposure, per-condition replication, and enough post-window observations. Otherwise use Samsung only if it is already accessible and a small, nonselective data audit shows a viable design. Do not quietly substitute a convenient subset. Add Sandia as secondary only if it can be processed without consuming the core analysis time; do not make an Arrhenius claim from a dataset whose temperature metadata and coverage have not been checked.
+
+## 4. Can KAN beat a GAM or polynomial?
+
+Potentially, if the stress-to-rate relationship has a localized onset or interaction—for example, a charge-rate threshold whose effect changes with DoD. That is a hypothesis, not an established advantage here. With only three or four stress inputs and a designed condition matrix, an additive spline GAM may be more stable, simpler, and easier to interpret.
+
+Use identical splits and inputs, training-only scaling, comparable effective degrees of freedom, and equal tuning effort. Compare KAN against a degree-2 log-polynomial, additive spline GAM, and a GAM with prespecified interactions. Evaluate held-out conditions, not only held-out replicate cells; plot the learned map and uncertainty across stress-space coverage. If KAN does not improve held-out prediction or law recovery, report that plainly and remove KAN superiority from the claim.
+
+## 5. Title, claim, and figures
+
+**Title I would bet on:** *When Are Stress-Dependent Battery Degradation Laws Identifiable from Ageing Data?*
+
+It avoids promising that KAN is superior or that learned expressions are electrochemical mechanisms. The claim should be conditional: under specified model classes and tested stress designs, quantify whether law parameters and predictive stress-response shapes can be recovered and remain stable under resampling.
+
+A compelling paper needs four main figures:
+
+1. Dataset condition map, replicate fade curves, and observed noise/resolution.
+2. Synthetic recovery plot across the actual design and degraded designs, with structured and free-\(G\) models.
+3. Held-out-condition forecast curves with the observed fitting window marked, alongside the strongest simple and flexible baselines.
+4. Law stability: seed/fold/bootstrap envelopes and rounded symbolic law predictions against the numerical KAN, including regions where the design provides little support.
+
+Those figures matter more than a long architecture schematic or a leaderboard table.
+
+## 6. Biggest risk and tonight’s cheapest pilot
+
+**Biggest risk:** the identifiability headline may be circular or untestable in the real data. A structured model can recover parameters from synthetic data generated by the same structure, while real-data coefficient instability may reflect model misspecification and sparse sampling rather than a meaningful failure of identifiability. Stable predictions can also coexist with unstable equations.
+
+**Kill/confirm pilot tonight:** take a small, spread of conditions from the primary dataset; verify the per-cell time coordinate and observation cadence; fit the simplest proposed rate model and a log-polynomial/GAM using grouped condition holdouts. In parallel, generate synthetic data at that exact design with known stress slopes and realistic replicate noise, then recover the slopes across resamples. If the simpler model fits at the measurement-noise level, or slopes are not recoverable under the real design, stop the KAN-identifiability claim before building the larger model.

@@ -1,2 +1,6 @@
 # File names never downloaded until a decision (re-read every loop).
+# 22:06: the link gives about 50 KB/s, so the 10.2 GB ISU cycling archive and the 0.9 GB RPT archive
+# cannot arrive tonight. Needed cells are taken from Cycling_json.zip by HTTP range requests instead
+# (tools/zip_range_fetch.py), not the whole file.
 Cycling_json.zip
+RPT_json.zip

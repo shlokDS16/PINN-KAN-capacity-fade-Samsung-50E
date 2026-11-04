@@ -1,0 +1,22 @@
+curl: (28) Operation too slow. Less than 2000 bytes/sec transferred the last 60 seconds
+attempt 1 rc=28
+curl: (28) Operation too slow. Less than 2000 bytes/sec transferred the last 60 seconds
+attempt 2 rc=28
+curl: (56) schannel: server closed abruptly (missing close_notify)
+attempt 3 rc=56
+curl: (28) Operation too slow. Less than 2000 bytes/sec transferred the last 60 seconds
+attempt 4 rc=28
+curl: (28) Operation too slow. Less than 2000 bytes/sec transferred the last 60 seconds
+attempt 5 rc=28
+curl: (28) Operation too slow. Less than 2000 bytes/sec transferred the last 60 seconds
+attempt 6 rc=28
+curl: (28) Operation too slow. Less than 2000 bytes/sec transferred the last 60 seconds
+attempt 7 rc=28
+curl: (28) Operation too slow. Less than 2000 bytes/sec transferred the last 60 seconds
+attempt 8 rc=28
+curl: (28) Operation too slow. Less than 2000 bytes/sec transferred the last 60 seconds
+attempt 9 rc=28
+curl: (28) Operation too slow. Less than 2000 bytes/sec transferred the last 60 seconds
+attempt 10 rc=28
+curl: (28) Operation too slow. Less than 2000 bytes/sec transferred the last 60 seconds
+attempt 11 rc=28

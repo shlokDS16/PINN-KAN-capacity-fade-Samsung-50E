@@ -1,15 +1,16 @@
 # Dataset prefixes from DEFERRED_URLS.tsv to download, in priority order (re-read every loop).
-# Core (about 6 GB):
+# 22:05 re-ordered after the D010 proposal: ISU-ILCC is the proposed primary dataset (cycling files
+# needed for the throughput coordinate), Samsung 50E and SNU are the temperature reserves,
+# TJU/HUST/XJTU are only comparison sets now.
 isu_ilcc
+samsung50e
+snu
+calce_official
 tju
 hust
 xjtu
-# Added 21:45 after Shlok's unlimited 5 Mbps plan (about 9 GB more):
-calce_official
-snu
 nasa_pcoe_hirf
 nasa_pcoe_randomized
 evtol_cmu
 tbsi_sunwoda
-# Then Samsung 50E (about 10 GB). BatteryLife processed (31 GB) and Stanford dynamic (17 GB) wait for the dataset decision.
-samsung50e
+# BatteryLife processed (31 GB) and Stanford dynamic (17 GB) wait for a decision.

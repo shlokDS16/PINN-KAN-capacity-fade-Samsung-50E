@@ -93,3 +93,5 @@ start, 6% at 22:00 (see the end of this file for the latest); Fable 0%. CPU only
   at the cost of a less clean claim)?
 - Before the preregistration is frozen: Zhang JES 182, 125097 and Stroebl JES 142, 119552 read (your
   e-gateway download), full Samsung data in (your download), throughput checked on cycling logs.
+- (01:25) The significance test is now the exact sign test on the median held-out condition (D012); the
+  35 C test is descriptive only. The abstract would say "for the typical (median) held-out condition".

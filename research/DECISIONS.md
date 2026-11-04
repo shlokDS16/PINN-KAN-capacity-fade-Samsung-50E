@@ -185,3 +185,17 @@ Row format:
 - **Proposer / opponent / judge:** experiment designer and statistician / gate auditor and Codex panel / D011 judge.
 - **Re-open if:** Zhang or Hallinger contains the combination; the level simulation fails both rules; the timing run
   breaks the CPU week; Shlok rejects title 3 as an endpoint or asks for H1c back in the family.
+
+### D012 Primary test = exact one-sided sign test on condition log error ratios (2026-11-05 01:25, status: accepted, pre-set fallback of D011)
+- **Decision:** the studentized sign-flip permutation test + BCa bound failed the D011 acceptance rule
+  (type-I <= 1.2x nominal): worst ratio 1.86 at n = 40 and 2.14 at n = 13 (left-skewed ISU mirror; 1.30 / 1.54
+  under failure contamination) (runs/prereg/TYPE1_SIGNFLIP.md). Per D011's pre-set fallback, primary contrasts
+  use the exact one-sided sign test on ln(S_comp / S_PINN) per held-out condition; estimand = median condition;
+  abstract wording "typical held-out condition (median)"; mean-based tier is descriptive. Margins, hierarchy,
+  Holm family (H1a, H1b, H6) and gatekept H2 unchanged. Test C (13 conditions) is descriptive only (sign test
+  nearly powerless there). Power at n = 40, Holm step 1: detectable median gain about 9-12 / 12-16 / 17-22 %
+  for assumed error correlation 0.95 / 0.90 / 0.75 (assumptions, not measurements).
+- **Alternatives and why they lost:** sign-flip test (fails level); Wilcoxon (same skew problem per D009 ruling).
+- **Evidence:** runs/prereg/TYPE1_SIGNFLIP.md, code/prereg/stats_signflip_sim.py, stats_signtest_sim.py (commit 127a1c3).
+- **Proposer / opponent / judge:** statistician / D011 acceptance rule / rule pre-set by the D011 judge.
+- **Re-open if:** the observed Samsung training-side error shape differs strongly from the simulated shapes.

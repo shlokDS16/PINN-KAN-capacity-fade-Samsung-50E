@@ -3,7 +3,8 @@ offsets delta_c fitted on the training records, and MAP-inferred from the window
 import torch
 from torch import nn
 
-from .law import (GRAD_CLIP, SIGMA, TAU, clip_and_count, clip_fraction, new_clip_stats, Law, Batch, batch_forecast_query, batch_from_cells, batch_from_windows, build_stress_map, drive_to_state,
+from . import law as _law   # TAU is read at call time here (sensitivity row (m): A2-only)
+from .law import (GRAD_CLIP, SIGMA, clip_and_count, clip_fraction, new_clip_stats, Law, Batch, batch_forecast_query, batch_from_cells, batch_from_windows, build_stress_map, drive_to_state,
                   init_levels, retention_from_y)
 
 
@@ -21,7 +22,7 @@ class HardODE(nn.Module):
     def loss(self, b: Batch, l2, sparsity):
         r = self.predict_y(b, self.delta) - b.obs_y
         n = r.numel()
-        return (r ** 2).mean() / SIGMA ** 2 + (self.delta ** 2).sum() / (TAU ** 2 * n) + self.law.reg(l2, sparsity)
+        return (r ** 2).mean() / SIGMA ** 2 + (self.delta ** 2).sum() / (_law.TAU ** 2 * n) + self.law.reg(l2, sparsity)
 
 
 def make_law(spec, batch, hp, backbone):
@@ -57,7 +58,7 @@ def fit_delta(m: HardODE, bw: Batch, steps=300, lr=0.05):
     for _ in range(steps):
         opt.zero_grad()
         r = m.predict_y(bw, delta) - bw.obs_y
-        ((r ** 2).sum() / SIGMA ** 2 + (delta ** 2).sum() / TAU ** 2).backward()
+        ((r ** 2).sum() / SIGMA ** 2 + (delta ** 2).sum() / _law.TAU ** 2).backward()
         opt.step()
     for p, f in zip(m.parameters(), flags):
         p.requires_grad_(f)

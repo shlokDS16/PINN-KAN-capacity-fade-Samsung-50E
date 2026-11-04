@@ -12,6 +12,7 @@ predictions.csv (phase, arm, seed, cell, cond, t, pred, true), RUN.log.
 """
 import argparse
 import csv
+import dataclasses
 import json
 import os
 import platform
@@ -23,7 +24,7 @@ import numpy as np
 import torch
 
 from . import ROOT as _ROOT
-from . import emit, guard, h7, margins, metrics, negcontrol, semi, stats_step, synth, tuning
+from . import emit, guard, h7, law, margins, metrics, negcontrol, semi, stats_step, synth, tuning
 from .arms import ARMS, H1B_POOL, NEURAL, default_hp, make_arm
 from .data import WindowRule, load_split, prepare_many, sha256_file
 from .law import TAU
@@ -33,7 +34,12 @@ torch.set_num_threads(1)
 
 DEFAULTS = {"mode": "inner", "test": "B", "fold": 0, "arms": ["A1", "A2", "A9", "R1", "R2"], "seeds": [0, 1, 2, 3, 4], "n_trials": 20, "inner_k": 3,
             "backbone": "self_limiting", "steps_scale": 1.0, "window": {}, "oracle_throughput": False, "per_cell_factor": True, "twins": "auto",
-            "refit_timing": False, "overwrite": False, "retain_all": False, "throughput": "analytic", "target_kind": None, "auto_budget": False, "permute_stress": False, "pinn": {}, "diagnostics": True, "mc_seed_root": negcontrol.MC_SEED_ROOT, "nc1_scramble_test": False}
+            "refit_timing": False, "overwrite": False, "retain_all": False, "throughput": "analytic", "target_kind": None, "auto_budget": False, "permute_stress": False, "pinn": {}, "diagnostics": True, "mc_seed_root": negcontrol.MC_SEED_ROOT, "nc1_scramble_test": False,
+            # sensitivity-row options (PREREG 9.8; default = the primary analysis). include_at: AT check-ups join the forecast set (i); include_storage_0406: storage
+            # cells 04-06 as two-point records (i); min_fc_points: scored cells need this many forecast points (i, "cells with >= 3 forecast points" -> 3);
+            # law_overrides: {Y0, gamma, tau} for the A2-only tournament row (m), {delta_scope: "total"} for row (l); throughput_fallback: "analytic" lets a
+            # cycling cell without ZYK entries use the designed throughput under throughput="zyk" (otherwise ZykDataMissing)
+            "include_at": False, "include_storage_0406": False, "min_fc_points": 1, "law_overrides": {}, "throughput_fallback": "none", "forecast_failure": False, "lab_indicator": False}
 TARGET_BY_TEST = {"B": "cycling", "C": "cycling", "A": "cycling", "S2": "storage", "S3": "storage"}   # the tuned task is the scored task (review M3)
 
 
@@ -129,14 +135,46 @@ def build_data(cfg, root, role):
         tr, te = synth.split_synthetic(S.cells, cfg["test"], sc.get("test_frac", 0.25), sc.get("seed", 0))
         return {"spec": SPECS["synthetic"], "train": tr, "test": te if role != "train" else None, "synth": S,
                 "split": {"file": "synthetic (generated)", "note": "no outer test fold of real data exists"}, "manifest": []}
-    sv = load_split(ds, cfg["test"], cfg["fold"], role=role, root=root, retain_all=cfg["retain_all"], throughput=cfg["throughput"])
+    sv = load_split(ds, cfg["test"], cfg["fold"], role=role, root=root, retain_all=cfg["retain_all"], throughput=cfg["throughput"], include_at=cfg["include_at"],
+                    throughput_fallback=cfg["throughput_fallback"], include_storage_0406=cfg["include_storage_0406"])
     return {"spec": sv.spec, "train": sv.train, "test": sv.test_cells, "sv": sv,
             "split": {"file": os.path.relpath(sv.split_file, root).replace("\\", "/"), "sha256_file": sv.split_sha256, "fold_hash_stored": sv.fold_hash_stored,
                       "fold_hash_recomputed": sv.fold_hash_recomputed, "fold_hash_ok": sv.hash_ok, "pinned_at_freeze": sv.pinned, "missing_train_conditions": sv.missing_train_conditions, "test_conditions": sv.test_conditions,
                       "n_train_cells": len(sv.train), "n_train_conditions": len(sv.train_conditions)}, "manifest": sv.input_files}
 
 
+class NotBuiltError(RuntimeError):
+    """a preregistered option that cannot be built faithfully from the text (listed in RESULT.md section 7 for the lead: strike or specify before the freeze)"""
+
+
+LAW_OVERRIDE_ARMS = {"tau": {"A2"}, "Y0": {"A2"}, "gamma": {"A2"}, "delta_scope": {"A1"}}   # rows (m) and (l): the arms the prereg names
+
+
 def run(cfg_in, root=None, runs_dir=None):
+    cfg = {**DEFAULTS, **cfg_in}
+    if cfg["forecast_failure"]:
+        raise NotBuiltError("forecast_failure (PREREG 3.3(8)): the rule scores cells whose record ends inside the window 'as forecast failures (retention carried forward "
+                            "from the last observation)', but the text gives no forecast times for a cell without post-window check-ups, so the scored set is undefined. "
+                            "Specify the forecast times (or strike the row) before the freeze.")
+    if cfg["lab_indicator"]:
+        raise NotBuiltError("lab_indicator (PREREG 9.8(f), the lab-indicator rows for A1, A9, A12 on Test B and Test C): the text says 'a lab indicator in the per-cell prior/inputs' "
+                            "without fixing where it enters each arm (prior mean of delta_c / z_c for A1 and A9, an input column for A12), the coding of the three laboratories or the "
+                            "reference level; building one reading would be a guess. Specify the construction (or strike the row) before the freeze.")
+    lo = {k: v for k, v in (cfg.get("law_overrides") or {}).items() if v is not None}
+    if lo:
+        bad = set(lo) - set(LAW_OVERRIDE_ARMS)
+        if bad:
+            raise ConfigError(f"unknown law_overrides {sorted(bad)}; allowed {sorted(LAW_OVERRIDE_ARMS)}")
+        allowed = set.union(*[LAW_OVERRIDE_ARMS[k] for k in lo]) | {"R1", "R2"}
+        extra = set(cfg["arms"]) - allowed
+        if extra:
+            raise ConfigError(f"law_overrides {sorted(lo)} are sensitivity rows of the arm(s) {sorted(set.union(*[LAW_OVERRIDE_ARMS[k] for k in lo]))} only; remove {sorted(extra)}")
+        with law.overrides(Y0=lo.get("Y0"), gamma=lo.get("gamma"), tau=lo.get("tau"), delta_scope=lo.get("delta_scope")):
+            return _run(cfg_in, root, runs_dir)
+    return _run(cfg_in, root, runs_dir)
+
+
+def _run(cfg_in, root=None, runs_dir=None):
     cfg = {**DEFAULTS, **cfg_in}
     if torch.cuda.is_available():            # D013 C4: a wrong environment must not silently produce GPU numbers
         raise DeviceError("CUDA is available to torch: runs are CPU only (CUDA_VISIBLE_DEVICES=-1 is forced by the package); no GPU use without the lead's instruction")
@@ -164,7 +202,7 @@ def run(cfg_in, root=None, runs_dir=None):
     if os.path.exists(run_dir):
         if os.path.exists(os.path.join(run_dir, "condition_scores.json")):
             raise ScoredRunError(f"{run_dir} holds a scored outer-test run; it is never replaced")
-        if not cfg["overwrite"]:
+        if not cfg["overwrite"] and not (mode == "h7" and (cfg.get("h7") or {}).get("resume")):      # the H7 batch is resumable and shared by up to three shard processes
             raise FileExistsError(run_dir)
     os.makedirs(run_dir, exist_ok=True)
     blinded = ds == "samsung" and not guard.is_valid_freeze(root)
@@ -183,8 +221,11 @@ def run(cfg_in, root=None, runs_dir=None):
     if mode == "h7":                                        # identifiability driver, synthetic only (PREREG_v2 13)
         if ds != "synthetic":
             raise ConfigError("mode h7 is synthetic only")
-        _json(os.path.join(run_dir, "config.json"), cfg)
-        hk = {k: v for k, v in (cfg.get("h7") or {}).items() if k in ("gens", "n_draws", "arms", "n_trials", "inner_k", "steps_scale", "design")}
+        shard = (cfg.get("h7") or {}).get("shard") or [0, 1]
+        _json(os.path.join(run_dir, "config.json" if shard == [0, 1] or not os.path.exists(os.path.join(run_dir, "config.json")) else f"config_shard{shard[0]}of{shard[1]}.json"), cfg)
+        hk = {k: v for k, v in (cfg.get("h7") or {}).items() if k in ("gens", "n_draws", "arms", "n_trials", "inner_k", "steps_scale", "design", "shard", "arms_by_gen")}
+        if "shard" in hk:
+            hk["shard"] = tuple(hk["shard"])
         h7.run_h7(run_dir, backbone=cfg["backbone"] if cfg["backbone"] != "tournament" else "self_limiting", **hk)
         return run_dir
     if blinded and mode not in ("timing", "confirmatory"):
@@ -218,10 +259,11 @@ def run(cfg_in, root=None, runs_dir=None):
         rec.log(f"NOTE: {len(D['split']['missing_train_conditions'])} training conditions of the split have no cells on disk (partial download)")
     wk = cfg["window"]
     rule = WindowRule.for_spec(spec, k_cycling=wk.get("k_cycling"), k_storage=wk.get("k_storage"), W=wk.get("W"), shift=wk.get("shift", 0))
+    rule_test = dataclasses.replace(rule, min_fc_points=int(cfg["min_fc_points"]))      # scored cells only (sensitivity row "cells with >= 3 forecast points"); training windows keep `rule`
     if cfg["nc1_scramble_test"]:
         if ds != "synthetic" or D["test"] is None:
             raise ConfigError("nc1_scramble_test is for synthetic confirmatory runs only")
-        D["test"] = negcontrol.scramble_cells(D["test"], rule, spec)
+        D["test"] = negcontrol.scramble_cells(D["test"], rule_test, spec)
     extra = None
     if (cfg["twins"] == "c35") or (cfg["twins"] == "auto" and cfg["test"] == "C" and ds == "samsung"):
         extra = twins_from_conditions(D["split"].get("test_conditions", []))
@@ -306,7 +348,7 @@ def run(cfg_in, root=None, runs_dir=None):
                                                           "h1c_comparator_by_inner_cv": min((a for a in ("A11", "A12") if a in inner), key=lambda a: inner[a]["inner_cv_pp"], default=None),
                                                           "note": "margins.json is formed from these after all folds finish (stats step); tuning is complete before any test condition is scored"})
     margins.write_margins(os.path.join(run_dir, "margins.json"), contr)
-    prep = prepare_many(D["test"], rule, oracle=cfg["oracle_throughput"])
+    prep = prepare_many(D["test"], rule_test, oracle=cfg["oracle_throughput"])
     wc = [p.win for p in prep]
     if ds != "synthetic":
         guard.require_frozen("score outer test fold", root)      # the scoring side of the guard
@@ -314,7 +356,7 @@ def run(cfg_in, root=None, runs_dir=None):
     bad = {c.kind for c in D["test"]} - {tk}
     if bad:
         raise ConfigError(f"test cells of kind {sorted(bad)} but the tuned and scored kind is {tk}")
-    cond_scores_out, per_arm = {}, {}
+    cond_scores_out, per_arm, cell_scores_out = {}, {}, {}
     fitted, inv_records = {}, {}
     for a in arms:
         per_seed_rows, per_seed_preds = [], []
@@ -325,13 +367,14 @@ def run(cfg_in, root=None, runs_dir=None):
             rows = metrics.score_prepared(preds, prep)
             per_seed_rows.append(rows)
             per_seed_preds.append(preds)
-            inv_records[f"{a}|{s}"] = negcontrol.check_invariance(arm.predict, D["test"], rule, spec, cfg["oracle_throughput"], base_preds=preds, base_prepared=prep)
+            inv_records[f"{a}|{s}"] = negcontrol.check_invariance(arm.predict, D["test"], rule_test, spec, cfg["oracle_throughput"], base_preds=preds, base_prepared=prep)
             if a in ("A1", "A2", "A4", "A10"):
                 fitted.setdefault(a, []).append(arm)
             rec.add_preds("outer_test", a, s, rows)
             timings[a][f"refit_seed{s}_seconds"] = time.time() - t0
         cs, sd = metrics.seed_condition_scores(per_seed_rows)
         cond_scores_out[a] = cs
+        cell_scores_out[a] = metrics.seed_cell_scores(per_seed_rows)
         per_arm[a] = {"primary_pp": float(np.mean(list(cs.values()))), "seed_sd_of_mean": sd, "n_conditions": len(cs),
                       "mae_pp_mean": float(np.mean([r["mae_pp"] for rows in per_seed_rows for r in rows])),
                       "n_nonfinite": int(sum(r["n_nonfinite"] for rows in per_seed_rows for r in rows)), "n_params": int(arm.n_params),
@@ -350,6 +393,8 @@ def run(cfg_in, root=None, runs_dir=None):
         raise negcontrol.InvarianceError(f"NC-1 label-invariance failed: max |diff| = {inv['max_abs_diff']} (see {run_dir}/invariance.json)")
     if cfg["permute_stress"]:
         metrics_out["permuted_stress_run"] = "NC-2 input: scored by stats_step.nc2 against the real Test B run (exact one-sided sign test)"
+    _json(os.path.join(run_dir, "cell_scores.json"), cell_scores_out)                 # per scored cell: mean over seeds of the cell RMSE (two-stage bootstrap, sensitivity row (d))
+    _json(os.path.join(run_dir, "condition_meta.json"), metrics.condition_meta(prep))  # identifiers only: scored cells, laboratory and stage per condition (rows (a)-(c))
     _json(os.path.join(run_dir, "condition_scores.json"), cond_scores_out)
     _finish(rec, run_dir, timings, metrics_out, t_start)
     return run_dir

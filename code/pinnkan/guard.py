@@ -3,7 +3,7 @@ unless the frozen-preregistration flag file ROOT/runs/prereg/FROZEN exists AND v
 
 FROZEN is a JSON file (review M2):
     {"commit": "<40-hex git commit of the frozen code>",
-     "prereg_file": "runs/prereg/PREREG_v2.md" (optional, default), "prereg_sha256": "<sha256 of that file>",
+     "prereg_file": "runs/prereg/PREREG_v3.md" (optional, default; name the frozen successor explicitly if the final text has another name), "prereg_sha256": "<sha256 of that file>",
      "splits": {"<dataset>:<test>": {"file_sha256": "...", "fold_hash": "..."}, ...},
      "config_sha256s": ["<canonical sha256 of each frozen run config>", ...]}
 Verification (`verify_freeze`): valid JSON with those keys; HEAD equals `commit`; the tracked files under code/ and runs/prereg/ are clean
@@ -21,7 +21,7 @@ from . import ROOT as _DEFAULT_ROOT
 
 FROZEN_REL = os.path.join("runs", "prereg", "FROZEN")
 SCORED_REL = os.path.join("runs", "prereg", "SCORED.jsonl")
-PREREG_DEFAULT = "runs/prereg/PREREG_v2.md"
+PREREG_DEFAULT = "runs/prereg/PREREG_v3.md"    # the freeze candidate (PREREG_v3 section 18.3); FROZEN stores the name of the final file explicitly
 GUARD_LOG = []
 
 

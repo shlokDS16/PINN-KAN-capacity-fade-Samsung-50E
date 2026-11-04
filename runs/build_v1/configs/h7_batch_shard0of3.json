@@ -1,0 +1,29 @@
+{
+ "run_id": "build_v1_h7_batch_synth",
+ "dataset": "synthetic",
+ "mode": "h7",
+ "steps_scale": 1.0,
+ "_note": "PREREG_v3 section 13 batch: 3 generators x 20 draws x (A1, A2, A4, A8; + A11, A12 on G0), 8 trials x 2 inner folds, design 40 + 19 conditions x 3 replicates. NOT RUN by the builder (about 6 CPU-h): launch the three shards as three single-thread processes, same run_id; each shard skips finished units; the summary and the section-13 verdicts are written by the shard that completes the set.",
+ "h7": {
+  "gens": [
+   "G0",
+   "G1",
+   "G2"
+  ],
+  "n_draws": 20,
+  "n_trials": 8,
+  "inner_k": 2,
+  "steps_scale": 1.0,
+  "arms_by_gen": "batch",
+  "shard": [
+   0,
+   3
+  ],
+  "resume": true,
+  "design": {
+   "n_cyc_cond": 40,
+   "n_sto_cond": 19,
+   "reps": 3
+  }
+ }
+}

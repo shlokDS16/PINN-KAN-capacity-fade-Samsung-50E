@@ -29,7 +29,7 @@ def window_rows(prepared):
 
 def _band(arr):
     a = np.asarray(arr, float)
-    return dict(mean=a.mean(0).tolist(), lo=a.min(0).tolist(), hi=a.max(0).tolist())
+    return dict(mean=a.mean(0).tolist(), lo=a.min(0).tolist(), hi=a.max(0).tolist(), members=a.tolist())     # `members` is moved to the top-level key `members` of stress_functions.json (11a)
 
 
 def supports_calendar_maps(spec):
@@ -100,10 +100,18 @@ def _a10_pd(arm, base_raw):
 
 
 def stress_functions(a1_arms, spec, train_cells, backbone, a4_arms=(), a10_arm=None):
-    """a1_arms: fitted A1 PINNArm objects (members). Returns the dict of stress_functions.json."""
+    """a1_arms: fitted A1 PINNArm objects (members). Returns the dict of stress_functions.json. The per-member arrays (one row per fitted model) are written under the
+    top-level key `members` for the physical-validation analyses of PREREG 11a; the figure-facing bands keep their keys (mean, lo, hi)."""
     models = [a.model for a in a1_arms]
+    members = {}
+
+    def split(band, name):
+        members[name] = band.pop("members")
+        return band
     soc, E, a, rate, arr = _cal_members(models, spec, backbone)
-    cal = dict(soc=soc.tolist(), E_kJmol=E, a_pp500=a)
+    cal = dict(soc=soc.tolist(), E_kJmol=split(E, "E_kJmol"), a_pp500=split(a, "a_pp500"))
+    rate = split(rate, "storage_rate")
+    arr["ln_rate"] = split(arr["ln_rate"], "arrhenius_ln_rate")
     if a10_arm is not None:
         cal["A10_E_kJmol"] = float(a10_arm.theta[1] * 1e4 / a10_arm.theta[3] * R_GAS / 1000.0)
     base = np.unique(np.stack([c.raw for c in train_cells if c.kind == "cycling"]), axis=0)
@@ -111,7 +119,7 @@ def stress_functions(a1_arms, spec, train_cells, backbone, a4_arms=(), a10_arm=N
     a10 = _a10_pd(a10_arm, base) if a10_arm is not None else {}
     for name, (k, xs, scale) in VARS.items():
         mem = np.stack([_cyc_pd(m.law, spec, base, k, xs, scale) for m in models])
-        e = dict(x=xs.tolist(), A1=_band(mem))
+        e = dict(x=xs.tolist(), A1=split(_band(mem), f"cyclic.{name}"))
         if a4_arms:
             e["A4"] = dict(mean=np.mean([_cyc_pd(x.model.law, spec, base, k, xs, scale) for x in a4_arms], axis=0).tolist())
         if name in a10:
@@ -119,7 +127,7 @@ def stress_functions(a1_arms, spec, train_cells, backbone, a4_arms=(), a10_arm=N
         cyc[name] = e
     return dict(n_members=len(models), member_definition="final-refit seeds of this run's outer fold (min/max envelope); merge folds for the paper",
                 calendar=cal, storage_rate=rate, arrhenius=arr, cyclic=cyc, partial_dependence="mean over the training cycling conditions, centred; others at their values",
-                a_pp500_definition="calendar loss after 500 d at 25 C (pp, backbone applied), no cycling")
+                a_pp500_definition="calendar loss after 500 d at 25 C (pp, backbone applied), no cycling", members=members)
 
 
 def residual_map(a1_arms, spec, train_cells, n_t=6):

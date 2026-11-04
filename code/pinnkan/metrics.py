@@ -47,6 +47,27 @@ def seed_condition_scores(per_seed_rows):
     return dict(zip(conds, mat.mean(0).tolist())), sd
 
 
+def seed_cell_scores(per_seed_rows):
+    """cell -> {cond, rmse_pp (mean over seeds), n_fc}: the cell-level scores behind the condition scores (second stage of the two-stage bootstrap, 9.8(d))"""
+    cells = sorted(set.intersection(*[{r["cell"] for r in rows} for rows in per_seed_rows]))
+    out = {}
+    for c in cells:
+        rs = [next(r for r in rows if r["cell"] == c) for rows in per_seed_rows]
+        out[c] = dict(cond=rs[0]["cond"], rmse_pp=float(np.mean([r["rmse_pp"] for r in rs])), n_fc=int(rs[0]["n_fc"]))
+    return out
+
+
+def condition_meta(prepared):
+    """condition -> {n_cells (scored), lab: {lab: n cells}, stage: {stage: n cells}}; identifiers of the scored cells only, no label"""
+    out = {}
+    for p in prepared:
+        e = out.setdefault(p.cell.cond, dict(n_cells=0, lab={}, stage={}))
+        e["n_cells"] += 1
+        e["lab"][p.cell.lab or ""] = e["lab"].get(p.cell.lab or "", 0) + 1
+        e["stage"][p.cell.stage or ""] = e["stage"].get(p.cell.stage or "", 0) + 1
+    return out
+
+
 def r2_pooled(preds, prepared):
     """R^2 = 1 - SSE / SST with (y_true, y_pred) in the correct argument order"""
     yt, yp = [], []

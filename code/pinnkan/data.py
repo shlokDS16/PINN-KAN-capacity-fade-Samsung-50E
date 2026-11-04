@@ -23,7 +23,7 @@ import numpy as np
 import pandas as pd
 
 from . import ROOT as _ROOT
-from . import guard
+from . import guard, zyk
 from .specs import SPECS, DatasetSpec
 
 # ------------------------------------------------------------------------------------------------ containers
@@ -172,9 +172,24 @@ def prepare_many(cells, rule, oracle=False):
 # stage, so a drop applies to BOTH stages of that serial (over-drop risk, counted in meta). TODO [FB-4]: map each to its stage.
 INCIDENT_FILE_DROPS = [("TP_z25_01", 1, "ET"), ("TP_z01_03", 11, "CU"), ("TP_z17_03", 13, "exCU"), ("TP_z17_03", 17, "CU"),
                        ("TP_z17_02", 19, "exCU"), ("TP_k11_02", 3, "exCU")]
-# TODO [FB-4]: "every later check-up of a cell whose cycling segment shows undefined load or wrong SOC_max (TP_z24_01_02, TP_z25_01_04,
-# TP_z07_03_16, TP_z20_03_16, TP_z17 from segment 18) is dropped from that point" needs the segment-to-file map of the complete download.
-INCIDENT_CONSECUTIVE_DROPS_IMPLEMENTED = False
+# Consecutive-file drops (prereg 3.3(4), second sentence, as listed there): "every later check-up of a cell whose cycling segment shows undefined load or a wrong
+# SOC_max, i.e. TP_z24_01_02, TP_z25_01_04, TP_z07_03_16, TP_z20_03_16, TP_z17 from segment 18". Entry = (serial or serial prefix, segment file number): every
+# row of a matching cell with file number > segment is dropped (the segment itself is a ZYK file and has no capacity row). A key without a cell number ("TP_z17")
+# matches all cells of that test point (TP_z17_01..03). Both stages are matched (the paper does not name the stage; over-drop possible, counted in meta).
+# Segments with only missing log data keep their check-ups (they are not in this list). The wording of the dataset paper's "Known incidents" list was not read
+# by the builder: the entries are those of the prereg text; the lead confirms the list at the freeze.
+INCIDENT_CONSECUTIVE_DROPS = [("TP_z24_01", 2), ("TP_z25_01", 4), ("TP_z07_03", 16), ("TP_z20_03", 16), ("TP_z17", 18)]
+INCIDENT_CONSECUTIVE_DROPS_IMPLEMENTED = True
+
+
+def consecutive_drop_mask(df, rules=None):
+    """boolean mask of the rows removed by the consecutive-file incident rule (see INCIDENT_CONSECUTIVE_DROPS)"""
+    m = np.zeros(len(df), bool)
+    ser = df["serial"].astype(str)
+    for key, seg in (INCIDENT_CONSECUTIVE_DROPS if rules is None else rules):
+        match = (ser == key) | ser.str.startswith(key + "_")
+        m |= (match & (df["file_idx"] > seg)).to_numpy()
+    return m
 
 
 def samsung_cond_key(kind, T, soc_max, dod, c_ch, c_dch):
@@ -183,17 +198,24 @@ def samsung_cond_key(kind, T, soc_max, dod, c_ch, c_dch):
     return "T%g|SOC%g" % (T, soc_max)
 
 
-def _load_samsung(root, retain_all=False, throughput="analytic", include_at=False, drop_incidents=True, keep=None):
+def _load_samsung(root, retain_all=False, throughput="analytic", include_at=False, drop_incidents=True, keep=None, throughput_fallback="none", include_storage_0406=False):
     if throughput not in ("analytic", "zyk"):
         raise ValueError(throughput)
     df = pd.read_csv(os.path.join(root, "data", "processed", "samsung_checkups.csv"))
-    n_incident = 0
+    if throughput == "zyk":
+        # ZYK-logged throughput (prereg 5, FB-5): cumulative EFC from the ZYK segment table, computed on the UNFILTERED rows so that the segments before dropped or
+        # QC-failed check-ups still count; an interval with missing log data takes the designed throughput (3.3(4)); no table / no cell entry -> ZykDataMissing
+        if "efc_zyk_cum" not in df.columns:
+            df = zyk.attach_zyk_cumulative(df, zyk.load_zyk_table(root), fallback=throughput_fallback)
+    n_incident = n_consec = 0
     if drop_incidents:
         m = np.zeros(len(df), bool)
         for ser, fidx, knd in INCIDENT_FILE_DROPS:
             m |= ((df["serial"] == ser) & (df["file_idx"] == fidx) & (df["kind"] == knd)).to_numpy()
         n_incident = int(m.sum())
-        df = df[~m]
+        mc = consecutive_drop_mask(df) & ~m
+        n_consec = int(mc.sum())
+        df = df[~(m | mc)]
     if not retain_all:
         df = df[df["qc_pass"].astype(str).str.lower().isin(["true", "1"])]
     if not include_at:
@@ -219,9 +241,7 @@ def _load_samsung(root, retain_all=False, throughput="analytic", include_at=Fals
         q = g["q_mean_ah"].to_numpy(float)
         ret = q / q[0]                                   # q_mean of the (single-rule) reference row
         if throughput == "zyk":
-            if "efc_zyk_cum" not in g.columns:
-                raise NotImplementedError("ZYK-logged throughput is not on disk yet (prereg 5, [FB-5]); use throughput='analytic'")
-            e = g["efc_zyk_cum"].to_numpy(float)
+            e = g["efc_zyk_cum"].to_numpy(float) if kind == "cycling" else np.zeros(len(g))
         else:
             e = g["efc_est_cum"].to_numpy(float) if kind == "cycling" else np.zeros(len(g))
         e = pd.Series(e).ffill().fillna(0.0).to_numpy(float)     # forward-fill gaps (review m4), never zero them mid-record
@@ -231,12 +251,13 @@ def _load_samsung(root, retain_all=False, throughput="analytic", include_at=Fals
         assert np.all(np.diff(e) >= 0) and np.all(np.diff(t) >= 0), f"{cid}: time or cumulative EFC not monotone"
         T, smax, dod, cch, cdch = (float(r0[c]) for c in ("T_C", "SOC_max", "DoD", "C_ch", "C_dch"))
         raw = np.array([T, smax - dod / 2.0, dod, cch, cdch]) if kind == "cycling" else np.array([T, smax, 0.0, 0.0, 0.0])
-        fc_ok = g["kind"].isin(["CU", "exCU"]).to_numpy()
+        fc_ok = g["kind"].isin(["CU", "exCU", "AT"] if include_at else ["CU", "exCU"]).to_numpy()      # AT only in the AT-included sensitivity row (3.3(6), 9.8(i))
         fc_ok[0] = False
         cells.append(Cell(cid, "samsung", kind, cond, raw, t, ret, e, fc_ok,
                           lab=str(r0["lab"]), stage=str(int(r0["stage"])),
                           meta={"cell_no": int(r0["cell"]), "tp": int(r0["tp"]), "n_incident_rows_dropped_dataset": n_incident,
-                                "reference": reference, "efc_decreases_fixed": n_fix}))
+                                "n_consecutive_incident_rows_dropped": n_consec, "reference": reference, "efc_decreases_fixed": n_fix,
+                                "throughput_source": throughput, "zyk_intervals": (dict(g["zyk_interval_source"].value_counts()) if throughput == "zyk" and "zyk_interval_source" in g else {})}))
     return cells
 
 
@@ -347,7 +368,7 @@ class SplitView:
 
 
 def _input_manifest(root, dataset):
-    names = {"samsung": ["samsung_checkups.csv"], "isu": ["isu_capacity.csv", "isu_conditions.csv"], "snl": ["snl_cells.csv", "snl_cycles.csv"]}[dataset]
+    names = {"samsung": ["samsung_checkups.csv", "samsung_zyk_efc.csv"], "isu": ["isu_capacity.csv", "isu_conditions.csv"], "snl": ["snl_cells.csv", "snl_cycles.csv"]}[dataset]
     out = []
     for n in names:
         p = os.path.join(root, "data", "processed", n)
@@ -356,7 +377,7 @@ def _input_manifest(root, dataset):
     return out
 
 
-def load_split(dataset, test, fold, role="train", root=None, retain_all=False, throughput="analytic", include_at=False):
+def load_split(dataset, test, fold, role="train", root=None, retain_all=False, throughput="analytic", include_at=False, throughput_fallback="none", include_storage_0406=False):
     """Cells of one outer split. role 'train' never contains a test cell or a test condition. role 'test' also returns the test cells
     and requires the FROZEN flag file; without it the guard raises before any test cell is built."""
     root = root or _ROOT
@@ -385,7 +406,7 @@ def load_split(dataset, test, fold, role="train", root=None, retain_all=False, t
         return cid in tids if test == "A" else (cond in tc or cid in tids)
 
     def storage_ok(kind, cell_no):          # cells 04-06 have entry/final tests only (prereg 3.3(6))
-        return dataset != "samsung" or kind == "cycling" or cell_no <= 3
+        return dataset != "samsung" or kind == "cycling" or cell_no <= 3 or include_storage_0406      # the flag is the 9.8(i) sensitivity row
 
     def keep_train(cid, cond, kind, cell_no):
         return (not is_test(cid, cond, kind, cell_no)) and storage_ok(kind, cell_no)
@@ -395,7 +416,7 @@ def load_split(dataset, test, fold, role="train", root=None, retain_all=False, t
 
     def build(keep):
         if dataset == "samsung":
-            return _load_samsung(root, retain_all, throughput, include_at, keep=keep)
+            return _load_samsung(root, retain_all, throughput, include_at, keep=keep, throughput_fallback=throughput_fallback, include_storage_0406=include_storage_0406)
         return (_load_isu if dataset == "isu" else _load_snl)(root, keep=keep)
 
     train = build(keep_train)             # outer-test cells are filtered out before any array is built

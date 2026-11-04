@@ -20,6 +20,10 @@ from .specs import SPECS
 CYC_WEEKS = [1, 2, 3, 5, 7, 9, 13, 17, 21, 25, 29, 33, 37, 41, 45, 49]
 STO_WEEKS = [5, 9, 17, 25, 33, 41, 49]
 FADE_TARGET = 2.0   # median final y_s
+# G2 strength (H, P) = (hinge weight, DoD x SOC product weight). G2: the upper values of the pilot grid (H 0.8/1.2, P 0.5/0.8), chosen after seeing P4 and disclosed (PREREG 13);
+# G2p: the lower pilot-grid values, the "pilot-strength" sensitivity of PREREG 13 (the pilot drew H and P at random from those grids; the lower corner is this builder's reading of
+# "pilot strength" and is to be confirmed by the lead).
+G2_STRENGTH = {"G2": (1.2, 0.8), "G2p": (0.8, 0.5)}
 
 
 @dataclass
@@ -42,9 +46,21 @@ def make_design(n_cyc_cond, n_sto_cond, reps, seed):
     temps = np.resize(np.array([23.0, 35.0, 45.0]), n_cyc_cond)
     rng.shuffle(temps)
     cyc = [(float(temps[i]), float(round(p[i, 0], 2)), float(round(p[i, 1], 2)), float(round(p[i, 2], 2)), float(round(p[i, 3], 2))) for i in range(n_cyc_cond)]
+    seen = set()
+    for i, c in enumerate(cyc):          # two LHS rows can round to the same condition (seen at 40 conditions, seed 18): nudge the later one by 0.01 in C_dch; designs without a collision are unchanged
+        while c in seen:
+            c = (c[0], c[1], c[2], c[3], round(c[4] + 0.01, 2))
+        seen.add(c)
+        cyc[i] = c
     us = qmc.LatinHypercube(d=1, seed=int(rng.integers(1 << 30))).random(n_sto_cond)[:, 0]
     st_t = np.resize(np.array([10.0, 23.0, 45.0]), n_sto_cond)
     sto = [(float(st_t[i]), float(round(0.05 + 0.95 * us[i], 2))) for i in range(n_sto_cond)]
+    seen_s = set()
+    for i, c in enumerate(sto):          # same rule for storage points that round to the same (T, SOC) (seed 18 at 19 conditions); designs without a collision are unchanged
+        while c in seen_s:
+            c = (c[0], round(c[1] - 0.01 if c[1] >= 0.99 else c[1] + 0.01, 2))
+        seen_s.add(c)
+        sto[i] = c
     return cyc, sto, reps
 
 
@@ -55,9 +71,10 @@ def _truth(kind, spec):
         s = spec.norm(raw)
         sT, ssoc, sdod, scch, scdch = (s[:, i] for i in range(5))
         f = 0.5 * sT + 0.4 * scch + 0.3 * scdch + 0.4 * sdod + 0.2 * np.sin(2.0 * ssoc)
-        if kind == "G2":
+        if kind in G2_STRENGTH:
+            H, P = G2_STRENGTH[kind]
             thr = 0.1 - 0.5 * sT                                   # temperature-shifted threshold
-            f = f + 1.2 * np.log1p(np.exp(6.0 * (scch - thr))) / 6.0 + 0.8 * sdod * ssoc
+            f = f + H * np.log1p(np.exp(6.0 * (scch - thr))) / 6.0 + P * sdod * ssoc
         return f
 
     def f_cal(raw):

@@ -10,6 +10,7 @@ shared by both terms of a fold (consequence of "shared by all law-based arms of 
     y = drive_to_state(Phi),   Phi(t) = a_cal * t_n + a_cyc * E_n(t)        (exact integration of the law for piecewise-constant nu).
 Units: y is y_s = y_scale * (1 - retention); t_n = t / t_scale.
 """
+import contextlib
 import math
 from dataclasses import dataclass
 
@@ -32,6 +33,29 @@ GRAD_CLIP = 20.0   # recipe constant (D013 C1): global gradient-norm clip of EVE
 WARMUP = 0.4       # residual-weight ramp 0 -> lam_res over this fraction of the steps (arms with a residual only)
 BACKBONES = ("constant", "self_limiting", "accelerating")   # order = simplicity order for the tournament
 _EPS = 1e-4
+DELTA_SCOPE = "term"   # "term" (primary: delta_c scales the term(s) the cell has) | "total" (sensitivity row (l): delta_c on the total rate of the cell)
+
+
+@contextlib.contextmanager
+def overrides(Y0=None, gamma=None, tau=None, delta_scope=None):
+    """Sensitivity rows (l) and (m) of PREREG 9.8: temporarily change the backbone scales Y0, gamma, the per-cell prior sd TAU (read at call time by the hard-ODE arm
+    only: pinn.py and semi.py keep their imported TAU, as the prereg row is A2-only) or the delta scope. Defaults are restored on exit."""
+    global DELTA_SCOPE
+    saved = (globals()["Y0"], globals()["GAMMA"], globals()["TAU"], DELTA_SCOPE)
+    if delta_scope not in (None, "term", "total"):
+        raise ValueError(delta_scope)
+    try:
+        if Y0 is not None:
+            globals()["Y0"] = float(Y0)
+        if gamma is not None:
+            globals()["GAMMA"] = float(gamma)
+        if tau is not None:
+            globals()["TAU"] = float(tau)
+        if delta_scope is not None:
+            DELTA_SCOPE = delta_scope
+        yield
+    finally:
+        globals()["Y0"], globals()["GAMMA"], globals()["TAU"], DELTA_SCOPE = saved
 
 
 def state_factor(y, kind):
@@ -292,6 +316,8 @@ class Law(nn.Module):
 
     def amplitudes(self, s, is_cyc, delta):
         ed = torch.exp(delta)
+        if DELTA_SCOPE == "total":                 # sensitivity row (l): the offset multiplies the whole rate of the cell
+            return self.r_cal(s) * ed, self.r_cyc(s) * ed
         a_cal = self.r_cal(s) * torch.where(is_cyc > 0.5, torch.ones_like(ed), ed)
         a_cyc = self.r_cyc(s) * torch.where(is_cyc > 0.5, ed, torch.ones_like(ed))
         return a_cal, a_cyc

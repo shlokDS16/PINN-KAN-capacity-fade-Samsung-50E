@@ -150,9 +150,11 @@ def test_m2_build_freeze_payload_returns_dict_without_writing(tmp_path, monkeypa
     root, p, h = mini_isu(tmp_path)
     make_freeze(tmp_path, monkeypatch)
     os.remove(tmp_path / "runs" / "prereg" / "FROZEN")
+    (tmp_path / "runs" / "prereg" / "PREREG_v3.md").write_text("prereg v3 freeze candidate")      # guard.PREREG_DEFAULT is v3 since build_v1 section 7
     cfgp = tmp_path / "cfg.json"
     cfgp.write_text(json.dumps(_confirmatory_cfg()))
     pay = guard.build_freeze_payload(root, [("isu", "B")], [str(cfgp)])
+    assert pay["prereg_file"].endswith("PREREG_v3.md")
     assert pay["splits"]["isu:B"] == {"file_sha256": data.sha256_file(p), "fold_hash": h} and len(pay["config_sha256s"]) == 1
     assert not os.path.exists(tmp_path / "runs" / "prereg" / "FROZEN")
 

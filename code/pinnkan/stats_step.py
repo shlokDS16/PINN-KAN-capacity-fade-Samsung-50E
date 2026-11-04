@@ -78,8 +78,9 @@ def load_fold(run_dir):
 
 
 class Builder:
-    def __init__(self, folds, test, alpha=ALPHA):
-        self.folds, self.test, self.alpha = folds, test, alpha
+    def __init__(self, folds, test, alpha=ALPHA, g2=None):
+        """g2: the G2 verdict dict of the H7 batch (h7.g2_status; key 'passes'), needed for the H3 'win' wording; None = H7 batch not available"""
+        self.folds, self.test, self.alpha, self.g2 = folds, test, alpha, g2
         self.mc_labels = []
         self.arms = set.intersection(*[set(f["scores"]) for f in folds])
         self.conds = sorted(c for f in folds for c in f["scores"]["A1"])
@@ -108,6 +109,7 @@ class Builder:
         pS, pN = sign_p(L, LOG_S), sign_p(L, LOG_N)
         mode = max(set(comp_by_fold), key=comp_by_fold.count)
         e = dict(label=label, comp=mode, comp_by_fold=list(comp_by_fold), hyp=hyp, n=len(L), L_by_cond={c: float(v) for c, v in zip(conds, L)},
+                 d_by_cond={c: float(v) for c, v in zip(conds, d)},
                  median_L=float(np.median(L)), median_ci95=[lo, hi], mean_L=float(L.mean()), n_wins=int((L > 0).sum()), mean_pp=float(d.mean()),
                  mean_pp_ci95=[blo, bhi], rel_reduction_median=float(1 - np.exp(-np.median(L))), p_S=pS, p_N=pN, tier=None, status="",
                  E_pp=E, delta_S_pp=dS, delta_N_pp=dN)
@@ -120,6 +122,31 @@ class Builder:
         e["tier"] = "S" if (test_S and e["p_S"] <= level) else ("N" if e["p_N"] <= level else "-")
         e["status"] = status
         e["tier_pp_differs"] = bool(e["tier_pp"] != e["tier"])
+        return e
+
+    def h3(self, h1b):
+        """H3 (PREREG 2 and 9.7), Test B only: KAN wording against the GAMs, comparator = the inner-CV-best of {A4, A5} per fold.
+        win   = tier S (ln 1.02, exact sign test) against that arm at the Holm level assigned to H1b in the family AND the H7 gate G2 passes (h7.g2_status);
+        worse = reverse tier S (level 0.025);  tie = TOST (both one-sided sign tests at +-ln 1.10, level 0.025);  otherwise unresolved. Order: win, worse, tie, unresolved.
+        A tier-S result with G2 not passed or not evaluated is reported (`win_blocked_by_g2`) and the KAN wording 'win' is not available."""
+        sel = self.best_by_inner([a for a in ("A4", "A5") if a in self.arms])
+        e = self.entry("best of A4, A5 (inner-CV) vs A1", "H3", sel)
+        L = np.array(list(e["L_by_cond"].values()))
+        lvl = h1b["holm_level"]
+        s_met = sign_p(L, LOG_S) <= lvl
+        g2_pass = None if self.g2 is None else bool(self.g2.get("passes"))
+        p_worse = sign_p(-L, LOG_S)
+        tie = sign_p(L, LOG_N) <= self.alpha and sign_p(-L, LOG_N) <= self.alpha
+        if s_met and g2_pass is True:
+            out = "win"
+        elif p_worse <= self.alpha:
+            out = "worse"
+        elif tie:
+            out = "tie"
+        else:
+            out = "unresolved"
+        e.update(outcome=out, status="derived: KAN wording against the GAMs", level_win=lvl, tier_S_met=bool(s_met), g2_passes=g2_pass, win_blocked_by_g2=bool(s_met and g2_pass is not True),
+                 p_worse=p_worse, tie_tost=bool(tie), g2=self.g2)
         return e
 
     def build(self):
@@ -166,6 +193,8 @@ class Builder:
                     e = self.entry(f"{a} vs A1 (cycling cells only)", hyp, [a] * len(self.folds))
                     e["status"] = st
                     fam[key] = e
+            if t == "B" and {"A4", "A5"} & self.arms:
+                fam["H3"] = self.h3(fam["H1b"])
             for a in pool:
                 e = self.entry(f"{a} vs A1", "H1b-pool", [a] * len(self.folds))
                 e["status"] = "pool arm, descriptive"
@@ -208,8 +237,8 @@ class Builder:
                     mc_seed_root=MC_SEED_ROOT, mc_labels=list(self.mc_labels))
 
 
-def build_contrasts(test, run_dirs, alpha=ALPHA):
-    return Builder([load_fold(d) for d in run_dirs], test, alpha).build()
+def build_contrasts(test, run_dirs, alpha=ALPHA, g2=None):
+    return Builder([load_fold(d) for d in run_dirs], test, alpha, g2).build()
 
 
 # --------------------------------------------------------------------------------------------------- reference quantities (training sides only)
@@ -333,9 +362,14 @@ def build_controls(negative_runs=None, contrasts_B=None, stress_functions=None, 
         out["negative"] = neg
     pos = out["positive"]
     if h7_summary:
-        g0 = [d for d in _load(h7_summary)["draws"] if d["gen"] == "G0"]
+        from . import h7 as _h7
+        hs = _load(h7_summary)
+        g0 = [d for d in hs["draws"] if d["gen"] == "G0"]
         if g0:
             pos["P1_G0_nrmse_leq_0p15"] = bool(all(np.median([d["nrmse"][a] for d in g0]) <= 0.15 for a in ("A1", "A2") if a in g0[0]["nrmse"]))
+            p1 = _h7.p1_positive_control(hs["draws"])          # PREREG 10 (P1): recovery AND A1, A2 beat both learners (paired Wilcoxon p < 0.05); None = learners not in the run
+            pos["P1_full"] = p1
+            pos["P1_passed"] = p1["passed"]
     if stress_functions:
         r = np.array(_load(stress_functions)["storage_rate"]["mean"])          # [nT x nSOC], T ascending
         pos["P2_monotone_in_T"] = bool(np.all(np.diff(r, axis=0) > 0))
@@ -343,7 +377,26 @@ def build_controls(negative_runs=None, contrasts_B=None, stress_functions=None, 
         c = _load(contrasts_B)["contrasts"].get("ref_R1")
         if c:
             pos["P3_A1_beats_R1_median_L"] = c["median_L"]
+            pos["P3_passed"] = bool(sign_p(list(c["L_by_cond"].values()), 0.0) <= ALPHA)         # PREREG 10 (P3): A1 beats persistence with margin 0 (exact one-sided sign test, 0.025)
+    out["gate_G"] = gate_g(out)
     return out
+
+
+def gate_g(controls):
+    """Outcome row G (PREREG 11): NC-1 trips or a positive control fails. NC-2 is not a gate. A control that could not be evaluated (value None or absent) is listed under
+    `not_evaluated`: the gate is then neither tripped nor cleared, and the freeze checklist must not treat it as passed."""
+    neg, pos = controls.get("negative") or {}, controls.get("positive") or {}
+    reasons = []
+    if neg.get("nc1") and not neg["nc1"]["passed"]:
+        reasons.append("NC-1 tripped")
+    required = {"P1": "P1_passed", "P2": "P2_monotone_in_T", "P3": "P3_passed"}
+    for name, key in required.items():
+        if pos.get(key) is False:
+            reasons.append(f"positive control {name} failed")
+    pending = [n for n, k in required.items() if pos.get(k) is None]
+    if not neg.get("nc1"):
+        pending.append("NC-1")
+    return dict(tripped=bool(reasons), reasons=reasons, not_evaluated=pending, rule="PREREG 11 row G: NC-1 trips, or a positive control (P1-P3) fails; NC-2 failing is not a gate")
 
 
 def write_json(path, obj):
@@ -359,14 +412,25 @@ def reference_from_runs(dirs):
     return dict(R_LOO=float(np.median([v["R_LOO"] for v in vals])), R_WARP=float(np.median([v["R_WARP"] for v in vals])), n_folds=len(vals))
 
 
-def run_stats(analysis_dir, runs_by_test, negative_run=None, h7_run=None, stress_run=None, reference_by_test=None, nc1_full=None):
-    """runs_by_test: {'B': [fold run dirs], 'C': [...], 'S2': [...], 'ISU': [...], 'SNL': [...]} -> writes analysis_dir/contrasts_<test>.json, controls.json (+ reference.json)"""
+def run_stats(analysis_dir, runs_by_test, negative_run=None, h7_run=None, stress_run=None, reference_by_test=None, nc1_full=None, physval_runs=None):
+    """runs_by_test: {'B': [fold run dirs], 'C': [...], 'S2': [...], 'ISU': [...], 'SNL': [...]} -> writes analysis_dir/contrasts_<test>.json, sensitivity_<test>.json (PREREG 9.8
+    rows computed from the runs' own outputs), controls.json (+ reference.json) and, with `physval_runs` (fold run directories of Test B), physval_11a.json (PREREG 11a).
+    `h7_run` (directory of the H7 batch with summary.json) supplies the G2 gate of the H3 'win' and the positive control P1."""
+    from . import physval, stats_ext
     os.makedirs(analysis_dir, exist_ok=True)
     out = {}
+    g2 = None
+    if h7_run and os.path.exists(os.path.join(h7_run, "summary.json")):
+        from . import h7 as _h7
+        g2 = _h7.g2_status(os.path.join(h7_run, "summary.json"))
     for t, dirs in runs_by_test.items():
-        c = build_contrasts(t, dirs)
+        folds = [load_fold(d) for d in dirs]
+        c = Builder(folds, t, ALPHA, g2).build()
         write_json(os.path.join(analysis_dir, f"contrasts_{t}.json"), c)
+        write_json(os.path.join(analysis_dir, f"sensitivity_{t}.json"), stats_ext.sensitivity_for_test(c, folds, t))
         out[t] = c
+    if physval_runs:
+        write_json(os.path.join(analysis_dir, "physval_11a.json"), physval.physval_11a(physval_runs))
     if reference_by_test is None:
         ref = {t: reference_from_runs(d) for t, d in runs_by_test.items()}
         reference_by_test = {t: v for t, v in ref.items() if v}
@@ -391,9 +455,10 @@ def main(argv=None):
     ap.add_argument("--nc1-full", default=None, help="nc1_full.json of the pre-freeze full-pipeline invariance run")
     ap.add_argument("--h7-run", default=None)
     ap.add_argument("--stress-run", default=None, help="Test B run directory holding stress_functions.json (control P2)")
+    ap.add_argument("--physval", action="store_true", help="also write physval_11a.json (PREREG 11a items 1, 2, 4, 5) from the Test B fold runs")
     a = ap.parse_args(argv)
     runs = {}
     for item in a.runs:
         t, dirs = item.split("=", 1)
         runs[t] = dirs.split(",")
-    run_stats(a.analysis_dir, runs, a.negative_run, a.h7_run, a.stress_run, nc1_full=a.nc1_full)
+    run_stats(a.analysis_dir, runs, a.negative_run, a.h7_run, a.stress_run, nc1_full=a.nc1_full, physval_runs=(runs.get("B") if a.physval else None))

@@ -95,3 +95,14 @@ start, 6% at 22:00 (see the end of this file for the latest); Fable 0%. CPU only
   e-gateway download), full Samsung data in (your download), throughput checked on cycling logs.
 - (01:25) The significance test is now the exact sign test on the median held-out condition (D012); the
   35 C test is descriptive only. The abstract would say "for the typical (median) held-out condition".
+
+## 7. Prior art read in full overnight (positioning)
+- PiDDM (arXiv 2607.29095): physics law with network-predicted parameters on XJTU; no storage cells, no KAN, no
+  held-out condition, needs the test cell's features every cycle (not an early forecast).
+- Guo et al. (arXiv 2607.16864): closest on the task (PINN forecasts an unseen cell from 2-20 % of early life);
+  no KAN, no calendar term; some abstract numbers do not match its own table.
+- KA-CRNN (JES 158, 121853; arXiv 2512.15628): KAN functions of SOC inside an Arrhenius law, but for
+  thermal-abuse kinetics, not ageing.
+- Consequence: the paper claims only the combination (coupled calendar + cycle PINN with KAN stress functions,
+  storage and cycling cells together, held-out conditions from early check-ups), never "first KAN in a rate
+  law" or "first early-data physics forecast". Safe wording: notes/papers/PRIORART_SUMMARY.md.

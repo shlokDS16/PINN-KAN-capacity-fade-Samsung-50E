@@ -15,3 +15,4 @@
 - 21:00 lead prior-art scan: PINN+KAN SOH with symbolic discovery is taken (PIKAN, PGKAN in JES 2026,
   PI-EKAN). See notes/PRIOR_ART_SCAN_lead.md.
 - 21:15 Shlok: figure and table FORM must match the best JES papers; added CONTRACT 6a, D003, figure-form catalogue in the exemplar step. Codex panel thread live (debates/codex_panel/SESSION.md).
+- 21:40 code reader done (notes/code/*.md). Lead verified PIKAN test-set tuning and per-cell whole-life scaling. PIKAN = JES 153, 120860 (2026). Candidates C1-C4 in debates/D010_topic/00_candidates.md; novelty audit running.

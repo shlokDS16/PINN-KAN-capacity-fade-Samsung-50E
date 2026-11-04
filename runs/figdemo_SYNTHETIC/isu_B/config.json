@@ -1,0 +1,15 @@
+{
+ "run_id": "isu_B",
+ "dataset": "isu",
+ "test": "B",
+ "synthetic": true,
+ "mode": "confirmatory",
+ "note": "SYNTHETIC DEMO - invented data",
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ]
+}

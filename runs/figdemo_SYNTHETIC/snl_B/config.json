@@ -1,0 +1,15 @@
+{
+ "run_id": "snl_B",
+ "dataset": "snl",
+ "test": "B",
+ "synthetic": true,
+ "mode": "confirmatory",
+ "note": "SYNTHETIC DEMO - invented data",
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ]
+}

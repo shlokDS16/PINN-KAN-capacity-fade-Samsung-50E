@@ -1,0 +1,44 @@
+{
+ "A1": {
+  "tuning_seconds": 420.0,
+  "median_fit_seconds": 7.40229880523623,
+  "n_trials": 20,
+  "n_failed": 0
+ },
+ "A10": {
+  "tuning_seconds": 132.0,
+  "median_fit_seconds": 2.238892393706832,
+  "n_trials": 20,
+  "n_failed": 0
+ },
+ "A11": {
+  "tuning_seconds": 180.0,
+  "median_fit_seconds": 3.1803582993969037,
+  "n_trials": 20,
+  "n_failed": 0
+ },
+ "A12": {
+  "tuning_seconds": 36.0,
+  "median_fit_seconds": 0.6537851032392403,
+  "n_trials": 20,
+  "n_failed": 0
+ },
+ "A9": {
+  "tuning_seconds": 570.0,
+  "median_fit_seconds": 10.153845863092567,
+  "n_trials": 20,
+  "n_failed": 0
+ },
+ "R1": {
+  "tuning_seconds": 0.0,
+  "median_fit_seconds": 0.0,
+  "n_trials": 20,
+  "n_failed": 0
+ },
+ "R2": {
+  "tuning_seconds": 0.0,
+  "median_fit_seconds": 0.0,
+  "n_trials": 20,
+  "n_failed": 0
+ }
+}

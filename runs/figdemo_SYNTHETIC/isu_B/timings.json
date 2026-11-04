@@ -1,0 +1,68 @@
+{
+ "A1": {
+  "tuning_seconds": 420.0,
+  "median_fit_seconds": 7.289108509107132,
+  "n_trials": 20,
+  "n_failed": 0
+ },
+ "A2": {
+  "tuning_seconds": 84.0,
+  "median_fit_seconds": 1.404722298042369,
+  "n_trials": 20,
+  "n_failed": 0
+ },
+ "A4": {
+  "tuning_seconds": 312.0,
+  "median_fit_seconds": 5.713102558292735,
+  "n_trials": 20,
+  "n_failed": 0
+ },
+ "A5": {
+  "tuning_seconds": 360.0,
+  "median_fit_seconds": 6.351527588104932,
+  "n_trials": 20,
+  "n_failed": 0
+ },
+ "A7": {
+  "tuning_seconds": 348.0,
+  "median_fit_seconds": 5.98821521940037,
+  "n_trials": 20,
+  "n_failed": 0
+ },
+ "A9": {
+  "tuning_seconds": 570.0,
+  "median_fit_seconds": 10.369039530054911,
+  "n_trials": 20,
+  "n_failed": 0
+ },
+ "A10": {
+  "tuning_seconds": 132.0,
+  "median_fit_seconds": 2.271416983764175,
+  "n_trials": 20,
+  "n_failed": 0
+ },
+ "A11": {
+  "tuning_seconds": 180.0,
+  "median_fit_seconds": 3.090625440963378,
+  "n_trials": 20,
+  "n_failed": 0
+ },
+ "A12": {
+  "tuning_seconds": 36.0,
+  "median_fit_seconds": 0.6534544162727567,
+  "n_trials": 20,
+  "n_failed": 0
+ },
+ "R1": {
+  "tuning_seconds": 0.0,
+  "median_fit_seconds": 0.0,
+  "n_trials": 20,
+  "n_failed": 0
+ },
+ "R2": {
+  "tuning_seconds": 0.0,
+  "median_fit_seconds": 0.0,
+  "n_trials": 20,
+  "n_failed": 0
+ }
+}

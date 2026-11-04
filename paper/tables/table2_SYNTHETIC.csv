@@ -1,0 +1,12 @@
+SYNTHETIC DEMO - NOT RESULTS
+Arm,Hypothesis,What changes,Parameters,Delta RMSE pp [95% BCa],Ratio [95% int.],Tier
+A9,H1a,"no residual, no law (lambda=0): data-only F with the same z_c, inputs and window inversion",50945,"0.86 [0.57, 1.24]","1.84 [1.31, 2.27]",S
+A3,H1b,cyclic stress map: log-linear Arrhenius / power-law factors,410,"0.29 [0.14, 0.47]","1.30 [1.06, 1.52]",desc.
+A4,H1b,cyclic stress map: additive GAM (KAN without hidden layer),2623,"0.12 [-0.10, 0.33]","1.13 [0.95, 1.31]",desc.
+A5,H1b,cyclic stress map: GAM with three tensor-product terms,3312,"-0.00 [-0.18, 0.14]","1.15 [0.97, 1.24]",N
+A7,H1b,"cyclic stress map: tanh MLP, parameters capped at the largest A1 map",2790,"0.23 [0.07, 0.42]","1.22 [0.99, 1.37]",desc.
+A2,H2,"exact integration of the same law, no F and no residual (hard ODE)",188,"0.12 [-0.02, 0.27]","1.13 [0.99, 1.30]",desc.
+A13,X1,trained on cycling cells only (no storage cells),2621,"-0.05 [-0.20, 0.07]","0.97 [0.82, 1.07]",desc.
+A10,H6,dataset authors' semi-empirical superposition with per-cell factor,11,"0.38 [0.20, 0.57]","1.47 [1.08, 1.76]",S
+
+Controls,"{""negative"": {""permutation"": ""stress vectors permuted among conditions, A1, A9, R2 re-run"", ""A9_minus_A1_mean_L"": 0.004, ""p_two_sided"": 0.62, ""passed"": true, ""A1_vs_R2_median_L"": -0.02, ""A1_not_beating_R2"": true}, ""positive"": {""P1_G0_nrmse_leq_0p15"": true, ""P2_monotone_in_T"": true, ""P3_A1_beats_R1_median_L"": 1.3762685591400383}, ""synthetic"": true}"

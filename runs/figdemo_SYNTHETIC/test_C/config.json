@@ -1,0 +1,18 @@
+{
+ "run_id": "test_C",
+ "dataset": "samsung",
+ "test": "C",
+ "synthetic": true,
+ "mode": "confirmatory",
+ "note": "SYNTHETIC DEMO - invented data",
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "window": {
+  "k_cycling": 4
+ }
+}

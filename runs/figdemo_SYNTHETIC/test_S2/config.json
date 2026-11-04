@@ -1,0 +1,18 @@
+{
+ "run_id": "test_S2",
+ "dataset": "samsung",
+ "test": "S2",
+ "synthetic": true,
+ "mode": "confirmatory",
+ "note": "SYNTHETIC DEMO - invented data",
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "window": {
+  "k_storage": 2
+ }
+}

@@ -1,0 +1,24 @@
+2026-11-04 21:38:43 downloader started
+2026-11-04 21:38:56 start Valid_cells.csv at 0 of 1727
+2026-11-04 21:39:04 curl rc=0 Valid_cells.csv now 1727 
+2026-11-04 21:39:04 verified Valid_cells.csv
+2026-11-04 21:39:09 start process_data.py at 0 of 9769
+2026-11-04 21:39:41 curl rc=0 process_data.py now 9769 
+2026-11-04 21:39:41 verified process_data.py
+2026-11-04 21:39:53 start capacity_fade.zip at 0 of 140256
+2026-11-04 21:41:01 downloader started
+2026-11-04 21:41:11 start capacity_fade.zip at 86016 of 140256
+2026-11-04 21:41:17 curl rc=0 capacity_fade.zip now 140256 
+2026-11-04 21:41:17 error PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\data\\raw\\isu_ilcc_figshare_22582234\\capacity_fade.zip.part' -> 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\data\\raw\\isu_ilcc_figshare_22582234\\capacity_fade.zip'
+2026-11-04 21:42:20 start capacity_fade.zip at 140256 of 140256
+2026-11-04 21:42:24 curl rc=0 capacity_fade.zip now 140256 
+2026-11-04 21:42:24 verified capacity_fade.zip
+2026-11-04 21:42:26 start README_V2.0.pdf at 0 of 640953
+2026-11-04 21:45:26 downloader started
+2026-11-04 21:45:26 restart loop: downloader exited, restarting in 60 s
+2026-11-04 21:46:26 downloader started
+2026-11-04 21:46:26 restart loop: downloader exited, restarting in 60 s
+2026-11-04 21:47:26 downloader started
+2026-11-04 21:47:26 restart loop: downloader exited, restarting in 60 s
+2026-11-04 21:47:57 downloader started
+2026-11-04 21:48:10 start README_V2.0.pdf at 466944 of 640953

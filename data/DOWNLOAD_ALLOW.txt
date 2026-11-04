@@ -1,0 +1,15 @@
+# Dataset prefixes from DEFERRED_URLS.tsv to download, in priority order (re-read every loop).
+# Core (about 6 GB):
+isu_ilcc
+tju
+hust
+xjtu
+# Added 21:45 after Shlok's unlimited 5 Mbps plan (about 9 GB more):
+calce_official
+snu
+nasa_pcoe_hirf
+nasa_pcoe_randomized
+evtol_cmu
+tbsi_sunwoda
+# Then Samsung 50E (about 10 GB). BatteryLife processed (31 GB) and Stanford dynamic (17 GB) wait for the dataset decision.
+samsung50e

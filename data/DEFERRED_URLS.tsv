@@ -359,3 +359,217 @@ batterylife_processed_zenodo_19688272	RWTH.zip	1058967295	md5:f5a0f039503b882613
 batterylife_processed_zenodo_19688272	CALB.zip	12671967	md5:2b1006e96e0ca42765a732060f964687	https://zenodo.org/records/19688272/files/CALB.zip?download=1
 batterylife_processed_zenodo_19688272	Life labels.zip	12586	md5:cd0cc01a7211972be45e8e38d86cdeca	https://zenodo.org/records/19688272/files/Life%20labels.zip?download=1
 batterylife_processed_zenodo_19688272	XJTU.zip	396945778	md5:ec68d223209b9ddac6c7f5592b2463cd	https://zenodo.org/records/19688272/files/XJTU.zip?download=1
+nasa_pcoe_randomized_battery	11.+Randomized+Battery+Usage+Data+Set.zip	1065821095	none (S3 ETag 8d5766832cc5c6d76c5f9a5926582889-63)	https://phm-datasets.s3.amazonaws.com/NASA/11.+Randomized+Battery+Usage+Data+Set.zip
+nasa_pcoe_hirf_battery	15.+HIRF+Battery+Data+Set.zip	1088895795	none (S3 ETag 37a8b7714afd0fde62e4dc7b17972ddd-64)	https://phm-datasets.s3.amazonaws.com/NASA/15.+HIRF+Battery+Data+Set.zip
+calce_official	CS2_6.zip	154484386	none published	https://web.calce.umd.edu/batteries/data/CS2_6.zip
+calce_official	CS2_8.zip	4350594	none published	https://web.calce.umd.edu/batteries/data/CS2_8.zip
+calce_official	CS2_9.zip	163176454	none published	https://web.calce.umd.edu/batteries/data/CS2_9.zip
+calce_official	CS2_24.zip	127488412	none published	https://web.calce.umd.edu/batteries/data/CS2_24.zip
+calce_official	CS2_33.zip	45345047	none published	https://web.calce.umd.edu/batteries/data/CS2_33.zip
+calce_official	CX2_8.zip	79909189	none published	https://web.calce.umd.edu/batteries/data/CX2_8.zip
+calce_official	CX2_16.zip	114750970	none published	https://web.calce.umd.edu/batteries/data/CX2_16.zip
+calce_official	CX2_31.zip	11946730	none published	https://web.calce.umd.edu/batteries/data/CX2_31.zip
+calce_official	CX2_33.zip	86700450	none published	https://web.calce.umd.edu/batteries/data/CX2_33.zip
+calce_official	CX2_37.zip	53311138	none published	https://web.calce.umd.edu/batteries/data/CX2_37.zip
+calce_official	CX2_38.zip	69995480	none published	https://web.calce.umd.edu/batteries/data/CX2_38.zip
+calce_official	CS2_3.zip	unknown (HEAD timed out 2026-11-04)	none published	https://web.calce.umd.edu/batteries/data/CS2_3.zip
+calce_official	CS2_5.zip	unknown (HEAD timed out 2026-11-04)	none published	https://web.calce.umd.edu/batteries/data/CS2_5.zip
+calce_official	CS2_7.zip	unknown (HEAD timed out 2026-11-04)	none published	https://web.calce.umd.edu/batteries/data/CS2_7.zip
+calce_official	CS2_21.zip	unknown (HEAD timed out 2026-11-04)	none published	https://web.calce.umd.edu/batteries/data/CS2_21.zip
+calce_official	CS2_25.zip	unknown (HEAD timed out 2026-11-04)	none published	https://web.calce.umd.edu/batteries/data/CS2_25.zip
+calce_official	CS2_37.zip	unknown (HEAD timed out 2026-11-04)	none published	https://web.calce.umd.edu/batteries/data/CS2_37.zip
+calce_official	CX2_3.zip	unknown (HEAD timed out 2026-11-04)	none published	https://web.calce.umd.edu/batteries/data/CX2_3.zip
+calce_official	CX2_4.zip	unknown (HEAD timed out 2026-11-04)	none published	https://web.calce.umd.edu/batteries/data/CX2_4.zip
+calce_official	CX2_32.zip	unknown (HEAD timed out 2026-11-04)	none published	https://web.calce.umd.edu/batteries/data/CX2_32.zip
+calce_official	CX2_34.zip	unknown (HEAD timed out 2026-11-04)	none published	https://web.calce.umd.edu/batteries/data/CX2_34.zip
+calce_official	CX2_35.zip	unknown (HEAD timed out 2026-11-04)	none published	https://web.calce.umd.edu/batteries/data/CX2_35.zip
+calce_official	CX2_36.zip	unknown (HEAD timed out 2026-11-04)	none published	https://web.calce.umd.edu/batteries/data/CX2_36.zip
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_003.csv	24789	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_003.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_004.csv	24820	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_004.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_005.csv	24808	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_005.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_006.csv	24789	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_006.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_007.csv	14673	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_007.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_008.csv	14686	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_008.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_009.csv	40484	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_009.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_010.csv	40497	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_010.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_011.csv	32704	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_011.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_012.csv	32672	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_012.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_013.csv	32672	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_013.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_014.csv	32704	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_014.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_015.csv	14705	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_015.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_016.csv	14683	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_016.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_017.csv	50942	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_017.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_019.csv	40520	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_019.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_020.csv	40492	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_020.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_021.csv	40495	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_021.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_022.csv	40476	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_022.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_023.csv	22226	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_023.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_024.csv	22180	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_024.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_025.csv	35065	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_025.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_026.csv	36601	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_026.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_027.csv	38207	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_027.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_028.csv	34938	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_028.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_029.csv	39263	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_029.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_030.csv	42612	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_030.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_031.csv	38276	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_031.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_032.csv	36569	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_032.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_033.csv	46280	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_033.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_034.csv	44738	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_034.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_035.csv	44710	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_035.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_036.csv	45905	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_036.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_037.csv	56957	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_037.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_038.csv	56448	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_038.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_039.csv	53173	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_039.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_040.csv	52977	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_040.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_041.csv	64034	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_041.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_042.csv	58770	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_042.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_043.csv	61349	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_043.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_044.csv	63999	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_044.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_045.csv	56040	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_045.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_046.csv	63832	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_046.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_047.csv	71857	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_047.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_048.csv	73075	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_048.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_049.csv	35268	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_049.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_050.csv	35256	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_050.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_051.csv	54183	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_051.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_052.csv	57354	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_052.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_053.csv	71822	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_053.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_054.csv	69287	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_054.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_055.csv	35266	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_055.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_056.csv	35232	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_056.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_057.csv	27362	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_057.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_058.csv	27406	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_058.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_059.csv	43074	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_059.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_060.csv	43060	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_060.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_061.csv	64338	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_061.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_062.csv	64278	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_062.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_063.csv	35081	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_063.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_064.csv	32596	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_064.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_065.csv	27553	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_065.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_066.csv	32719	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_066.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_067.csv	45467	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_067.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_068.csv	45849	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_068.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_069.csv	64464	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_069.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_070.csv	64198	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_070.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_071.csv	48258	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_071.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_072.csv	48461	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_072.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_073.csv	25691	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_073.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_074.csv	32642	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_074.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_075.csv	42611	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_075.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_076.csv	43555	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_076.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_077.csv	68349	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_077.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_078.csv	66369	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_078.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_079.csv	41764	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_079.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_080.csv	40632	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_080.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_081.csv	32705	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_081.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_082.csv	36174	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_082.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_084.csv	47258	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_084.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_085.csv	73919	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_085.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_086.csv	69686	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_086.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_087.csv	60202	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_087.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_088.csv	56413	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_088.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_089.csv	30180	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_089.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_090.csv	29949	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_090.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_091.csv	32899	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_091.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_092.csv	31915	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_092.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_093.csv	29652	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_093.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_094.csv	30146	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_094.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_095.csv	35178	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_095.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/aging_summary_cell_096.csv	35614	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/aging_summary_cell_096.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/protocol_mapping_dic.json	3231	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/protocol_mapping_dic.json
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_003.csv	113183793	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_003.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_004.csv	113068071	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_004.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_005.csv	111165677	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_005.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_006.csv	111316688	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_006.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_007.csv	76344551	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_007.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_008.csv	77117389	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_008.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_009.csv	100462318	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_009.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_010.csv	101469253	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_010.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_011.csv	115077449	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_011.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_012.csv	116362490	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_012.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_013.csv	113999686	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_013.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_014.csv	116303911	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_014.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_015.csv	63824658	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_015.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_016.csv	63409714	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_016.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_017.csv	105674190	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_017.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_019.csv	127706601	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_019.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_020.csv	123693024	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_020.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_021.csv	122103314	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_021.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_022.csv	122895776	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_022.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_023.csv	76361368	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_023.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_024.csv	75796079	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_024.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_025.csv	177286078	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_025.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_026.csv	186711459	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_026.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_027.csv	187132961	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_027.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_028.csv	169608435	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_028.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_029.csv	178269423	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_029.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_030.csv	179369216	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_030.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_031.csv	434274522	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_031.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_032.csv	413488139	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_032.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_033.csv	155091858	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_033.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_034.csv	157388958	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_034.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_035.csv	152058079	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_035.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_036.csv	158225336	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_036.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_037.csv	170169566	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_037.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_038.csv	171334358	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_038.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_039.csv	394514203	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_039.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_040.csv	394420012	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_040.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_041.csv	179459769	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_041.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_042.csv	161321987	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_042.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_043.csv	161420562	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_043.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_044.csv	166203254	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_044.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_045.csv	138699535	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_045.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_046.csv	151898318	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_046.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_047.csv	401907784	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_047.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_048.csv	406093373	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_048.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_049.csv	332994453	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_049.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_050.csv	331085425	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_050.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_051.csv	365827975	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_051.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_052.csv	349913938	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_052.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_053.csv	371166303	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_053.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_054.csv	368833845	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_054.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_055.csv	110227361	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_055.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_056.csv	109606874	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_056.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_057.csv	155902851	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_057.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_058.csv	142354655	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_058.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_059.csv	158988416	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_059.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_060.csv	155550440	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_060.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_061.csv	154065227	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_061.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_062.csv	155898121	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_062.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_063.csv	169206361	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_063.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_064.csv	134018862	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_064.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_065.csv	207644201	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_065.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_066.csv	229558084	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_066.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_067.csv	191482055	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_067.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_068.csv	199400184	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_068.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_069.csv	169278953	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_069.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_070.csv	160890844	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_070.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_071.csv	166313697	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_071.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_072.csv	144047947	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_072.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_073.csv	249671172	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_073.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_074.csv	292154303	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_074.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_075.csv	217457481	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_075.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_076.csv	229215885	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_076.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_077.csv	195521469	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_077.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_078.csv	191196746	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_078.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_079.csv	162286404	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_079.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_080.csv	149477141	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_080.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_081.csv	219186771	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_081.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_082.csv	270213511	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_082.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_084.csv	203069426	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_084.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_085.csv	187393989	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_085.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_086.csv	181800574	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_086.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_087.csv	148317147	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_087.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_088.csv	148496211	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_088.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_089.csv	171502649	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_089.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_090.csv	174041626	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_090.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_091.csv	167502154	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_091.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_092.csv	194669487	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_092.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_093.csv	164926816	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_093.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_094.csv	192734094	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_094.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_095.csv	190239619	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_095.csv
+stanford_dynamic_cycling_sdr_td676xr4322	Publishing_data/raw_data_cell_096.csv	199575467	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/raw_data_cell_096.csv
+stanford_dynamic_cycling_sdr_td676xr4322	README.md	2144	none in record (md5 in SDR object)	https://stacks.stanford.edu/file/druid:td676xr4322/README.md
+calce_official	SOC_40-100_HalfC.zip	106626746	none published	https://web.calce.umd.edu/batteries/data/pl/SOC_40-100_HalfC.zip
+calce_official	SOC_20-80_HalfC.zip	132710443	none published	https://web.calce.umd.edu/batteries/data/pl/SOC_20-80_HalfC.zip
+oxford_degradation_1	Oxford_Battery_Degradation_Dataset_1.mat	(253.8 MB per ORA page; exact bytes unknown)	none published	https://ora.ox.ac.uk/objects/uuid:03ba4b01-cfed-46d3-9b1a-7d4a7bdf6fac/files/m5ac36a1e2073852e4f1f7dee647909a7

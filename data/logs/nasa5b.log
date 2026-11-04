@@ -1,0 +1,3 @@
+curl: (28) Operation too slow. Less than 2000 bytes/sec transferred the last 60 seconds
+attempt 1 rc=28
+done 5.Battery_Data_Set.zip

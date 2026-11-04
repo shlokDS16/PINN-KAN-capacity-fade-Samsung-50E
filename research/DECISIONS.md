@@ -40,3 +40,20 @@ Row format:
 - **Evidence:** Shlok's instruction, 2026-11-04 evening.
 - **Proposer / opponent / judge:** Shlok (author's instruction).
 - **Re-open if:** never dropped; the forms themselves are debated per figure.
+
+### D004 Overnight download whitelist and resumable manager (2026-11-04 21:40, status: accepted)
+- **Decision:** `tools/resumable_download.py` (detached process; pid in data/logs/downloader.pid)
+  downloads only ISU-ILCC small files + Q_interpolated, TJU (3 zips + impedance), HUST and XJTU,
+  about 6 GB, one file at a time, resuming from the bytes on disk after every drop (curl -C -),
+  waiting with backoff while offline, pausing 00:05-00:30, verifying size and checksum.
+  Status: data/DOWNLOAD_STATUS.md. Everything else in data/DEFERRED_URLS.tsv (about 76 GB:
+  BatteryLife processed 31 GB, Stanford dynamic 17 GB, ISU cycling 10 GB, Samsung 50E 10 GB, others)
+  waits for the dataset decision.
+- **Alternatives and why they lost:** download the whole 82 GB queue overnight (mobile data from
+  about 23:00, and most of it may never be used); download nothing until the topic is fixed (loses
+  the night; TJU/HUST/XJTU and ISU are likely needed by the leading candidates or as comparison
+  with prior art); several parallel connections (memory: at most 4 connections; one file at a time
+  resumes most reliably).
+- **Evidence:** Shlok, 21:35: network fluctuating; downloads must resume from where they stopped.
+- **Proposer / opponent / judge:** lead; rule-driven (no debate needed for logistics).
+- **Re-open if:** the dataset decision needs Samsung 50E, Stanford, MIT or the ISU cycling files.

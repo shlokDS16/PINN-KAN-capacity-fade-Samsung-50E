@@ -48,3 +48,4 @@
 - 03:32 PREREG_v3 committed (24ac12c; FB-1..6, 8, 9, 10 open; freeze procedure section 18). Started: builder for pre-freeze code gaps (H3, H7 pieces, ZYK branch, 11a, sensitivity rows, PREREG_DEFAULT=v3); red team on v3 + package (D015).
 - 03:39 red team on v3: FATAL F1 (no demonstrable PINN/KAN benefit expected), F2 (outcome table open), 13 major. D015 recorded; D016 debate started (proposer). Builder filling code gaps.
 - 03:52 D016: proposer Design R (data efficiency); Codex opponent REVISE; Opus judge running (02_judge.md).
+- 04:05 D016 judge: REVISE -> Design R2 (data efficiency; ablation ladder; KAN law vs simplified GAM law on held-out conditions; closed table T1-T8 + M1/M2) committed. Status file section 00 asks Shlok to approve the table.

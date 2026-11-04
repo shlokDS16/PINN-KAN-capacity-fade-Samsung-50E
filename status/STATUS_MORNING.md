@@ -3,7 +3,29 @@
 Folder: `C:\Users\Shlok\Downloads\PINN KAN battery paper` (own git repo). Budget: weekly usage 5% at
 start, 6% at 22:00 (see the end of this file for the latest); Fable 0%. CPU only, no GPU used.
 
-## 0. In one minute (read this first; details below)
+## 00. LATEST (04:05): the design changed after a red team; your approval is needed
+- At 03:30 the red team rated the plan FATAL: as designed, the likely result showed no measurable benefit of
+  the PINN or the KAN (debates/D015_redteam_v3/01_redteam.md). A new debate (proposer, Codex opponent, Opus
+  judge) produced **Design R2** (debates/D016_roles/02_judge.md, DECISIONS D016):
+  - **PINN test:** with only 8 cycling conditions and 2 check-ups per held-out cell, does the PINN forecast
+    held-out conditions better than the best tuned data-driven model, and is the gain due to the physics law
+    (same network without it), shrinking as data grow (learning curve over 8/16/32 conditions x 0/2/full
+    check-ups)?
+  - **KAN test:** does the KAN give a closed-form stress law that predicts unseen conditions about as well as
+    the full network, and better than an equally simplified additive (GAM) law, using a symbolic library frozen
+    in advance?
+  - **Cannot claim:** that the soft residual is necessary (the plain ODE uses the same law); any temperature
+    mechanism or validated activation energy (temperature and lab are aliased); a "first".
+  - **Realistic best case (title T2):** "Physics-informed neural networks with Kolmogorov-Arnold stress functions
+    forecast lithium-ion capacity fade from few cycling tests and early check-ups". Equally plausible: T5, an
+    honest learning-curve paper ("How many cycling tests and check-ups do physics-informed and data-driven
+    forecasts ... need?"), weaker for JES.
+- **Your decision:** approve or change the closed outcome table (nine cells T1-T8 plus modifiers M1, M2) in
+  debates/D016_roles/02_judge.md section 4. After the freeze no sentence is chosen by anyone.
+- Cost: about 3-3.5 more days of code before the freeze; the statistician must still simulate the sign test with
+  fold- and lab-shared effects; an ISU training-side pilot (P6) gives the first signal; PREREG_v4 follows.
+
+## 0. In one minute (written 03:25, before the red team; superseded where section 00 differs)
 - **Topic fixed by debate:** a PINN whose physics combines calendar ageing (Arrhenius x KAN of SOC) and
   cycle ageing (KAN over temperature, SOC window, DoD, C-rates), trained on storage + cycling cells of the
   Samsung INR21700-50E dataset, forecasting held-out conditions from early check-ups. ISU and Sandia support.

@@ -45,3 +45,4 @@
 - note: lead timestamps between 02:30 and 03:20 were estimated and partly too late; corrected where found; from 03:20 all times are taken from the system clock.
 - 03:23 writer fixed all audit-flagged sentences (7976c1a, 2ec4b95); 3 title-only JES cites added to the e-gateway list. QC drop rule time-scaled (3415db2; 0 flags). Status file has a one-minute summary.
 - 03:26 NC-1/NC-2 + seed rule + t_fc tests implemented (f3e0b2f; 205 tests pass; nc1_full synthetic demo max diff 0.0). Designer assembling PREREG_v3 (freeze-ready, blockers open).
+- 03:32 PREREG_v3 committed (24ac12c; FB-1..6, 8, 9, 10 open; freeze procedure section 18). Started: builder for pre-freeze code gaps (H3, H7 pieces, ZYK branch, 11a, sensitivity rows, PREREG_DEFAULT=v3); red team on v3 + package (D015).

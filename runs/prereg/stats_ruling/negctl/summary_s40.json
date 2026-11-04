@@ -1,0 +1,226 @@
+{
+ "seed": 40,
+ "clean": {
+  "n_rows": 5940,
+  "same_rows": true,
+  "max_abs_dpred": 0.0,
+  "max_abs_dpred_outer": 0.0,
+  "cond_scores": {
+   "A1": {
+    "T23|SOCmax0.45|DoD0.43|Cch0.52|Cdch1.32": 0.7311745184537329,
+    "T23|SOCmax0.72|DoD0.29|Cch0.47|Cdch1.71": 1.4712203441242657,
+    "T35|SOCmax0.34|DoD0.17|Cch0.34|Cdch1.8": 2.162395918948723,
+    "T35|SOCmax0.35|DoD0.26|Cch0.85|Cdch0.85": 3.5729657745977677,
+    "T35|SOCmax0.55|DoD0.44|Cch0.64|Cdch0.99": 1.796325252695583,
+    "T35|SOCmax0.58|DoD0.42|Cch0.24|Cdch1.93": 1.3535616320248567,
+    "T35|SOCmax0.59|DoD0.08|Cch0.26|Cdch1.12": 4.785061718318681,
+    "T45|SOCmax0.47|DoD0.06|Cch0.81|Cdch0.6": 3.5891531528805447,
+    "T45|SOCmax0.53|DoD0.33|Cch0.75|Cdch1.42": 4.263004164167718,
+    "T45|SOCmax0.65|DoD0.14|Cch0.42|Cdch1.57": 2.5859348391833836
+   },
+   "A9": {
+    "T23|SOCmax0.45|DoD0.43|Cch0.52|Cdch1.32": 0.840458683111818,
+    "T23|SOCmax0.72|DoD0.29|Cch0.47|Cdch1.71": 1.2446396392551111,
+    "T35|SOCmax0.34|DoD0.17|Cch0.34|Cdch1.8": 0.9555829900913503,
+    "T35|SOCmax0.35|DoD0.26|Cch0.85|Cdch0.85": 2.8049074871416715,
+    "T35|SOCmax0.55|DoD0.44|Cch0.64|Cdch0.99": 3.206233094918622,
+    "T35|SOCmax0.58|DoD0.42|Cch0.24|Cdch1.93": 1.599301322791996,
+    "T35|SOCmax0.59|DoD0.08|Cch0.26|Cdch1.12": 0.9419783758054218,
+    "T45|SOCmax0.47|DoD0.06|Cch0.81|Cdch0.6": 3.455307655969117,
+    "T45|SOCmax0.53|DoD0.33|Cch0.75|Cdch1.42": 27.704667887304755,
+    "T45|SOCmax0.65|DoD0.14|Cch0.42|Cdch1.57": 1.050487492405643
+   },
+   "R2": {
+    "T23|SOCmax0.45|DoD0.43|Cch0.52|Cdch1.32": 7.523814656353513,
+    "T23|SOCmax0.72|DoD0.29|Cch0.47|Cdch1.71": 5.006689118089259,
+    "T35|SOCmax0.34|DoD0.17|Cch0.34|Cdch1.8": 6.933890147117787,
+    "T35|SOCmax0.35|DoD0.26|Cch0.85|Cdch0.85": 19.864391954614998,
+    "T35|SOCmax0.55|DoD0.44|Cch0.64|Cdch0.99": 14.794582504375972,
+    "T35|SOCmax0.58|DoD0.42|Cch0.24|Cdch1.93": 3.7701036077097503,
+    "T35|SOCmax0.59|DoD0.08|Cch0.26|Cdch1.12": 2.8610473136121772,
+    "T45|SOCmax0.47|DoD0.06|Cch0.81|Cdch0.6": 19.43687714265718,
+    "T45|SOCmax0.53|DoD0.33|Cch0.75|Cdch1.42": 31.43165887555469,
+    "T45|SOCmax0.65|DoD0.14|Cch0.42|Cdch1.57": 11.005691918867598
+   }
+  },
+  "negative_control": {
+   "required_arms": [
+    "A1",
+    "A9",
+    "R2"
+   ],
+   "complete": true,
+   "mean_L_A9_over_A1": -0.10329279062659084,
+   "signflip_p_two_sided": 0.7230827691723083,
+   "mean_L_R2_over_A1": 1.4190588802700657,
+   "median_L_R2_over_A1": 1.568790682422569,
+   "ln_margin": 0.01980262729617973,
+   "pass_residual_effect_vanishes": true,
+   "pass_A1_not_better_than_R2": false,
+   "passed": false
+  },
+  "tuning_same": true
+ },
+ "leakA": {
+  "n_rows": 6930,
+  "same_rows": true,
+  "max_abs_dpred": 0.1873362541198731,
+  "max_abs_dpred_outer": 0.052127647399902395,
+  "cond_scores": {
+   "A1": {
+    "T23|SOCmax0.45|DoD0.43|Cch0.52|Cdch1.32": 1.9597124872874518,
+    "T23|SOCmax0.72|DoD0.29|Cch0.47|Cdch1.71": 1.1827365444119347,
+    "T35|SOCmax0.34|DoD0.17|Cch0.34|Cdch1.8": 2.2419101929713086,
+    "T35|SOCmax0.35|DoD0.26|Cch0.85|Cdch0.85": 2.465242863232737,
+    "T35|SOCmax0.55|DoD0.44|Cch0.64|Cdch0.99": 1.3971562322341489,
+    "T35|SOCmax0.58|DoD0.42|Cch0.24|Cdch1.93": 1.9769861773535802,
+    "T35|SOCmax0.59|DoD0.08|Cch0.26|Cdch1.12": 4.713096086395775,
+    "T45|SOCmax0.47|DoD0.06|Cch0.81|Cdch0.6": 2.422176486564575,
+    "T45|SOCmax0.53|DoD0.33|Cch0.75|Cdch1.42": 1.4727997013576986,
+    "T45|SOCmax0.65|DoD0.14|Cch0.42|Cdch1.57": 0.8760134122466053
+   },
+   "A9": {
+    "T23|SOCmax0.45|DoD0.43|Cch0.52|Cdch1.32": 0.7165791161781133,
+    "T23|SOCmax0.72|DoD0.29|Cch0.47|Cdch1.71": 1.2581288257885828,
+    "T35|SOCmax0.34|DoD0.17|Cch0.34|Cdch1.8": 0.9566435677287082,
+    "T35|SOCmax0.35|DoD0.26|Cch0.85|Cdch0.85": 2.9931087224611344,
+    "T35|SOCmax0.55|DoD0.44|Cch0.64|Cdch0.99": 3.166679397586566,
+    "T35|SOCmax0.58|DoD0.42|Cch0.24|Cdch1.93": 1.2312463647414,
+    "T35|SOCmax0.59|DoD0.08|Cch0.26|Cdch1.12": 0.7759392063369054,
+    "T45|SOCmax0.47|DoD0.06|Cch0.81|Cdch0.6": 3.911165915453301,
+    "T45|SOCmax0.53|DoD0.33|Cch0.75|Cdch1.42": 29.37097743457424,
+    "T45|SOCmax0.65|DoD0.14|Cch0.42|Cdch1.57": 1.283806147629323
+   },
+   "R2": {
+    "T23|SOCmax0.45|DoD0.43|Cch0.52|Cdch1.32": 7.523814656353513,
+    "T23|SOCmax0.72|DoD0.29|Cch0.47|Cdch1.71": 5.006689118089259,
+    "T35|SOCmax0.34|DoD0.17|Cch0.34|Cdch1.8": 6.933890147117787,
+    "T35|SOCmax0.35|DoD0.26|Cch0.85|Cdch0.85": 19.864391954614998,
+    "T35|SOCmax0.55|DoD0.44|Cch0.64|Cdch0.99": 14.794582504375972,
+    "T35|SOCmax0.58|DoD0.42|Cch0.24|Cdch1.93": 3.7701036077097503,
+    "T35|SOCmax0.59|DoD0.08|Cch0.26|Cdch1.12": 2.8610473136121772,
+    "T45|SOCmax0.47|DoD0.06|Cch0.81|Cdch0.6": 19.43687714265718,
+    "T45|SOCmax0.53|DoD0.33|Cch0.75|Cdch1.42": 31.43165887555469,
+    "T45|SOCmax0.65|DoD0.14|Cch0.42|Cdch1.57": 11.005691918867598
+   }
+  },
+  "negative_control": {
+   "required_arms": [
+    "A1",
+    "A9",
+    "R2"
+   ],
+   "complete": true,
+   "mean_L_A9_over_A1": 0.07929857351133779,
+   "signflip_p_two_sided": 0.8540314596854032,
+   "mean_L_R2_over_A1": 1.6184087063179795,
+   "median_L_R2_over_A1": 1.7627248088789114,
+   "ln_margin": 0.01980262729617973,
+   "pass_residual_effect_vanishes": false,
+   "pass_A1_not_better_than_R2": false,
+   "passed": false
+  },
+  "tuning_same": false
+ },
+ "leakB": {
+  "n_rows": 5940,
+  "same_rows": true,
+  "max_abs_dpred": 0.28896684646606446,
+  "max_abs_dpred_outer": 0.28896684646606446,
+  "cond_scores": {
+   "A1": {
+    "T23|SOCmax0.45|DoD0.43|Cch0.52|Cdch1.32": 0.7876868841803618,
+    "T23|SOCmax0.72|DoD0.29|Cch0.47|Cdch1.71": 1.048054495650152,
+    "T35|SOCmax0.34|DoD0.17|Cch0.34|Cdch1.8": 1.7348807607756933,
+    "T35|SOCmax0.35|DoD0.26|Cch0.85|Cdch0.85": 2.1517417840655257,
+    "T35|SOCmax0.55|DoD0.44|Cch0.64|Cdch0.99": 1.0365295953527929,
+    "T35|SOCmax0.58|DoD0.42|Cch0.24|Cdch1.93": 1.0246285323733082,
+    "T35|SOCmax0.59|DoD0.08|Cch0.26|Cdch1.12": 3.6790757529779534,
+    "T45|SOCmax0.47|DoD0.06|Cch0.81|Cdch0.6": 2.6805058229890553,
+    "T45|SOCmax0.53|DoD0.33|Cch0.75|Cdch1.42": 2.7081270154913573,
+    "T45|SOCmax0.65|DoD0.14|Cch0.42|Cdch1.57": 1.3885619026982088
+   },
+   "A9": {
+    "T23|SOCmax0.45|DoD0.43|Cch0.52|Cdch1.32": 0.8013572724439122,
+    "T23|SOCmax0.72|DoD0.29|Cch0.47|Cdch1.71": 0.8003555349305699,
+    "T35|SOCmax0.34|DoD0.17|Cch0.34|Cdch1.8": 1.0453745913851782,
+    "T35|SOCmax0.35|DoD0.26|Cch0.85|Cdch0.85": 2.416302222734489,
+    "T35|SOCmax0.55|DoD0.44|Cch0.64|Cdch0.99": 2.4262429585203527,
+    "T35|SOCmax0.58|DoD0.42|Cch0.24|Cdch1.93": 1.0476174104722158,
+    "T35|SOCmax0.59|DoD0.08|Cch0.26|Cdch1.12": 0.9157972098651123,
+    "T45|SOCmax0.47|DoD0.06|Cch0.81|Cdch0.6": 2.0159664341584294,
+    "T45|SOCmax0.53|DoD0.33|Cch0.75|Cdch1.42": 16.104415904094168,
+    "T45|SOCmax0.65|DoD0.14|Cch0.42|Cdch1.57": 1.1612360694920576
+   },
+   "R2": {
+    "T23|SOCmax0.45|DoD0.43|Cch0.52|Cdch1.32": 7.077715651373722,
+    "T23|SOCmax0.72|DoD0.29|Cch0.47|Cdch1.71": 5.920260708571733,
+    "T35|SOCmax0.34|DoD0.17|Cch0.34|Cdch1.8": 6.593359254466793,
+    "T35|SOCmax0.35|DoD0.26|Cch0.85|Cdch0.85": 17.65069507379907,
+    "T35|SOCmax0.55|DoD0.44|Cch0.64|Cdch0.99": 12.051834971516152,
+    "T35|SOCmax0.58|DoD0.42|Cch0.24|Cdch1.93": 4.279287247602549,
+    "T35|SOCmax0.59|DoD0.08|Cch0.26|Cdch1.12": 2.8896568881813693,
+    "T45|SOCmax0.47|DoD0.06|Cch0.81|Cdch0.6": 15.180182512701125,
+    "T45|SOCmax0.53|DoD0.33|Cch0.75|Cdch1.42": 27.439117851783195,
+    "T45|SOCmax0.65|DoD0.14|Cch0.42|Cdch1.57": 10.35893268265806
+   }
+  },
+  "negative_control": {
+   "required_arms": [
+    "A1",
+    "A9",
+    "R2"
+   ],
+   "complete": true,
+   "mean_L_A9_over_A1": 0.015814673894392096,
+   "signflip_p_two_sided": 0.9495805041949581,
+   "mean_L_R2_over_A1": 1.7067222060765097,
+   "median_L_R2_over_A1": 1.8717829389564007,
+   "ln_margin": 0.01980262729617973,
+   "pass_residual_effect_vanishes": true,
+   "pass_A1_not_better_than_R2": false,
+   "passed": false
+  },
+  "tuning_same": true
+ },
+ "real": {
+  "cond_scores": {
+   "A1": {
+    "T23|SOCmax0.45|DoD0.43|Cch0.52|Cdch1.32": 1.2739170016445247,
+    "T23|SOCmax0.72|DoD0.29|Cch0.47|Cdch1.71": 1.2171586781382533,
+    "T35|SOCmax0.34|DoD0.17|Cch0.34|Cdch1.8": 1.3287775271398505,
+    "T35|SOCmax0.35|DoD0.26|Cch0.85|Cdch0.85": 1.498591966034147,
+    "T35|SOCmax0.55|DoD0.44|Cch0.64|Cdch0.99": 1.1623299865465917,
+    "T35|SOCmax0.58|DoD0.42|Cch0.24|Cdch1.93": 0.9331558812066074,
+    "T35|SOCmax0.59|DoD0.08|Cch0.26|Cdch1.12": 1.5442086521349794,
+    "T45|SOCmax0.47|DoD0.06|Cch0.81|Cdch0.6": 1.8101497146174381,
+    "T45|SOCmax0.53|DoD0.33|Cch0.75|Cdch1.42": 5.808727407579437,
+    "T45|SOCmax0.65|DoD0.14|Cch0.42|Cdch1.57": 1.0861487984071778
+   },
+   "A9": {
+    "T23|SOCmax0.45|DoD0.43|Cch0.52|Cdch1.32": 1.466312378891928,
+    "T23|SOCmax0.72|DoD0.29|Cch0.47|Cdch1.71": 1.2186917751852269,
+    "T35|SOCmax0.34|DoD0.17|Cch0.34|Cdch1.8": 1.247812604020321,
+    "T35|SOCmax0.35|DoD0.26|Cch0.85|Cdch0.85": 1.8552559234967314,
+    "T35|SOCmax0.55|DoD0.44|Cch0.64|Cdch0.99": 2.262037805371387,
+    "T35|SOCmax0.58|DoD0.42|Cch0.24|Cdch1.93": 1.016827375590712,
+    "T35|SOCmax0.59|DoD0.08|Cch0.26|Cdch1.12": 0.7639697323769186,
+    "T45|SOCmax0.47|DoD0.06|Cch0.81|Cdch0.6": 2.388239857425314,
+    "T45|SOCmax0.53|DoD0.33|Cch0.75|Cdch1.42": 4.562193253039314,
+    "T45|SOCmax0.65|DoD0.14|Cch0.42|Cdch1.57": 1.37131957529816
+   },
+   "R2": {
+    "T23|SOCmax0.45|DoD0.43|Cch0.52|Cdch1.32": 7.523814656353513,
+    "T23|SOCmax0.72|DoD0.29|Cch0.47|Cdch1.71": 5.006689118089259,
+    "T35|SOCmax0.34|DoD0.17|Cch0.34|Cdch1.8": 6.933890147117787,
+    "T35|SOCmax0.35|DoD0.26|Cch0.85|Cdch0.85": 19.864391954614998,
+    "T35|SOCmax0.55|DoD0.44|Cch0.64|Cdch0.99": 14.794582504375972,
+    "T35|SOCmax0.58|DoD0.42|Cch0.24|Cdch1.93": 3.7701036077097503,
+    "T35|SOCmax0.59|DoD0.08|Cch0.26|Cdch1.12": 2.8610473136121772,
+    "T45|SOCmax0.47|DoD0.06|Cch0.81|Cdch0.6": 19.43687714265718,
+    "T45|SOCmax0.53|DoD0.33|Cch0.75|Cdch1.42": 31.43165887555469,
+    "T45|SOCmax0.65|DoD0.14|Cch0.42|Cdch1.57": 11.005691918867598
+   }
+  }
+ }
+}

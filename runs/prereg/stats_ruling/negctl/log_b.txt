@@ -1,0 +1,87 @@
+[02:53:55] run nc_s33_clean: dataset synthetic test B fold 0 mode confirmatory (requested confirmatory) blinded=False
+[02:53:55] train cells 109: 90 cycling, 19 storage; conditions 49
+[02:54:01] backbone tournament: chosen self_limiting (best self_limiting)
+[02:54:12] tuned A1: inner-CV 2.909 pp, best {'h': 3, 'grid': 2, 'l2': 0.001, 'sparsity': 0.001, 'lam_res': 0.01, 'placement': 'record_end'}, median fit 2.3 s, failed 0
+[02:54:14] tuned A9: inner-CV 4.706 pp, best {'width': 32, 'depth': 3, 'wd': 0.0001, 'zdim': 3}, median fit 0.6 s, failed 0
+[02:54:14] tuned R2: inner-CV 13.523 pp, best {}, median fit 0.0 s, failed 0
+[02:54:23] outer test A1: 2.236 pp (seed SD 0.402) over 10 conditions
+[02:54:24] outer test A9: 5.650 pp (seed SD 0.229) over 10 conditions
+[02:54:24] outer test R2: 13.523 pp (seed SD 0.000) over 10 conditions
+[02:54:25] emitted window.csv, stress_functions.json, residual_map.npz, superposition.csv
+[02:54:25] done in 30 s
+[02:54:25] run nc_s33_clean_scr: dataset synthetic test B fold 0 mode confirmatory (requested confirmatory) blinded=False
+[02:54:25] train cells 109: 90 cycling, 19 storage; conditions 49
+[02:54:29] backbone tournament: chosen self_limiting (best self_limiting)
+[02:54:40] tuned A1: inner-CV 2.909 pp, best {'h': 3, 'grid': 2, 'l2': 0.001, 'sparsity': 0.001, 'lam_res': 0.01, 'placement': 'record_end'}, median fit 2.2 s, failed 0
+[02:54:43] tuned A9: inner-CV 4.706 pp, best {'width': 32, 'depth': 3, 'wd': 0.0001, 'zdim': 3}, median fit 0.6 s, failed 0
+[02:54:43] tuned R2: inner-CV 13.523 pp, best {}, median fit 0.0 s, failed 0
+[02:54:51] outer test A1: 7.071 pp (seed SD 0.299) over 10 conditions
+[02:54:52] outer test A9: 7.733 pp (seed SD 0.241) over 10 conditions
+[02:54:52] outer test R2: 12.278 pp (seed SD 0.000) over 10 conditions
+[02:54:52] emitted window.csv, stress_functions.json, residual_map.npz, superposition.csv
+[02:54:53] done in 28 s
+[02:54:53] run nc_s33_leakA: dataset synthetic test B fold 0 mode confirmatory (requested confirmatory) blinded=False
+[02:54:53] train cells 139: 120 cycling, 19 storage; conditions 59
+[02:54:57] backbone tournament: chosen self_limiting (best self_limiting)
+[02:55:08] tuned A1: inner-CV 2.682 pp, best {'h': 3, 'grid': 2, 'l2': 0.001, 'sparsity': 0.001, 'lam_res': 0.01, 'placement': 'record_end'}, median fit 2.3 s, failed 0
+[02:55:11] tuned A9: inner-CV 4.551 pp, best {'width': 128, 'depth': 4, 'wd': 1e-05, 'zdim': 3}, median fit 0.7 s, failed 0
+[02:55:11] tuned R2: inner-CV 13.523 pp, best {}, median fit 0.0 s, failed 0
+[02:55:20] outer test A1: 2.231 pp (seed SD 0.037) over 10 conditions
+[02:55:26] outer test A9: 6.448 pp (seed SD 1.619) over 10 conditions
+[02:55:26] outer test R2: 13.523 pp (seed SD 0.000) over 10 conditions
+[02:55:27] emitted window.csv, stress_functions.json, residual_map.npz, superposition.csv
+[02:55:27] done in 34 s
+[02:55:27] run nc_s33_leakA_scr: dataset synthetic test B fold 0 mode confirmatory (requested confirmatory) blinded=False
+[02:55:27] train cells 139: 120 cycling, 19 storage; conditions 59
+[02:55:31] backbone tournament: chosen self_limiting (best self_limiting)
+[02:55:41] tuned A1: inner-CV 3.660 pp, best {'h': 3, 'grid': 2, 'l2': 0.001, 'sparsity': 0.001, 'lam_res': 0.01, 'placement': 'record_end'}, median fit 2.1 s, failed 0
+[02:55:44] tuned A9: inner-CV 6.024 pp, best {'width': 128, 'depth': 4, 'wd': 1e-05, 'zdim': 3}, median fit 0.7 s, failed 0
+[02:55:44] tuned R2: inner-CV 13.212 pp, best {}, median fit 0.0 s, failed 0
+[02:55:52] outer test A1: 7.115 pp (seed SD 0.108) over 10 conditions
+[02:55:59] outer test A9: 10.108 pp (seed SD 0.412) over 10 conditions
+[02:55:59] outer test R2: 12.278 pp (seed SD 0.000) over 10 conditions
+[02:56:00] emitted window.csv, stress_functions.json, residual_map.npz, superposition.csv
+[02:56:00] done in 33 s
+[02:56:00] run nc_s33_leakB: dataset synthetic test B fold 0 mode confirmatory (requested confirmatory) blinded=False
+[02:56:00] train cells 109: 90 cycling, 19 storage; conditions 49
+[02:56:04] backbone tournament: chosen self_limiting (best self_limiting)
+[02:56:15] tuned A1: inner-CV 2.909 pp, best {'h': 3, 'grid': 2, 'l2': 0.001, 'sparsity': 0.001, 'lam_res': 0.01, 'placement': 'record_end'}, median fit 2.2 s, failed 0
+[02:56:18] tuned A9: inner-CV 4.706 pp, best {'width': 32, 'depth': 3, 'wd': 0.0001, 'zdim': 3}, median fit 0.6 s, failed 0
+[02:56:18] tuned R2: inner-CV 13.523 pp, best {}, median fit 0.0 s, failed 0
+[02:56:25] outer test A1: 1.748 pp (seed SD 0.239) over 10 conditions
+[02:56:27] outer test A9: 4.423 pp (seed SD 0.186) over 10 conditions
+[02:56:27] outer test R2: 11.657 pp (seed SD 0.000) over 10 conditions
+[02:56:27] emitted window.csv, stress_functions.json, residual_map.npz, superposition.csv
+[02:56:27] done in 28 s
+[02:56:28] run nc_s33_leakB_scr: dataset synthetic test B fold 0 mode confirmatory (requested confirmatory) blinded=False
+[02:56:28] train cells 109: 90 cycling, 19 storage; conditions 49
+[02:56:32] backbone tournament: chosen self_limiting (best self_limiting)
+[02:56:42] tuned A1: inner-CV 2.909 pp, best {'h': 3, 'grid': 2, 'l2': 0.001, 'sparsity': 0.001, 'lam_res': 0.01, 'placement': 'record_end'}, median fit 2.1 s, failed 0
+[02:56:45] tuned A9: inner-CV 4.706 pp, best {'width': 32, 'depth': 3, 'wd': 0.0001, 'zdim': 3}, median fit 0.7 s, failed 0
+[02:56:45] tuned R2: inner-CV 13.523 pp, best {}, median fit 0.0 s, failed 0
+[02:56:53] outer test A1: 6.440 pp (seed SD 0.212) over 10 conditions
+[02:56:54] outer test A9: 7.463 pp (seed SD 0.388) over 10 conditions
+[02:56:54] outer test R2: 12.384 pp (seed SD 0.000) over 10 conditions
+[02:56:55] emitted window.csv, stress_functions.json, residual_map.npz, superposition.csv
+[02:56:55] done in 28 s
+[02:56:55] run nc_s33_real: dataset synthetic test B fold 0 mode confirmatory (requested confirmatory) blinded=False
+[02:56:55] train cells 109: 90 cycling, 19 storage; conditions 49
+[02:57:00] backbone tournament: chosen self_limiting (best self_limiting)
+[02:57:11] tuned A1: inner-CV 1.908 pp, best {'h': 3, 'grid': 2, 'l2': 0.001, 'sparsity': 0.001, 'lam_res': 0.01, 'placement': 'record_end'}, median fit 2.3 s, failed 0
+[02:57:14] tuned A9: inner-CV 3.445 pp, best {'width': 128, 'depth': 4, 'wd': 1e-05, 'zdim': 3}, median fit 0.6 s, failed 0
+[02:57:14] tuned R2: inner-CV 13.523 pp, best {}, median fit 0.0 s, failed 0
+[02:57:22] outer test A1: 1.450 pp (seed SD 0.247) over 10 conditions
+[02:57:27] outer test A9: 3.057 pp (seed SD 0.216) over 10 conditions
+[02:57:27] outer test R2: 13.523 pp (seed SD 0.000) over 10 conditions
+[02:57:28] emitted window.csv, stress_functions.json, residual_map.npz, superposition.csv
+[02:57:28] done in 33 s
+Traceback (most recent call last):
+  File "C:\Users\Shlok\Downloads\PINN KAN battery paper\code\prereg\negcontrol_check.py", line 106, in <module>
+    a, b = preds(dirs[v]), preds(dirs[v + "_s"])
+           ~~~~~^^^^^^^^^
+  File "C:\Users\Shlok\Downloads\PINN KAN battery paper\code\prereg\negcontrol_check.py", line 94, in preds
+    return p.set_index(["phase", "arm", "seed", "cell", "t"])
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shlok\AppData\Roaming\Python\Python314\site-packages\pandas\core\frame.py", line 6144, in set_index
+    raise KeyError(f"None of {missing} are in the columns")
+KeyError: "None of ['cell'] are in the columns"

@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "C:\Users\Shlok\Downloads\PINN KAN battery paper\code\prereg\negcontrol_check.py", line 102, in <module>
+    dirs[v] = do_run(s, v, False)
+              ~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Shlok\Downloads\PINN KAN battery paper\code\prereg\negcontrol_check.py", line 88, in do_run
+    R.run(cfg, root=ROOT, runs_dir=OUT)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users/Shlok/Downloads/PINN KAN battery paper/code\pinnkan\run.py", line 188, in run
+    D = build_data(cfg, root, role)          # the test-fold guard is inside load_split (role != 'train')
+  File "C:\Users\Shlok\Downloads\PINN KAN battery paper\code\prereg\negcontrol_check.py", line 50, in build
+    D = _orig_build(cfg, root, role)
+  File "C:\Users/Shlok/Downloads/PINN KAN battery paper/code\pinnkan\run.py", line 128, in build_data
+    S = synth.make_synthetic(sc.get("kind", "G0"), sc.get("n_cyc_cond", 20), sc.get("n_sto_cond", 8), sc.get("reps", 2), sc.get("seed", 0))
+  File "C:\Users/Shlok/Downloads/PINN KAN battery paper/code\pinnkan\synth.py", line 127, in make_synthetic
+    assert len({c.cond for c in cells}) == len(cyc) + len(sto), "condition keys collide: change the seed or the rounding"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: condition keys collide: change the seed or the rounding

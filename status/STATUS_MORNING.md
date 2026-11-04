@@ -48,8 +48,9 @@ start, 6% at 22:00 (see the end of this file for the latest); Fable 0%. CPU only
 
 ## 4. Overnight work (updated as it finishes)
 - Pilots: P0 Samsung file layout GO (capacity computable from check-up files); P1 data checks GO; P2 fit
-  timing GO (PINN about 16-19 s per fit on CPU); P3 headroom, P4 KAN vs GAM (synthetic), P5 PINN vs hard
-  ODE (synthetic): running.
+  timing GO (PINN about 16-19 s per fit on CPU); P4 KAN vs additive GAM (synthetic) GO in 4 of 5 draws,
+  small margin; P5 soft PINN vs plain ODE (synthetic) GO in 4 of 5 draws, small margin (5 draws: no
+  significance claim; go signals only). P3 headroom: running.
 - Downloads: Samsung check-up files for all 279 cells by range requests (status:
   data/SAMSUNG_CU_STATUS.md; log data/logs/samsung_cu.log). Bulk downloader paused (data/STOP_DOWNLOADS)
   because of the slow link. At 23:20 the fetch ran at about one file per 30 s (figshare request latency),

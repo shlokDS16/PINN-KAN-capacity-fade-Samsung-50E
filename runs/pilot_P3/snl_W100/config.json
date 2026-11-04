@@ -1,0 +1,17 @@
+{
+ "pilot": "P3",
+ "dataset": "snl",
+ "window": 100.0,
+ "window_unit": "cycles",
+ "n_trials": 20,
+ "seed": 1,
+ "inner_folds": 3,
+ "life_level": 0.7,
+ "snl_grid": 25,
+ "commit": "992b5b404266afea668275ee7324d345357b3176",
+ "threads": "1",
+ "cuda_visible_devices": "",
+ "split_file": "./runs/splits/snl_testB.json",
+ "split_sha256": "d5018c6bf008aab56708e3449af690cfe9a783ebc930c0c216644aa4b0a6d5d7",
+ "command": "code/pilots/p3_headroom.py . snl 100 20 1"
+}

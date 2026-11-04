@@ -1,0 +1,62 @@
+[snl W=100.0] fold 0 persist: inner-CV 10.883 pp (floor median 2.681, mean 2.823) 0s
+[snl W=100.0] fold 0 pl: inner-CV 4.803 pp (floor median 2.681, mean 2.823) 0s
+[snl W=100.0] fold 0 lgb: inner-CV 2.792 pp (floor median 2.681, mean 2.823) 4s
+[snl W=100.0] fold 0 gp: inner-CV 3.315 pp (floor median 2.681, mean 2.823) 36s
+[snl W=100.0] fold 1 persist: inner-CV 11.272 pp (floor median 2.763, mean 3.111) 0s
+[snl W=100.0] fold 1 pl: inner-CV 5.303 pp (floor median 2.763, mean 3.111) 0s
+[snl W=100.0] fold 1 lgb: inner-CV 3.570 pp (floor median 2.763, mean 3.111) 5s
+[snl W=100.0] fold 1 gp: inner-CV 3.830 pp (floor median 2.763, mean 3.111) 36s
+[snl W=100.0] fold 2 persist: inner-CV 10.851 pp (floor median 2.632, mean 2.773) 0s
+[snl W=100.0] fold 2 pl: inner-CV 5.090 pp (floor median 2.632, mean 2.773) 0s
+[snl W=100.0] fold 2 lgb: inner-CV 3.519 pp (floor median 2.632, mean 2.773) 4s
+[snl W=100.0] fold 2 gp: inner-CV 4.075 pp (floor median 2.632, mean 2.773) 35s
+[snl W=100.0] fold 3 persist: inner-CV 10.839 pp (floor median 2.632, mean 2.968) 0s
+[snl W=100.0] fold 3 pl: inner-CV 4.245 pp (floor median 2.632, mean 2.968) 0s
+[snl W=100.0] fold 3 lgb: inner-CV 2.528 pp (floor median 2.632, mean 2.968) 4s
+[snl W=100.0] fold 3 gp: inner-CV 2.815 pp (floor median 2.632, mean 2.968) 40s
+[snl W=100.0] fold 4 persist: inner-CV 10.300 pp (floor median 2.390, mean 2.570) 0s
+[snl W=100.0] fold 4 pl: inner-CV 3.886 pp (floor median 2.390, mean 2.570) 0s
+[snl W=100.0] fold 4 lgb: inner-CV 2.417 pp (floor median 2.390, mean 2.570) 3s
+[snl W=100.0] fold 4 gp: inner-CV 2.627 pp (floor median 2.390, mean 2.570) 33s
+{
+ "ratio_primary": 1.1283950787559913,
+ "ratio_like_for_like_mean": 1.0395470265081594,
+ "ratio_repartition": 1.117777666315997,
+ "per_fold_ratio": [
+  1.0412840488104516,
+  1.2919061120395356,
+  1.337019787431912,
+  0.9607255739494207,
+  1.0110398715486373
+ ],
+ "min_fold_ratio": 0.9607255739494207,
+ "mean_best_error_pp": 2.9650996941379666,
+ "mean_floor_median_pp": 2.6196491231306394,
+ "mean_floor_mean_pp": 2.848909442320346,
+ "mean_inner_cv_persist_pp": 10.82920404517177,
+ "ratio_persist": 4.137882049644494,
+ "mean_inner_cv_pl_pp": 4.665558041051818,
+ "ratio_pl": 1.7767182433342525,
+ "mean_inner_cv_gp_pp": 3.3324129142785432,
+ "ratio_gp": 1.2679018441630836,
+ "mean_inner_cv_lgb_pp": 2.9650996941379666,
+ "ratio_lgb": 1.1283950787559913,
+ "pooled_condition_level": {
+  "n_conditions": 20,
+  "ratio_judge_literal": 1.1078378322012072,
+  "ci95_judge_literal": [
+   0.8053578749605631,
+   1.6226507000565593
+  ],
+  "ratio_like_for_like": 1.0334492563953124,
+  "ci95_like_for_like": [
+   0.7982350789780689,
+   1.3816495357379739
+  ],
+  "mean_error_pp": 2.9429997318114984,
+  "median_floor_pp": 2.656525753380289,
+  "mean_floor_pp": 2.8477447863059373
+ },
+ "verdict_rule": "ratio_primary > 1.2: superiority winnable; <= 1.2: contrast (iii) preregistered as non-inferiority",
+ "verdict": "NON-INFERIORITY"
+}

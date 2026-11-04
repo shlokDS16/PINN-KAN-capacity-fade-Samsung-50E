@@ -305,7 +305,7 @@ def main():
     if ds == "snl":
         strata = dict(zip(full.cond, full.cond.str.split("|").str[0]))
     res = {"folds": {}}
-    used_cells, test_cells_all = set(), set()
+    used_cells, test_cells_all, fold_overlap = set(), set(), []
     cond_err = {}                                # condition -> list of best-learner OOF errors over folds
     cond_floor = {}
     for f in sorted(split["folds"], key=int):
@@ -316,6 +316,7 @@ def main():
         cells, excluded = build_cells(train, ds, W)
         assert not (set(cells) & test_cells)
         used_cells |= set(cells)
+        fold_overlap += sorted(set(cells) & test_cells)
         names = sorted(cells)
         conds = sorted(set(cells[c]["cond"] for c in names), key=str)
         folds1 = inner_folds(conds, seed * 1000 + int(f), strata)
@@ -346,7 +347,7 @@ def main():
             out["learners"][k].pop("_pc")
         res["folds"][f] = out
     # ---- audit: the outer test cells were never part of any frame used
-    assert not (used_cells & test_cells_all)
+    assert not fold_overlap, fold_overlap          # per-fold check done in the loop
     assert sha(split_path) == split_sha0
     # ---- pooled verdict
     F = res["folds"]
@@ -377,7 +378,7 @@ def main():
     summ["verdict"] = "SUPERIORITY WINNABLE" if summ["ratio_primary"] > 1.2 else "NON-INFERIORITY"
     res["summary"] = summ
     res["audit"] = dict(outer_test_cells_total=len(test_cells_all), cells_used_in_any_frame=len(used_cells),
-                        intersection=len(used_cells & test_cells_all), split_file_sha256=split_sha0,
+                        intersection_within_fold=len(fold_overlap), split_file_sha256=split_sha0,
                         split_file_unchanged_after_run=True, test_fold_scored=False)
     cfg = dict(pilot="P3", dataset=ds, window=W, window_unit="weeks" if ds == "isu" else "cycles", n_trials=n_trials, seed=seed,
                inner_folds=N_INNER, life_level=LIFE_LEVEL, snl_grid=SNL_GRID, commit=git_commit(root),

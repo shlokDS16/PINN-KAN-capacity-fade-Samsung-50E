@@ -1,0 +1,11 @@
+[isu W=4.0] fold 0 persist: inner-CV 13.203 pp (floor median 6.094, mean 6.300) 0s
+[isu W=4.0] fold 0 pl: inner-CV 6.582 pp (floor median 6.094, mean 6.300) 1s
+[isu W=4.0] fold 0 lgb: inner-CV 5.183 pp (floor median 6.094, mean 6.300) 6s
+[isu W=4.0] fold 0 gp: inner-CV 5.382 pp (floor median 6.094, mean 6.300) 539s
+[isu W=4.0] fold 1 persist: inner-CV 13.172 pp (floor median 5.824, mean 6.042) 0s
+[isu W=4.0] fold 1 pl: inner-CV 6.333 pp (floor median 5.824, mean 6.042) 1s
+[isu W=4.0] fold 1 lgb: inner-CV 5.070 pp (floor median 5.824, mean 6.042) 4s
+[isu W=4.0] fold 1 gp: inner-CV 4.753 pp (floor median 5.824, mean 6.042) 526s
+[isu W=4.0] fold 2 persist: inner-CV 13.103 pp (floor median 6.094, mean 6.181) 0s
+[isu W=4.0] fold 2 pl: inner-CV 6.522 pp (floor median 6.094, mean 6.181) 1s
+[isu W=4.0] fold 2 lgb: inner-CV 5.188 pp (floor median 6.094, mean 6.181) 4s

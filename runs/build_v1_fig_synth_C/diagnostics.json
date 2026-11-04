@@ -1,0 +1,29 @@
+{
+ "arms": {
+  "A1": {
+   "lam_res": 0.01,
+   "lam_res_at_lower_edge": false,
+   "lam_res_at_upper_edge": false,
+   "clip_fraction": 0.52,
+   "delta_sd": 0.20978163182735443,
+   "tau": 0.15,
+   "delta_sd_over_tau": 1.398544212182363,
+   "delta_sd_flag_outside_0p5_2": false
+  },
+  "A9": {
+   "clip_fraction": 0.9555555555555556
+  }
+ },
+ "lam_res_edge_share_over_arms": 0.0,
+ "lam_res_grid": [
+  0.001,
+  0.01,
+  0.1,
+  1.0,
+  10.0,
+  100.0
+ ],
+ "tau": 0.15,
+ "outer_fold": 0,
+ "tournament_table": "see backbone_tournament.json"
+}

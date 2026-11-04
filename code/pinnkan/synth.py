@@ -13,7 +13,7 @@ import numpy as np
 import torch
 from scipy.stats import qmc
 
-from .data import Cell
+from .data import Cell, samsung_cond_key
 from .law import SIGMA, TAU, drive_to_state, state_factor  # noqa: F401
 from .specs import SPECS
 
@@ -121,8 +121,10 @@ def make_synthetic(kind="G0", n_cyc_cond=20, n_sto_cond=8, reps=2, seed=0, backb
         ret = 1.0 - y_obs / spec.y_scale
         fc = np.ones(len(t), bool)
         fc[0] = False
-        cells.append(Cell(cid, "synthetic", kind_c, f"{kind}{seed}_{cond}", raw.copy(), t, ret, efc, fc, meta={"delta_true": delta}))
+        ckey = (samsung_cond_key("cycling", raw[0], raw[1] + raw[2] / 2.0, raw[2], raw[3], raw[4]) if kind_c == "cycling" else samsung_cond_key("storage", raw[0], raw[1], 0, 0, 0))   # Samsung key format: the figure scripts parse it
+        cells.append(Cell(cid, "synthetic", kind_c, ckey, raw.copy(), t, ret, efc, fc, meta={"delta_true": delta}))
         cond_of[cid] = cond
+    assert len({c.cond for c in cells}) == len(cyc) + len(sto), "condition keys collide: change the seed or the rounding"
     return SynthSet(kind, cells, lambda raw: c_cyc + f_cyc(raw), lambda raw: c_cal + f_cal(raw), {"c_cyc": c_cyc, "c_cal": c_cal}, backbone, cond_of)
 
 
@@ -133,3 +135,17 @@ def split_conditions(cells, test_frac=0.25, seed=0):
     k = max(1, int(round(test_frac * len(conds))))
     test = set(rng.choice(conds, size=k, replace=False))
     return [c for c in cells if c.cond not in test], [c for c in cells if c.cond in test]
+
+
+def split_synthetic(cells, test, frac=0.25, seed=0):
+    """held-out part per test name: B and A random cycling conditions; C the 35 C cycling conditions (a temperature domain); S2 and S3 random storage conditions"""
+    if test == "C":
+        te = {c.cond for c in cells if c.kind == "cycling" and abs(c.raw[0] - 35.0) < 1e-9}
+        if te:
+            return [c for c in cells if c.cond not in te], [c for c in cells if c.cond in te]
+    if test in ("S2", "S3"):
+        rng = np.random.default_rng([20261106, 8, seed])
+        conds = sorted({c.cond for c in cells if c.kind == "storage"})
+        te = set(rng.choice(conds, size=max(1, int(round(frac * len(conds)))), replace=False))
+        return [c for c in cells if c.cond not in te], [c for c in cells if c.cond in te]
+    return split_conditions(cells, frac, seed)

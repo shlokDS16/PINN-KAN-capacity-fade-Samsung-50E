@@ -1,0 +1,36 @@
+{
+ "run_id": "build_v1_fig_synth_ISUslot",
+ "dataset": "synthetic",
+ "mode": "confirmatory",
+ "n_trials": 2,
+ "inner_k": 2,
+ "steps_scale": 0.15,
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "backbone": "tournament",
+ "test": "B",
+ "arms": [
+  "A1",
+  "A2",
+  "A4",
+  "A5",
+  "A7",
+  "A9",
+  "A10",
+  "A11",
+  "A12",
+  "R1",
+  "R2"
+ ],
+ "synthetic": {
+  "kind": "G2",
+  "n_cyc_cond": 40,
+  "n_sto_cond": 19,
+  "reps": 3,
+  "seed": 41,
+  "test_frac": 0.25
+ }
+}

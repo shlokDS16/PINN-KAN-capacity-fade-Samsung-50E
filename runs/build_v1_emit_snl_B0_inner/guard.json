@@ -1,0 +1,8 @@
+[
+ {
+  "what": "load_split(snl, B, fold 0)",
+  "role": "train",
+  "frozen": false,
+  "allowed": true
+ }
+]

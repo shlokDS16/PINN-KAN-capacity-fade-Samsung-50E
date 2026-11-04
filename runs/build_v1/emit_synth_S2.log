@@ -1,0 +1,43 @@
+[02:23:32] run build_v1_emit_synth_S2: dataset synthetic test S2 fold 0 mode confirmatory (requested confirmatory) blinded=False
+[02:23:32] train cells 104: 90 cycling, 14 storage; conditions 44
+[02:23:38] backbone tournament: chosen constant (best constant)
+[02:23:49] tuned A1: inner-CV 0.837 pp, best {'h': 3, 'grid': 2, 'l2': 0.001, 'sparsity': 0.001, 'lam_res': 0.01, 'placement': 'record_end'}, median fit 2.3 s, failed 0
+[02:23:58] tuned A3: inner-CV 0.832 pp, best {'l2': 1e-05, 'lam_res': 0.1, 'placement': 'whole_axis'}, median fit 1.9 s, failed 0
+[02:24:02] tuned A9: inner-CV 0.925 pp, best {'width': 128, 'depth': 4, 'wd': 1e-05, 'zdim': 3}, median fit 0.9 s, failed 0
+[02:24:08] tuned A10: inner-CV 2.858 pp, best {}, median fit 2.8 s, failed 0
+[02:24:08] tuned R1: inner-CV 1.587 pp, best {}, median fit 0.0 s, failed 0
+[02:24:08] tuned R2: inner-CV 1.379 pp, best {}, median fit 0.0 s, failed 0
+[02:24:14] diagnostics: {"A1": {"lam_res": 0.01, "clip_fraction": 0.607, "delta_sd": 0.148, "tau": 0.15, "delta_sd_over_tau": 0.986}, "A3": {"lam_res": 0.1, "clip_fraction": 0.95, "delta_sd": 0.187, "tau": 0.15, "delta_sd_over_tau": 1.249}, "A9": {"clip_fraction": 0.84}}
+[02:24:22] outer test A1: 0.634 pp (seed SD 0.060) over 5 conditions
+[02:24:28] outer test A3: 0.763 pp (seed SD 0.075) over 5 conditions
+[02:24:32] outer test A9: 1.258 pp (seed SD 0.049) over 5 conditions
+[02:24:41] outer test A10: 3.146 pp (seed SD 0.000) over 5 conditions
+[02:24:41] outer test R1: 0.867 pp (seed SD 0.000) over 5 conditions
+[02:24:41] outer test R2: 1.479 pp (seed SD 0.000) over 5 conditions
+Traceback (most recent call last):
+  File "C:\Users\Shlok\Downloads\PINN KAN battery paper\code\run_pinnkan.py", line 9, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\Shlok\Downloads\PINN KAN battery paper\code\pinnkan\run.py", line 427, in main
+    run(load_config(a.config), runs_dir=a.runs_dir)
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shlok\Downloads\PINN KAN battery paper\code\pinnkan\run.py", line 319, in run
+    emit_artifacts(run_dir, rec, spec, train, prep, fitted, ctx["backbone"], prep)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shlok\Downloads\PINN KAN battery paper\code\pinnkan\run.py", line 365, in emit_artifacts
+    emit.superposition(one, prep, spec, backbone).to_csv(os.path.join(run_dir, "superposition.csv"), index=False)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shlok\Downloads\PINN KAN battery paper\code\pinnkan\emit.py", line 185, in superposition
+    preds, (z, delta) = pinn_mod.predict_pinn(arm.model, spec, wc, float(arm.hp.get("lam_res", 1.0)), arm.seed)
+                        ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shlok\Downloads\PINN KAN battery paper\code\pinnkan\pinn.py", line 206, in predict_pinn
+    bw = batch_from_windows(spec, wcells)
+  File "C:\Users\Shlok\Downloads\PINN KAN battery paper\code\pinnkan\law.py", line 351, in batch_from_windows
+    return _series_batch(spec, [w.cell_id for w in wcells], [w.cond for w in wcells], [w.kind for w in wcells], [w.raw for w in wcells],
+                         [w.t_win for w in wcells], [w.y_win for w in wcells], [w.efc_curve for w in wcells])
+  File "C:\Users\Shlok\Downloads\PINN KAN battery paper\code\pinnkan\law.py", line 329, in _series_batch
+    s = torch.tensor(np.stack([spec.norm(r) for r in raws]), dtype=torch.float32)
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shlok\AppData\Roaming\Python\Python314\site-packages\numpy\_core\shape_base.py", line 454, in stack
+    raise ValueError('need at least one array to stack')
+ValueError: need at least one array to stack

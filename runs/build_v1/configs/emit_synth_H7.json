@@ -1,0 +1,22 @@
+{
+ "run_id": "build_v1_emit_synth_H7",
+ "dataset": "synthetic",
+ "mode": "h7",
+ "steps_scale": 0.15,
+ "h7": {
+  "gens": [
+   "G0",
+   "G1",
+   "G2"
+  ],
+  "n_draws": 3,
+  "n_trials": 1,
+  "inner_k": 2,
+  "steps_scale": 0.15,
+  "design": {
+   "n_cyc_cond": 20,
+   "n_sto_cond": 8,
+   "reps": 2
+  }
+ }
+}

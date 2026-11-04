@@ -23,7 +23,7 @@ import numpy as np
 import torch
 
 from . import ROOT as _ROOT
-from . import guard, margins, metrics, semi, synth, tuning
+from . import emit, guard, h7, margins, metrics, semi, stats_step, synth, tuning
 from .arms import ARMS, H1B_POOL, NEURAL, default_hp, make_arm
 from .data import WindowRule, load_split, prepare_many, sha256_file
 from .law import TAU
@@ -126,7 +126,7 @@ def build_data(cfg, root, role):
     if ds == "synthetic":
         sc = cfg.get("synthetic", {})
         S = synth.make_synthetic(sc.get("kind", "G0"), sc.get("n_cyc_cond", 20), sc.get("n_sto_cond", 8), sc.get("reps", 2), sc.get("seed", 0))
-        tr, te = synth.split_conditions(S.cells, sc.get("test_frac", 0.25), sc.get("seed", 0))
+        tr, te = synth.split_synthetic(S.cells, cfg["test"], sc.get("test_frac", 0.25), sc.get("seed", 0))
         return {"spec": SPECS["synthetic"], "train": tr, "test": te if role != "train" else None, "synth": S,
                 "split": {"file": "synthetic (generated)", "note": "no outer test fold of real data exists"}, "manifest": []}
     sv = load_split(ds, cfg["test"], cfg["fold"], role=role, root=root, retain_all=cfg["retain_all"], throughput=cfg["throughput"])
@@ -145,7 +145,7 @@ def run(cfg_in, root=None, runs_dir=None):
     run_id = cfg["run_id"]
     run_dir = os.path.join(runs_dir, run_id)
     ds, mode = cfg["dataset"], cfg["mode"]
-    tk = "cycling" if ds == "synthetic" else TARGET_BY_TEST.get(cfg["test"], "cycling")
+    tk = TARGET_BY_TEST.get(cfg["test"], "cycling")
     if cfg.get("target_kind") not in (None, tk):
         raise ConfigError(f"target_kind {cfg['target_kind']!r} contradicts test {cfg['test']!r} (scored kind is {tk!r})")
     cfg["target_kind"] = tk
@@ -164,10 +164,19 @@ def run(cfg_in, root=None, runs_dir=None):
             raise FileExistsError(run_dir)
     os.makedirs(run_dir, exist_ok=True)
     blinded = ds == "samsung" and not guard.is_valid_freeze(root)
+    if mode == "h7":                                        # identifiability driver, synthetic only (PREREG_v2 13)
+        if ds != "synthetic":
+            raise ConfigError("mode h7 is synthetic only")
+        _json(os.path.join(run_dir, "config.json"), cfg)
+        hk = {k: v for k, v in (cfg.get("h7") or {}).items() if k in ("gens", "n_draws", "arms", "n_trials", "inner_k", "steps_scale", "design")}
+        h7.run_h7(run_dir, backbone=cfg["backbone"] if cfg["backbone"] != "tournament" else "self_limiting", **hk)
+        return run_dir
     if blinded and mode not in ("timing", "confirmatory"):
         mode = "timing"        # retention blinding before the freeze: no retention-derived number is written under runs/
         # (a confirmatory request is NOT downgraded: it goes to the guard, which refuses it)
     rec = Recorder(run_dir, run_id)
+    if ds == "synthetic":
+        open(os.path.join(run_dir, "SYNTHETIC"), "w").write("synthetic data: invented ageing laws, not results\n")
     guard.GUARD_LOG.clear()
     t_start = time.time()
     _json(os.path.join(run_dir, "config.json"), {**cfg, "mode_effective": mode, "blinded_samsung_pre_freeze": blinded})
@@ -247,7 +256,7 @@ def run(cfg_in, root=None, runs_dir=None):
     _json(os.path.join(run_dir, "tuning_done.json"), {"backbone": ctx["backbone"], "arms": inner, "budget": {"n_trials": cfg["n_trials"], "inner_k": cfg["inner_k"]}})
     metrics_out["inner_cv_pp"] = {a: inner[a]["inner_cv_pp"] for a in arms}
     if cfg["diagnostics"]:
-        diag = diagnostics(arms, tuned, train, spec, ctx, cfg["fold"])
+        diag, diag_arms = diagnostics(arms, tuned, train, spec, ctx, cfg["fold"])
         _json(os.path.join(run_dir, "diagnostics.json"), diag)
         metrics_out["diagnostics_file"] = "diagnostics.json"
         rec.log("diagnostics: " + json.dumps({a: {k: round(v, 3) for k, v in d.items() if isinstance(v, float)} for a, d in diag["arms"].items()}))
@@ -258,6 +267,11 @@ def run(cfg_in, root=None, runs_dir=None):
             arm = make_arm(a, spec, tuned[a]["best_hp"], 0, ctx).fit(train)
             timings[a].update(refit_seconds=time.time() - t0, n_params=int(arm.n_params), n_train_used=arm.n_train_used)
     if mode == "inner":
+        if cfg["diagnostics"]:
+            scored_ids = {r["cell"] for a in arms for r in tuned[a]["rows"]}
+            prep_in = [p for p in prepare_many(train, rule, oracle=cfg["oracle_throughput"]) if p.cell.cell_id in scored_ids]
+            emit_artifacts(run_dir, rec, spec, train, [], {a: [x] for a, x in diag_arms.items()}, ctx["backbone"], prep_in)
+        write_reference(run_dir, train, rule, blinded, cfg, rec)
         for a in arms:
             if tuned[a]["rows"]:
                 metrics_out.setdefault("inner_nonfinite", {})[a] = int(sum(r["n_nonfinite"] for r in tuned[a]["rows"]))
@@ -280,6 +294,7 @@ def run(cfg_in, root=None, runs_dir=None):
     if bad:
         raise ConfigError(f"test cells of kind {sorted(bad)} but the tuned and scored kind is {tk}")
     cond_scores_out, per_arm = {}, {}
+    fitted = {}
     for a in arms:
         per_seed_rows, per_seed_preds = [], []
         for s in cfg["seeds"]:
@@ -289,6 +304,8 @@ def run(cfg_in, root=None, runs_dir=None):
             rows = metrics.score_prepared(preds, prep)
             per_seed_rows.append(rows)
             per_seed_preds.append(preds)
+            if a in ("A1", "A2", "A4", "A10"):
+                fitted.setdefault(a, []).append(arm)
             rec.add_preds("outer_test", a, s, rows)
             timings[a][f"refit_seed{s}_seconds"] = time.time() - t0
         cs, sd = metrics.seed_condition_scores(per_seed_rows)
@@ -299,6 +316,8 @@ def run(cfg_in, root=None, runs_dir=None):
                       "n_train_used": arm.n_train_used, **outer_extras(prep, per_seed_preds, per_seed_rows)}
         rec.log(f"outer test {a}: {per_arm[a]['primary_pp']:.3f} pp (seed SD {sd:.3f}) over {len(cs)} conditions")
     metrics_out["outer_test"] = per_arm
+    emit_artifacts(run_dir, rec, spec, train, prep, fitted, ctx["backbone"], prep)
+    write_reference(run_dir, train, rule, blinded, cfg, rec)
     if cfg["permute_stress"]:
         metrics_out["negative_control"] = negative_control(cond_scores_out)
     _json(os.path.join(run_dir, "condition_scores.json"), cond_scores_out)
@@ -312,7 +331,7 @@ LAM_GRID = ARMS["A1"].space["lam_res"][1]
 def diagnostics(arms, tuned, train, spec, ctx, fold):
     """D013 C7, per fold: tuned lam_res and whether it sits on a grid edge; sd of the fitted delta_c on the training cells against TAU (flag outside [0.5, 2]);
     share of clipped steps (A1, A9 and the other gradient-trained arms). One refit per arm at its tuned settings, seed 0, training cells only."""
-    out, lam_edges = {}, []
+    out, lam_edges, kept = {}, [], {}
     for a in arms:
         hp = tuned[a]["best_hp"]
         d = {}
@@ -323,10 +342,44 @@ def diagnostics(arms, tuned, train, spec, ctx, fold):
         if ARMS[a].family in ("pinn", "hard", "data"):
             arm = make_arm(a, spec, hp, 0, ctx).fit(train)
             d.update(arm.diagnostics())
+            kept[a] = arm
         if d:
             out[a] = d
     return {"arms": out, "lam_res_edge_share_over_arms": (float(np.mean(lam_edges)) if lam_edges else None), "lam_res_grid": list(LAM_GRID), "tau": TAU,
-            "outer_fold": fold, "tournament_table": "see backbone_tournament.json"}
+            "outer_fold": fold, "tournament_table": "see backbone_tournament.json"}, kept
+
+
+def emit_artifacts(run_dir, rec, spec, train, prep, fitted, backbone, window_prep):
+    """window.csv for every run with scored cells; stress_functions.json, residual_map.npz, superposition.csv for datasets with a calendar term
+    (Samsung layout) when the fitted A1 (and A2 / A4 / A10) models are available. `fitted`: {arm_id: [fitted arms]}."""
+    try:
+        _emit_artifacts(run_dir, rec, spec, train, prep, fitted, backbone, window_prep)
+    except Exception as e:  # noqa: BLE001  (secondary artefacts must not destroy a scored run; the failure is recorded, not hidden)
+        rec.log(f"EMIT FAILED: {type(e).__name__}: {e}")
+        _json(os.path.join(run_dir, "emit_errors.json"), {"error": f"{type(e).__name__}: {e}"})
+
+
+def _emit_artifacts(run_dir, rec, spec, train, prep, fitted, backbone, window_prep):
+    if window_prep:
+        emit.window_rows(window_prep).to_csv(os.path.join(run_dir, "window.csv"), index=False)
+    if "A1" not in fitted or not emit.supports_calendar_maps(spec):
+        rec.log("no stress_functions / residual_map / superposition: needs A1 and the Samsung stress layout with a calendar term")
+        return
+    a10 = fitted["A10"][0] if "A10" in fitted else None
+    _json(os.path.join(run_dir, "stress_functions.json"), emit.stress_functions(fitted["A1"], spec, train, backbone, fitted.get("A4", ()), a10))
+    np.savez(os.path.join(run_dir, "residual_map.npz"), **emit.residual_map(fitted["A1"], spec, train))
+    one = {a: v[0] for a, v in fitted.items() if a in ("A1", "A2")}
+    if prep and one:
+        emit.superposition(one, prep, spec, backbone).to_csv(os.path.join(run_dir, "superposition.csv"), index=False)
+    rec.log("emitted window.csv, stress_functions.json, residual_map.npz" + (", superposition.csv" if prep and one else ""))
+
+
+def write_reference(run_dir, train, rule, blinded, cfg, rec):
+    """training-side R_LOO / R_WARP for the stats step (descriptive). Not written for Samsung before a valid freeze (retention blinding)."""
+    if blinded:
+        return
+    prep_tr = prepare_many(train, rule, oracle=cfg["oracle_throughput"])
+    _json(os.path.join(run_dir, "reference_values.json"), stats_step.reference_values(prep_tr))
 
 
 def outer_extras(prep, per_seed_preds, per_seed_rows, rul_level=0.8):
@@ -350,8 +403,9 @@ def negative_control(cond_scores, margin=1.02):
     L9 = metrics.log_ratio(cond_scores["A9"], cond_scores["A1"])
     L2 = metrics.log_ratio(cond_scores["R2"], cond_scores["A1"])
     m9, m2 = float(np.mean(list(L9.values()))), float(np.mean(list(L2.values())))
+    med2 = float(np.median(list(L2.values())))
     p = metrics.signflip_p_two_sided(list(L9.values()))
-    out.update(mean_L_A9_over_A1=m9, signflip_p_two_sided=p, mean_L_R2_over_A1=m2, ln_margin=float(np.log(margin)),
+    out.update(mean_L_A9_over_A1=m9, signflip_p_two_sided=p, mean_L_R2_over_A1=m2, median_L_R2_over_A1=med2, ln_margin=float(np.log(margin)),
                pass_residual_effect_vanishes=bool(m9 < np.log(margin) and p > 0.05), pass_A1_not_better_than_R2=bool(m2 <= np.log(margin)))
     out["passed"] = out["pass_residual_effect_vanishes"] and out["pass_A1_not_better_than_R2"]
     return out

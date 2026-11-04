@@ -1,0 +1,20 @@
+[02:37:01] run build_v1_fig_synth_C: dataset synthetic test C fold 0 mode confirmatory (requested confirmatory) blinded=False
+[02:37:01] train cells 79: 60 cycling, 19 storage; conditions 39
+[02:37:07] backbone tournament: chosen self_limiting (best self_limiting)
+[02:37:18] tuned A1: inner-CV 3.092 pp, best {'h': 3, 'grid': 2, 'l2': 0.001, 'sparsity': 0.001, 'lam_res': 0.01, 'placement': 'record_end'}, median fit 2.4 s, failed 0
+[02:37:21] tuned A9: inner-CV 3.048 pp, best {'width': 128, 'depth': 4, 'wd': 1e-05, 'zdim': 3}, median fit 0.5 s, failed 0
+[02:37:25] tuned A10: inner-CV 2.670 pp, best {}, median fit 1.8 s, failed 0
+[02:37:27] tuned A11: inner-CV 3.358 pp, best {'nu': 2.5, 'noise_lo': 0.00015119336467641018, 'fs': 'min'}, median fit 0.5 s, failed 0
+[02:37:27] tuned A12: inner-CV 4.385 pp, best {'n_est': 352, 'lr': 0.11387317092169064, 'leaves': 21, 'mcs': 35, 'l2': 0.04950159553733195}, median fit 0.0 s, failed 0
+[02:37:27] tuned R1: inner-CV 13.996 pp, best {}, median fit 0.0 s, failed 0
+[02:37:27] tuned R2: inner-CV 13.680 pp, best {}, median fit 0.0 s, failed 0
+[02:37:30] diagnostics: {"A1": {"lam_res": 0.01, "clip_fraction": 0.52, "delta_sd": 0.21, "tau": 0.15, "delta_sd_over_tau": 1.399}, "A9": {"clip_fraction": 0.956}}
+[02:37:39] outer test A1: 1.359 pp (seed SD 0.148) over 10 conditions
+[02:37:43] outer test A9: 2.890 pp (seed SD 0.123) over 10 conditions
+[02:37:50] outer test A10: 2.672 pp (seed SD 0.000) over 10 conditions
+[02:37:53] outer test A11: 1.126 pp (seed SD 0.000) over 10 conditions
+[02:37:53] outer test A12: 1.666 pp (seed SD 0.106) over 10 conditions
+[02:37:53] outer test R1: 14.886 pp (seed SD 0.000) over 10 conditions
+[02:37:53] outer test R2: 13.509 pp (seed SD 0.000) over 10 conditions
+[02:37:54] emitted window.csv, stress_functions.json, residual_map.npz, superposition.csv
+[02:37:54] done in 53 s

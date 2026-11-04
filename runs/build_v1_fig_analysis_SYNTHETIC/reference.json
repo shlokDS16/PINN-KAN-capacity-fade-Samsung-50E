@@ -1,0 +1,30 @@
+{
+ "definition": "training-side replicate spread (descriptive, never a margin)",
+ "values": {
+  "B": {
+   "R_LOO": 1.5765403115979044,
+   "R_WARP": 1.3636689084807219,
+   "n_folds": 1
+  },
+  "C": {
+   "R_LOO": 1.2314886738762247,
+   "R_WARP": 1.0736952456449855,
+   "n_folds": 1
+  },
+  "S2": {
+   "R_LOO": 1.786220087930062,
+   "R_WARP": 1.43394430331136,
+   "n_folds": 1
+  },
+  "ISU": {
+   "R_LOO": 1.489923831589518,
+   "R_WARP": 1.30492292190478,
+   "n_folds": 1
+  },
+  "SNL": {
+   "R_LOO": 1.5938276758448875,
+   "R_WARP": 1.3024568261836047,
+   "n_folds": 1
+  }
+ }
+}

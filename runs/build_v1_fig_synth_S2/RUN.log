@@ -1,0 +1,18 @@
+[02:37:01] run build_v1_fig_synth_S2: dataset synthetic test S2 fold 0 mode confirmatory (requested confirmatory) blinded=False
+[02:37:01] train cells 104: 90 cycling, 14 storage; conditions 44
+[02:37:07] backbone tournament: chosen constant (best accelerating)
+[02:37:19] tuned A1: inner-CV 0.978 pp, best {'h': 3, 'grid': 2, 'l2': 0.001, 'sparsity': 0.001, 'lam_res': 0.01, 'placement': 'record_end'}, median fit 2.6 s, failed 0
+[02:37:28] tuned A3: inner-CV 0.943 pp, best {'l2': 1e-05, 'lam_res': 0.1, 'placement': 'whole_axis'}, median fit 1.8 s, failed 0
+[02:37:32] tuned A9: inner-CV 0.878 pp, best {'width': 128, 'depth': 4, 'wd': 1e-05, 'zdim': 3}, median fit 1.0 s, failed 0
+[02:37:37] tuned A10: inner-CV 2.932 pp, best {}, median fit 2.8 s, failed 0
+[02:37:37] tuned R1: inner-CV 1.452 pp, best {}, median fit 0.0 s, failed 0
+[02:37:37] tuned R2: inner-CV 1.411 pp, best {}, median fit 0.0 s, failed 0
+[02:37:43] diagnostics: {"A1": {"lam_res": 0.01, "clip_fraction": 0.657, "delta_sd": 0.148, "tau": 0.15, "delta_sd_over_tau": 0.986}, "A3": {"lam_res": 0.1, "clip_fraction": 0.897, "delta_sd": 0.186, "tau": 0.15, "delta_sd_over_tau": 1.241}, "A9": {"clip_fraction": 0.818}}
+[02:37:51] outer test A1: 0.810 pp (seed SD 0.002) over 5 conditions
+[02:37:57] outer test A3: 0.883 pp (seed SD 0.019) over 5 conditions
+[02:38:02] outer test A9: 1.327 pp (seed SD 0.066) over 5 conditions
+[02:38:11] outer test A10: 2.973 pp (seed SD 0.000) over 5 conditions
+[02:38:11] outer test R1: 1.243 pp (seed SD 0.000) over 5 conditions
+[02:38:11] outer test R2: 1.387 pp (seed SD 0.000) over 5 conditions
+[02:38:11] emitted window.csv, stress_functions.json, residual_map.npz, superposition.csv
+[02:38:11] done in 70 s

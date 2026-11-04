@@ -1,0 +1,54 @@
+{
+ "mode": "h7",
+ "test": "B",
+ "fold": 0,
+ "arms": [
+  "A1",
+  "A2",
+  "A9",
+  "R1",
+  "R2"
+ ],
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "n_trials": 20,
+ "inner_k": 3,
+ "backbone": "self_limiting",
+ "steps_scale": 0.15,
+ "window": {},
+ "oracle_throughput": false,
+ "per_cell_factor": true,
+ "twins": "auto",
+ "refit_timing": false,
+ "overwrite": false,
+ "retain_all": false,
+ "throughput": "analytic",
+ "target_kind": "cycling",
+ "auto_budget": false,
+ "permute_stress": false,
+ "pinn": {},
+ "diagnostics": true,
+ "run_id": "build_v1_emit_synth_H7",
+ "dataset": "synthetic",
+ "h7": {
+  "gens": [
+   "G0",
+   "G1",
+   "G2"
+  ],
+  "n_draws": 3,
+  "n_trials": 1,
+  "inner_k": 2,
+  "steps_scale": 0.15,
+  "design": {
+   "n_cyc_cond": 20,
+   "n_sto_cond": 8,
+   "reps": 2
+  }
+ }
+}

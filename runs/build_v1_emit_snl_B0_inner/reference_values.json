@@ -1,0 +1,9 @@
+{
+ "R_LOO": 2.761242832976232,
+ "R_WARP": 1.2570314068032045,
+ "R_WARP_form": "additive",
+ "R_WARP_add": 1.2570314068032045,
+ "R_WARP_mult": 3.0387144374552757,
+ "n_conditions": 17,
+ "aggregate": "median over training conditions with >= 2 replicates"
+}

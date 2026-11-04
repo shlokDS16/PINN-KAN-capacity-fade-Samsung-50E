@@ -1,0 +1,24 @@
+{
+ "run_id": "build_v1_emit_isu_B0_inner",
+ "dataset": "isu",
+ "test": "B",
+ "fold": 0,
+ "mode": "inner",
+ "arms": [
+  "A1",
+  "A2",
+  "A4",
+  "A5",
+  "A7",
+  "A9",
+  "A10",
+  "A11",
+  "A12",
+  "R1",
+  "R2"
+ ],
+ "n_trials": 2,
+ "inner_k": 2,
+ "steps_scale": 0.15,
+ "backbone": "self_limiting"
+}

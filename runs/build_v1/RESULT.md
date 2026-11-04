@@ -105,3 +105,25 @@ CU files after the stage-aware fetch (stage 1 and stage 2 have the same zip name
 | D013 C7 | `diagnostics.json` per run: tuned `lam_res` with grid-edge flags and edge share, sd of fitted `delta_c` against TAU (flag outside [0.5, 2]), clipped-step fraction for A1, A9 and the other gradient-trained arms; tournament table in `backbone_tournament.json` | `test_d013_c7_*` |
 
 Not touched (lead assigns): D013 C5, C6, C8, C9 (prereg and paper text). The smoke runs of section 2 were made before these changes (A1 now has a 6-value `lam_res` grid and A2/A9 are clipped); re-run at the freeze.
+
+## 5. Figure inputs and statistics step (2026-11-05)
+
+New: `pinnkan/emit.py`, `pinnkan/stats_step.py`, `pinnkan/h7.py`, launchers `code/run_pinnkan_stats.py` and `code/run_figures_on_build.py`; formats of `code/figures/README.md`.
+Tests: `code/tests/test_pk_emit_stats.py` (13 tests). **Full suite: 170 passed, 0 failed** (the two older probe tests pass again after the data layout settled). No FROZEN, no SCORED.jsonl.
+
+| file | written by | where |
+|---|---|---|
+| `window.csv`, `reference_values.json` | run writer (every inner and confirmatory run; not for blinded Samsung) | each run dir |
+| `stress_functions.json`, `residual_map.npz`, `superposition.csv` | run writer, datasets with a calendar term and the Samsung layout (superposition: confirmatory only) | each such run dir |
+| `contrasts_<test>.json`, `reference.json`, `controls.json` | `run_pinnkan_stats.py` (D012 exact sign test on ln(S_comp/S_A1), order-statistic interval, BCa mean pp, D009 pp tier from the inner-CV E, Holm for H1a/H1b/H6, gate for H1c, H2 A/C/B, Test C Holm-2, S2 H5) | analysis dir |
+| H7 `summary.json`, `surfaces_<gen>.npz` | `mode: "h7"` | run dir |
+
+Definitions chosen where the figure README leaves them open: `a_pp500` = calendar loss in pp after 500 d at 25 C with the fold backbone; `E_kJmol` = E / (1/298.15 - 1/308.15) x R; storage rate in pp per 500 d (initial rate); cyclic partial dependence = mean over the training cycling conditions, centred; A10 curves from its fitted exponents (SOC_max = SOC_mid + median DoD / 2); superposition counterfactual `y(a_cyc = 0) / y(full)` (D013); `R_LOO`, `R_WARP` = median over training conditions with at least 2 replicates (STATS_RULING 1.2). Comparators for H1b, H1c, H4, H5 are chosen by the inner-CV score of each fold's training side, never by test error.
+Synthetic condition keys now use the Samsung key format so the figure scripts can parse them (all earlier synthetic runs used another key format; they stay on disk).
+
+End-to-end checks (all CPU, synthetic or training folds only):
+- Synthetic confirmatory runs `build_v1_fig_synth_B2` (13 arms), `_C` (35 C domain), `_S2` (storage conditions held out), `_NEG` (permuted stress, A1/A9/R2), `_ISUslot`, `_SNLslot`, H7 `build_v1_emit_synth_H7` (3 generators x 3 draws, A1/A2/A4/A8, demo size) -> `build_v1_fig_analysis_SYNTHETIC/` -> `python -P code/run_figures_on_build.py --b runs/build_v1_fig_synth_B2 --h7 runs/build_v1_emit_synth_H7`: **all 11 figure and table scripts exit OK** (outputs `paper/figures/*_SYNTHETIC.*`, watermarked). Fig. 2 uses the figure demo's invented fade table (not a run-writer output). The ISU/SNL slots of Table 1 are synthetic stand-ins: the real ISU/SNL outer tests are blocked by the guard and their training-fold runs have no outer metrics.
+- Real ISU and SNL **training folds** (mode inner, `build_v1_emit_isu_B0_inner`, `_snl_B0_inner`): window.csv and reference values written, contrasts from out-of-fold inner-CV scores labelled `source: inner_cv_training_conditions`; a confirmatory request on ISU is still refused by the guard (test).
+- Superseded and kept on disk: `build_v1_emit_synth_S2` (failed: superposition on a run without cycling test cells, fixed), `build_v1_emit_synth_B/C/S2_r2/NEG`, `build_v1_fig_synth_B` (earlier key format or before the A10 partial-dependence floor).
+
+Observations for the statistician (synthetic G2 demo, tiny budgets, not results): (i) under the permuted-stress control A1 is clearly worse than A9 (mean L = -0.74, two-sided p = 0.03, so the control "fails" its p > 0.05 criterion although mean L < ln 1.02 holds) and A1 still beats R2 by a large margin (median L = 1.31, criterion "A1 does not beat R2" fails): the window-fitted per-cell terms and the time law carry information that does not depend on stress, so criterion (ii) as written may fail even for a leak-free pipeline; the criteria need a ruling before the freeze. (ii) P1 shows False at demo size (H7 with 1 trial and 15 % steps).

@@ -1,0 +1,66 @@
+{
+ "arms": {
+  "A1": {
+   "lam_res": 0.1,
+   "lam_res_at_lower_edge": false,
+   "lam_res_at_upper_edge": false,
+   "clip_fraction": 1.0,
+   "delta_sd": 0.26043039560317993,
+   "tau": 0.15,
+   "delta_sd_over_tau": 1.736202637354533,
+   "delta_sd_flag_outside_0p5_2": false
+  },
+  "A2": {
+   "clip_fraction": 0.2833333333333333,
+   "delta_sd": 0.4495522677898407,
+   "tau": 0.15,
+   "delta_sd_over_tau": 2.997015118598938,
+   "delta_sd_flag_outside_0p5_2": true
+  },
+  "A4": {
+   "lam_res": 1.0,
+   "lam_res_at_lower_edge": false,
+   "lam_res_at_upper_edge": false,
+   "clip_fraction": 1.0,
+   "delta_sd": 0.2806251049041748,
+   "tau": 0.15,
+   "delta_sd_over_tau": 1.8708340326944988,
+   "delta_sd_flag_outside_0p5_2": false
+  },
+  "A5": {
+   "lam_res": 1.0,
+   "lam_res_at_lower_edge": false,
+   "lam_res_at_upper_edge": false,
+   "clip_fraction": 1.0,
+   "delta_sd": 0.21237961947917938,
+   "tau": 0.15,
+   "delta_sd_over_tau": 1.415864129861196,
+   "delta_sd_flag_outside_0p5_2": false
+  },
+  "A7": {
+   "lam_res": 0.01,
+   "lam_res_at_lower_edge": false,
+   "lam_res_at_upper_edge": false,
+   "clip_fraction": 1.0,
+   "delta_sd": 0.20329411327838898,
+   "tau": 0.15,
+   "delta_sd_over_tau": 1.3552940885225933,
+   "delta_sd_flag_outside_0p5_2": false
+  },
+  "A9": {
+   "clip_fraction": 1.0
+  }
+ },
+ "lam_res_edge_share_over_arms": 0.0,
+ "lam_res_grid": [
+  0.001,
+  0.01,
+  0.1,
+  1.0,
+  10.0,
+  100.0
+ ],
+ "tau": 0.15,
+ "outer_fold": 0,
+ "tournament_table": "see backbone_tournament.json"
+}

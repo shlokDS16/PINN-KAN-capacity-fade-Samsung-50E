@@ -1,0 +1,31 @@
+{
+ "run_id": "build_v1_emit_synth_S2_r2",
+ "dataset": "synthetic",
+ "mode": "confirmatory",
+ "n_trials": 2,
+ "inner_k": 2,
+ "steps_scale": 0.15,
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "backbone": "tournament",
+ "test": "S2",
+ "arms": [
+  "A1",
+  "A3",
+  "A9",
+  "A10",
+  "R1",
+  "R2"
+ ],
+ "synthetic": {
+  "kind": "G2",
+  "n_cyc_cond": 30,
+  "n_sto_cond": 19,
+  "reps": 3,
+  "seed": 33,
+  "test_frac": 0.25
+ }
+}

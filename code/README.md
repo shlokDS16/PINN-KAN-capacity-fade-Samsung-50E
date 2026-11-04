@@ -50,6 +50,30 @@ Run record in `runs/<run_id>/`: `config.json`, `env.json`, `git.json` (commit + 
 `backbone_tournament.json`, `margins_inputs.json`, `margins.json`, `timings.json`, `metrics.json`, `condition_scores.json`, `predictions.csv`
 (phase `inner_oof` or `outer_test`, arm, seed, cell, condition, time, predicted and true retention), `RUN.log`.
 
+## Figure inputs and the statistics step (code/figures/README.md formats)
+
+Written by the run writer (`pinnkan/emit.py`, called at the end of every `inner` and `confirmatory` run; a failure is recorded in `emit_errors.json`, not hidden):
+`window.csv` (model-visible window check-ups of every scored cell; in `inner` mode of the cells scored out-of-fold), `reference_values.json` (training-side `R_LOO`, `R_WARP`),
+and for datasets with a calendar term and the Samsung stress layout (Samsung, synthetic) `stress_functions.json` (calendar E(SOC) in kJ/mol and a(SOC) as pp lost after 500 d at 25 C,
+storage rate in pp per 500 d, Arrhenius lines, centred cyclic partial dependences; A1 envelope = min/max over the run's final-refit seeds, A4 and A10 curves when those arms ran),
+`residual_map.npz` (median |R| of the A1 residual on bins, training points) and `superposition.csv` (counterfactual calendar share `y(a_cyc = 0) / y(full)` of A1 and A2 at the last check-up,
+scored cycling cells; confirmatory runs only). Runs on synthetic data carry a `SYNTHETIC` marker file, which the figure scripts turn into a watermark.
+`mode: "h7"` (synthetic only, config `h7: {gens, n_draws, arms, n_trials, inner_k, steps_scale, design}`) runs the identifiability driver of `pinnkan/h7.py` and writes `summary.json` and `surfaces_<gen>.npz`.
+
+Statistics step (`pinnkan/stats_step.py`, launcher `code/run_pinnkan_stats.py`):
+
+```
+.venv/Scripts/python.exe -P code/run_pinnkan_stats.py --analysis-dir runs/<x>/analysis --runs B=runs/b_fold0,runs/b_fold1 --runs C=runs/c --runs S2=runs/s2 \
+    --runs ISU=runs/isu_fold0 --negative-run runs/neg --h7-run runs/h7 --stress-run runs/b_fold0
+```
+It reads `condition_scores.json`, `metrics.json` (`inner_cv_pp`) and `config.json` of the fold runs (one directory per outer fold; conditions are merged, comparators are chosen per fold by
+the inner-CV score of that fold's training side, never by test error) and writes `contrasts_<test>.json`, `reference.json` (median over folds of the training-side reference values) and
+`controls.json`. Rule: exact one-sided sign test on `ln(S_comp / S_A1)` (median estimand, order-statistic 95 % interval), tiers S (ln 1.02) and N (-ln 1.10), Holm over {H1a, H1b, H6} by the N-tier p-values,
+H1c tested only when all three are tier S (and only for the inner-CV-best of A11/A12), H2 outcome A/C/B/unresolved (PREREG_v2 9.6), Test C Holm-2 (H4a, H4b), S2 one non-inferiority test (H5),
+ISU/SNL as Test B on their pool (A4, A5, A7; H1c unadjusted). Beside each tier: mean paired pp difference with a BCa interval and the pp-scale tier of D009 (0.02 E, 0.10 E; E = the comparator's
+inner-CV score pooled by test-condition count); `tier_pp_differs` flags a disagreement. A directory without `condition_scores.json` (a training-fold `inner` run) is read from its out-of-fold inner-CV scores and the
+output says `source: inner_cv_training_conditions` (not a confirmatory result). The negative control of `controls.json` comes from the `permute_stress` run; P2 from `stress_functions.json`; P1 from the H7 summary (G0).
+
 ## Arms (config ids; spaces and dimensions as PREREG_v2 7.1, tested in `test_arm_table_matches_prereg_dimensions`)
 
 | id | what | module |
@@ -102,11 +126,11 @@ logged inside the window, the window's mean rate afterwards) and keep the foreca
 - **Window counts** [FB-6]: `window_rule_from_counts` exists; Samsung k_cyc = 4 and k_sto = 2 in the defaults are placeholders until the member listings are counted.
 - **Reference Q0,c** [FB-3]: the loader uses the pipeline's `retention` (ET_T23 if present, else first CU) and renormalises to the first retained check-up.
 - **Consecutive-file incident drops** (prereg 3.3(4), second sentence) and the stage mapping of each named incident file [FB-4]: not implemented (`INCIDENT_CONSECUTIVE_DROPS_IMPLEMENTED = False`).
-- **A8** (free G) for the synthetic H7 figure, the G1 hard-versus-soft batch, the Kendall-tau / variance-importance metrics and the 240-fit synthetic driver: the generator, the recovery metric (nRMSE on a hull sample) and the arms A1, A2, A4 exist; the batch driver does not.
+- **H7** (`mode: "h7"`): driver, A8 and the recovery metric exist; not built: the G1 hard-versus-soft batch (20 draws), the Kendall-tau / variance-importance metric, the paired Wilcoxon thresholds of section 13 and the positive control `A1 beats A11/A12 on G0`. The 240-fit batch at the pilot tuning effort is a long CPU job and was only run at demo size.
 - **Review m1 (left for the lead)**: the pipeline's isolated-outlier QC rule (`code/data/samsung_checkups.py`, prereg 3.3(3)) looks at the next capacity, so whether the last window point survives depends on the first post-window value. Changing it (preceding neighbours only) changes a preregistered rule and a pipeline output; not done here.
 - **Review m2**: the forecast-time list of ISU/SNL still ends at the 70 % crossing (it is the scored set); every arm predicts pointwise and `test_m2_forecast_does_not_depend_on_where_the_query_list_ends` pins that predictions at a check-up do not depend on later query times (A8's integration grid does; synthetic only).
 - **Review m6**: A11/A12 train on the cells that have enough window and forecast points; the other arms on all cells. `n_train_used` and `n_train_scorable_cells` are in the run record; with the secondary window k-1 all storage cells drop out of A11/A12 (k_sto = 1 gives 2 window points < 3).
-- **Statistics** (sign-flip test, BCa, Holm, TOST) belong to `code/prereg/stats_rule.py`; `margins.py` only prepares the margin inputs.
+- **Statistics**: `stats_step.py` implements the D012 sign-test rule for the contrasts; the type-I simulations stay in `code/prereg/`. The sign-flip p of the negative control uses a placeholder RNG seed. H3 (KAN wording against A4/A5 with the G2 validity rule) is not assembled.
 - Implemented after review: the negative control (`permute_stress`, with the acceptance checks of prereg 10; the sign-flip p uses a placeholder RNG seed), and the secondary metrics R^2, MAPE, error by horizon and RUL error in the outer-test `metrics.json`.
 - **Physical validation analyses** of prereg 11a (activation energy, SOC slope, superposition check) and the figure scripts are not part of this build.
 - Sensitivity rows implemented as options: windows (`shift`), oracle throughput, A10 as published, retain-every-check-up. Not implemented: lab-indicator rows, AT-included (`include_at` exists in `load_split`), forecast-failure rule, lab-stratified bootstraps.

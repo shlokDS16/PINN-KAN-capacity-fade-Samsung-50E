@@ -1,0 +1,16 @@
+[02:29:41] run build_v1_emit_isu_B0_inner: dataset isu test B fold 0 mode inner (requested inner) blinded=False
+[02:29:41] train cells 203: 203 cycling, 0 storage; conditions 51
+[02:29:52] tuned A1: inner-CV 6.682 pp, best {'h': 3, 'grid': 8, 'l2': 0.01, 'sparsity': 0.01, 'lam_res': 0.1, 'placement': 'whole_axis'}, median fit 2.2 s, failed 0
+[02:29:55] tuned A2: inner-CV 6.292 pp, best {'h': 4, 'grid': 12, 'l2': 0.01, 'sparsity': 0.01}, median fit 0.4 s, failed 0
+[02:30:02] tuned A4: inner-CV 9.056 pp, best {'grid': 10, 'l2': 0.1, 'lam_res': 1.0, 'placement': 'whole_axis'}, median fit 1.3 s, failed 0
+[02:30:11] tuned A5: inner-CV 6.805 pp, best {'grid': 3, 'l2': 0.001, 'lam_res': 0.01, 'placement': 'whole_axis', 'igrid': 3}, median fit 1.8 s, failed 0
+[02:30:18] tuned A7: inner-CV 7.074 pp, best {'width': 8, 'depth': 1, 'l2': 0.0001, 'lam_res': 0.01, 'placement': 'whole_axis'}, median fit 1.2 s, failed 0
+[02:30:23] tuned A9: inner-CV 9.146 pp, best {'width': 32, 'depth': 3, 'wd': 0.0001, 'zdim': 3}, median fit 1.2 s, failed 0
+[02:30:24] tuned A10: inner-CV 7.019 pp, best {}, median fit 0.6 s, failed 0
+[02:30:35] tuned A11: inner-CV 5.703 pp, best {'nu': 2.5, 'noise_lo': 0.00015119336467641018, 'fs': 'min'}, median fit 2.6 s, failed 0
+[02:30:35] tuned A12: inner-CV 5.784 pp, best {'n_est': 405, 'lr': 0.04429649570464297, 'leaves': 29, 'mcs': 58, 'l2': 0.03417952912061012}, median fit 0.1 s, failed 0
+[02:30:35] tuned R1: inner-CV 13.056 pp, best {}, median fit 0.0 s, failed 0
+[02:30:35] tuned R2: inner-CV 7.983 pp, best {}, median fit 0.0 s, failed 0
+[02:30:43] diagnostics: {"A1": {"lam_res": 0.1, "clip_fraction": 1.0, "delta_sd": 0.19, "tau": 0.15, "delta_sd_over_tau": 1.265}, "A2": {"clip_fraction": 0.278, "delta_sd": 0.352, "tau": 0.15, "delta_sd_over_tau": 2.349}, "A4": {"lam_res": 1.0, "clip_fraction": 1.0, "delta_sd": 0.138, "tau": 0.15, "delta_sd_over_tau": 0.92}, "A5": {"lam_res": 0.01, "clip_fraction": 1.0, "delta_sd": 0.233, "tau": 0.15, "delta_sd_over_tau": 1.553}, "A7": {"lam_res": 0.01, "clip_fraction": 0.997, "delta_sd": 0.234, "tau": 0.15, "delta_sd_over_tau": 1.558}, "A9": {"clip_fraction": 1.0}}
+[02:30:43] no stress_functions / residual_map / superposition: needs A1 and the Samsung stress layout with a calendar term
+[02:30:43] done in 62 s

@@ -1,0 +1,86 @@
+{
+ "arms": {
+  "A1": {
+   "lam_res": 0.01,
+   "lam_res_at_lower_edge": false,
+   "lam_res_at_upper_edge": false,
+   "clip_fraction": 0.6366666666666667,
+   "delta_sd": 0.2020300328731537,
+   "tau": 0.15,
+   "delta_sd_over_tau": 1.3468668858210247,
+   "delta_sd_flag_outside_0p5_2": false
+  },
+  "A2": {
+   "clip_fraction": 0.09444444444444444,
+   "delta_sd": 0.17381946742534637,
+   "tau": 0.15,
+   "delta_sd_over_tau": 1.1587964495023093,
+   "delta_sd_flag_outside_0p5_2": false
+  },
+  "A3": {
+   "lam_res": 0.1,
+   "lam_res_at_lower_edge": false,
+   "lam_res_at_upper_edge": false,
+   "clip_fraction": 0.9833333333333333,
+   "delta_sd": 0.2068033218383789,
+   "tau": 0.15,
+   "delta_sd_over_tau": 1.3786888122558594,
+   "delta_sd_flag_outside_0p5_2": false
+  },
+  "A4": {
+   "lam_res": 1.0,
+   "lam_res_at_lower_edge": false,
+   "lam_res_at_upper_edge": false,
+   "clip_fraction": 1.0,
+   "delta_sd": 0.17512944340705872,
+   "tau": 0.15,
+   "delta_sd_over_tau": 1.1675296227137248,
+   "delta_sd_flag_outside_0p5_2": false
+  },
+  "A5": {
+   "lam_res": 0.01,
+   "lam_res_at_lower_edge": false,
+   "lam_res_at_upper_edge": false,
+   "clip_fraction": 0.59,
+   "delta_sd": 0.13444361090660095,
+   "tau": 0.15,
+   "delta_sd_over_tau": 0.8962907393773397,
+   "delta_sd_flag_outside_0p5_2": false
+  },
+  "A7": {
+   "lam_res": 0.01,
+   "lam_res_at_lower_edge": false,
+   "lam_res_at_upper_edge": false,
+   "clip_fraction": 0.5233333333333333,
+   "delta_sd": 0.15689319372177124,
+   "tau": 0.15,
+   "delta_sd_over_tau": 1.0459546248118083,
+   "delta_sd_flag_outside_0p5_2": false
+  },
+  "A9": {
+   "clip_fraction": 0.8088888888888889
+  },
+  "A13": {
+   "lam_res": 0.01,
+   "lam_res_at_lower_edge": false,
+   "lam_res_at_upper_edge": false,
+   "clip_fraction": 0.5466666666666666,
+   "delta_sd": 0.21121539175510406,
+   "tau": 0.15,
+   "delta_sd_over_tau": 1.4081026117006938,
+   "delta_sd_flag_outside_0p5_2": false
+  }
+ },
+ "lam_res_edge_share_over_arms": 0.0,
+ "lam_res_grid": [
+  0.001,
+  0.01,
+  0.1,
+  1.0,
+  10.0,
+  100.0
+ ],
+ "tau": 0.15,
+ "outer_fold": 0,
+ "tournament_table": "see backbone_tournament.json"
+}

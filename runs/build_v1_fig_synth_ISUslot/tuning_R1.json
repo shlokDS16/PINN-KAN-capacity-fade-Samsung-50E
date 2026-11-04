@@ -1,0 +1,857 @@
+{
+ "arm": "R1",
+ "tuning_seed": 1000,
+ "tpe_seed": 0,
+ "inner_k": 2,
+ "n_trials": 0,
+ "n_inner_conditions": 30,
+ "best_hp": {},
+ "inner_cv_pp": 12.464360595695975,
+ "cond_scores": {
+  "T35|SOCmax0.56|DoD0.42|Cch0.77|Cdch0.38": 10.738619834627835,
+  "T23|SOCmax0.73|DoD0.4|Cch0.82|Cdch1.92": 18.768669362643454,
+  "T35|SOCmax0.71|DoD0.45|Cch0.91|Cdch0.89": 21.006124099695953,
+  "T45|SOCmax0.55|DoD0.53|Cch0.41|Cdch0.44": 8.244839174062397,
+  "T35|SOCmax0.46|DoD0.13|Cch0.49|Cdch1.6": 12.011540548471983,
+  "T35|SOCmax0.76|DoD0.25|Cch0.33|Cdch1.37": 8.221637292622551,
+  "T35|SOCmax0.69|DoD0.22|Cch0.55|Cdch1.53": 12.16316093079474,
+  "T23|SOCmax0.64|DoD0.17|Cch0.3|Cdch0.62": 4.600569283079071,
+  "T23|SOCmax0.75|DoD0.29|Cch0.97|Cdch1.04": 17.36488840525811,
+  "T45|SOCmax0.68|DoD0.19|Cch0.94|Cdch0.77": 24.35517504884226,
+  "T23|SOCmax0.44|DoD0.56|Cch0.94|Cdch1.8": 19.456411528345836,
+  "T45|SOCmax0.34|DoD0.08|Cch0.69|Cdch0.22": 9.047369855653322,
+  "T45|SOCmax0.61|DoD0.44|Cch0.89|Cdch0.3": 14.566182341058676,
+  "T23|SOCmax0.4|DoD0.34|Cch0.62|Cdch1.72": 10.320056339451774,
+  "T23|SOCmax0.63|DoD0.43|Cch0.46|Cdch2": 10.791339472975373,
+  "T23|SOCmax0.31|DoD0.08|Cch0.66|Cdch1.47": 10.8548756157361,
+  "T35|SOCmax0.58|DoD0.18|Cch0.57|Cdch0.47": 7.564570269413004,
+  "T35|SOCmax0.67|DoD0.36|Cch0.24|Cdch1.26": 7.288942103849716,
+  "T45|SOCmax0.56|DoD0.49|Cch0.46|Cdch1.23": 12.857171831867923,
+  "T23|SOCmax0.61|DoD0.12|Cch0.38|Cdch1.67": 6.740303260098884,
+  "T35|SOCmax0.51|DoD0.54|Cch0.2|Cdch1.75": 5.963335051740695,
+  "T45|SOCmax0.43|DoD0.28|Cch0.72|Cdch0.58": 14.100839776893514,
+  "T23|SOCmax0.53|DoD0.6|Cch0.3|Cdch0.8": 5.594590230980722,
+  "T23|SOCmax0.8|DoD0.24|Cch0.35|Cdch0.68": 4.887667343230354,
+  "T23|SOCmax0.42|DoD0.57|Cch0.84|Cdch1.34": 13.029933117642107,
+  "T35|SOCmax0.37|DoD0.14|Cch0.79|Cdch1.9": 22.179479037914927,
+  "T45|SOCmax0.48|DoD0.06|Cch0.59|Cdch1.01": 13.615155243851705,
+  "T45|SOCmax0.66|DoD0.16|Cch0.43|Cdch0.71": 9.342030707651716,
+  "T45|SOCmax0.39|DoD0.48|Cch0.5|Cdch0.92": 11.102324455811484,
+  "T35|SOCmax0.72|DoD0.55|Cch0.87|Cdch1.86": 27.15301630661318
+ },
+ "trials": [],
+ "n_failed": 0,
+ "median_fit_seconds": 5.4836273193359375e-06,
+ "rows": [
+  {
+   "cell": "SYN_G2_41_C03_1",
+   "cond": "T35|SOCmax0.56|DoD0.42|Cch0.77|Cdch0.38",
+   "rmse_pp": 9.560289783185306,
+   "mae_pp": 8.34607861858898,
+   "mape_pct": 9.917376687827062,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C03_2",
+   "cond": "T35|SOCmax0.56|DoD0.42|Cch0.77|Cdch0.38",
+   "rmse_pp": 10.58931922950912,
+   "mae_pp": 9.546290030235768,
+   "mape_pct": 11.388346761522774,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C03_3",
+   "cond": "T35|SOCmax0.56|DoD0.42|Cch0.77|Cdch0.38",
+   "rmse_pp": 12.066250491189077,
+   "mae_pp": 10.910902065040611,
+   "mape_pct": 13.210663639705913,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C04_1",
+   "cond": "T23|SOCmax0.73|DoD0.4|Cch0.82|Cdch1.92",
+   "rmse_pp": 18.97136052028856,
+   "mae_pp": 17.22011492534258,
+   "mape_pct": 24.32705112579433,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C04_2",
+   "cond": "T23|SOCmax0.73|DoD0.4|Cch0.82|Cdch1.92",
+   "rmse_pp": 20.812289665441916,
+   "mae_pp": 18.8894282767153,
+   "mape_pct": 28.012937997899733,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C04_3",
+   "cond": "T23|SOCmax0.73|DoD0.4|Cch0.82|Cdch1.92",
+   "rmse_pp": 16.52235790219989,
+   "mae_pp": 14.97134433095939,
+   "mape_pct": 20.29367386346708,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C06_1",
+   "cond": "T35|SOCmax0.71|DoD0.45|Cch0.91|Cdch0.89",
+   "rmse_pp": 20.13069920539022,
+   "mae_pp": 18.009656230605785,
+   "mape_pct": 27.453852935012723,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C06_2",
+   "cond": "T35|SOCmax0.71|DoD0.45|Cch0.91|Cdch0.89",
+   "rmse_pp": 19.326574900237794,
+   "mae_pp": 17.428412094326983,
+   "mape_pct": 25.54836750505109,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C06_3",
+   "cond": "T35|SOCmax0.71|DoD0.45|Cch0.91|Cdch0.89",
+   "rmse_pp": 23.561098193459838,
+   "mae_pp": 21.46666193830041,
+   "mape_pct": 34.39556092607695,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C11_1",
+   "cond": "T45|SOCmax0.55|DoD0.53|Cch0.41|Cdch0.44",
+   "rmse_pp": 7.9468493065709955,
+   "mae_pp": 7.145876825103098,
+   "mape_pct": 8.0533615791973,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C11_2",
+   "cond": "T45|SOCmax0.55|DoD0.53|Cch0.41|Cdch0.44",
+   "rmse_pp": 8.781823140891063,
+   "mae_pp": 7.873356950436261,
+   "mape_pct": 8.965322683387486,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C11_3",
+   "cond": "T45|SOCmax0.55|DoD0.53|Cch0.41|Cdch0.44",
+   "rmse_pp": 8.00584507472513,
+   "mae_pp": 7.100459503916005,
+   "mape_pct": 8.110267778247533,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C13_1",
+   "cond": "T35|SOCmax0.46|DoD0.13|Cch0.49|Cdch1.6",
+   "rmse_pp": 11.303151330929788,
+   "mae_pp": 9.905959638002516,
+   "mape_pct": 12.248402713550378,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C13_2",
+   "cond": "T35|SOCmax0.46|DoD0.13|Cch0.49|Cdch1.6",
+   "rmse_pp": 12.286008726494103,
+   "mae_pp": 11.10270211719341,
+   "mape_pct": 13.52700278041968,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C13_3",
+   "cond": "T35|SOCmax0.46|DoD0.13|Cch0.49|Cdch1.6",
+   "rmse_pp": 12.445461587992058,
+   "mae_pp": 11.104804884625558,
+   "mape_pct": 13.805548366358652,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C14_1",
+   "cond": "T35|SOCmax0.76|DoD0.25|Cch0.33|Cdch1.37",
+   "rmse_pp": 8.751171947002277,
+   "mae_pp": 7.8282695768578945,
+   "mape_pct": 8.915302093972468,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C14_2",
+   "cond": "T35|SOCmax0.76|DoD0.25|Cch0.33|Cdch1.37",
+   "rmse_pp": 7.107280238236237,
+   "mae_pp": 6.255460264883331,
+   "mape_pct": 7.02297301102832,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C14_3",
+   "cond": "T35|SOCmax0.76|DoD0.25|Cch0.33|Cdch1.37",
+   "rmse_pp": 8.806459692629137,
+   "mae_pp": 7.854272300736823,
+   "mape_pct": 9.076412508454089,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C17_1",
+   "cond": "T35|SOCmax0.69|DoD0.22|Cch0.55|Cdch1.53",
+   "rmse_pp": 12.159468491182235,
+   "mae_pp": 10.8638652769954,
+   "mape_pct": 13.397795250614166,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C17_2",
+   "cond": "T35|SOCmax0.69|DoD0.22|Cch0.55|Cdch1.53",
+   "rmse_pp": 11.256459144233705,
+   "mae_pp": 10.016881913717569,
+   "mape_pct": 12.201577771607711,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C17_3",
+   "cond": "T35|SOCmax0.69|DoD0.22|Cch0.55|Cdch1.53",
+   "rmse_pp": 13.073555156968284,
+   "mae_pp": 11.651911095244378,
+   "mape_pct": 14.684855947417985,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C25_1",
+   "cond": "T23|SOCmax0.64|DoD0.17|Cch0.3|Cdch0.62",
+   "rmse_pp": 4.709375416960953,
+   "mae_pp": 4.094722196464496,
+   "mape_pct": 4.391379526635415,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C25_2",
+   "cond": "T23|SOCmax0.64|DoD0.17|Cch0.3|Cdch0.62",
+   "rmse_pp": 3.9581895658257866,
+   "mae_pp": 3.3865605345416836,
+   "mape_pct": 3.5941207138808635,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C25_3",
+   "cond": "T23|SOCmax0.64|DoD0.17|Cch0.3|Cdch0.62",
+   "rmse_pp": 5.134142866450476,
+   "mae_pp": 4.742777213141984,
+   "mape_pct": 5.040480566712386,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C28_1",
+   "cond": "T23|SOCmax0.75|DoD0.29|Cch0.97|Cdch1.04",
+   "rmse_pp": 19.77571200590558,
+   "mae_pp": 17.787552017172594,
+   "mape_pct": 26.7420230820761,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C28_2",
+   "cond": "T23|SOCmax0.75|DoD0.29|Cch0.97|Cdch1.04",
+   "rmse_pp": 17.995827416464465,
+   "mae_pp": 16.13346233845592,
+   "mape_pct": 22.750810724836093,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C28_3",
+   "cond": "T23|SOCmax0.75|DoD0.29|Cch0.97|Cdch1.04",
+   "rmse_pp": 14.32312579340429,
+   "mae_pp": 12.867901790602776,
+   "mape_pct": 16.64121905683966,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C29_1",
+   "cond": "T45|SOCmax0.68|DoD0.19|Cch0.94|Cdch0.77",
+   "rmse_pp": 26.891613622482552,
+   "mae_pp": 24.198060744057276,
+   "mape_pct": 45.17956553635755,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C29_2",
+   "cond": "T45|SOCmax0.68|DoD0.19|Cch0.94|Cdch0.77",
+   "rmse_pp": 22.078334310131787,
+   "mae_pp": 19.95944771300752,
+   "mape_pct": 31.42197052408353,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C29_3",
+   "cond": "T45|SOCmax0.68|DoD0.19|Cch0.94|Cdch0.77",
+   "rmse_pp": 24.09557721391244,
+   "mae_pp": 21.89393795319578,
+   "mape_pct": 36.70691829135578,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C33_1",
+   "cond": "T23|SOCmax0.44|DoD0.56|Cch0.94|Cdch1.8",
+   "rmse_pp": 18.234801921784992,
+   "mae_pp": 16.55687559463575,
+   "mape_pct": 23.145022271410333,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C33_2",
+   "cond": "T23|SOCmax0.44|DoD0.56|Cch0.94|Cdch1.8",
+   "rmse_pp": 19.316371983893177,
+   "mae_pp": 17.29896832340049,
+   "mape_pct": 25.460604016325544,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C33_3",
+   "cond": "T23|SOCmax0.44|DoD0.56|Cch0.94|Cdch1.8",
+   "rmse_pp": 20.81806067935933,
+   "mae_pp": 18.66268248044849,
+   "mape_pct": 28.63334448030287,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C34_1",
+   "cond": "T45|SOCmax0.34|DoD0.08|Cch0.69|Cdch0.22",
+   "rmse_pp": 9.497395025685876,
+   "mae_pp": 8.593288234898393,
+   "mape_pct": 10.05206090835523,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C34_2",
+   "cond": "T45|SOCmax0.34|DoD0.08|Cch0.69|Cdch0.22",
+   "rmse_pp": 8.625654916985255,
+   "mae_pp": 7.696056648459386,
+   "mape_pct": 8.899682275714001,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C34_3",
+   "cond": "T45|SOCmax0.34|DoD0.08|Cch0.69|Cdch0.22",
+   "rmse_pp": 9.019059624288838,
+   "mae_pp": 8.016959044402048,
+   "mape_pct": 9.313409049767692,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C36_1",
+   "cond": "T45|SOCmax0.61|DoD0.44|Cch0.89|Cdch0.3",
+   "rmse_pp": 15.34827909006774,
+   "mae_pp": 13.83806863836318,
+   "mape_pct": 18.295510974491727,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C36_2",
+   "cond": "T45|SOCmax0.61|DoD0.44|Cch0.89|Cdch0.3",
+   "rmse_pp": 13.506539995377308,
+   "mae_pp": 11.889227052257429,
+   "mape_pct": 15.399140144713725,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C36_3",
+   "cond": "T45|SOCmax0.61|DoD0.44|Cch0.89|Cdch0.3",
+   "rmse_pp": 14.84372793773098,
+   "mae_pp": 13.263380150187603,
+   "mape_pct": 17.51473696264054,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C37_1",
+   "cond": "T23|SOCmax0.4|DoD0.34|Cch0.62|Cdch1.72",
+   "rmse_pp": 12.187026324009373,
+   "mae_pp": 10.917079935266383,
+   "mape_pct": 13.382501447495365,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C37_2",
+   "cond": "T23|SOCmax0.4|DoD0.34|Cch0.62|Cdch1.72",
+   "rmse_pp": 8.66439195783819,
+   "mae_pp": 7.95089405136421,
+   "mape_pct": 9.087517462216773,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C37_3",
+   "cond": "T23|SOCmax0.4|DoD0.34|Cch0.62|Cdch1.72",
+   "rmse_pp": 10.10875073650776,
+   "mae_pp": 9.030017736727821,
+   "mape_pct": 10.629398100507279,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C39_1",
+   "cond": "T23|SOCmax0.63|DoD0.43|Cch0.46|Cdch2",
+   "rmse_pp": 10.492891915712615,
+   "mae_pp": 9.310743337970507,
+   "mape_pct": 11.139703777455475,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C39_2",
+   "cond": "T23|SOCmax0.63|DoD0.43|Cch0.46|Cdch2",
+   "rmse_pp": 8.653005826717267,
+   "mae_pp": 7.7433274348654075,
+   "mape_pct": 8.942087326405575,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C39_3",
+   "cond": "T23|SOCmax0.63|DoD0.43|Cch0.46|Cdch2",
+   "rmse_pp": 13.228120676496237,
+   "mae_pp": 11.978568221266249,
+   "mape_pct": 14.825187487854222,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C02_1",
+   "cond": "T23|SOCmax0.31|DoD0.08|Cch0.66|Cdch1.47",
+   "rmse_pp": 11.38093270481745,
+   "mae_pp": 10.202819436487566,
+   "mape_pct": 12.444511141219044,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C02_2",
+   "cond": "T23|SOCmax0.31|DoD0.08|Cch0.66|Cdch1.47",
+   "rmse_pp": 11.06762809913105,
+   "mae_pp": 9.997828504454022,
+   "mape_pct": 12.005662880202449,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C02_3",
+   "cond": "T23|SOCmax0.31|DoD0.08|Cch0.66|Cdch1.47",
+   "rmse_pp": 10.116066043259805,
+   "mae_pp": 8.949547911255694,
+   "mape_pct": 10.68450511859309,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C05_1",
+   "cond": "T35|SOCmax0.58|DoD0.18|Cch0.57|Cdch0.47",
+   "rmse_pp": 8.101124623397723,
+   "mae_pp": 7.2012508624390446,
+   "mape_pct": 8.25513886035778,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C05_2",
+   "cond": "T35|SOCmax0.58|DoD0.18|Cch0.57|Cdch0.47",
+   "rmse_pp": 6.192982811313481,
+   "mae_pp": 5.4657867270686085,
+   "mape_pct": 6.067477282375878,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C05_3",
+   "cond": "T35|SOCmax0.58|DoD0.18|Cch0.57|Cdch0.47",
+   "rmse_pp": 8.399603373527805,
+   "mae_pp": 7.522493478283278,
+   "mape_pct": 8.544975531313455,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C10_1",
+   "cond": "T35|SOCmax0.67|DoD0.36|Cch0.24|Cdch1.26",
+   "rmse_pp": 6.432143363508354,
+   "mae_pp": 5.712436435379266,
+   "mape_pct": 6.346322847217779,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C10_2",
+   "cond": "T35|SOCmax0.67|DoD0.36|Cch0.24|Cdch1.26",
+   "rmse_pp": 8.01365934289262,
+   "mae_pp": 7.2804232558630355,
+   "mape_pct": 8.182585390145796,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C10_3",
+   "cond": "T35|SOCmax0.67|DoD0.36|Cch0.24|Cdch1.26",
+   "rmse_pp": 7.421023605148173,
+   "mae_pp": 6.642118714964693,
+   "mape_pct": 7.403003399596752,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C12_1",
+   "cond": "T45|SOCmax0.56|DoD0.49|Cch0.46|Cdch1.23",
+   "rmse_pp": 11.339460104783358,
+   "mae_pp": 10.046342380993197,
+   "mape_pct": 12.281450767205643,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C12_2",
+   "cond": "T45|SOCmax0.56|DoD0.49|Cch0.46|Cdch1.23",
+   "rmse_pp": 13.763812848046037,
+   "mae_pp": 12.3479113033917,
+   "mape_pct": 15.755076128582871,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C12_3",
+   "cond": "T45|SOCmax0.56|DoD0.49|Cch0.46|Cdch1.23",
+   "rmse_pp": 13.468242542774375,
+   "mae_pp": 12.173521063707188,
+   "mape_pct": 15.305184839627747,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C15_1",
+   "cond": "T23|SOCmax0.61|DoD0.12|Cch0.38|Cdch1.67",
+   "rmse_pp": 6.2006447872827914,
+   "mae_pp": 5.753811735594837,
+   "mape_pct": 6.240438154164725,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C15_2",
+   "cond": "T23|SOCmax0.61|DoD0.12|Cch0.38|Cdch1.67",
+   "rmse_pp": 6.007872737375355,
+   "mae_pp": 5.1276215320122445,
+   "mape_pct": 5.704558221650189,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C15_3",
+   "cond": "T23|SOCmax0.61|DoD0.12|Cch0.38|Cdch1.67",
+   "rmse_pp": 8.012392255638503,
+   "mae_pp": 7.2838037567148,
+   "mape_pct": 8.191552133485484,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C16_1",
+   "cond": "T35|SOCmax0.51|DoD0.54|Cch0.2|Cdch1.75",
+   "rmse_pp": 5.2107267035138065,
+   "mae_pp": 4.534270891323313,
+   "mape_pct": 4.927044753633206,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C16_2",
+   "cond": "T35|SOCmax0.51|DoD0.54|Cch0.2|Cdch1.75",
+   "rmse_pp": 6.589929469842006,
+   "mae_pp": 5.916776588290687,
+   "mape_pct": 6.50386270176203,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C16_3",
+   "cond": "T35|SOCmax0.51|DoD0.54|Cch0.2|Cdch1.75",
+   "rmse_pp": 6.089348981866271,
+   "mae_pp": 5.385858969888828,
+   "mape_pct": 5.91929612659461,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C19_1",
+   "cond": "T45|SOCmax0.43|DoD0.28|Cch0.72|Cdch0.58",
+   "rmse_pp": 12.312389553579623,
+   "mae_pp": 11.035086325812195,
+   "mape_pct": 13.664515292003804,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C19_2",
+   "cond": "T45|SOCmax0.43|DoD0.28|Cch0.72|Cdch0.58",
+   "rmse_pp": 14.332485075790004,
+   "mae_pp": 12.809569426769382,
+   "mape_pct": 16.70106836101864,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C19_3",
+   "cond": "T45|SOCmax0.43|DoD0.28|Cch0.72|Cdch0.58",
+   "rmse_pp": 15.657644701310916,
+   "mae_pp": 14.093609996298381,
+   "mape_pct": 18.70465129948517,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C20_1",
+   "cond": "T23|SOCmax0.53|DoD0.6|Cch0.3|Cdch0.8",
+   "rmse_pp": 5.437767548385605,
+   "mae_pp": 4.978075738609184,
+   "mape_pct": 5.358262864050879,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C20_2",
+   "cond": "T23|SOCmax0.53|DoD0.6|Cch0.3|Cdch0.8",
+   "rmse_pp": 4.361758768023654,
+   "mae_pp": 3.806482268455389,
+   "mape_pct": 4.114732672619621,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C20_3",
+   "cond": "T23|SOCmax0.53|DoD0.6|Cch0.3|Cdch0.8",
+   "rmse_pp": 6.984244376532907,
+   "mae_pp": 6.302579258277953,
+   "mape_pct": 6.901004675370814,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C22_1",
+   "cond": "T23|SOCmax0.8|DoD0.24|Cch0.35|Cdch0.68",
+   "rmse_pp": 4.949508357951057,
+   "mae_pp": 4.3306153792655415,
+   "mape_pct": 4.726949496867867,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C22_2",
+   "cond": "T23|SOCmax0.8|DoD0.24|Cch0.35|Cdch0.68",
+   "rmse_pp": 4.981157979061633,
+   "mae_pp": 4.354848485782161,
+   "mape_pct": 4.755740393393059,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C22_3",
+   "cond": "T23|SOCmax0.8|DoD0.24|Cch0.35|Cdch0.68",
+   "rmse_pp": 4.7323356926783715,
+   "mae_pp": 4.1295996610039785,
+   "mape_pct": 4.457551985155299,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C24_1",
+   "cond": "T23|SOCmax0.42|DoD0.57|Cch0.84|Cdch1.34",
+   "rmse_pp": 13.249869924067205,
+   "mae_pp": 11.697402349097779,
+   "mape_pct": 14.867981843050016,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C24_2",
+   "cond": "T23|SOCmax0.42|DoD0.57|Cch0.84|Cdch1.34",
+   "rmse_pp": 13.015203615009973,
+   "mae_pp": 11.543961545150712,
+   "mape_pct": 14.627432997303359,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C24_3",
+   "cond": "T23|SOCmax0.42|DoD0.57|Cch0.84|Cdch1.34",
+   "rmse_pp": 12.824725813849144,
+   "mae_pp": 11.663392201221399,
+   "mape_pct": 14.381394818192295,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C26_1",
+   "cond": "T35|SOCmax0.37|DoD0.14|Cch0.79|Cdch1.9",
+   "rmse_pp": 21.85727671524746,
+   "mae_pp": 19.535210109354963,
+   "mape_pct": 31.42867816117191,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C26_2",
+   "cond": "T35|SOCmax0.37|DoD0.14|Cch0.79|Cdch1.9",
+   "rmse_pp": 24.566804975123787,
+   "mae_pp": 22.185742449879196,
+   "mape_pct": 37.37902840210912,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C26_3",
+   "cond": "T35|SOCmax0.37|DoD0.14|Cch0.79|Cdch1.9",
+   "rmse_pp": 20.114355423373528,
+   "mae_pp": 18.076807728514428,
+   "mape_pct": 27.035493529109335,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C27_1",
+   "cond": "T45|SOCmax0.48|DoD0.06|Cch0.59|Cdch1.01",
+   "rmse_pp": 12.627273495396617,
+   "mae_pp": 11.160948734720549,
+   "mape_pct": 14.116395387320335,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C27_2",
+   "cond": "T45|SOCmax0.48|DoD0.06|Cch0.59|Cdch1.01",
+   "rmse_pp": 13.615753497441114,
+   "mae_pp": 12.258392590680371,
+   "mape_pct": 15.56750323193399,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C27_3",
+   "cond": "T45|SOCmax0.48|DoD0.06|Cch0.59|Cdch1.01",
+   "rmse_pp": 14.602438738717384,
+   "mae_pp": 13.078659364672689,
+   "mape_pct": 17.12110038328225,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C30_1",
+   "cond": "T45|SOCmax0.66|DoD0.16|Cch0.43|Cdch0.71",
+   "rmse_pp": 9.432662194143528,
+   "mae_pp": 8.45671528509435,
+   "mape_pct": 9.856733472261576,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C30_2",
+   "cond": "T45|SOCmax0.66|DoD0.16|Cch0.43|Cdch0.71",
+   "rmse_pp": 8.881151953075722,
+   "mae_pp": 7.948734642295708,
+   "mape_pct": 9.125838691986647,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C30_3",
+   "cond": "T45|SOCmax0.66|DoD0.16|Cch0.43|Cdch0.71",
+   "rmse_pp": 9.712277975735896,
+   "mae_pp": 8.716479908703526,
+   "mape_pct": 10.142051206521373,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C31_1",
+   "cond": "T45|SOCmax0.39|DoD0.48|Cch0.5|Cdch0.92",
+   "rmse_pp": 11.04887480274819,
+   "mae_pp": 10.07632658537351,
+   "mape_pct": 11.9154752160624,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C31_2",
+   "cond": "T45|SOCmax0.39|DoD0.48|Cch0.5|Cdch0.92",
+   "rmse_pp": 11.963839953737708,
+   "mae_pp": 10.777279328531684,
+   "mape_pct": 13.185359629890867,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C31_3",
+   "cond": "T45|SOCmax0.39|DoD0.48|Cch0.5|Cdch0.92",
+   "rmse_pp": 10.294258610948557,
+   "mae_pp": 9.07913017421604,
+   "mape_pct": 10.818759086162585,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C38_1",
+   "cond": "T35|SOCmax0.72|DoD0.55|Cch0.87|Cdch1.86",
+   "rmse_pp": 27.080486762654132,
+   "mae_pp": 24.58481986099547,
+   "mape_pct": 45.26478926527916,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C38_2",
+   "cond": "T35|SOCmax0.72|DoD0.55|Cch0.87|Cdch1.86",
+   "rmse_pp": 26.8320860035928,
+   "mae_pp": 24.271908092033403,
+   "mape_pct": 45.33103794458647,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  },
+  {
+   "cell": "SYN_G2_41_C38_3",
+   "cond": "T35|SOCmax0.72|DoD0.55|Cch0.87|Cdch1.86",
+   "rmse_pp": 27.5464761535926,
+   "mae_pp": 24.765950602590387,
+   "mape_pct": 47.70635203064698,
+   "n_fc": 11,
+   "n_nonfinite": 0
+  }
+ ]
+}

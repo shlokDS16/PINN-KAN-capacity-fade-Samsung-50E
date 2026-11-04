@@ -34,3 +34,7 @@ Apply together with the freeze blockers FB-1..FB-8 of PREREG_v2 section 17; each
 10. **D014 (negative control):** replace PREREG_v2 section 10 gate G with NC-1 (label invariance, gating) and NC-2
     (stress-permutation sign test on Test B, non-gating); seed rule SeedSequence([20261105, crc32(label)]);
     apply section 6 of runs/prereg/NEGCONTROL_RULING.md.
+11. **Blinding exposure (BLINDING_LOG.md):** TP_z24_01_s1 is an outer-test cell (Test B fold 1, Test A fold 0)
+    whose check-up rows were printed to an agent's terminal before the freeze. The freeze judge decides: exclude
+    the cell from scoring (preregistered, before any score) or keep it with disclosure. Same review for the other
+    logged exposures once split membership is looked up.

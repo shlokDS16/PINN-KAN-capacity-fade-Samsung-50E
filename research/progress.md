@@ -1,14 +1,29 @@
 # Progress
 
-## RESUME (update at every phase boundary)
-- 2026-11-04 20:35 start. Lead: Opus session (side session of the Paper 2 TNNLS session).
-- Budget: weekly all-models 5% at start, Fable 0%. Session cap tonight: +12 points (to 17%); may be
-  extended for quality (memory quality-over-token-budget), Shlok told in the morning.
-- CPU only tonight (D002). At most 3 agents at once (RAM 3.6 GB available).
-- Phase 1 (running): references fetched/verified; PIKAN + PINN4SOH + kan-review read; dataset
-  inventory and downloads.
-- Next: paper extraction (35 refs, full text where available), exemplar dissection (PGKAN JES 2026
-  first), candidate topics, debate, novelty audit, red team, preregistration, first CPU runs.
+## RESUME (updated 2026-11-05 ~04:15 by the overnight lead session; read this first)
+- **State:** topic and method decided by debate (D005 -> D011 -> D016). Current design = **Design R2**
+  (debates/D016_roles/02_judge.md): data efficiency (8/16/32 cycling conditions x 0/2/full check-ups), PINN
+  attribution by ablation ladder, KAN closed-form law vs equally simplified GAM law on held-out conditions,
+  closed outcome table T1-T8 + M1/M2 **awaiting Shlok's approval**. PREREG_v3 exists (24ac12c) but predates
+  D016: next is **PREREG_v4** implementing D016 + V3_EDITS + red-team freeze conditions (D015).
+- **Freeze blockers:** FB-1 Zhang JES 182, 125097 read (Shlok's e-gateway); FB-2 Stroebl JES 142, 119552 read +
+  A10 equations verified; FB-3/4 full Samsung download (10.29 GB, Shlok, fast network; keep both same-named zips)
+  + stage assignment of all 279 cells; FB-5 ZYK throughput check (code ready: pinnkan/zyk.py); FB-6 window counts;
+  FB-8 Samsung timing; FB-9 NC-1 full run at the candidate commit; FB-10 smoke re-run; statistician simulations
+  for D016 (sign test with fold/lab-shared effects, power at the scarce cell); novelty re-check of the D016 framing;
+  blinding exposures resolved (runs/prereg/BLINDING_LOG.md).
+- **Code:** code/pinnkan (256 tests pass, ca66522/e24d4e8); FROZEN guard JSON-verified; NC-1 label-invariance in
+  every confirmatory run. D016 needs about 3-3.5 days more code (subset selector over m, k = 0/2 windows, symbolic
+  extraction with a frozen library for KAN and GAM, learning-curve statistics). Builder's 6 choices in
+  runs/build_v1/RESULT.md 7.3 need an independent reviewer.
+- **Data:** Samsung check-up fetch running detached (tools/run_samsung_cu_forever.ps1; log data/logs/samsung_cu.log;
+  stop with data/STOP_SAMSUNG); ISU, SNL processed; bulk downloader paused (data/STOP_DOWNLOADS).
+- **Papers:** 8 of 35 references read in full + dataset papers + PiDDM, Guo, KA-CRNN; draft sections 2-5 in
+  paper/draft (citation audit fixed; 3 title-only JES cites to read). Figures: code/figures (synthetic demos only).
+- **Next session order:** (1) Shlok's answers (table approval, PDFs, download); (2) PREREG_v4 (designer) +
+  statistician simulations + novelty re-check; (3) D016 code; (4) ISU pilot P6; (5) freeze; (6) confirmatory runs;
+  (7) manuscript on the JES Word template.
+- **Budget:** weekly 11% at 03:30 (started 5%); Fable 0%. Lead context was about 76% at hand-off.
 
 ## Log
 - 20:35 folder, contract, decisions ledger created; sign-in list sent to Shlok.

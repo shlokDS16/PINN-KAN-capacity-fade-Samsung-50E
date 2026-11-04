@@ -59,3 +59,16 @@ start, 6% at 22:00 (see the end of this file for the latest); Fable 0%. CPU only
   network (item 2 of section 2).** To stop the fetch: create an empty file `data/STOP_SAMSUNG`.
 - References read in full so far: 8 (refs 8, 11, 15, 23, 29, 30, 31, 33), plus the Samsung dataset paper
   and the ISU dataset paper; notes in notes/papers/.
+
+## 5. Data facts found overnight (they shape the paper)
+- **Samsung 50E is two campaigns.** 279 cells = 141 in stage 1 + 138 in stage 2; the stage-2 cells reuse the
+  stage-1 names but are different cells at different conditions (figshare holds two zips per name). Fixed
+  in the fetcher at 00:05; if you download "all" from figshare, keep every zip (do not let Windows
+  overwrite same-named files: download into two folders, or keep figshare's file IDs).
+- **Temperature is partly confounded with laboratory:** all 35 C cycling cells were tested at one lab
+  (INT), 45 C mostly at another (HM), 10 C storage all at a third (SIE). The temperature-extrapolation
+  test will state this and carry a lab/stage sensitivity check; no claim will separate the two.
+- **Only 66 of 132 storage cells have intermediate check-ups.** The storage arm forecasts from those.
+- **A preregistration draft exists** (runs/prereg/PREREG_DRAFT.md): hypotheses, splits, every model
+  arm, statistics, and which title follows each outcome. It is frozen only after Zhang JES 182, 125097
+  is read and the full Samsung data is in.

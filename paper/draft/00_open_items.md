@@ -8,6 +8,6 @@ Appendices promised in the text and still to write: A (quality-control threshold
 
 Placeholders that wait for runs: k_cyc, k_sto; reference-capacity rule; throughput check; cells excluded and used; backbone per fold; N from the timing run; Figures 5 and 6.
 
-Statements to verify before the freeze: A10 equations (Stroebl JES 142 full text and data-paper supplement); causal form of the outlier rule (V3 edit 5); PIKAN, PGKAN and Zhang full texts; gasper2022 authors and volume; piekan2026 author and DOI string; constants in Section 4.2 against the frozen commit.
+Statements to verify before the freeze: A10 equations (Stroebl JES 142 full text and data-paper supplement); causal form of the outlier rule (V3 edit 5); PIKAN, PGKAN, PI-EKAN, SOH-KPINN and Zhang full texts; the 238-versus-251 ISU cell count; the source of the processed Sandia copy; constants in Section 4.2 against the frozen commit.
 
 Differences between the prereg and the draft text to settle: the prereg 9.3 still names the sign-flip rule (V3 edit 7); Section 5.3 follows D012.

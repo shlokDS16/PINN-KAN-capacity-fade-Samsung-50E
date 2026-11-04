@@ -1,0 +1,46 @@
+{
+ "model": "pinn",
+ "variant": "fullcycle",
+ "threads": 1,
+ "steps": 2000,
+ "seed": 0,
+ "lr": 0.005,
+ "fit_seconds": 219.36144680000143,
+ "seconds_per_step": 0.10968072340000072,
+ "data_build_seconds": 0.21908629999961704,
+ "peak_working_set_mb": 837.316608,
+ "peak_pagefile_mb": 1331.372032,
+ "n_params": 9326,
+ "loss_total_data_at_steps": [
+  [
+   0,
+   2.1656312942504883,
+   2.098785877227783
+  ],
+  [
+   1000,
+   0.39070868492126465,
+   0.31625545024871826
+  ],
+  [
+   1999,
+   0.2846813499927521,
+   0.22490574419498444
+  ]
+ ],
+ "all_finite": true,
+ "system_cpu_percent_before": 25.3,
+ "torch": "2.11.0+cu130",
+ "num_threads_effective": 1,
+ "data_info": {
+  "n_cells": 61,
+  "n_obs": 96341,
+  "n_nodes_M": 4569,
+  "horizon_tn": 1.14986867520833,
+  "n_coll_a_fixed": 1952,
+  "n_coll_b_fixed": 256,
+  "n_coll_c_fixed": 128,
+  "per_cycle_all": true,
+  "tile_to": null
+ }
+}

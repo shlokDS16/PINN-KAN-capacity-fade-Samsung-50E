@@ -1,0 +1,46 @@
+{
+ "model": "hard",
+ "variant": "base",
+ "threads": 1,
+ "steps": 2000,
+ "seed": 0,
+ "lr": 0.005,
+ "fit_seconds": 38.20838760002516,
+ "seconds_per_step": 0.019104193800012582,
+ "data_build_seconds": 0.19837440003175288,
+ "peak_working_set_mb": 696.369152,
+ "peak_pagefile_mb": 1161.78944,
+ "n_params": 243,
+ "loss_total_data_at_steps": [
+  [
+   0,
+   3.089141368865967,
+   3.089141368865967
+  ],
+  [
+   1000,
+   0.16075357794761658,
+   0.15849736332893372
+  ],
+  [
+   1999,
+   0.16009482741355896,
+   0.15781359374523163
+  ]
+ ],
+ "all_finite": true,
+ "system_cpu_percent_before": 17.0,
+ "torch": "2.11.0+cu130",
+ "num_threads_effective": 1,
+ "data_info": {
+  "n_cells": 61,
+  "n_obs": 4819,
+  "n_nodes_M": 80,
+  "horizon_tn": 1.14986867520833,
+  "n_coll_a_fixed": 1952,
+  "n_coll_b_fixed": 256,
+  "n_coll_c_fixed": 128,
+  "per_cycle_all": false,
+  "tile_to": null
+ }
+}

@@ -1,0 +1,20 @@
+{
+  "pilot": "P1",
+  "date": "2026-11-04",
+  "code": ["code/data/isu_conditions.py", "code/data/snl_cycles.py", "code/data_audit/verify_raw.py (allowlist loader, imported)"],
+  "code_commit_note": "isu_conditions.py and snl_cycles.py were first committed in e48bc2d (swept in by the P0 commit); final state in the commit named in commit.txt",
+  "commands": ["python -I code/data/isu_conditions.py .", "python -I code/data/snl_cycles.py ."],
+  "interpreter": ".venv/Scripts/python.exe (Python 3.14.3, numpy 2.4.2, pandas 2.3.3)",
+  "pdf_conversion": "C:/Users/Shlok/AppData/Roaming/Python/Python314/Scripts/markitdown.exe data/raw/isu_ilcc_figshare_22582234/README_V2.0.pdf > runs/pilot_P1/README_V2.0.md",
+  "inputs": ["data/raw/isu_ilcc_figshare_22582234/README_V2.0.pdf", "data/raw/isu_ilcc_small/capacity_fade.zip", "debates/D010_topic/pilot_scratch/isu_profile.py (parsed as text, never executed)", "data/raw/batterylife_processed_snl/SNL.zip"],
+  "outputs": ["data/processed/isu_conditions.csv", "data/processed/isu_capacity.csv", "data/processed/snl_cycles.csv", "data/processed/snl_cells.csv", "runs/pilot_P1/isu_table_check.json", "runs/pilot_P1/snl_duplicates.json"],
+  "seeds": "none (deterministic parsing; no random numbers)",
+  "snl_per_cycle_definitions": {
+    "q_dis_ah": "max of cumulative discharge_capacity_in_Ah within the cycle record",
+    "q_chg_ah": "max of cumulative charge_capacity_in_Ah",
+    "throughput_ah": "trapezoid integral of |current_in_A| over time_in_s, divided by 3600",
+    "t_start_s/t_end_s": "seconds since the first sample of the cell",
+    "retention_vs_first": "q_dis_ah / q_dis_ah of the cell's first cycle"
+  },
+  "duplicate_test": "5 raw-record fingerprints per cell (SHA-1 of rounded V and I at cycles 1, 2, 100, middle, last) compared across all 1830 pairs; per-cycle capacity vectors compared over common cycles (exact and median |dq| < 1e-4 Ah)"
+}

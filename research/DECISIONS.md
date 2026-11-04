@@ -72,6 +72,7 @@ Row format:
   ageing of lithium-ion cells at untested conditions". Datasets: Samsung INR21700-50E primary (storage +
   cycling by design; check-up schema by range request tonight; full download by Shlok on a faster
   network if needed), ISU-ILCC secondary (cyclic law, weeks + analytic throughput, 6 Cycling_json members),
+  [lead note 22:50: see D006 for the novelty re-audit and the mandatory comparator]
   Sandia SNL external check and development set. Identifiability reduced to one figure with misspecified
   generators and thresholds fixed in the judge file. Pilots P0-P5 tonight, CPU only.
 - **Alternatives and why they lost:** proposal as written (no PINN in headline; KAN [3,2] = GAM; ISU
@@ -90,3 +91,21 @@ Row format:
   functions forecasting unseen conditions (or prior modelling of Samsung 50E that pre-empts the claim);
   Samsung cadence too sparse for a window; hard-ODE outcome C (framing to Shlok); P2 compute no-go
   (re-plan arms); Shlok rejects the framing.
+
+### D006 Novelty re-audit of D005 and the mandatory comparator (2026-11-04 22:50, status: accepted)
+- **Decision:** keep D005. Re-audit (debates/D010_topic/05_novelty_reaudit.md): the combination
+  (PINN with residual + calendar term with KAN SOC function + cycling KAN stress term, trained jointly
+  on storage and cycling cells, forecasting held-out conditions) is NOVEL as a narrow combination
+  (confidence 0.6); the model class alone is INCREMENTAL (0.7). Mandatory comparators: Stroebl et al.
+  (dataset authors) J. Energy Storage 142, 119552 (parametric calendar + cycle superposition fitted to
+  this dataset; their 2026 JES follow-up states the cycle part is inadequate) and PiDDM (arXiv
+  2607.29095). Facts that constrain the design: dataset paper Stroebl et al., Sci. Data 11, 1020
+  (doi 10.1038/s41597-024-03859-z); only 66 of 132 storage cells have intermediate check-ups (cells 04-06
+  of each storage test point have initial and final only); capacity must be computed from raw CU steps.
+- **Alternatives and why they lost:** re-open the topic (no work found that does the combination); drop
+  the calendar arm (it is the part no KAN battery paper has and the dataset's distinctive design).
+- **Evidence:** 05_novelty_reaudit.md; notes/papers/samsung50e_dataset_paper.md; runs/pilot_P0/RESULT.md.
+- **Proposer / opponent / judge:** novelty auditor (check) / judge's D005 conditions / lead records.
+- **Re-open if:** JES 182, 125097 (Zhang) or the Hallinger SSRN preprint (both cite the dataset, unread)
+  contain a neural calendar + cycle model with learned stress functions; PIKAN/PGKAN/JECS addd4e full
+  texts (unread) contain an operating-condition dynamics model.

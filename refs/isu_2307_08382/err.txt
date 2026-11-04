@@ -1,0 +1,23 @@
+C:\Users\Shlok\AppData\Roaming\Python\Python314\site-packages\pydub\utils.py:170: RuntimeWarning: Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work
+  warn("Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work", RuntimeWarning)
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\Shlok\AppData\Roaming\Python\Python314\Scripts\markitdown.exe\__main__.py", line 5, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "C:\Users\Shlok\AppData\Roaming\Python\Python314\site-packages\markitdown\__main__.py", line 196, in main
+    result = markitdown.convert(
+        args.filename, stream_info=stream_info, keep_data_uris=args.keep_data_uris
+    )
+  File "C:\Users\Shlok\AppData\Roaming\Python\Python314\site-packages\markitdown\_markitdown.py", line 283, in convert
+    return self.convert_local(source, stream_info=stream_info, **kwargs)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shlok\AppData\Roaming\Python\Python314\site-packages\markitdown\_markitdown.py", line 337, in convert_local
+    return self._convert(file_stream=fh, stream_info_guesses=guesses, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shlok\AppData\Roaming\Python\Python314\site-packages\markitdown\_markitdown.py", line 626, in _convert
+    raise FileConversionException(attempts=failed_attempts)
+markitdown._exceptions.FileConversionException: File conversion failed after 1 attempts:
+ - PdfConverter threw PSEOF with message: Unexpected EOF
+

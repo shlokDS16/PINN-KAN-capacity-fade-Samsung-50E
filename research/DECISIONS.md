@@ -559,3 +559,20 @@ Row format:
 - **Proposer / opponent / judge:** lead (rule from the existing min() convention) / none convened (mechanical) / gate auditor
   at the freeze.
 - **Re-open if:** the gate auditor finds the rule changes any condition-level n or interacts with the NC-1 window scramble.
+
+### D026 Item (f) under retention blinding: separate post-freeze inner runs at g1 (2026-11-05, status: accepted; gate auditor checks at the freeze)
+- **Decision:** O1. After FROZEN and before any Samsung test fold is loaded, five `inner` runs (g1 = (8, 2), max-min, folds
+  0-4, arms A1, A9, A11, A12; configs = the g1 confirmatory configs with mode, run_id, arms, diagnostics and refit_timing
+  changed, pinned in FROZEN as `item_f_config_sha256s`) feed `item_f_from_runs(("D*", "A1"))`; the file and its record live in
+  `runs/item_f/` (untracked). Order is enforced by state: `build_item_f` refuses after any Samsung score or SCORED row;
+  `require_item_f_record` runs before `build_data` in every Samsung confirmatory run; every Samsung SCORED row carries
+  `item_f_sha256`. `item_f`/`item_f_record` leave `PIN_FILES`. PREREG rev. 11 rewrites 9.9 (r), C24, sections 15, 16, 18, 22.
+- **Alternatives and why they lost:** O2 two-phase run (the confirmatory path loads role=test before tuning and forbids
+  overwrite, so it needs resume logic in the most guarded path to save about 1 CPU-h); O3 post hoc (breaks D18 2.3 (ii));
+  O4 ISU (other dataset and estimand).
+- **Evidence:** run.py ~238-312 and ~452, guard.py PIN_FILES / build_freeze_payload / verify_freeze, stats_v4.py 540-650,
+  selectors.DSTAR_CANDIDATES; cost about 1.1 CPU-h expected, 4 ceiling (judge arithmetic from section 16, not measured).
+- **Proposer / opponent / judge:** lead (debates/D026_item_f_blinding/01_proposal.md, O2) / Codex panel turn 9 (REVISE, O1) /
+  judge (debates/D026_item_f_blinding/02_judge.md).
+- **Re-open if:** the timing run puts the item-f runs above 15 % of core compute; an item-f fold cannot finish; or the
+  descriptive concordance row shows a different D* in more than one fold.

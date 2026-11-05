@@ -1,6 +1,6 @@
 # Message to the supervising professor on NASA and CALCE (D022 judge 1.7, corrected), 2026-11-05
 
-Status: proposed wording for Shlok's approval; not sent. Every factual statement below is traced to the paper (Saxena et al.
+Status: wording APPROVED by Shlok (2026-11-05, "Wording is fine"); Shlok sends it himself. Every factual statement below is traced to the paper (Saxena et al.
 2016 = `notes/papers/saxena2016_jps_calce_pl.md`), the provider page (CALCE battery-data page, fetched 2026-11-05; NASA PCoE
 repository page and zip READMEs) or our own counts (`notes/data/NASA_CALCE_feasibility.md`). Changes against judge 1.7 are listed
 at the end.

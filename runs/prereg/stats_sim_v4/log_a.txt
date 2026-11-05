@@ -1,0 +1,12 @@
+a 1/110 a|normal|f0.000|l0.000|k0.60|random 3s
+a 11/110 a|normal|f0.050|l0.000|k0.60|random 42s
+a 21/110 a|normal|f0.200|l0.000|k0.60|random 81s
+a 31/110 a|isu_right|f0.020|l0.000|k0.60|random 117s
+a 41/110 a|isu_right|f0.100|l0.000|k0.60|random 155s
+a 51/110 a|isu_left|f0.000|l0.000|k0.60|random 192s
+a 61/110 a|isu_left|f0.050|l0.000|k0.60|random 227s
+a 71/110 a|isu_left|f0.200|l0.000|k0.60|random 265s
+a 81/110 a|normal|f0.150|l0.000|k0.60|random 301s
+a 91/110 a|normal|f0.000|l0.030|k0.60|random 335s
+a 101/110 a|isu_right|f0.000|l0.000|k0.90|random 370s
+a done 402s

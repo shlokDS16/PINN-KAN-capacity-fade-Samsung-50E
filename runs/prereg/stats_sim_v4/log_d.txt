@@ -1,0 +1,13 @@
+d iid_plain 65s
+d iid_plain_highdep 128s
+d fold05_plain 196s
+d fold10_lab05_plain 271s
+d fold10_lab05_fb0.01 342s
+d iid_fb0.01 405s
+d fold10_lab05_fb0.02 483s
+d iid_fb0.02 551s
+d fold10_lab05_fb0.03 628s
+d iid_fb0.03 692s
+d fold10_lab05_fb0.05 768s
+d iid_fb0.05 830s
+d done 830s

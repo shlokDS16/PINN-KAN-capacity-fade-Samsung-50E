@@ -1,3 +1,5 @@
+> **SUPERSEDED (2026-11-05, decision row D022a):** replaced by `calibration_rule_v2.md` (unit = synthetic dataset, family-wise bound, C1-C3). Kept for the record; the v1 plan (240 datasets, 600 fits) is not run.
+
 # D022 extraction-audit calibration: rule (written and committed BEFORE the calibration code `code/prereg/extraction_calibration.py` is written or run)
 
 Author: coder (build_v2), 2026-11-05, from D022 judge section 2.2 (a) items 2, 3 and 5 (`debates/D022_datasets_kan/03_judge.md`). Reading: full text of that section and of Actions A2 and A4; `code/pinnkan/symbolic.py` (cap 2 in `symbolic_library.json`), `synth.py`, `runs/prereg/subsets.json` (identifiers only). No Samsung label, outer-test datum or score was opened. Nothing here was run. The thresholds are in `code/pinnkan/extraction_audit.json`; this file fixes the calibration design. Both files are in the frozen commit and their sha256 values are config keys (`extraction_audit_sha256`, `calibration_rule_sha256`). Any number below is a design choice, not a result.

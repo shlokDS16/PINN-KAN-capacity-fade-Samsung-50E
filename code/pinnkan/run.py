@@ -39,7 +39,7 @@ DEFAULTS = {"mode": "inner", "test": "B", "fold": 0, "arms": ["A1", "A2", "A9", 
             # cells 04-06 as two-point records (i); min_fc_points: scored cells need this many forecast points (i, "cells with >= 3 forecast points" -> 3);
             # law_overrides: {Y0, gamma, tau} for the A2-only tournament row (m), {delta_scope: "total"} for row (l); throughput_fallback: "analytic" lets a
             # cycling cell without ZYK entries use the designed throughput under throughput="zyk" (otherwise ZykDataMissing)
-            "include_at": False, "include_storage_0406": False, "min_fc_points": 1, "m": None, "subset": "maxmin", "subset_draw": 0, "k": None, "design": "R2", "endpoint": "ensemble", "inner_k_thin": 2, "p6b_decision": None, "law_overrides": {}, "throughput_fallback": "none", "forecast_failure": False, "lab_indicator": False}
+            "include_at": False, "include_storage_0406": False, "min_fc_points": 1, "m": None, "subset": "maxmin", "subset_draw": 0, "k": None, "design": "R2", "symbolic": {}, "endpoint": "ensemble", "inner_k_thin": 2, "p6b_decision": None, "law_overrides": {}, "throughput_fallback": "none", "forecast_failure": False, "lab_indicator": False}
 TARGET_BY_TEST = {"B": "cycling", "C": "cycling", "A": "cycling", "S2": "storage", "S3": "storage"}   # the tuned task is the scored task (review M3)
 
 
@@ -186,6 +186,14 @@ def _run(cfg_in, root=None, runs_dir=None):
         raise ConfigError("mc_seed_root is fixed by the NEGCONTROL ruling (20261105)")
     if cfg["endpoint"] not in ("ensemble", "per_seed"):
         raise ConfigError("endpoint must be 'ensemble' (D020 C1, Design R2) or 'per_seed' (the V3 rule)")
+    sc_ = cfg["symbolic"] or {}
+    if set(sc_) - {"cap", "refit_frac"}:
+        raise ConfigError(f"unknown symbolic keys {sorted(set(sc_) - {'cap', 'refit_frac'})}: allowed cap, refit_frac")
+    if sc_.get("cap") is not None:
+        from . import symbolic as _sym
+        fcap = _sym.library_file_cap()
+        if fcap is not None and int(sc_["cap"]) != int(fcap):
+            raise ConfigError(f"symbolic.cap = {sc_['cap']} disagrees with max_coeffs_per_edge = {fcap} in symbolic_library.json: the cap is pinned in the library file (PREREG_v4 7.3, D021); remove the config value or change the file")
     if cfg["design"] not in ("R2", "V3_legacy"):
         raise ConfigError("design must be 'R2' (PREREG_v4) or 'V3_legacy' (history only)")
     if cfg["design"] == "R2" and (cfg["mode"] in ("confirmatory", "nc1_full", "h7") or cfg["m"] is not None or cfg["k"] is not None):
@@ -301,7 +309,7 @@ def _run(cfg_in, root=None, runs_dir=None):
         extra = twins_from_conditions(D["split"].get("test_conditions", []))
     rule_tune = rule if cfg["m"] is None else WindowRule.for_grid(spec, 2 if int(cfg["m"]) < 32 else "full", rule)      # PREREG_v4 4.1: inner CV scored at k = 2 for m < 32, at k_full for m = 32
     ctx = {"backbone": cfg["backbone"] if cfg["backbone"] != "tournament" else "self_limiting", "steps_scale": cfg["steps_scale"], "rule": rule_tune, "extra_twin_raw": extra,
-           "oracle": cfg["oracle_throughput"], "per_cell_factor": cfg["per_cell_factor"], "lab_indicator": bool(cfg["lab_indicator"]),  "a10_starts": cfg.get("a10_starts", 8), "pinn": cfg["pinn"]}
+           "oracle": cfg["oracle_throughput"], "per_cell_factor": cfg["per_cell_factor"], "lab_indicator": bool(cfg["lab_indicator"]), "symbolic": dict(cfg["symbolic"] or {}), "a10_starts": cfg.get("a10_starts", 8), "pinn": cfg["pinn"]}
     arms = list(cfg["arms"])
     if mode == "confirmatory" and ds != "synthetic" and ({"A10", "A10P"} & set(arms)):
         semi.require_verified()

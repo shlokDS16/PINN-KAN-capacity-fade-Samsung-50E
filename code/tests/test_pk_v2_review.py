@@ -61,3 +61,42 @@ def test_I3_missing_k_arms_raise_unless_chain_k_is_struck_by_config():
     del partial.tables[(32, "full")]["G15"]
     with pytest.raises(v4.ChainKMissingError):
         v4.run_v4(partial)
+
+
+# ------------------------------------------------------------------------------------------------ I4 and the matched budget of A15 / G15
+def test_I4_config_symbolic_reaches_the_arm_and_a_cap_that_disagrees_with_the_library_file_refuses_to_start(tmp_path, monkeypatch):
+    from pinnkan import arms as A, run, symbolic as S
+    base = {"dataset": "synthetic", "arms": ["A15"], "n_trials": 1, "inner_k": 2, "steps_scale": 0.04, "seeds": [0], "mode": "inner", "diagnostics": False,
+            "synthetic": {"kind": "G0", "n_cyc_cond": 12, "n_sto_cond": 5, "reps": 2, "seed": 3}}
+    monkeypatch.setattr(S, "library_file_cap", lambda path=S.LIB_FILE: 3)
+    with pytest.raises(run.ConfigError, match="disagrees"):
+        run.run({**base, "run_id": "bad", "symbolic": {"cap": 2}}, runs_dir=str(tmp_path))
+    with pytest.raises(run.ConfigError, match="unknown symbolic"):
+        run.run({**base, "run_id": "bad2", "symbolic": {"capp": 3}}, runs_dir=str(tmp_path))
+    seen = []
+    orig = S.resolve_cap
+    monkeypatch.setattr(S, "resolve_cap", lambda cap=None: (seen.append(cap), orig(cap))[1])
+    run.run({**base, "run_id": "ok", "symbolic": {"cap": 3, "refit_frac": 0.25}}, runs_dir=str(tmp_path))
+    assert seen and all(c == 3 for c in seen)                            # the config value is what the arm resolved
+    assert json.load(open(os.path.join(tmp_path, "ok", "config.json")))["symbolic"] == {"cap": 3, "refit_frac": 0.25}      # and it is part of the hashed config
+
+
+def test_matched_budget_a15_g15_use_no_more_optimisation_steps_than_one_a1_fit(monkeypatch):
+    from pinnkan import arms as A, data as D, pinn, symbolic as S, synth
+    from pinnkan.specs import SPECS
+    SPEC = SPECS["synthetic"]
+    S0 = synth.make_synthetic("G0", n_cyc_cond=10, n_sto_cond=4, reps=2, seed=4)
+    tr, _ = synth.split_conditions(S0.cells, 0.25, 4)
+    calls = []
+    orig = A.fit_pinn
+    monkeypatch.setattr(A, "fit_pinn", lambda *a, **k: (calls.append(k.get("steps")), orig(*a, **k))[1])
+    ctx = {"backbone": "self_limiting", "steps_scale": 0.05, "symbolic": {"cap": 3}}
+    a1 = A.make_arm("A1", SPEC, A.default_hp("A1"), 0, ctx).fit(tr)
+    n_a1 = calls[-1]
+    for aid in ("A15", "G15"):
+        calls.clear()
+        arm = A.make_arm(aid, SPEC, A.default_hp(aid), 0, ctx).fit(tr)
+        assert len(calls) == 2 and sum(calls) == n_a1 == arm.total_steps
+    calls.clear()
+    A.make_arm("A15", SPEC, A.default_hp("A15"), 0, {**ctx, "symbolic": {"cap": 3, "refit_frac": 0.25}}).fit(tr)
+    assert sum(calls) == n_a1 and calls[1] < calls[0]

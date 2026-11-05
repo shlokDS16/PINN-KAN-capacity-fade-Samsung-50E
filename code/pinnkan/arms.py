@@ -170,7 +170,7 @@ def swap_law(parent_model, sym_cyc, sym_cal):
 class SymbolicArm(DiagMixin, Arm):
     """A15 / G15. ONE class for both: (1) fit the parent PINN (A15: KAN [d,h,1], h in {1,2}; G15: the additive GAM of A4) with the tuned settings, (2) extract its stress map and
     calendar KAN into the frozen library (symbolic.py; the per-edge cap must be set: ctx['symbolic']['cap']), (3) refit the coefficients end to end under the same PINN loss,
-    warm-started from the parent (ctx['symbolic']['refit_frac'] of the steps, default 0.5)."""
+    warm-started from the parent (ctx['symbolic']['refit_frac'] of the steps, default 0.4; parent + refit = the steps of one A1 fit)."""
 
     def fit(self, train_cells):
         a = ARMS[self.arm_id]
@@ -182,7 +182,9 @@ class SymbolicArm(DiagMixin, Arm):
         pk = {k: v for k, v in (self.ctx.get("pinn") or {}).items() if k in ("clip", "warmup", "lr")}
         self.n_train_used = len(cells)
         steps = self.steps("pinn")
-        parent = fit_pinn(b, self.spec, hp, self.ctx["backbone"], self.seed, steps=steps, extra_twin_raw=self.ctx.get("extra_twin_raw"), **pk)
+        refit = max(int(steps * float(sc.get("refit_frac", 0.4))), 5)
+        parent_steps = max(steps - refit, 5)              # matched budget (lead ruling on review item 3): parent + refit = the steps of one A1 fit, so K1 is not favoured by extra optimisation
+        parent = fit_pinn(b, self.spec, hp, self.ctx["backbone"], self.seed, steps=parent_steps, extra_twin_raw=self.ctx.get("extra_twin_raw"), **pk)
         cyc = (b.is_cyc > 0.5).numpy()
         s_cyc = np.unique(b.s.numpy()[cyc], axis=0)
         s_cal = b.s.numpy()[:, self.spec.soc_index]
@@ -192,8 +194,9 @@ class SymbolicArm(DiagMixin, Arm):
         if sym_cal is not None:
             law_s.cal = sym_cal
         self.parent_train_data_mse = float(parent.train_data_mse)
-        refit = max(int(steps * float(sc.get("refit_frac", 0.5))), 5)
+        self.total_steps = parent_steps + refit
         self.model = fit_pinn(b, self.spec, hp, self.ctx["backbone"], self.seed, steps=refit, extra_twin_raw=self.ctx.get("extra_twin_raw"), law=law_s, init_from=parent, **pk)
+        self.refit_diverged = not bool(np.isfinite(self.model.train_data_mse))      # reported, never hidden: a non-finite forecast is scored with the persistence error and counted (PREREG_v4 6)
         self.n_coefs = int(self.report["n_coefs"])                    # free coefficients of the extracted laws (cyclic + calendar); the two log levels are counted in n_params
         self.n_params = sum(p.numel() for p in self.model.parameters()) - self.model.z.numel() - self.model.delta.numel()
         n_obs = int(b.obs_t.numel())

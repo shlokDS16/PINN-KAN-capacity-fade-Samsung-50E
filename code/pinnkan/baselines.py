@@ -34,6 +34,8 @@ def window_linear(wcells):
 
 
 def p3_cell(cond, tw, rw, tf, rf, stress, ds):
+    if len(tw) < 2:          # k = 0: the window is the reference check-up only: stress and horizon, no window feature (PREREG_v4 4.1)
+        return dict(cond=cond, tw=tw, rw=rw, t_last=tw[-1], r_last=rw[-1], summ=np.zeros(0), tf=tf, rf=rf, stress=np.asarray(stress, float))
     slope = np.polyfit(tw, rw, 1)[0]
     h = len(tw) // 2
     s1 = np.polyfit(tw[: h + 1], rw[: h + 1], 1)[0] if h >= 1 else slope
@@ -61,6 +63,8 @@ class P3Learner:
     def fit(self, prepared_train):
         cells = cells_from_prepared(prepared_train, self.ds)
         names = sorted(cells)
+        if cells and all(len(c["summ"]) == 0 for c in cells.values()):
+            self.hp = dict(self.hp, fs="full")          # no window feature exists at k = 0: the 'min' feature set (which indexes window columns) is not defined
         if self.kind == "gp":
             p = dict(nu=self.hp.get("nu", 2.5), m=4, tau_log=True, fs=self.hp.get("fs", "full"), noise_lo=self.hp.get("noise_lo", 1e-4))
             self.fn = P3.fit_gp(cells, names, p, self.ds, self.seed)

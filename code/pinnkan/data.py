@@ -14,6 +14,7 @@ Conventions
     forecast set: later check-ups flagged fc_ok (CU, exCU), ended at the first point below spec.life_level when set (ISU, SNL)
     throughput after the window: the cell's own mean EFC rate over the window (causal); `oracle=True` uses the logged record.
 """
+import dataclasses
 import hashlib
 import json
 import os
@@ -53,11 +54,13 @@ class EFCCurve:
     """Piecewise-linear cumulative throughput through the check-ups used; beyond the last used check-up the mean rate over
     the used span continues (causal rule when only the window is used)."""
 
-    def __init__(self, t, efc, upto=None):
+    def __init__(self, t, efc, upto=None, tail=None):
         w = len(t) - 1 if upto is None else int(upto)
         self.t, self.e = np.asarray(t[: w + 1], float), np.asarray(efc[: w + 1], float)
         span = self.t[-1] - self.t[0]
         self.tail = float((self.e[-1] - self.e[0]) / span) if span > 0 else 0.0
+        if tail is not None and span <= 0:       # k = 0: no window rate exists; the caller supplies the DESIGN rate (label-free)
+            self.tail = float(tail)
 
     def value(self, tq):
         tq = np.asarray(tq, float)
@@ -114,6 +117,26 @@ class WindowRule:
     min_window_points: int = 3
     min_fc_points: int = 1
     life_level: object = None
+    design_spec: object = None       # k = 0: the dataset spec whose analytic design EFC rate is the throughput of a cell that has no window rate
+
+    @classmethod
+    def for_grid(cls, spec: DatasetSpec, k, base, min_fc_points=None):
+        """Window rule of one grid cell (PREREG_v4 4.1). k = 0: the reference check-up only (no window check-up, no window rate: the design rate of the stress vector
+        is the throughput); k = 2: reference + 2 check-ups (storage cells: min(2, k_sto)); k = 'full': the base rule (k_full = k_cyc, k_sto; or the base window W).
+        Time-window datasets (ISU, SNL): k is the window length W in the dataset unit (0 = reference only), 'full' = the base W."""
+        full = k in ("full", None)
+        mfp = base.min_fc_points if min_fc_points is None else min_fc_points
+        if base.W is not None:
+            W = base.W if full else float(k)
+            return dataclasses.replace(base, W=W, min_window_points=1 if (not full and W == 0) else base.min_window_points, min_fc_points=mfp,
+                                       design_spec=spec if (not full and W == 0) else None)
+        if full:
+            return dataclasses.replace(base, min_fc_points=mfp)
+        k = int(k)
+        if k > base.k_cycling:
+            raise DesignReopenError(f"grid k = {k} exceeds k_full = {base.k_cycling}")
+        return dataclasses.replace(base, k_cycling=k, k_storage=min(k, base.k_storage), min_window_points=1 if k == 0 else base.min_window_points, min_fc_points=mfp,
+                                   design_spec=spec if k == 0 else None)
 
     @classmethod
     def for_spec(cls, spec: DatasetSpec, k_cycling=None, k_storage=None, W=None, shift=0, min_fc_points=1):
@@ -129,6 +152,17 @@ class WindowRule:
             return int(np.sum(cell.t <= self.W + 1e-9) - 1)
         k = self.k_cycling if cell.kind == "cycling" else self.k_storage
         return int(k)  # reference + k check-ups
+
+
+class DesignReopenError(RuntimeError):
+    """k_full < 2: the grid k in {0, 2, k_full} is not defined and the design is re-opened (J16 section 8, PREREG_v4 4.1)"""
+
+
+def grid_ks(k_full):
+    """the k axis of the grid: (0, 2, 'full'); if k_full = 2 the cells k = 2 and k = full are one cell, so (0, 'full'); k_full < 2 re-opens the design"""
+    if k_full < 2:
+        raise DesignReopenError(f"k_full = {k_full} < 2: the grid k in {{0, 2, k_full}} cannot be formed; the design is re-opened (J16 section 8)")
+    return (0, "full") if k_full == 2 else (0, 2, "full")
 
 
 def window_rule_from_counts(counts_cycling, counts_storage=None):
@@ -151,7 +185,10 @@ def prepare(cell: Cell, rule: WindowRule, oracle=False):
     idx = np.array([i for i in range(w + 1, last + 1) if cell.fc_ok[i]], int)
     if len(idx) < rule.min_fc_points:
         return None
-    curve = EFCCurve(cell.t, cell.efc, upto=None if oracle else w)
+    design_tail = None
+    if w == 0 and rule.design_spec is not None and cell.kind == "cycling":
+        design_tail = float(rule.design_spec.efc_rate(cell.raw))      # k = 0: label-free design throughput (the window has no rate)
+    curve = EFCCurve(cell.t, cell.efc, upto=None if oracle else w, tail=design_tail)
     win = WindowCell(cell.cell_id, cell.kind, cell.cond, cell.raw.copy(), cell.t[: w + 1].copy(), cell.ret[: w + 1].copy(),
                      cell.efc[: w + 1].copy(), cell.t[idx].copy(), curve, cell.lab, cell.stage)
     return Prepared(cell, win, cell.ret[idx].copy(), w)

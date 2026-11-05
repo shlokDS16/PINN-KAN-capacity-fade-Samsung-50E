@@ -62,7 +62,9 @@ def fit_delta(m: HardODE, bw: Batch, steps=300, lr=0.05):
         opt.step()
     for p, f in zip(m.parameters(), flags):
         p.requires_grad_(f)
-    return delta.detach()
+    delta = delta.detach().clone()
+    delta[torch.bincount(bw.obs_cell, minlength=bw.C) <= 1] = 0.0      # k = 0: no window check-up -> the prior mean
+    return delta
 
 
 def split_by_cell(b: Batch, values):

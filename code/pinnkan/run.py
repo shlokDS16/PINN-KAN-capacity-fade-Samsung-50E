@@ -26,7 +26,7 @@ import torch
 from . import ROOT as _ROOT
 from . import emit, guard, h7, law, margins, metrics, negcontrol, semi, stats_step, subsets, synth, tuning
 from .arms import ARMS, H1B_POOL, NEURAL, default_hp, make_arm
-from .data import WindowRule, apply_subset, load_split, prepare_many, sha256_file
+from .data import WindowRule, apply_subset, grid_ks, load_split, prepare_many, sha256_file
 from .law import TAU
 from .specs import SPECS
 
@@ -39,7 +39,7 @@ DEFAULTS = {"mode": "inner", "test": "B", "fold": 0, "arms": ["A1", "A2", "A9", 
             # cells 04-06 as two-point records (i); min_fc_points: scored cells need this many forecast points (i, "cells with >= 3 forecast points" -> 3);
             # law_overrides: {Y0, gamma, tau} for the A2-only tournament row (m), {delta_scope: "total"} for row (l); throughput_fallback: "analytic" lets a
             # cycling cell without ZYK entries use the designed throughput under throughput="zyk" (otherwise ZykDataMissing)
-            "include_at": False, "include_storage_0406": False, "min_fc_points": 1, "m": None, "subset": "maxmin", "subset_draw": 0, "law_overrides": {}, "throughput_fallback": "none", "forecast_failure": False, "lab_indicator": False}
+            "include_at": False, "include_storage_0406": False, "min_fc_points": 1, "m": None, "subset": "maxmin", "subset_draw": 0, "k": None, "law_overrides": {}, "throughput_fallback": "none", "forecast_failure": False, "lab_indicator": False}
 TARGET_BY_TEST = {"B": "cycling", "C": "cycling", "A": "cycling", "S2": "storage", "S3": "storage"}   # the tuned task is the scored task (review M3)
 
 
@@ -279,7 +279,8 @@ def _run(cfg_in, root=None, runs_dir=None):
     extra = None
     if (cfg["twins"] == "c35") or (cfg["twins"] == "auto" and cfg["test"] == "C" and ds == "samsung"):
         extra = twins_from_conditions(D["split"].get("test_conditions", []))
-    ctx = {"backbone": cfg["backbone"] if cfg["backbone"] != "tournament" else "self_limiting", "steps_scale": cfg["steps_scale"], "rule": rule, "extra_twin_raw": extra,
+    rule_tune = rule if cfg["m"] is None else WindowRule.for_grid(spec, 2 if int(cfg["m"]) < 32 else "full", rule)      # PREREG_v4 4.1: inner CV scored at k = 2 for m < 32, at k_full for m = 32
+    ctx = {"backbone": cfg["backbone"] if cfg["backbone"] != "tournament" else "self_limiting", "steps_scale": cfg["steps_scale"], "rule": rule_tune, "extra_twin_raw": extra,
            "oracle": cfg["oracle_throughput"], "per_cell_factor": cfg["per_cell_factor"], "a10_starts": cfg.get("a10_starts", 8), "pinn": cfg["pinn"]}
     arms = list(cfg["arms"])
     if mode == "confirmatory" and ds != "synthetic" and "A10" in arms:
@@ -314,19 +315,20 @@ def _run(cfg_in, root=None, runs_dir=None):
         _json(os.path.join(run_dir, "budget_rule.json"), {**bud, "median_fit_seconds": med})
         rec.log(f"budget fixed before tuning: {bud}")
     if cfg["backbone"] == "tournament":
-        tb = tuning.backbone_tournament(train, spec, rule, cfg["inner_k"], cfg["fold"], ctx, tk)
+        tb = tuning.backbone_tournament(train, spec, rule_tune, cfg["inner_k"], cfg["fold"], ctx, tk)
         ctx["backbone"] = tb["chosen"]
         _json(os.path.join(run_dir, "backbone_tournament.json"), tb)
         rec.log(f"backbone tournament: chosen {tb['chosen']} (best {tb['best']})")
     tuned = {}
     for a in arms:
         t0 = time.time()
-        r = tuning.tune(a, train, spec, rule, cfg["n_trials"], cfg["inner_k"], cfg["fold"], ctx, tk)
+        r = tuning.tune(a, train, spec, rule_tune, cfg["n_trials"], cfg["inner_k"], cfg["fold"], ctx, tk)
         tuned[a] = r
         timings[a] = {"tuning_seconds": time.time() - t0, "median_fit_seconds": r["median_fit_seconds"], "n_trials": r["n_trials"], "n_failed": r["n_failed"]}
         rec.add_preds("inner_oof", a, 1000 + cfg["fold"], r["rows"])
         _json(os.path.join(run_dir, f"tuning_{a}.json"), {k: (strip_rows(v) if k == "rows" else v) for k, v in r.items()})
         rec.log(f"tuned {a}: inner-CV {r['inner_cv_pp']:.3f} pp, best {r['best_hp']}, median fit {r['median_fit_seconds']:.1f} s, failed {r['n_failed']}")
+    metrics_out["tuning_window"] = {"k_cycling": rule_tune.k_cycling, "k_storage": rule_tune.k_storage, "W": rule_tune.W, "m": cfg["m"]}
     inner = {a: {"inner_cv_pp": tuned[a]["inner_cv_pp"], "cond_scores": tuned[a]["cond_scores"], "best_hp": tuned[a]["best_hp"]} for a in arms}
     _json(os.path.join(run_dir, "tuning_done.json"), {"backbone": ctx["backbone"], "arms": inner, "budget": {"n_trials": cfg["n_trials"], "inner_k": cfg["inner_k"]}})
     metrics_out["inner_cv_pp"] = {a: inner[a]["inner_cv_pp"] for a in arms}
@@ -360,39 +362,55 @@ def _run(cfg_in, root=None, runs_dir=None):
                                                           "h1c_comparator_by_inner_cv": min((a for a in ("A11", "A12") if a in inner), key=lambda a: inner[a]["inner_cv_pp"], default=None),
                                                           "note": "margins.json is formed from these after all folds finish (stats step); tuning is complete before any test condition is scored"})
     margins.write_margins(os.path.join(run_dir, "margins.json"), contr)
-    prep = prepare_many(D["test"], rule_test, oracle=cfg["oracle_throughput"])
-    wc = [p.win for p in prep]
+    kcells = _score_windows(cfg, rule_test, spec)                       # [(label, WindowRule)]; legacy single window: [(None, rule_test)]
+    KC = {}
+    for kl, rk in kcells:
+        pk = prepare_many(D["test"], rk, oracle=cfg["oracle_throughput"])
+        KC[kl] = {"rule": rk, "prep": pk, "wc": [p.win for p in pk]}
+    primary = "full" if "full" in KC else kcells[-1][0]
+    prep = KC[primary]["prep"]
     if ds != "synthetic":
         guard.require_frozen("score outer test fold", root)      # the scoring side of the guard
         guard.record_scoring(chash, run_id, git_info(root)["commit"], root)     # a second scoring of the same config is refused
     bad = {c.kind for c in D["test"]} - {tk}
     if bad:
         raise ConfigError(f"test cells of kind {sorted(bad)} but the tuned and scored kind is {tk}")
-    cond_scores_out, per_arm, cell_scores_out = {}, {}, {}
+    cond_scores_out, per_arm, cell_scores_out = {kl: {} for kl in KC}, {kl: {} for kl in KC}, {kl: {} for kl in KC}
     fitted, inv_records = {}, {}
     for a in arms:
-        per_seed_rows, per_seed_preds = [], []
-        for s in cfg["seeds"]:
+        ks_a = [kl for kl in KC if not (kl == "0" and a in ("R1", "R2"))]            # R1 and R2 need a window check-up (k >= 1): k = 0 is its own reference
+        per_seed = {kl: ([], []) for kl in ks_a}
+        for sd_ in cfg["seeds"]:
             t0 = time.time()
-            arm = make_arm(a, spec, tuned[a]["best_hp"], s, ctx).fit(train)
-            preds = arm.predict(wc)
-            rows = metrics.score_prepared(preds, prep)
-            per_seed_rows.append(rows)
-            per_seed_preds.append(preds)
-            inv_records[f"{a}|{s}"] = negcontrol.check_invariance(arm.predict, D["test"], rule_test, spec, cfg["oracle_throughput"], base_preds=preds, base_prepared=prep)
-            if a in ("A1", "A2", "A4", "A10"):
-                fitted.setdefault(a, []).append(arm)
-            rec.add_preds("outer_test", a, s, rows)
-            timings[a][f"refit_seed{s}_seconds"] = time.time() - t0
-        cs, sd = metrics.seed_condition_scores(per_seed_rows)
-        cond_scores_out[a] = cs
-        cell_scores_out[a] = metrics.seed_cell_scores(per_seed_rows)
-        per_arm[a] = {"primary_pp": float(np.mean(list(cs.values()))), "seed_sd_of_mean": sd, "n_conditions": len(cs),
-                      "mae_pp_mean": float(np.mean([r["mae_pp"] for rows in per_seed_rows for r in rows])),
-                      "n_nonfinite": int(sum(r["n_nonfinite"] for rows in per_seed_rows for r in rows)), "n_params": int(arm.n_params),
-                      "n_train_used": arm.n_train_used, **outer_extras(prep, per_seed_preds, per_seed_rows)}
-        rec.log(f"outer test {a}: {per_arm[a]['primary_pp']:.3f} pp (seed SD {sd:.3f}) over {len(cs)} conditions")
-    metrics_out["outer_test"] = per_arm
+            arm = None
+            for kl in ks_a:
+                if arm is None or ARMS[a].family == "p3":                           # A11 / A12 retrain per k (window features differ); every other arm is fitted once
+                    arm = make_arm(a, spec, tuned[a]["best_hp"], sd_, dict(ctx, rule=KC[kl]["rule"])).fit(train)
+                preds = arm.predict(KC[kl]["wc"])
+                rows = metrics.score_prepared(preds, KC[kl]["prep"])
+                per_seed[kl][0].append(rows)
+                per_seed[kl][1].append(preds)
+                key = f"{a}|{sd_}" if kl is None else f"{a}|{sd_}|k{kl}"
+                inv_records[key] = negcontrol.check_invariance(arm.predict, D["test"], KC[kl]["rule"], spec, cfg["oracle_throughput"], base_preds=preds, base_prepared=KC[kl]["prep"])
+                if kl == primary and a in ("A1", "A2", "A4", "A10"):
+                    fitted.setdefault(a, []).append(arm)
+                rec.add_preds("outer_test" if kl is None else f"outer_test_k{kl}", a, sd_, rows)
+            timings[a][f"refit_seed{sd_}_seconds"] = time.time() - t0
+        for kl in ks_a:
+            per_seed_rows, per_seed_preds = per_seed[kl]
+            cs, sd = metrics.seed_condition_scores(per_seed_rows)
+            cond_scores_out[kl][a] = cs
+            cell_scores_out[kl][a] = metrics.seed_cell_scores(per_seed_rows)
+            per_arm[kl][a] = {"primary_pp": float(np.mean(list(cs.values()))), "seed_sd_of_mean": sd, "n_conditions": len(cs),
+                              "mae_pp_mean": float(np.mean([r["mae_pp"] for rows in per_seed_rows for r in rows])),
+                              "n_nonfinite": int(sum(r["n_nonfinite"] for rows in per_seed_rows for r in rows)), "n_params": int(arm.n_params),
+                              "n_train_used": arm.n_train_used, **outer_extras(KC[kl]["prep"], per_seed_preds, per_seed_rows)}
+            rec.log(f"outer test {a} k={kl}: {per_arm[kl][a]['primary_pp']:.3f} pp (seed SD {sd:.3f}) over {len(cs)} conditions")
+    metrics_out["outer_test"] = per_arm[primary]
+    if None not in KC:
+        metrics_out["outer_test_by_k"] = {kl: per_arm[kl] for kl in KC}
+        metrics_out["k_labels"] = list(KC)
+        metrics_out["k_primary"] = primary
     emit_artifacts(run_dir, rec, spec, train, prep, fitted, ctx["backbone"], prep)
     write_reference(run_dir, train, rule, blinded, cfg, rec)
     inv = negcontrol.summarise(inv_records)
@@ -405,11 +423,36 @@ def _run(cfg_in, root=None, runs_dir=None):
         raise negcontrol.InvarianceError(f"NC-1 label-invariance failed: max |diff| = {inv['max_abs_diff']} (see {run_dir}/invariance.json)")
     if cfg["permute_stress"]:
         metrics_out["permuted_stress_run"] = "NC-2 input: scored by stats_step.nc2 against the real Test B run (exact one-sided sign test)"
-    _json(os.path.join(run_dir, "cell_scores.json"), cell_scores_out)                 # per scored cell: mean over seeds of the cell RMSE (two-stage bootstrap, sensitivity row (d))
-    _json(os.path.join(run_dir, "condition_meta.json"), metrics.condition_meta(prep))  # identifiers only: scored cells, laboratory and stage per condition (rows (a)-(c))
-    _json(os.path.join(run_dir, "condition_scores.json"), cond_scores_out)
+    for kl in KC:
+        suf = "" if kl == primary else f"_k{kl}"                                     # the primary cell keeps the file names the statistics step reads
+        _json(os.path.join(run_dir, f"cell_scores{suf}.json"), cell_scores_out[kl])        # per scored cell: mean over seeds of the cell RMSE (two-stage bootstrap, sensitivity row (d))
+        _json(os.path.join(run_dir, f"condition_meta{suf}.json"), metrics.condition_meta(KC[kl]["prep"]))     # identifiers only: scored cells, laboratory and stage per condition
+        if kl != primary:
+            _json(os.path.join(run_dir, f"condition_scores{suf}.json"), cond_scores_out[kl])
+    _json(os.path.join(run_dir, "condition_scores.json"), cond_scores_out[primary])     # written last: its presence marks a scored run
     _finish(rec, run_dir, timings, metrics_out, t_start)
     return run_dir
+
+
+def _score_windows(cfg, rule_test, spec):
+    """[(label, WindowRule)] of the grid cells scored in this run. cfg['k'] None: the single legacy window. 'grid': (0, 2, 'full') from k_full (data.grid_ks; k_full < 2 raises
+    DesignReopenError). A list names the cells explicitly (ints, 'full'; time-window datasets: W values)."""
+    k = cfg["k"]
+    if k is None:
+        return [(None, rule_test)]
+    if k == "grid":
+        if rule_test.W is not None:
+            raise ConfigError("k = 'grid' is the count-window grid; name the W values explicitly for ISU / SNL (for example [0, 2, 'full'])")
+        k = list(grid_ks(rule_test.k_cycling))
+    k = list(k) if isinstance(k, (list, tuple)) else [k]
+    out = []
+    for x in k:
+        if x != "full" and (not isinstance(x, (int, float)) or x < 0):
+            raise ConfigError(f"bad k {x!r}: use 0, 2, 'full' (or a window length)")
+        out.append(("full" if x == "full" else str(x), WindowRule.for_grid(spec, x, rule_test)))
+    if len({l for l, _ in out}) != len(out):
+        raise ConfigError("duplicate k cells")
+    return out
 
 
 LAM_GRID = ARMS["A1"].space["lam_res"][1]

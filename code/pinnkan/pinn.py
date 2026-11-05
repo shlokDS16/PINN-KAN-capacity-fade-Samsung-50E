@@ -199,7 +199,10 @@ def invert_pinn(m: PINNModel, bw: Batch, lam, seed, n_col=16, steps=200, lr=0.05
         opt.step()
     for p, f in zip(m.parameters(), flags):
         p.requires_grad_(f)
-    return z.detach(), delta.detach()
+    z, delta = z.detach().clone(), delta.detach().clone()
+    ref_only = torch.bincount(bw.obs_cell, minlength=Ct) <= 1      # k = 0 (PREREG_v4 4.1): no window check-up -> latents and offset stay at their prior means (z = 0, delta = 0)
+    z[ref_only], delta[ref_only] = 0.0, 0.0
+    return z, delta
 
 
 def predict_pinn(m: PINNModel, spec, wcells, lam, seed, steps=200):

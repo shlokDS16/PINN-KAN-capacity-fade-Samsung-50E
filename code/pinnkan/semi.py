@@ -175,7 +175,7 @@ def cell_factor(form: SemiForm, th, wc):
 def predict_semi(form: SemiForm, th, wcells, per_cell_factor=True):
     out = {}
     for w in wcells:
-        d = cell_factor(form, th, w) if per_cell_factor else 0.0
+        d = cell_factor(form, th, w) if (per_cell_factor and len(w.t_win) > 1) else 0.0      # k = 0: population parameters, factor 1 (PREREG_v4 4.1)
         efc_fc = w.efc_curve.value(w.t_fc)
         out[w.cell_id] = 1.0 - np.exp(d) * form.loss(th, w.raw, w.t_fc, efc_fc)
     return out

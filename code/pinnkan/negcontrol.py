@@ -92,11 +92,12 @@ def compare_runs(dir_a, dir_b):
     pa, pb = pd.read_csv(os.path.join(dir_a, "predictions.csv")), pd.read_csv(os.path.join(dir_b, "predictions.csv"))
     keys = ["phase", "arm", "seed", "cell_id", "cond", "t"]
     same_keys = len(pa) == len(pb) and bool((pa[keys].astype(str).values == pb[keys].astype(str).values).all())
-    mx = float(np.max(np.abs(pa[pa.phase == "outer_test"].pred_retention.values - pb[pb.phase == "outer_test"].pred_retention.values))) if same_keys else float("nan")
+    oa, ob = pa.phase.astype(str).str.startswith("outer_test"), pb.phase.astype(str).str.startswith("outer_test")      # grid runs: outer_test_k0, outer_test_k2, outer_test_kfull
+    mx = float(np.max(np.abs(pa[oa].pred_retention.values - pb[ob].pred_retention.values))) if same_keys else float("nan")
     # the inner OOF predictions use only training labels: also identical
     mi = float(np.max(np.abs(pa[pa.phase == "inner_oof"].pred_retention.values - pb[pb.phase == "inner_oof"].pred_retention.values))) if same_keys else float("nan")
     same = {}
     for f in ("tuning_done.json", "margins_inputs.json"):
         same[f] = json.load(open(os.path.join(dir_a, f))) == json.load(open(os.path.join(dir_b, f)))
     return dict(passed=bool(same_keys and mx == 0.0 and mi == 0.0 and all(same.values())), same_row_keys=same_keys, max_abs_diff_outer=mx, max_abs_diff_inner_oof=mi,
-                n_outer_rows=int((pa.phase == "outer_test").sum()), identical_records=same)
+                n_outer_rows=int(oa.sum()), identical_records=same)

@@ -39,7 +39,7 @@ DEFAULTS = {"mode": "inner", "test": "B", "fold": 0, "arms": ["A1", "A2", "A9", 
             # cells 04-06 as two-point records (i); min_fc_points: scored cells need this many forecast points (i, "cells with >= 3 forecast points" -> 3);
             # law_overrides: {Y0, gamma, tau} for the A2-only tournament row (m), {delta_scope: "total"} for row (l); throughput_fallback: "analytic" lets a
             # cycling cell without ZYK entries use the designed throughput under throughput="zyk" (otherwise ZykDataMissing)
-            "include_at": False, "include_storage_0406": False, "min_fc_points": 1, "m": None, "subset": "maxmin", "subset_draw": 0, "k": None, "design": "R2", "nc1_scramble_k": None, "symbolic": {}, "endpoint": "ensemble", "inner_k_thin": 2, "p6b_decision": None, "law_overrides": {}, "throughput_fallback": "none", "forecast_failure": False, "lab_indicator": False}
+            "include_at": False, "include_storage_0406": False, "min_fc_points": 1, "m": None, "subset": "maxmin", "subset_draw": 0, "k": None, "design": "R2", "extraction_audit_sha256": None, "calibration_rule_sha256": None, "nc1_scramble_k": None, "symbolic": {}, "endpoint": "ensemble", "inner_k_thin": 2, "p6b_decision": None, "law_overrides": {}, "throughput_fallback": "none", "forecast_failure": False, "lab_indicator": False}
 TARGET_BY_TEST = {"B": "cycling", "C": "cycling", "A": "cycling", "S2": "storage", "S3": "storage"}   # the tuned task is the scored task (review M3)
 
 
@@ -194,6 +194,15 @@ def _run(cfg_in, root=None, runs_dir=None):
         fcap = _sym.library_file_cap()
         if fcap is not None and int(sc_["cap"]) != int(fcap):
             raise ConfigError(f"symbolic.cap = {sc_['cap']} disagrees with max_coeffs_per_edge = {fcap} in symbolic_library.json: the cap is pinned in the library file (PREREG_v4 7.3, D021); remove the config value or change the file")
+    if {"A15", "G15"} & set(cfg["arms"]):                                   # D022 2.2a item 5: the audit thresholds and the calibration rule are config keys (hence in the config hash)
+        from . import extraction_audit as _xa
+        rule_file = os.path.join(root or _ROOT, "debates", "D022_datasets_kan", "calibration_rule.md")
+        for key, path in (("extraction_audit_sha256", _xa.THRESHOLDS_FILE), ("calibration_rule_sha256", rule_file)):
+            if cfg[key] is None:
+                if cfg["mode"] == "confirmatory" and ds != "synthetic":
+                    raise ConfigError(f"{key} is required in a real-data confirmatory run with A15 / G15 (sha256 of {os.path.basename(path)})")
+            elif not os.path.isfile(path) or cfg[key] != _xa.sha256_file(path):
+                raise ConfigError(f"{key} does not match the file {os.path.basename(path)} in this tree")
     if cfg["design"] not in ("R2", "V3_legacy"):
         raise ConfigError("design must be 'R2' (PREREG_v4) or 'V3_legacy' (history only)")
     if cfg["design"] == "R2" and (cfg["mode"] in ("confirmatory", "nc1_full", "h7") or cfg["m"] is not None or cfg["k"] is not None):
@@ -435,7 +444,7 @@ def _run(cfg_in, root=None, runs_dir=None):
         raise ConfigError(f"test cells of kind {sorted(bad)} but the tuned and scored kind is {tk}")
     cond_scores_out, per_arm, cell_scores_out = {kl: {} for kl in KC}, {kl: {} for kl in KC}, {kl: {} for kl in KC}
     seed_scores_out = {kl: {} for kl in KC}            # per-seed condition scores (mean over seeds of the per-seed condition RMSE): K1 / K2 and the descriptive row
-    fitted, inv_records = {}, {}
+    fitted, inv_records, law_records = {}, {}, []
     for a in arms:
         ks_a = [kl for kl in KC if not (kl == "0" and a in ("R1", "R2"))]            # R1 and R2 need a window check-up (k >= 1): k = 0 is its own reference
         per_seed = {kl: ([], []) for kl in ks_a}
@@ -456,6 +465,10 @@ def _run(cfg_in, root=None, runs_dir=None):
                 if kl == primary and a in ("A1", "A2", "A4", "A10"):
                     fitted.setdefault(a, []).append(arm)
                 rec.add_preds("outer_test" if kl is None else f"outer_test_k{kl}", a, sd_, rows)
+            if a in ("A15", "G15") and arm is not None:                          # the extraction audit reads one record per fold-by-seed law (D022 2.2a)
+                from . import extraction_audit as _xa
+                akey = "G15" if a == "G15" else f"A15h{int(tuned[a]['best_hp'].get('h', 0))}"
+                law_records.append(_xa.law_record(akey, cfg["fold"], sd_, arm.report, spec, arm.model.law.cyc, arm.parent_cyc, arm.s_cyc_train))
             timings[a][f"refit_seed{sd_}_seconds"] = fit_s
             timings[a][f"refit_seed{sd_}_total_seconds"] = time.time() - t0     # fit + predict + invariance re-predict, for the record
         for kl in ks_a:
@@ -504,6 +517,10 @@ def _run(cfg_in, root=None, runs_dir=None):
         _json(os.path.join(run_dir, f"condition_scores_seed{suf}.json"), seed_scores_out[kl])      # per-seed endpoint: K1 / K2 and the descriptive row (D020 C1 item 4, 5)
         if kl != primary:
             _json(os.path.join(run_dir, f"condition_scores{suf}.json"), cond_scores_out[kl])
+    if law_records:
+        from . import extraction_audit as _xa
+        _json(os.path.join(run_dir, "extracted_laws.json"), {"m": 32 if cfg["m"] is None else int(cfg["m"]), "fold": cfg["fold"], "laws": law_records,
+                                                            "levels": _xa.distinct_levels(sorted({c.cond for c in train if c.kind == "cycling"})), "extraction_audit_sha256": _xa.thresholds_sha256()})
     _json(os.path.join(run_dir, "condition_scores.json"), cond_scores_out[primary])     # written last: its presence marks a scored run
     _finish(rec, run_dir, timings, metrics_out, t_start)
     return run_dir

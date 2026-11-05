@@ -171,6 +171,15 @@ def _cell_ok(cell, thr):
 
 
 # ------------------------------------------------------------------------------------------------ the label rule
+def _worst_cell(cells):
+    """when the fold-by-seed laws of one arm come from different variants (A15 tuned h = 1 in some folds and h = 2 in others), the matching calibration cells are combined by the
+    worst case: the largest false-family rate per family and the largest sign-error rate; the smallest n per truth family"""
+    if len(cells) == 1:
+        return cells[0]
+    return {"n": {t: min(c["n"][t] for c in cells) for t in ELIGIBLE}, "false_family_rate": {F: max(c["false_family_rate"][F] for c in cells) for F in ELIGIBLE},
+            "sign_error_rate": max(c["sign_error_rate"] for c in cells)}
+
+
 def label_input(name, laws, levels, calibration, m, arm_key, thr=None):
     """label of one input from the fold-by-seed laws of one arm. -> dict(label, family, reasons, shares, ...). Abstention is the default."""
     thr = thr or load_thresholds()
@@ -188,8 +197,10 @@ def label_input(name, laws, levels, calibration, m, arm_key, thr=None):
     share_add = sum(r["additive"] for r in recs) / N
     approx_share = np.mean([bool(r["approx"]) for r in recs if r["approx"] is not None]) if any(r["approx"] is not None for r in recs) else None
     L = int(levels[name])
-    cell = (calibration or {}).get(f"{name}|{m}|{arm_key}")
-    cal_ok = _cell_ok(cell, thr)
+    keys = [arm_key] if isinstance(arm_key, str) else list(arm_key)
+    cells = [(calibration or {}).get(f"{name}|{m}|{k}") for k in keys]
+    cal_ok = all(_cell_ok(c, thr) for c in cells)
+    cell = _worst_cell(cells) if cal_ok else (cells[0] if len(cells) == 1 else None)
     margins = [r["bic_margin"] for r in recs if r["bic_margin"] is not None]
     out = {"input": name, "n_laws": N, "levels": L, "share_zero": share_zero, "modal_family": modal, "share_family": share_family, "share_sign": share_sign, "share_additive": share_add,
            "median_bic_margin": (float(np.median(margins)) if margins else None), "identifiable_parameters": (identifiable_parameters(modal, L) if modal else 0),
@@ -268,14 +279,30 @@ def input_notes(lab, thr=None):
 def audit_arm(laws, levels, calibration, m, arm, thr=None):
     """full audit of one arm ('A15' or 'G15' family key for the sentence; the calibration key is the arm variant, e.g. A15h2): labels, edge table, sentences"""
     thr = thr or load_thresholds()
-    arm_key = laws[0]["arm"]
+    arm_key = sorted({l["arm"] for l in laws})            # calibration cells of every variant present (A15h1 / A15h2 / G15); worst case when several
     lab = label_law(laws, levels, calibration, m, arm_key, thr)
     table = []
     for name, l in lab.items():
-        table.append({"arm": arm_key, "input": name, "levels": l["levels"], "eligible_families": list(thr["eligible_families"]), "identifiable_parameters": l["identifiable_parameters"],
+        table.append({"arm": "+".join(arm_key), "input": name, "levels": l["levels"], "eligible_families": list(thr["eligible_families"]), "identifiable_parameters": l["identifiable_parameters"],
                       "chosen_family": l["modal_family"], "bic_margin_median": l["median_bic_margin"], "share_family": l["share_family"], "share_sign": l["share_sign"],
                       "label": label_text(l, thr), "notes": input_notes(l, thr), "bic_caveat": thr["wording"]["bic_caveat"]})
     return {"labels": lab, "table": table, "sentences": results_sentence(lab, arm, thr)}
+
+
+def collect_laws(run_dirs, m=32):
+    """fold-by-seed law records and the training levels (minimum over folds, the conservative value) from the `extracted_laws.json` of the grid runs with this m (g4: m = 32)"""
+    laws, levels = {"A15": [], "G15": []}, None
+    for d in run_dirs:
+        cfg = json.load(open(os.path.join(d, "config.json"), encoding="utf8"))
+        p = os.path.join(d, "extracted_laws.json")
+        if (cfg.get("m") if cfg.get("m") is not None else 32) != m or not os.path.exists(p):
+            continue
+        rec = json.load(open(p, encoding="utf8"))
+        for rr in rec["laws"]:
+            laws["G15" if rr["arm"] == "G15" else "A15"].append(rr)
+        lv = rec["levels"]
+        levels = lv if levels is None else {k: min(levels[k], lv[k]) for k in levels}
+    return laws, levels
 
 
 # ------------------------------------------------------------------------------------------------ D021 regression and the guard

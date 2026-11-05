@@ -588,6 +588,22 @@ def require_item_f(directory, run_dirs, pinned_sha256=None):
     return json.load(open(p, encoding="utf8"))
 
 
+def edge_level_wording(run_dirs, audit_dir, thresholds_pin=None, m=32):
+    """edge-level law wording of the extracted laws (labels, edge table, fixed sentences) -- the only function that produces it. It needs the calibration table of the audit: present,
+    matching its hash record, made with the thresholds in force, and written before every outer score file; otherwise `extraction_audit.AuditGuardError` (the caller then prints the law
+    in closed form without any named family). D022 2.2a item 5."""
+    from . import extraction_audit as X
+    cells = X.require_calibration(audit_dir, run_dirs, thresholds_pin)
+    laws, levels = X.collect_laws(run_dirs, m)
+    out = {}
+    for arm in ("A15", "G15"):
+        if laws[arm]:
+            out[arm] = X.audit_arm(laws[arm], levels, cells, m, arm)
+    if not out:
+        raise X.AuditGuardError("no extracted laws (extracted_laws.json) in the runs")
+    return {"printed": True, "m": m, "arms": out, "discussion_sentence": X.load_thresholds()["wording"]["discussion_sentence"]}
+
+
 def item_f_from_runs(run_dirs, contrast=("D*", "A1")):
     """item (f) estimate from the INNER-CV training-side condition scores of the outer-fold runs (tuning_done.json): sign of ln(S_comp / S_target) > its median per condition;
     groups: the inner fold of the condition (the model that scored it) and the majority laboratory. Reported evidence only (D018 2.3 (ii))."""

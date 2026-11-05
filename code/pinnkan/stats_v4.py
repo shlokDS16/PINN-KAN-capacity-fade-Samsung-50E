@@ -697,7 +697,7 @@ CONTRASTS_FOR_LABS = {"P1": ("A1", "D*", G1), "P2": ("A1", "A9", G1), "K1": ("A1
                       "QH_g1": ("A1", "A2", G1), "QH_g4": ("A1", "A2", G4), "QT_g1": ("A1", "A13", G1)}
 
 
-def primary_numbers(store, rule, tiers):
+def primary_numbers(store, rule, tiers, sec=None):
     """numbers of the abstract sentence from the primary entries (unadjusted fallback 95 % intervals)"""
     num = {}
     if store.has("D*", *G1) and store.has("A1", *G1):
@@ -722,6 +722,9 @@ def primary_numbers(store, rule, tiers):
         num["Z"] = pct_reduction(float(np.median(L)))
         num["interval_K2"] = (pct_reduction(lo), pct_reduction(hi))
     forms = [f for f in A10_FORMS if store.has(f, *G1)]
+    if sec is not None:                          # review I1: [W] only from the forms that are reverse S (the clause is printed iff M2); a form that is not reverse S can have a negative effect
+        rs = sec["tests"].get("QA10_g1", {}).get("reverse_S", {})
+        forms = [f for f in forms if rs.get(f, {}).get("rejected")]
     if forms:
         best = None
         for f in forms:                           # M2: the weaker (smaller) reverse effect among the forms that are reverse S
@@ -793,7 +796,7 @@ def run_v4(store, cfg=None, gate=None, row_tiers=None):
         "per_seed_descriptive": per_seed_descriptive(store), "endpoint_note": ENDPOINT_NOTE,
     }
     if "P1" in tiers:
-        out["outcome"] = assemble_outcome(tiers, primary_numbers(store, rule, tiers), c, gate, None if most is None else most["most"])
+        out["outcome"] = assemble_outcome(tiers, primary_numbers(store, rule, tiers, sec), c, gate, None if most is None else most["most"])
         q = {}
         for key, kind in (("QH_g1", "QH"), ("QH_g4", "QH"), ("QA10_g1", "QA10"), ("QA10_g4", "QA10"), ("QT_g1", "QT")):
             t = sec["tests"][key]

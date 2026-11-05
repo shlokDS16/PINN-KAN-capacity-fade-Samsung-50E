@@ -1,0 +1,6 @@
+POST HOC diagnostic (outside the committed rule; 2 seeds, GAM arm, G0, m = 32; script code/prereg/d022_mono_init_diag_POSTHOC.py)
+E_par of the monotone map M as a function of the initial raw value of the softplus increments (signed inputs T, DoD, C_ch):
+init -4.0 (the study): 0.130 0.115
+init -2.0           : 0.060 0.052
+init -1.0           : 0.154 0.148
+init  0.0           : 0.324 0.311

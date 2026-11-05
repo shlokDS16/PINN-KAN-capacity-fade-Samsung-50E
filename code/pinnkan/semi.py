@@ -186,7 +186,7 @@ def cell_factor(form: SemiForm, th, wc, mu=0.0):
 
 
 def indicator_beta(form: SemiForm, th, cells, ridge=1.0):
-    """rows 9.8(ii): prior mean of A10's per-cell factor from the lab-and-stage indicators. Each training cell's delta_c is the MAP from its full record (flat prior), then ridge
+    """rows 9.8(ii): prior mean of A10's per-cell factor from the lab-and-stage indicators. Each training cell's delta_c is the MAP from its full record under the N(0, TAU^2) prior, then ridge
     regression of delta_c on [1, indicators] (ridge 1 on the indicator coefficients, none on the intercept: the population fit is not centred on the reference group).
     Returns [intercept, b_INT, b_SIE, b_stage2]."""
     from .data import indicator_vector

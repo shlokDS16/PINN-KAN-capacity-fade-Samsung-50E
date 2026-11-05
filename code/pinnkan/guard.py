@@ -21,6 +21,7 @@ from . import ROOT as _DEFAULT_ROOT
 
 FROZEN_REL = os.path.join("runs", "prereg", "FROZEN")
 SCORED_REL = os.path.join("runs", "prereg", "SCORED.jsonl")
+PIN_FILES = {"subsets": "runs/prereg/subsets.json", "symbolic_library": "code/pinnkan/symbolic_library.json", "item_f": "runs/prereg/item_f_dependence.json", "item_f_record": "runs/prereg/item_f_dependence.sha256.json"}   # Design R2 pins (build_v2): nested subsets, frozen symbolic library + cap, item (f) dependence file (stats_v4.ITEM_F_FILE)
 PREREG_DEFAULT = "runs/prereg/PREREG_v3.md"    # the freeze candidate (PREREG_v3 section 18.3); FROZEN stores the name of the final file explicitly
 GUARD_LOG = []
 
@@ -75,6 +76,14 @@ def verify_freeze(root=None, check_git=True):
     pf = os.path.join(root, d.get("prereg_file", PREREG_DEFAULT))
     if not os.path.isfile(pf) or sha256_file(pf) != d["prereg_sha256"]:
         raise TestFoldAccessError("prereg file hash differs from the value pinned in FROZEN")
+    if d.get("pins_missing"):
+        raise TestFoldAccessError(f"FROZEN was built without the pins {d['pins_missing']}: a freeze needs subsets.json, the symbolic library (cap set) and the item (f) file pinned")
+    for name, ent in (d.get("pins") or {}).items():                # Design R2: files pinned by hash in FROZEN; any difference or absence refuses (a FROZEN without "pins" keeps the older behaviour)
+        fp = os.path.join(root, ent["file"])
+        if not os.path.isfile(fp):
+            raise TestFoldAccessError(f"pinned file {ent['file']} ({name}) is absent")
+        if sha256_file(fp) != ent["sha256"]:
+            raise TestFoldAccessError(f"pinned file {ent['file']} ({name}) differs from the hash pinned in FROZEN")
     if check_git:
         head = _git(root, "rev-parse", "HEAD")
         if head != d["commit"]:
@@ -153,7 +162,7 @@ def record_scoring(config_hash, run_id, commit, root=None):
         fh.write(json.dumps({"config_sha256": config_hash, "run_id": run_id, "commit": commit}) + "\n")
 
 
-def build_freeze_payload(root, split_keys, config_paths, prereg_file=PREREG_DEFAULT):
+def build_freeze_payload(root, split_keys, config_paths, prereg_file=PREREG_DEFAULT, pin_files=None, require_pins=False):
     """Helper for the lead at freeze time: returns the dict to put in FROZEN (does NOT write the file).
     split_keys: [(dataset, test)], config_paths: run-config JSON files whose canonical hashes are pinned."""
     from .data import _digest, split_path  # local import: data imports guard
@@ -165,5 +174,14 @@ def build_freeze_payload(root, split_keys, config_paths, prereg_file=PREREG_DEFA
         splits[f"{ds}:{test}"] = {"file_sha256": sha256_file(p), "fold_hash": block.get("sha256_of_folds") or _digest(block)}
     from .run import DEFAULTS  # the runner hashes DEFAULTS + the file's keys
     cfgs = [canonical_config_hash({**DEFAULTS, **json.load(open(c, encoding="utf8"))}) for c in config_paths]
+    pins, missing = {}, []
+    for name, rel in (PIN_FILES if pin_files is None else pin_files).items():      # subsets.json, symbolic_library.json (cap set) and the item (f) file must exist at the freeze
+        fp = os.path.join(root, rel)
+        if not os.path.isfile(fp):
+            if require_pins:
+                raise TestFoldAccessError(f"cannot pin {name}: {rel} does not exist")
+            missing.append(name)                                          # listed in the payload; verify_freeze refuses a FROZEN that has a missing pin
+            continue
+        pins[name] = {"file": rel.replace("\\", "/"), "sha256": sha256_file(fp)}
     return {"commit": _git(root, "rev-parse", "HEAD"), "prereg_file": prereg_file, "prereg_sha256": sha256_file(os.path.join(root, prereg_file)),
-            "splits": splits, "config_sha256s": cfgs}
+            "splits": splits, "config_sha256s": cfgs, "pins": pins, "pins_missing": missing}

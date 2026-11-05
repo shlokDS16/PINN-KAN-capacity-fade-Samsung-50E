@@ -1,0 +1,1646 @@
+OpenAI Codex v0.162.1
+--------
+workdir: C:\Users\Shlok\Downloads\PINN KAN battery paper\debates\codex_panel
+model: gpt-6-luna
+provider: openai
+approval: never
+sandbox: read-only
+reasoning effort: medium
+reasoning summaries: none
+session id: 01a1a70f-11a9-7313-988d-5d4e85ad3047
+--------
+user
+Turn 8 (you are the OPPONENT in debate D023: test-time inversion of the per-cell latent). Read:
+- C:\Users\Shlok\Downloads\PINN KAN battery paper\debates\D023_inversion\01_proposal.md and
+  C:\Users\Shlok\Downloads\PINN KAN battery paper\runs\check_D023_inversion\ (decision.json and results; rule committed before
+  the run). Finding: fixed-step Adam inversion is unconverged; a per-cell Newton step (O2) converges for 99.4 % (A1) / 100 % (A9)
+  of cells but different starts reach different local minima (start spread median 7.8 pp for A1; A9 p95 50 pp); lowest-loss
+  multi-start (O3) is less stable. Pre-ruled verdict NONE. Proposer recommends O2 from the prior mode for every inverting arm,
+  disclose multimodality, plus a separate pre-ruled check of the z-prior weight {1, 4, 16} (about 0.5 CPU-h).
+- C:\Users\Shlok\Downloads\PINN KAN battery paper\runs\pilot_P6b\RESULT.md (where the problem was found; ISU development data).
+
+Attack concretely:
+1. Is "deterministic start at the prior mode" a defensible estimator (MAP-like, reproducible) or does it hide an identifiability
+   failure a reviewer will find? What should the paper report about start dependence?
+2. Is tuning the z-prior weight on ISU training sides legitimate and fair to A9 (and to non-inverting comparators D*)? Should the
+   weight instead be chosen per Samsung fold by inner CV (training conditions only)?
+3. Better options within 1-2 days, CPU-only: e.g. reparameterise the window so z is identified (F = t*g makes early-window
+   sensitivity to z scale with t), shrink z to zero when the window is short, marginalise over z (average forecasts over the
+   posterior or over starts), or drop z at k = 0/2. Weigh each; mark speculation.
+4. Final: accept / revise / reject, with at most 3 required changes.
+Under 800 words. No invented numbers or citations.
+
+warning: clamping SessionEnd hook timeout to 3s in C:\Users\Shlok\.codex\plugins\cache\openai-codex\codex\1.0.6\hooks\hooks.json
+2026-11-05T08:32:29.748904Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://mcp.supabase.com/.well-known/oauth-protected-resource/mcp\"" })
+2026-11-05T08:32:30.001209Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer realm=\"OAuth\", resource_metadata=\"https://mcp.canva.com/.well-known/oauth-protected-resource/mcp\", error=\"invalid_token\", error_description=\"Missing or invalid access token\"" })
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart
+2026-11-05T08:32:32.824810Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when UnexpectedServerResponse("HTTP 404: \n<!DOCTYPE html>\n<html>\n  <head>\n    <meta charset=\"utf-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n    <title>404 - No instance here</title>\n    <link\n      href=\"https://fonts.googleapis.com/css?family=Open Sans\"\n      rel=\"stylesheet\"\n    />\n    <style>\n      html {\n        width: 100%;\n        height: 100%;\n      }\n\n      body {\n        height: 100%;\n        width: 100%;\n        background-color: #fbfcfe;\n        font-family: \"Open Sans\";\n        font-style: normal;\n        text-align: center;\n        color: #555555;\n        display: flex;\n        flex-direction: column;\n        align-items: center;\n        font-weight: 400;\n      }\n\n      body * {\n        margin-block-start: 0;\n        margin-block-end: 5px;\n      }\n\n      .container {\n        display: flex;\n        flex-direction: column;\n        align-items: center;\n        height: 100%;\n        max-width: 350px;\n        margin-top: 48px;\n      }\n\n      h1 {\n        font-weight: 400;\n        font-size: 28px;\n        line-height: 35px;\n        color: #555555;\n        margin-top: 64px;\n      }\n\n      h2 {\n        font-weight: 400;\n        font-size: 20px;\n        line-height: 26px;\n      }\n\n      p {\n        font-size: 14px;\n        line-height: normal;\n        color: #7d7d87;\n      }\n\n      a {\n        color: #fd4d21;\n        text-decoration: none;\n        text-align: center;\n        font-weight: 400px;\n      }\n\n      .subheading {\n        margin-top: 24px;\n      }\n    </style>\n  </head>\n  <body>\n    <div class=\"container\">\n      <svg\n        xmlns=\"http://www.w3.org/2000/svg\"\n        width=\"120\"\n        height=\"32\"\n        viewBox=\"0 0 120 32\"\n        fill=\"none\"\n      >\n        <path\n          fill-rule=\"evenodd\"\n          clip-rule=\"evenodd\"\n          d=\"M55.1998 12.8C52.2177 12.8 49.7119 10.7604 49.0014 8H41.666C40.1017 8 38.7667 9.13092 38.5096 10.6739L38.2465 12.2522C37.9968 13.7506 37.2388 15.0548 36.1668 16C37.2388 16.9452 37.9968 18.2494 38.2465 19.7478L38.5096 21.3261C38.7667 22.8691 40.1017 24 41.666 24H42.6014C43.3119 21.2396 45.8177 19.2 48.7998 19.2C52.3344 19.2 55.1998 22.0654 55.1998 25.6C55.1998 29.1346 52.3344 32 48.7998 32C45.8177 32 43.3119 29.9604 42.6014 27.2H41.666C38.5374 27.2 35.8674 24.9382 35.3531 21.8522L35.0901 20.2739C34.8329 18.7309 33.4979 17.6 31.9336 17.6H29.3982C28.6877 20.3604 26.1819 22.4 23.1998 22.4C20.2177 22.4 17.7119 20.3604 17.0014 17.6H13.3982C12.6877 20.3604 10.1819 22.4 7.1998 22.4C3.66518 22.4 0.799805 19.5346 0.799805 16C0.799805 12.4654 3.66518 9.6 7.1998 9.6C10.1819 9.6 12.6877 11.6396 13.3982 14.4H17.0014C17.7119 11.6396 20.2177 9.6 23.1998 9.6C26.1819 9.6 28.6877 11.6396 29.3982 14.4H31.9336C33.4979 14.4 34.8329 13.2691 35.0901 11.7261L35.3531 10.1478C35.8674 7.06184 38.5374 4.8 41.666 4.8L49.0014 4.8C49.7119 2.03964 52.2177 0 55.1998 0C58.7344 0 61.5998 2.86538 61.5998 6.4C61.5998 9.93462 58.7344 12.8 55.1998 12.8ZM55.1998 9.6C56.9671 9.6 58.3998 8.16731 58.3998 6.4C58.3998 4.63269 56.9671 3.2 55.1998 3.2C53.4325 3.2 51.9998 4.63269 51.9998 6.4C51.9998 8.16731 53.4325 9.6 55.1998 9.6ZM7.1998 19.2C8.96712 19.2 10.3998 17.7673 10.3998 16C10.3998 14.2327 8.96712 12.8 7.1998 12.8C5.43249 12.8 3.9998 14.2327 3.9998 16C3.9998 17.7673 5.43249 19.2 7.1998 19.2ZM26.3998 16C26.3998 17.7673 24.9671 19.2 23.1998 19.2C21.4325 19.2 19.9998 17.7673 19.9998 16C19.9998 14.2327 21.4325 12.8 23.1998 12.8C24.9671 12.8 26.3998 14.2327 26.3998 16ZM51.9998 25.6C51.9998 27.3673 50.5671 28.8 48.7998 28.8C47.0325 28.8 45.5998 27.3673 45.5998 25.6C45.5998 23.8327 47.0325 22.4 48.7998 22.4C50.5671 22.4 51.9998 23.8327 51.9998 25.6Z\"\n          fill=\"#EA4B71\"\n        />\n        <path\n          fill-rule=\"evenodd\"\n          clip-rule=\"evenodd\"\n          d=\"M100.004 13.8366V13.6841C101.121 13.1249 102.237 12.1591 102.237 10.2529C102.237 7.508 99.9791 5.85596 96.8579 5.85596C93.6606 5.85596 91.3768 7.60966 91.3768 10.3038C91.3768 12.1337 92.4426 13.1249 93.6099 13.6841V13.8366C92.3157 14.2941 90.7678 15.6665 90.7678 17.954C90.7678 20.7243 93.0516 22.656 96.8325 22.656C100.613 22.656 102.821 20.7243 102.821 17.954C102.821 15.6665 101.299 14.3195 100.004 13.8366ZM96.8325 8.19423C98.1013 8.19423 99.0402 9.00755 99.0402 10.38C99.0402 11.7525 98.0759 12.5658 96.8325 12.5658C95.5892 12.5658 94.5488 11.7525 94.5488 10.38C94.5488 8.98213 95.5384 8.19423 96.8325 8.19423ZM96.8325 20.216C95.3608 20.216 94.1681 19.2756 94.1681 17.6744C94.1681 16.2257 95.1578 15.1328 96.8072 15.1328C98.4312 15.1328 99.4208 16.2003 99.4208 17.7252C99.4208 19.2756 98.2789 20.216 96.8325 20.216Z\"\n          fill=\"#101330\"\n        />\n        <path\n          d=\"M106.736 22.4018H109.984V15.514C109.984 13.252 111.354 12.2608 112.902 12.2608C114.425 12.2608 115.617 13.2774 115.617 15.3616V22.4018H118.865V14.7007C118.865 11.3712 116.937 9.43962 113.917 9.43962C112.014 9.43962 110.948 10.2021 110.187 11.1933H109.984L109.705 9.69378H106.736V22.4018Z\"\n          fill=\"#101330\"\n        />\n        <path\n          d=\"M77.9839 22.4018H74.7358V9.69378H77.7048L77.9839 11.1933H78.1869C78.9481 10.2021 80.0139 9.43962 81.9171 9.43962C84.9367 9.43962 86.8653 11.3712 86.8653 14.7007V22.4018H83.6172V15.3616C83.6172 13.2774 82.4246 12.2608 80.9021 12.2608C79.3542 12.2608 77.9839 13.252 77.9839 15.514V22.4018Z\"\n          fill=\"#101330\"\n        />\n      </svg>\n\n      <h1>No instance here</h1>\n      <h2><a href=\"https://app.n8n.cloud/magic-link\">Open Cloud console</a></h2>\n      <h2></h2>\n      <p class=\"subheading\">\n        If the instance exists, the owner can manage it from the Cloud console.\n      </p>\n    </div>\n  </body>\n</html>")
+2026-11-05T08:32:33.204703Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://mcp.figma.com/.well-known/oauth-protected-resource\",scope=\"mcp:connect\",authorization_uri=\"https://api.figma.com/.well-known/oauth-authorization-server\"" })
+2026-11-05T08:32:33.210126Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer error=\"invalid_token\", error_description=\"No authorization provided\", resource_metadata=\"https://mcp.vercel.com/.well-known/oauth-protected-resource\"" })
+2026-11-05T08:32:33.949859Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://huggingface.co/.well-known/oauth-protected-resource/mcp?login\"" })
+2026-11-05T08:32:34.075578Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://mcp.context7.com/.well-known/oauth-protected-resource/mcp\"" })
+hook: SessionStart Failed
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: UserPromptSubmit
+hook: UserPromptSubmit
+hook: UserPromptSubmit Completed
+hook: UserPromptSubmit Completed
+codex
+I’ll inspect the D023 proposal, the pre-ruled inversion results, and the P6b diagnostics. I’ll focus on whether a deterministic solver resolves only reproducibility or also the underlying identifiability problem.
+hook: PreToolUse
+2026-11-05T08:32:58.905586Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpRequest(HttpRequest("http/request failed: error sending request for url (https://api.githubcopilot.com/mcp/)")))
+hook: PreToolUse Completed
+exec
+"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command "Get-Content -Raw 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\debates\\D023_inversion\\01_proposal.md'; Get-Content -Raw 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\runs\\check_D023_inversion\\decision.json'; Get-ChildItem -Force 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\runs\\check_D023_inversion' | Select-Object Name,Length; Get-Content -Raw 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\runs\\pilot_P6b\\RESULT.md'" in C:\Users\Shlok\Downloads\PINN KAN battery paper\debates\codex_panel
+ succeeded in 433ms:
+# D023 proposal: a converged, start-independent test-time inversion for every arm that infers per-cell latents (2026-11-05)
+
+Role: proposer (ml-expert). The opponent and the judge are other agents (CONTRACT 3).
+Reading depth: full text of `runs/pilot_P6b/RESULT.md`, `run_meta.json` and `config_used.json`; `code/pinnkan/pinn.py`
+(`PINNModel`, `fit_pinn`, `invert_pinn`, `predict_pinn`, `DataOnlyF`, `fit_data_only`, `predict_data_only`);
+`code/pinnkan/hard.py` in full; `code/models/ageing_models.py` `SolutionNet`; `code/pinnkan/law.py` lines 28-40, 61-68 and
+336-395; `code/pinnkan/semi.py` (grep of `cell_factor`); `code/pinnkan/arms.py` (grep of the predict calls); and
+`code/pilots/p6b_inner_folds.py` lines 1-440, whose diagnostic replicates the production loops.
+No production code was edited. No Samsung label and no ISU outer-test fold was read.
+
+## 0. Summary
+- **Cause (section 1).** The inversion is a fixed-budget, constant-learning-rate Adam run (A1 200, A9 150, A2 300 steps,
+  float32, no convergence test). It is applied to a non-convex, poorly conditioned per-cell objective. The early window
+  barely identifies z, because F = t g(t, s, z) makes the window's sensitivity to z scale with t. The long-horizon forecast,
+  however, depends strongly on z. In A1, z and delta can also trade off along a ridge. So the answer depends on where
+  Adam stops. A2 converges because its latent is one scalar per cell in a closed-form, monotone law.
+- **Proposal (section 2).** Replace the three loops by one routine for every inverting arm:
+  - float64;
+  - a deterministic start at the prior mode;
+  - a per-cell damped Newton (Levenberg-Marquardt) step, using the exact per-cell Hessian (the objective is a sum of
+    per-cell terms, so the Hessian is block diagonal with blocks of size 1-4);
+  - a convergence test, with an iteration cap and a logged non-converged share;
+  - optionally, K fixed starts with per-cell selection by the arm's own causal inversion objective.
+  The objective itself is unchanged.
+- **The small check (section 7) was committed before running.** Its result is in section 8: the verdict is **NONE**. O2
+  converges (99.4 % of A1 cells, 100 % of A9 cells) and is budget-independent, but converged starts land in different local
+  minima (A1 start spread median 7.8 pp), so the start-spread criterion fails for every option. The proposer recommends R-a
+  (O2 from the prior mode, with the multimodality disclosed) and a separate check of the z-prior weight (R-b). The adoption rule uses only
+  convergence, budget stability, start spread and the objective, never an A1-vs-D\* gap.
+
+## 1. Diagnosis from the code
+1. **Fixed budget, no stopping test, and a budget that differs by arm.** `invert_pinn` uses Adam with lr 0.05 constant and
+   200 steps (`pinn.py` 190-222). `predict_data_only` uses Adam with lr 0.05 and 150 steps (272-292). `fit_delta` uses Adam
+   with lr 0.05 and 300 steps (`hard.py` 55-73). Adam with a constant learning rate does not settle at a stationary point.
+   Its per-coordinate step stays of order lr, so the returned latent is "wherever step 150/200/300 lands". This acts as an
+   implicit, untuned regulariser whose strength differs between A1 and A9. That matches P6b Table E: doubling the steps moves
+   forecasts by up to 4.6 pp (A1) and 42 pp (A9).
+2. **Scale and conditioning.**
+   - The data and residual terms are divided by SIGMA^2 = 0.0025 (`law.py` 28), and the residual term is multiplied by
+     lam x pts_per_cell x Ct. The initial gradient norms are therefore about 3e4 for A1 (P6b Table E).
+   - The prior curvatures are only 2 for z and 2/TAU^2, about 89, for delta.
+   - The per-cell objective therefore mixes stiff directions (window and residual) with flat ones (prior only). Adam's
+     per-coordinate normalisation zig-zags across a stiff valley that is not aligned with the axes, and it crawls along the
+     flat valley floor.
+   - Float32 with a 400x scaled loss limits the precision that can be reached; this is a minor factor.
+3. **Weak identification of z by the window.**
+   - `SolutionNet` has F(t, s, z) = t * g(t, s, z) (`ageing_models.py` 56-69), so the derivative of F with respect to z at
+     a window point is t times the derivative of g.
+   - With an early window (ISU W = 2 weeks, so t_n = t / 50 is at most 0.04) the window says little about z.
+   - The forecast at t_n of order 1 depends on z through the tanh network, which is non-convex in z.
+   - A9 has only the window and the N(0, I) prior, so its z posterior is flat and possibly multimodal.
+   - A1 adds the residual over (window end, t_max], which ties F's shape to the law. But delta moves the law amplitude and z
+     moves F, and both can reduce the residual, which creates a ridge in (z, delta).
+4. **Why A2 converges.** Its latent is one delta per cell. The forward model is the closed-form law (`hard.py` 21-24), which
+   is monotone in delta. The 1-D objective is smooth and well scaled, and 300 Adam steps reach a gradient norm of about 1e-5
+   (P6b Table E).
+5. **A10** fits its per-cell factor with bounded Brent on [-2, 2] (`semi.py` 177-185), which is 1-D and converged. It is
+   unchanged, but boundary hits should be logged (a delta at plus or minus 2 means the bound, not the data, set the value).
+6. **Related risk (not the test-time issue).** The training cells' z_c and delta_c are fitted jointly with the network in
+   the same 2000-step Adam loop (`fit_pinn` 154-187). A fully converged test-time MAP can land in a region of z that the
+   network never saw in training, where the forecast extrapolates wildly. Section 8 reports the forecast scores of each
+   option (descriptive only) so that the judge can see whether this occurs.
+
+## 2. Proposal
+One routine `invert_latents(objective_per_cell, P0)`, used by `invert_pinn` (A1, A4/AG, A5, A13, A15, G15),
+`predict_data_only` (A9) and `fit_delta` (A2 and the backbone tournament):
+- **Objective: unchanged.** It is each arm's production loss written per cell: window points, A1's residual over the
+  horizon, and the priors. It uses only causal information, with no label after the window. The per-cell form sums exactly
+  to the production loss (checked by the replica column in section 8).
+- **Start:** the prior mode (z = 0, delta = mu), deterministic.
+- **Step:** per-cell Levenberg-Marquardt on the exact block Hessian (autograd: one gradient plus p Hessian-column passes,
+  with p = dim z + dim delta, at most 4).
+  - The damping is shifted so that H plus the shift is positive definite.
+  - A step is accepted only if that cell's objective does not rise.
+  - Float64 for the inversion only; the network stays as trained.
+- **Stopping:** ||g_c|| <= 1e-6 (1 + |f_c|) for every cell, or an iteration cap. The non-converged share and the final
+  gradient norms go to `diagnostics.json`.
+- **k = 0 rule:** unchanged (latents at the prior mode when the window has only the reference point).
+- **Multi-start (only if the check shows multimodality after convergence; option O3):** K fixed starts (the prior mode, and
+  the prior mode plus or minus 1 prior sd along each latent axis), each run to convergence, with per-cell selection by the
+  same causal objective. Selection never uses a later label, a forecast score or a comparator.
+- **Same for every inverting arm:** the same tolerance, cap and start rule. The confirmatory arms that do not invert (A11,
+  A12, R1, R2) are unaffected.
+
+**Expected effect.**
+- Forecasts become a deterministic function of the trained network and the window: start-independent if the per-cell
+  minimum is unique, and budget-independent once converged.
+- This removes a source of noise that the seed ensemble only partly averages, which helps P1's effective rho (D020 01, section 1).
+- The direction of the change in accuracy is not known in advance: the early-stopped iterate may have been regularising.
+  Section 8 shows it on development data, descriptively.
+
+**Cost (arithmetic from the timing check in section 7, fold 0, 131 pseudo-test cells).**
+- A1: about 0.031 s per Newton iteration (float64), against about 0.004 s per Adam step. Typically tens of iterations, cap
+  100, so about 1-3 s per prediction call against about 0.5-1 s now.
+- Inner-CV prediction calls (about 100 per tuned PINN arm per (fold, m), on smaller validation sets) give roughly +1-3 CPU-h
+  over the grid. O3 with 5 starts would be roughly x5 on the inversion part (about +5-15 CPU-h).
+- Coder about 3 h: one routine, three call sites, and unit tests (an exact minimum on a quadratic objective; agreement with
+  the production replica at a fixed budget; per-cell separability; the k = 0 rule).
+
+**Fairness.** One routine and one rule for A1 and its physics-off twin A9 (P2), and for AG, A2, A13, A15 and G15. D\* members
+A11 and A12 do not invert. A9 is a D\* candidate and gains or loses the same way. Nothing is tuned for any arm.
+
+## 3. Why this, and why not each alternative
+- **O1, more Adam steps with a decaying learning rate (tested as a reference).** This is the smallest change, but a first-order
+  method on this conditioning needs thousands of steps. It has no reliable stopping test, and its result still depends on the
+  budget.
+- **L-BFGS on the whole batch.** It couples cells inside its low-rank curvature approximation, uses one global line search
+  and one global stopping test, and ignores the exact block-diagonal structure. Per-cell Newton uses that structure for the
+  cost of p extra backward passes.
+- **Reparameterisation by whitening with the prior.** The prior is already unit-scale for z. Whitening by the Hessian is the
+  Newton step.
+- **Drop z at test time (infer delta only, z at the prior mode).** This is well posed (like A2), but it changes the model: A9
+  would then have nothing to infer, and P2 would compare different window usage. It is kept only as a fallback if the check
+  finds no converged start-independent option.
+- **Laplace or posterior-mean forecast (average over the latent posterior).** This changes the estimator and needs sampling
+  or Hessian-based integration per cell. It is more defensible statistically, but it is a larger change than a pre-freeze
+  fix should be.
+- **Warm start from the nearest training cell's latent.** It adds a data-dependent design choice (the distance metric and
+  which cell is nearest), and it is still not converged.
+- **Leave it and disclose.** This is unacceptable: the reported scores would depend on an arbitrary step count that differs
+  between A1 and A9.
+
+## 4. Is this the best possible, or is there room?
+A converged MAP is the best defensible point estimate for this objective. Further gains would have to come from the
+objective itself, which is a separate decision, not part of this fix:
+- the prior scale of z and TAU (D020 C6);
+- the window weighting;
+- a posterior mean.
+If section 8 shows that the converged MAP forecasts worse than the early-stopped iterate on development data, the honest
+reading is that the prior is too weak for an early window. The judge should then consider an explicit change to the prior
+scale, decided on training sides only and the same for every arm, rather than keeping an implicit step count.
+
+## 5. What a JES reviewer would hit
+- "Test-time latent inference is an optimisation; is it converged?" The paper must report the tolerance, the cap, the
+  non-converged share, and the start-sensitivity check.
+- Unequal step budgets between the model and its ablation (200 vs 150) would read as a hidden handicap of A9.
+- The order of operations: this fix and its check came before the freeze and on development data only (P6b, D023).
+
+## 6. What would make a reviewer reject it
+- Forecasts that change with the random seed of the inversion, or with the number of steps (the current state).
+- A fix tuned on the test outcome, or one applied to A1 only.
+- Selection among starts by forecast error. Here the selection is by the causal objective only.
+
+## 7. Test plan and adoption rule (fixed and committed BEFORE the main run)
+**Data.**
+- ISU training sides only, exactly as P6b: `runs/splits/isu_testB.json`, folds 0-4, with the outer-test conditions never
+  loaded (`p6b_inner_folds.fold_data` asserts it).
+- Pseudo-train = the m = 8 max-min subset; pseudo-test = the fold's other training conditions; window W = 2 weeks.
+- No Samsung data.
+
+**Models.** A1, A9 and A2, refit with seed 0 using the P6b 2-fold configuration and tournament backbone of each fold
+(`runs/pilot_P6b/units/f<f>_k2_<arm>.json`, `tournament_f<f>_k2.json`).
+
+**Options (each applied identically to A1, A9 and A2).**
+- **O0:** the production replica (float32 Adam lr 0.05; 200 / 150 / 300 steps; budget doubled by continuing).
+- **O1:** float64 Adam, lr 0.05 cosine-decayed to 5e-4, 4000 steps (doubled: a fresh 8000-step run).
+- **O2:** per-cell damped Newton, float64, from the prior mode, cap 100 iterations (doubled: 200).
+- **O3:** O2 from S_A (the prior mode plus or minus 1 prior sd along every axis) with per-cell selection by the objective,
+  compared with the selection from S_B (the prior mode plus 4 seeded draws, z ~ N(0, 1), delta ~ N(0, TAU^2)).
+
+**Spread starts for O0-O2:** the prior mode plus 3 seeded draws, z ~ N(0, 0.5^2), delta ~ N(0, TAU^2) (as P6b). Seeds:
+`[20261106, 23, fold, arm index, j]`.
+
+**Measures, per pseudo-test cell, pooled over the 5 folds.** Cells with a single window point are excluded, because
+production sets them to the prior.
+- Convergence share (||g|| <= 1e-6 (1 + |f|)).
+- Budget change: the largest absolute forecast change in pp between the cap and the doubled cap.
+- Start spread: the largest range in pp across starts. For O3 it is the largest |selection(S_A) - selection(S_B)|.
+- Objective difference f(option) - f(O0).
+- For A2, the largest change against O0.
+
+**Adoption rule (`RULE` in `code/pilots/d023_inversion_check.py`, applied by `aggregate`; nobody chooses).** Go through the
+options in the order **O2, O1, O3** and adopt the first one for which all of the following hold:
+- (a) for A1 and for A9, the convergence share (of the base run, i.e. O2 for O3) is at least 0.99;
+- (b) for A1 and A9, the budget change has p99 <= 0.1 pp and max <= 1 pp;
+- (c) for A1 and A9, the start spread has median <= 0.1 pp and p95 <= 1 pp;
+- (d) for A1 and A9, the median objective difference against O0 is <= 0;
+- (e) for A2, the p99 change against O0 is <= 0.05 pp (A2 is already converged; the fix must not move it);
+- and all 15 units are complete.
+
+If no option passes, the verdict is **NONE**: nothing is adopted from this check, and the judge decides on the fallbacks of
+section 3 (z fixed at the prior mode, or a prior-scale change), with the descriptive table.
+The pseudo-test forecast scores per arm and option are reported as **descriptive only, with no rule**. No A1-vs-D\* contrast
+is computed.
+
+**Budget.** CPU only, 2 processes (folds {0, 1, 2} and {3, 4}), with a guard of 0.70 CPU-h per process (an incomplete run
+gives NONE). Expected cost about 0.3 CPU-h (timing check on fold 0: A1 fit 12.5 s, Adam step 0.004 s, Newton iteration
+0.031 s; A9 2.5 s, 0.0008 s and 0.005 s).
+
+**Mechanics smoke test** (before the commit, in the scratchpad outside `runs/`, 1 fold, 5 % training steps, tiny caps): it
+ran end to end. Its numbers are not used.
+
+## 8. Result (appended after the run; development data, ISU training sides, not evidence for Samsung)
+**Run facts.**
+- Rule and script committed in `0ba9f92` (14:04:51) before the main run.
+- All 15 units complete, no errors, 0.30 CPU-h on 2 processes.
+- The replica matches the production path: largest difference 1.9e-5 pp for A1 and 0 for A9 and A2.
+- Files: `runs/check_D023_inversion/decision.json`, `units/`, `log_a.txt`, `log_b.txt`.
+
+**Verdict of the fixed rule: NONE.**
+- O2, O1 and O3 all fail criterion (c), start spread, for A1 and for A9.
+- O1 also fails (a) and (b) for A1.
+- Criteria (a), (b), (d) and (e) pass for O2.
+- Nothing is adopted from this check (section 7). The judge decides.
+
+| arm, option | conv. share | budget change p99 / max (pp) | start spread median / p95 / max (pp) | median f - f(O0) | Hessian at solution |
+|---|---|---|---|---|---|
+| A1 O0 (production) | - | 2.35 / 4.58 | 7.83 / 65.6 / 119 | 0 | - |
+| A1 O1 (Adam 4000, cosine) | 0.627 | 1.23 / 17.7 | 5.71 / 52.0 / 139 | -0.78 | - |
+| A1 O2 (Newton-LM) | 0.994 | 0 / 0 | 7.76 / 46.4 / 90.3 | -1.00 | min eig > 0 in all cells; median condition number 2237 |
+| A1 O3 (S_A vs S_B selection) | (O2) | (O2) | 0 / 5.49 / 24.9 | -1.92 | best start is not the prior mode in 72-84 % of cells |
+| A9 O0 (production) | - | 12.0 / 42.3 | 1.13 / 50.4 / 128 | 0 | - |
+| A9 O1 | 1.000 | 0 / 0 | 0 / 46.0 / 111 | 0 | - |
+| A9 O2 | 1.000 | 0 / 0 | 0 / 50.0 / 111 | 0 | min eig > 0 in all cells; median condition number 6.9 |
+| A9 O3 | (O2) | (O2) | 0 / 1.63 / 65.8 | -0.0002 | best start is not the prior mode in 68-82 % of cells |
+| A2 O0, O1, O2, O3 | 1.000 | 0 / 0 | 0 / 0 / 0 | 0 | median condition number 1 |
+
+**What this shows (reading of the table).**
+1. **Non-convergence was real, and the second-order method removes it.**
+   - With O2, 99.4 % (A1) and 100 % (A9) of cells meet the gradient test.
+   - Doubling the cap changes no forecast (0 pp).
+   - This also holds for A2, whose forecasts do not move at all (criterion e).
+   - Adam needs thousands of steps for A1 and still leaves 37 % of cells unconverged (O1).
+2. **The dominant problem is non-uniqueness, not only non-convergence.**
+   - Converged runs from different starts end at different local minima: the Hessian is positive definite at each one.
+   - Those minima carry forecasts that differ by up to about 90 pp for A1 and 111 pp for A9.
+   - A9's per-cell problem is well conditioned (median condition number 6.9) but multimodal. A1's is both ill-conditioned
+     (2237) and multimodal.
+   - This supports diagnosis item 3: the early window does not pin z, and the tanh network gives several basins.
+3. **Selecting the lowest objective among starts (O3) does not give a stable answer.**
+   - Its p95 disagreement between two start sets is 5.5 pp (A1) and 1.6 pp (A9).
+   - Its best start is mostly not the prior mode.
+   - Descriptive only, no rule: the forecast scores move the wrong way. The A1 fold means are 4.98-5.84 pp for O0, 4.97-5.98
+     for O2 and 5.03-5.97 for O3. A9 fold 3 goes from 9.05 (O0) to 16.34 (O3).
+   - So a deeper minimum of the window MAP objective is not a better forecast. The window over-fits z when the search goes
+     looking for it.
+4. **O2 from the prior mode is a well-defined, deterministic and budget-independent estimator.** It is the local MAP in the
+   basin of the prior mode. Its descriptive forecast scores are close to production for both arms: A1 fold means 4.97-5.98
+   vs 4.98-5.84 pp; A9 9.32-21.67 vs 9.05-22.43 pp. Its dependence on the start is a property of the model, not of the
+   optimiser.
+
+**Recommendation to the judge (the proposer's, not a rule outcome).**
+- **(R-a) Adopt O2 from the prior mode for every inverting arm.** Name it in the paper for exactly what it is: "the local
+  posterior mode reached from the prior mode by a converged per-cell Newton method". Report the convergence share, and the
+  start-spread diagnostic as a stated limitation.
+  - It meets every criterion except (c), and (c) measures the model's multimodality, which no optimiser can remove.
+  - It removes the budget dependence and the unequal step counts between A1 and A9 (200 vs 150).
+  - Its cost is small (section 2).
+- **(R-b) Before the freeze, test whether the multimodality comes from the z prior being too weak for an early window.**
+  - This is a separate decision row, because it changes the objective.
+  - The check would compare a z prior weight of {1, 4, 16} (the same for A1 and A9; A2 has no z), on the same ISU training
+    sides, with O2 from the prior mode.
+  - Its criterion would be start spread (median <= 0.1 pp, p95 <= 1 pp) plus a non-inferiority guard on each arm's own
+    pseudo-test score. The guard is needed because the weight changes the estimator.
+  - Cost about 0.5 CPU-h. It is not run here, because it changes the model and needs its own committed rule.
+- **(R-c) Do not adopt O3 (multi-start selection by objective).** It is less stable and, descriptively, worse.
+- **Fallback if the judge rejects R-a:** fix z at the prior mode at test time (delta-only inversion, as A2). This is
+  unimodal by construction, but it changes A9 into a population forecast with no window use, so P2 would then compare unequal
+  window use. That is why it is not preferred.
+
+## 9. Opponent's attack and the proposer's answer
+(separate agent)
+
+## 10. Judge's verdict
+(separate agent)
+
+{
+ "complete": true,
+ "units": 15,
+ "verdict": "NONE",
+ "checks": {
+  "O2": {
+   "pass": false,
+   "conditions": [
+    {
+     "A1": {
+      "a": true,
+      "b": true,
+      "c": false,
+      "d": true
+     }
+    },
+    {
+     "A9": {
+      "a": true,
+      "b": true,
+      "c": false,
+      "d": true
+     }
+    },
+    {
+     "A2_e": true
+    }
+   ]
+  },
+  "O1": {
+   "pass": false,
+   "conditions": [
+    {
+     "A1": {
+      "a": false,
+      "b": false,
+      "c": false,
+      "d": true
+     }
+    },
+    {
+     "A9": {
+      "a": true,
+      "b": true,
+      "c": false,
+      "d": true
+     }
+    },
+    {
+     "A2_e": true
+    }
+   ]
+  },
+  "O3": {
+   "pass": false,
+   "conditions": [
+    {
+     "A1": {
+      "a": true,
+      "b": true,
+      "c": false,
+      "d": true
+     }
+    },
+    {
+     "A9": {
+      "a": true,
+      "b": true,
+      "c": false,
+      "d": true
+     }
+    },
+    {
+     "A2_e": true
+    }
+   ]
+  }
+ },
+ "rule": {
+  "order": [
+   "O2",
+   "O1",
+   "O3"
+  ],
+  "arms_gated": [
+   "A1",
+   "A9"
+  ],
+  "a_conv_share_min": 0.99,
+  "b_budget_p99_max_pp": 0.1,
+  "b_budget_max_pp": 1.0,
+  "c_spread_median_max_pp": 0.1,
+  "c_spread_p95_max_pp": 1.0,
+  "d_objective_median_delta_max": 0.0,
+  "e_A2_change_p99_max_pp": 0.05
+ },
+ "table": {
+  "A1|O0": {
+   "spread_median": 7.8260752558708235,
+   "spread_p95": 65.64069747924803,
+   "spread_max": 119.37465190887451,
+   "budget_median": 0.16022801399230846,
+   "budget_p99": 2.3453973531723085,
+   "budget_max": 4.578986167907717,
+   "grad_median": 30.38833812654368,
+   "grad_max": 6901.165199988122,
+   "score_pp_by_fold_descriptive": [
+    5.480671598000103,
+    5.838122584313143,
+    4.9755297932884845,
+    5.76275158914998,
+    5.557696455527668
+   ]
+  },
+  "A1|O1": {
+   "spread_median": 5.7122535903456,
+   "spread_p95": 51.97825632603285,
+   "spread_max": 138.88749456477737,
+   "budget_median": 2.220446049250313e-14,
+   "budget_p99": 1.2309009381000313,
+   "budget_max": 17.689381485809186,
+   "grad_median": 1.4045448128038198e-10,
+   "grad_max": 112.72922594534931,
+   "conv_share": 0.6266233766233766,
+   "f_minus_O0_median": -0.7826955466365431,
+   "change_vs_O0_median": 0.47491929240635056,
+   "change_vs_O0_p99": 5.9039392477004276,
+   "change_vs_O0_max": 8.71207403788663,
+   "score_pp_by_fold_descriptive": [
+    5.484383295482053,
+    5.736173610104223,
+    5.0061084950293475,
+    5.974490699292177,
+    5.763045577860152
+   ]
+  },
+  "A1|O2": {
+   "spread_median": 7.756113309595936,
+   "spread_p95": 46.36007727261995,
+   "spread_max": 90.34673522873845,
+   "budget_median": 0.0,
+   "budget_p99": 0.0,
+   "budget_max": 0.0,
+   "grad_median": 9.861659616027748e-07,
+   "grad_max": 0.0011686077111178284,
+   "conv_share": 0.9935064935064936,
+   "f_minus_O0_median": -1.0048363728301475,
+   "change_vs_O0_median": 0.6520918369068651,
+   "change_vs_O0_p99": 7.3271873608235545,
+   "change_vs_O0_max": 8.802087928164337,
+   "hess_min_median": 1020.3326993623007,
+   "share_hess_min_nonpos": 0.0,
+   "cond_median": 2237.3736694642785,
+   "score_pp_by_fold_descriptive": [
+    5.274754128239978,
+    5.726815506194142,
+    4.973580558847264,
+    5.974708264026955,
+    5.736818110043228
+   ]
+  },
+  "A1|O3": {
+   "spread_median": 1.5269685516017262e-08,
+   "spread_p95": 5.492406814504447,
+   "spread_max": 24.8900561086436,
+   "share_not_prior_mode": [
+    0.8091603053435115,
+    0.7154471544715447,
+    0.8403361344537815,
+    0.775,
+    0.8373983739837398
+   ],
+   "f_minus_O0_median": -1.9216771751343558,
+   "change_vs_O0_median": 0.8559739414365886,
+   "change_vs_O0_p99": 11.196822537405534,
+   "change_vs_O0_max": 12.800684114940308,
+   "score_pp_by_fold_descriptive": [
+    5.785042033349112,
+    5.729934032141561,
+    5.0278065996297885,
+    5.965381612848594,
+    5.830046760887544
+   ]
+  },
+  "A9|O0": {
+   "spread_median": 1.1277413368225075,
+   "spread_p95": 50.431450605392456,
+   "spread_max": 128.3725309371948,
+   "budget_median": 0.008574724197385475,
+   "budget_p99": 11.981205701828001,
+   "budget_max": 42.25897073745728,
+   "grad_median": 0.025193814004698452,
+   "grad_max": 34.16574591682778,
+   "score_pp_by_fold_descriptive": [
+    10.127213180237291,
+    13.695028769943846,
+    22.427434234840305,
+    9.046339291311629,
+    15.275722594576447
+   ]
+  },
+  "A9|O1": {
+   "spread_median": 1.1102230246251565e-14,
+   "spread_p95": 45.98594433541045,
+   "spread_max": 111.14910145056598,
+   "budget_median": 0.0,
+   "budget_p99": 2.369131835155974e-08,
+   "budget_max": 4.48209944714506e-06,
+   "grad_median": 4.3049590769691094e-15,
+   "grad_max": 1.27924385550174e-06,
+   "conv_share": 1.0,
+   "f_minus_O0_median": -3.992233593486105e-06,
+   "change_vs_O0_median": 0.00973043344575375,
+   "change_vs_O0_p99": 23.908490115871707,
+   "change_vs_O0_max": 42.22643302964767,
+   "score_pp_by_fold_descriptive": [
+    10.108444206177158,
+    13.703173660068808,
+    21.86621256744201,
+    9.05180811236593,
+    15.229064510975357
+   ]
+  },
+  "A9|O2": {
+   "spread_median": 6.985999306818869e-06,
+   "spread_p95": 50.043983979801624,
+   "spread_max": 111.14910163173109,
+   "budget_median": 0.0,
+   "budget_p99": 0.0,
+   "budget_max": 0.0,
+   "grad_median": 2.1606151157513873e-07,
+   "grad_max": 0.0004008702523028429,
+   "conv_share": 1.0,
+   "f_minus_O0_median": -4.61723156081062e-06,
+   "change_vs_O0_median": 0.011015911181722071,
+   "change_vs_O0_p99": 43.83255543168333,
+   "change_vs_O0_max": 50.973873953630445,
+   "hess_min_median": 6.603297161535732,
+   "share_hess_min_nonpos": 0.0,
+   "cond_median": 6.876614386277586,
+   "score_pp_by_fold_descriptive": [
+    10.104282509669767,
+    13.709717515412825,
+    21.673272337533103,
+    9.32177533575432,
+    14.831751004042175
+   ]
+  },
+  "A9|O3": {
+   "spread_median": 3.079582144849269e-08,
+   "spread_p95": 1.6261666964375614,
+   "spread_max": 65.8092331485387,
+   "share_not_prior_mode": [
+    0.7175572519083969,
+    0.8211382113821138,
+    0.6974789915966386,
+    0.6916666666666667,
+    0.6829268292682927
+   ],
+   "f_minus_O0_median": -0.00023082327469222536,
+   "change_vs_O0_median": 0.021989346454515113,
+   "change_vs_O0_p99": 63.539752011429435,
+   "change_vs_O0_max": 73.8728770165965,
+   "score_pp_by_fold_descriptive": [
+    9.585335342631053,
+    13.910607655193129,
+    21.547573295495532,
+    16.340256933097827,
+    15.284858751187993
+   ]
+  },
+  "A2|O0": {
+   "spread_median": 4.768371575369912e-06,
+   "spread_p95": 9.536743161842054e-06,
+   "spread_max": 1.4305114748314196e-05,
+   "budget_median": 0.0,
+   "budget_p99": 9.536743161842054e-06,
+   "budget_max": 9.536743161842054e-06,
+   "grad_median": 1.9527968365906645e-05,
+   "grad_max": 0.0005229250377851713,
+   "score_pp_by_fold_descriptive": [
+    8.480540291811211,
+    7.063084443187377,
+    7.609962150741091,
+    7.236171203535913,
+    7.983609471253781
+   ]
+  },
+  "A2|O1": {
+   "spread_median": 0.0,
+   "spread_p95": 1.1102230246251565e-14,
+   "spread_max": 2.220446049250313e-14,
+   "budget_median": 0.0,
+   "budget_p99": 1.1102230246251565e-14,
+   "budget_max": 2.220446049250313e-14,
+   "grad_median": 1.0658141036401503e-14,
+   "grad_max": 5.684341886080801e-13,
+   "conv_share": 1.0,
+   "f_minus_O0_median": -7.216449660063518e-13,
+   "change_vs_O0_median": 2.2684700673458735e-06,
+   "change_vs_O0_p99": 6.739287820023423e-06,
+   "change_vs_O0_max": 1.0762586988288803e-05,
+   "score_pp_by_fold_descriptive": [
+    8.480540203039636,
+    7.06308464597109,
+    7.609962179399131,
+    7.23617142234313,
+    7.983609438160757
+   ]
+  },
+  "A2|O2": {
+   "spread_median": 1.438413665955096e-07,
+   "spread_p95": 1.1622667162036748e-06,
+   "spread_max": 3.07363821061557e-06,
+   "budget_median": 0.0,
+   "budget_p99": 0.0,
+   "budget_max": 0.0,
+   "grad_median": 1.2949202243817126e-07,
+   "grad_max": 6.100498650596364e-05,
+   "conv_share": 1.0,
+   "f_minus_O0_median": -6.79067913011977e-13,
+   "change_vs_O0_median": 2.3289614514698798e-06,
+   "change_vs_O0_p99": 6.910063105047832e-06,
+   "change_vs_O0_max": 1.0734014832536332e-05,
+   "hess_min_median": 283.3534276534769,
+   "share_hess_min_nonpos": 0.0,
+   "cond_median": 1.0,
+   "score_pp_by_fold_descriptive": [
+    8.480540229886822,
+    7.063084705398161,
+    7.60996221649515,
+    7.23617144650106,
+    7.9836094762001
+   ]
+  },
+  "A2|O3": {
+   "spread_median": 3.7090164273223536e-09,
+   "spread_p95": 9.087831320808704e-08,
+   "spread_max": 3.996736497313691e-07,
+   "share_not_prior_mode": [
+    0.6946564885496184,
+    0.6178861788617886,
+    0.6470588235294118,
+    0.575,
+    0.5365853658536586
+   ],
+   "f_minus_O0_median": -7.291944825738028e-13,
+   "change_vs_O0_median": 2.265026100012335e-06,
+   "change_vs_O0_p99": 6.743121758745476e-06,
+   "change_vs_O0_max": 1.07613100541748e-05,
+   "score_pp_by_fold_descriptive": [
+    8.480540206144381,
+    7.063084646877019,
+    7.6099621806956,
+    7.236171427050745,
+    7.983609440288891
+   ]
+  }
+ },
+ "cpu_hours": 0.30049913194444444,
+ "replica_vs_production_pp_max": {
+  "A1": 1.9073486334786338e-05,
+  "A9": 0.0,
+  "A2": 0.0
+ },
+ "note": "development data (ISU training sides); the scores are descriptive and carry no rule"
+}
+
+Name                  Length
+----                  ------
+units                       
+decision.json         9475  
+log_a.txt             237   
+log_b.txt             158   
+meta_folds_0_1_2.json 249   
+meta_folds_3_4.json   243   
+# P6b result: four against two inner folds at m = 8 (D020 judge section 4, rule R2')
+
+**All numbers below: development data (ISU), not evidence for Samsung.** Non-confirmatory. ISU is not blind (PREREG 3.4); if ISU later becomes primary, this pilot is part of the ISU development exposure (judge section 4).
+
+## Verdict
+**KEEP 2 inner folds for m in {8, 16}** (`decision.json`: `"adopt": false`). Four of six arms have q > 0 (A4, A9, A11, A12); the rule needs at least five. The floor condition (min q > -ln(1.02) = -0.0198) is met (min q = -0.0088, A1), so the first condition alone decides. All 60 units finished; no failed unit, no failed tuning trial, no non-finite seed forecast.
+
+## What was run
+- ISU Test B (`runs/splits/isu_testB.json`, sha256 identical before and after). Five outer folds; the outer-test conditions (12-13 per fold) and cells were never loaded (`fold_audit.json`: intersection 0 with conditions and cells, `test_fold_scored: false`, fold hash ok).
+- Pseudo-train: the nested max-min subset of 8 of the fold's 51 training conditions. Pseudo-test: the other 42-43 conditions (171 cells in fold 0). Window W = 2 weeks, as `run.py` does at m < 32. 63 conditions in total, 43 pooled over folds for the median.
+- Arms A1, A2, A4 (= AG at m < 32), A9, A11, A12; N = 20 TPE trials (sampler seed = fold, tuning seed 1000 + fold); final refits seeds 0-4; inner_k in {2, 4}; the backbone tournament was run per (fold, inner_k) on the pseudo-train (it chose self_limiting in all 10 (fold, inner_k) cells).
+- Endpoint: ensemble score (mean of the five refit forecasts, non-finite values replaced seed-wise by persistence before averaging). The per-seed score is the descriptive row. Every cell had RMSE(ensemble) <= mean per-seed RMSE (checked per unit).
+- Rule R2' was applied by `aggregate` of the committed script; nobody chose the verdict. Script commit `93e478403a862c3e73465857a3a53c739f131425`, committed (10:59:43) before the first fit (10:59:58 start; first jobs began after). Script sha256 unchanged at the end.
+- Mechanics smoke test before the commit: 1 fold, 2 trials, 2 seeds, steps_scale 0.02, in a scratch directory outside `runs/` (only to find bugs; its numbers were not used). It exposed one table-formatting bug, fixed before the commit.
+- The lead's file contract asked for a boolean `adopt` key in `decision.json`. The script was not changed (a change after the first fit is a D020 re-open condition). `code/pilots/p6b_add_adopt_key.py` (commit 88e91eb) derives the key mechanically from `verdict` and `complete`; nothing was edited by hand.
+
+### Table A. Rule R2' (development data, ISU: not evidence for Samsung)
+
+| arm | q_a (ensemble endpoint) | bootstrap 95 % (descriptive) | q_a (per-seed endpoint, descriptive) | q_a > 0 |
+|---|---|---|---|---|
+| A1 | -0.00882 | [-0.0189, 0.0146] | -0.00651 | no |
+| A2 | -0.00604 | [-0.0100, -0.0006] | -0.00412 | no |
+| A4 | 0.06351 | [-0.0041, 0.0919] | 0.06092 | yes |
+| A9 | 0.06438 | [0.0393, 0.1164] | 0.05198 | yes |
+| A11 | 0.00322 | [-0.0608, 0.0421] | 0.00322 | yes |
+| A12 | 0.02681 | [0.0098, 0.0545] | 0.02888 | yes |
+
+Verdict: **KEEP_2_INNER_FOLDS**. 4 of 6 arms with q > 0 (need >= 5); min q = -0.00882 against floor -0.01980 -> KEEP two inner folds.
+
+Floor -ln(1.02) = -0.01980; arms with q > 0: 4 of 6; min q = -0.00882.
+
+### Table B. Per-fold median ln(S_2fold / S_4fold) over the fold's pseudo-test conditions (ensemble endpoint)
+
+| arm | fold 0 | fold 1 | fold 2 | fold 3 | fold 4 |
+|---|---|---|---|---|---|
+| A1 | -0.1087 | 0.0098 | 0.0319 | 0.1248 | -0.0956 |
+| A2 | -0.0003 | -0.0035 | -0.0226 | -0.0008 | 0.0022 |
+| A4 | 0.3277 | -0.0405 | 0.0042 | 0.0000 | 0.0031 |
+| A9 | -0.1915 | 0.0954 | 0.4944 | 0.0000 | -0.1372 |
+| A11 | -0.3178 | 0.2211 | 0.0000 | 0.0687 | -0.1817 |
+| A12 | -0.0173 | 0.0032 | 0.1449 | -0.0033 | 0.0286 |
+
+### Table C. Mean cross-condition ensemble score (pp), mean over folds; seed SD of the cross-condition mean (pp); median ln(per-seed / ensemble) score
+
+| arm | S 2-fold | S 4-fold | seed SD 2 | seed SD 4 | median ln(per-seed/ens) 2 | 4 | grid-edge share 2 | 4 | failed trials 2/4 | non-finite seed values 2/4 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| A1 | 5.486 | 5.517 | 0.249 | 0.328 | 0.0280 | 0.0361 | 0.40 | 0.32 | 0/0 | 0/0 |
+| A2 | 7.731 | 7.810 | 0.102 | 0.080 | 0.0016 | 0.0002 | 0.55 | 0.45 | 0/0 | 0/0 |
+| A4 | 6.233 | 5.892 | 0.281 | 0.281 | 0.0222 | 0.0243 | 0.13 | 0.20 | 0/0 | 0/0 |
+| A9 | 14.397 | 12.896 | 2.403 | 2.121 | 0.0645 | 0.0855 | 0.50 | 0.50 | 0/0 | 0/0 |
+| A11 | 6.646 | 6.852 | 0.000 | 0.000 | 0.0000 | 0.0000 | 0.00 | 0.40 | 0/0 | 0/0 |
+| A12 | 6.123 | 5.916 | 0.057 | 0.038 | 0.0019 | 0.0010 | 0.12 | 0.08 | 0/0 | 0/0 |
+
+### Table D. A1 against D* (inner-CV choice of A9, A11, A12 per fold and variant), ensemble endpoint, descriptive, non-binding
+
+| variant | D* by fold | median ln(S_D* / S_A1) | share of conditions where A1 is better | conditions |
+|---|---|---|---|---|
+| 2-fold | 0:A11, 1:A12, 2:A12, 3:A12, 4:A12 | 0.0472 | 0.535 | 43 |
+| 4-fold | 0:A12, 1:A12, 2:A12, 3:A12, 4:A12 | 0.0538 | 0.605 | 43 |
+
+### Table E. Inversion-convergence diagnostic (seed-0 refit, pseudo-test windows W = 2 weeks; no rule attached)
+
+| arm, variant | folds | grad norm initial (median) | grad norm final (median) | grad norm final (max) | final/initial (median) | final/initial (max) | spread over 4 inits, pp (median) | spread pp (max cell, max fold) | change when steps are doubled, pp (max) | score range over inits, pp (max) | replica vs production, pp (max) |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| A1 k=2 | 5 | 3.07e+04 | 25.1 | 6.9e+03 | 0.000726 | 0.321 | 7.3381 | 129.8795 | 4.5790 | 4.3867 | 0.00e+00 |
+| A1 k=4 | 5 | 3.13e+04 | 39.2 | 5.53e+03 | 0.000328 | 3.34 | 7.5868 | 113.1600 | 8.1174 | 1.7198 | 0.00e+00 |
+| A2 k=2 | 5 | 128 | 1.48e-05 | 0.000473 | 1.13e-07 | 0.00044 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.00e+00 |
+| A2 k=4 | 5 | 141 | 1.53e-05 | 0.000485 | 9.98e-08 | 3.13e-05 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.00e+00 |
+| A9 k=2 | 5 | 15.4 | 0.015 | 34.2 | 0.00144 | 2.68 | 5.1740 | 127.8337 | 42.2590 | 2.9334 | 0.00e+00 |
+| A9 k=4 | 5 | 15.6 | 0.0278 | 7.16 | 0.000425 | 4.11 | 0.8710 | 130.7075 | 20.8982 | 3.1717 | 0.00e+00 |
+
+### Table F. Run facts
+
+- CPU hours (sum over units, tournaments and error files): 5.647; wall hours: 2.889; units complete: True.
+- split sha256 before = after: True (c1227642a067e61c4e5110d577e0b84b6ccb6da1cd8e4b48b16e03b2ba4419d8).
+- script commit: 93e478403a862c3e73465857a3a53c739f131425 (committed 2026-11-05T10:59:43+05:45); script sha256 unchanged since the first fit: True.
+- pinnkan files whose content changed between the start and the end of the run: ['arms.py', 'guard.py', 'metrics.py', 'negcontrol.py', 'pinn.py', 'run.py', 'semi.py', 'stats_rows.py', 'stats_step.py', 'stats_v4.py', 'tuning.py'].
+- tuned per fold: pseudo-train conditions = 8; pseudo-test conditions per fold: f0: 43, f1: 42, f2: 43, f3: 42, f4: 42.
+
+## Reading (descriptive)
+- Effect sizes are small. A1 and A2 do slightly worse with four folds (q = -0.009, -0.006; for A2 the descriptive bootstrap interval excludes 0); A4 and A9 gain about 6 %; A12 gains 2.7 %; A11 is flat (+0.3 %). Per-fold signs flip for A1, A9 and A11 (Table B), so folds disagree, as expected with validation folds of 2 conditions.
+- The bootstrap intervals (resampling the pooled conditions, 5000 draws) are descriptive and ignore the dependence between conditions of the same fold.
+- Table D: with either variant, A1 is not clearly better than D*: the median ln(S_D*/S_A1) is +0.047 (2-fold) and +0.054 (4-fold), A1 better in 54 % and 61 % of conditions. Non-binding signal for Shlok (the P6 reading of J16 5.6); D* was chosen by inner CV only.
+- The per-seed against ensemble gap (median ln ratio 0.028 to 0.086 for A1, A4, A9) is where C1 helps; A11 has no seed variance, A2 and A12 almost none.
+- Grid-edge share (Table C) is 0.3 to 0.55 for A1, A2, A9: selected configurations often sit on the end of an ordered grid in both variants.
+
+## Inversion-convergence diagnostic (Table E; no rule attached)
+- A2 (delta only): converged. Final gradient norm about 1e-5, four starting points give identical forecasts, doubling the steps changes nothing.
+- A1 and A9 (z, and delta for A1): **not converged by this measure.** The gradient norm falls by three to four orders of magnitude from its start, but the median spread of the forecast across the production start and three random starts (z ~ N(0, 0.5^2), delta ~ N(0, TAU^2); my design choice, not in the ruling) is 7.3 pp (A1, 2-fold), 7.6 pp (A1, 4-fold), 5.2 pp (A9, 2-fold), 0.9 pp (A9, 4-fold), with maxima near 113-131 pp for single cells. Doubling the steps changes some forecasts by up to 4.6 to 42 pp. The mean score moves by up to 4.4 pp (A1) and 3.2 pp (A9) across starts. The replica of the production loop reproduces the production forecasts exactly (difference 0).
+- Per the ruling, any fix (more steps or starts, equal for every affected arm) needs its own decision row before the freeze; nothing was changed. Caveat: the inversion is non-convex, and random starts at this scale may land in basins the production start never reaches, so the spread is an upper-end indication; the doubled-step column is the cleaner sign that the 200- and 150-step budgets stop early.
+
+## Runtime and budget
+CPU 5.65 h (sum over units and tournaments), wall 2.89 h on 2 worker processes (one thread each), start 10:59:58, end 13:53:19. Judge's estimate was about 6 CPU-h; the 8 CPU-h abort guard was not reached. CPU only (`CUDA_VISIBLE_DEVICES=-1`, torch reports no CUDA).
+
+## Limits
+- ISU only: 3 stress inputs, no storage, no 5-D stress sparsity; says nothing about C1, C3, Samsung, or the size of A1's advantage there.
+- m = 8 only; m = 16 is assumed to follow (disclosed in the ruling).
+- Pseudo-test conditions are shared across folds; the median over 43 pooled conditions is not an independent sample.
+- Code changed on disk during the run: a coder edited `code/pinnkan/` files (arms, guard, metrics, negcontrol, pinn, run, semi, stats_*, tuning; modification times 11:11 to 12:33) while the run was in progress. The two worker processes had imported all modules used in training and scoring at about 11:00-11:02 and Python does not reload them, so the run used the start-of-run code; the uncommitted state at start was only `arms.py`, `run.py`, `stats_step.py` (scope flags, no behaviour used here). The per-file hashes at start and end are in `run_meta.json`. A reviewer who wants to be certain can re-run the committed script on commit-pinned code.
+- Selected configurations differ between variants and often sit on grid edges, so q partly reflects search noise at N = 20.
+
+## Files
+`decision.json`, `summary.json`, `tables.md`, `per_condition.csv`, `per_fold_condition.csv`, `fold_audit.json`, `run_meta.json`, `config_used.json`, `RUN.log`, `units/` (one JSON per fold, variant and arm; tournaments).
+
+
+
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+warning: Exceeded skills context budget. All skill descriptions were removed and 271 additional skills were not included in the model-visible skills list.
+context compacted
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Failed
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: SessionStart Completed
+codex
+I’ll check the proposal and run artifacts directly, then judge the solver choice and prior tuning against what the preregistration actually froze.
+hook: PreToolUse
+hook: PreToolUse Completed
+exec
+"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command "Get-Content -Raw 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\debates\\D023_inversion\\01_proposal.md'; Get-Content -Raw 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\runs\\check_D023_inversion\\decision.json'; Get-Content -Raw 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\runs\\check_D023_inversion\\RESULT.md'; Get-Content -Raw 'C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\runs\\pilot_P6b\\RESULT.md'" in C:\Users\Shlok\Downloads\PINN KAN battery paper\debates\codex_panel
+ succeeded in 425ms:
+# D023 proposal: a converged, start-independent test-time inversion for every arm that infers per-cell latents (2026-11-05)
+
+Role: proposer (ml-expert). The opponent and the judge are other agents (CONTRACT 3).
+Reading depth: full text of `runs/pilot_P6b/RESULT.md`, `run_meta.json` and `config_used.json`; `code/pinnkan/pinn.py`
+(`PINNModel`, `fit_pinn`, `invert_pinn`, `predict_pinn`, `DataOnlyF`, `fit_data_only`, `predict_data_only`);
+`code/pinnkan/hard.py` in full; `code/models/ageing_models.py` `SolutionNet`; `code/pinnkan/law.py` lines 28-40, 61-68 and
+336-395; `code/pinnkan/semi.py` (grep of `cell_factor`); `code/pinnkan/arms.py` (grep of the predict calls); and
+`code/pilots/p6b_inner_folds.py` lines 1-440, whose diagnostic replicates the production loops.
+No production code was edited. No Samsung label and no ISU outer-test fold was read.
+
+## 0. Summary
+- **Cause (section 1).** The inversion is a fixed-budget, constant-learning-rate Adam run (A1 200, A9 150, A2 300 steps,
+  float32, no convergence test). It is applied to a non-convex, poorly conditioned per-cell objective. The early window
+  barely identifies z, because F = t g(t, s, z) makes the window's sensitivity to z scale with t. The long-horizon forecast,
+  however, depends strongly on z. In A1, z and delta can also trade off along a ridge. So the answer depends on where
+  Adam stops. A2 converges because its latent is one scalar per cell in a closed-form, monotone law.
+- **Proposal (section 2).** Replace the three loops by one routine for every inverting arm:
+  - float64;
+  - a deterministic start at the prior mode;
+  - a per-cell damped Newton (Levenberg-Marquardt) step, using the exact per-cell Hessian (the objective is a sum of
+    per-cell terms, so the Hessian is block diagonal with blocks of size 1-4);
+  - a convergence test, with an iteration cap and a logged non-converged share;
+  - optionally, K fixed starts with per-cell selection by the arm's own causal inversion objective.
+  The objective itself is unchanged.
+- **The small check (section 7) was committed before running.** Its result is in section 8: the verdict is **NONE**. O2
+  converges (99.4 % of A1 cells, 100 % of A9 cells) and is budget-independent, but converged starts land in different local
+  minima (A1 start spread median 7.8 pp), so the start-spread criterion fails for every option. The proposer recommends R-a
+  (O2 from the prior mode, with the multimodality disclosed) and a separate check of the z-prior weight (R-b). The adoption rule uses only
+  convergence, budget stability, start spread and the objective, never an A1-vs-D\* gap.
+
+## 1. Diagnosis from the code
+1. **Fixed budget, no stopping test, and a budget that differs by arm.** `invert_pinn` uses Adam with lr 0.05 constant and
+   200 steps (`pinn.py` 190-222). `predict_data_only` uses Adam with lr 0.05 and 150 steps (272-292). `fit_delta` uses Adam
+   with lr 0.05 and 300 steps (`hard.py` 55-73). Adam with a constant learning rate does not settle at a stationary point.
+   Its per-coordinate step stays of order lr, so the returned latent is "wherever step 150/200/300 lands". This acts as an
+   implicit, untuned regulariser whose strength differs between A1 and A9. That matches P6b Table E: doubling the steps moves
+   forecasts by up to 4.6 pp (A1) and 42 pp (A9).
+2. **Scale and conditioning.**
+   - The data and residual terms are divided by SIGMA^2 = 0.0025 (`law.py` 28), and the residual term is multiplied by
+     lam x pts_per_cell x Ct. The initial gradient norms are therefore about 3e4 for A1 (P6b Table E).
+   - The prior curvatures are only 2 for z and 2/TAU^2, about 89, for delta.
+   - The per-cell objective therefore mixes stiff directions (window and residual) with flat ones (prior only). Adam's
+     per-coordinate normalisation zig-zags across a stiff valley that is not aligned with the axes, and it crawls along the
+     flat valley floor.
+   - Float32 with a 400x scaled loss limits the precision that can be reached; this is a minor factor.
+3. **Weak identification of z by the window.**
+   - `SolutionNet` has F(t, s, z) = t * g(t, s, z) (`ageing_models.py` 56-69), so the derivative of F with respect to z at
+     a window point is t times the derivative of g.
+   - With an early window (ISU W = 2 weeks, so t_n = t / 50 is at most 0.04) the window says little about z.
+   - The forecast at t_n of order 1 depends on z through the tanh network, which is non-convex in z.
+   - A9 has only the window and the N(0, I) prior, so its z posterior is flat and possibly multimodal.
+   - A1 adds the residual over (window end, t_max], which ties F's shape to the law. But delta moves the law amplitude and z
+     moves F, and both can reduce the residual, which creates a ridge in (z, delta).
+4. **Why A2 converges.** Its latent is one delta per cell. The forward model is the closed-form law (`hard.py` 21-24), which
+   is monotone in delta. The 1-D objective is smooth and well scaled, and 300 Adam steps reach a gradient norm of about 1e-5
+   (P6b Table E).
+5. **A10** fits its per-cell factor with bounded Brent on [-2, 2] (`semi.py` 177-185), which is 1-D and converged. It is
+   unchanged, but boundary hits should be logged (a delta at plus or minus 2 means the bound, not the data, set the value).
+6. **Related risk (not the test-time issue).** The training cells' z_c and delta_c are fitted jointly with the network in
+   the same 2000-step Adam loop (`fit_pinn` 154-187). A fully converged test-time MAP can land in a region of z that the
+   network never saw in training, where the forecast extrapolates wildly. Section 8 reports the forecast scores of each
+   option (descriptive only) so that the judge can see whether this occurs.
+
+## 2. Proposal
+One routine `invert_latents(objective_per_cell, P0)`, used by `invert_pinn` (A1, A4/AG, A5, A13, A15, G15),
+`predict_data_only` (A9) and `fit_delta` (A2 and the backbone tournament):
+- **Objective: unchanged.** It is each arm's production loss written per cell: window points, A1's residual over the
+  horizon, and the priors. It uses only causal information, with no label after the window. The per-cell form sums exactly
+  to the production loss (checked by the replica column in section 8).
+- **Start:** the prior mode (z = 0, delta = mu), deterministic.
+- **Step:** per-cell Levenberg-Marquardt on the exact block Hessian (autograd: one gradient plus p Hessian-column passes,
+  with p = dim z + dim delta, at most 4).
+  - The damping is shifted so that H plus the shift is positive definite.
+  - A step is accepted only if that cell's objective does not rise.
+  - Float64 for the inversion only; the network stays as trained.
+- **Stopping:** ||g_c|| <= 1e-6 (1 + |f_c|) for every cell, or an iteration cap. The non-converged share and the final
+  gradient norms go to `diagnostics.json`.
+- **k = 0 rule:** unchanged (latents at the prior mode when the window has only the reference point).
+- **Multi-start (only if the check shows multimodality after convergence; option O3):** K fixed starts (the prior mode, and
+  the prior mode plus or minus 1 prior sd along each latent axis), each run to convergence, with per-cell selection by the
+  same causal objective. Selection never uses a later label, a forecast score or a comparator.
+- **Same for every inverting arm:** the same tolerance, cap and start rule. The confirmatory arms that do not invert (A11,
+  A12, R1, R2) are unaffected.
+
+**Expected effect.**
+- Forecasts become a deterministic function of the trained network and the window: start-independent if the per-cell
+  minimum is unique, and budget-independent once converged.
+- This removes a source of noise that the seed ensemble only partly averages, which helps P1's effective rho (D020 01, section 1).
+- The direction of the change in accuracy is not known in advance: the early-stopped iterate may have been regularising.
+  Section 8 shows it on development data, descriptively.
+
+**Cost (arithmetic from the timing check in section 7, fold 0, 131 pseudo-test cells).**
+- A1: about 0.031 s per Newton iteration (float64), against about 0.004 s per Adam step. Typically tens of iterations, cap
+  100, so about 1-3 s per prediction call against about 0.5-1 s now.
+- Inner-CV prediction calls (about 100 per tuned PINN arm per (fold, m), on smaller validation sets) give roughly +1-3 CPU-h
+  over the grid. O3 with 5 starts would be roughly x5 on the inversion part (about +5-15 CPU-h).
+- Coder about 3 h: one routine, three call sites, and unit tests (an exact minimum on a quadratic objective; agreement with
+  the production replica at a fixed budget; per-cell separability; the k = 0 rule).
+
+**Fairness.** One routine and one rule for A1 and its physics-off twin A9 (P2), and for AG, A2, A13, A15 and G15. D\* members
+A11 and A12 do not invert. A9 is a D\* candidate and gains or loses the same way. Nothing is tuned for any arm.
+
+## 3. Why this, and why not each alternative
+- **O1, more Adam steps with a decaying learning rate (tested as a reference).** This is the smallest change, but a first-order
+  method on this conditioning needs thousands of steps. It has no reliable stopping test, and its result still depends on the
+  budget.
+- **L-BFGS on the whole batch.** It couples cells inside its low-rank curvature approximation, uses one global line search
+  and one global stopping test, and ignores the exact block-diagonal structure. Per-cell Newton uses that structure for the
+  cost of p extra backward passes.
+- **Reparameterisation by whitening with the prior.** The prior is already unit-scale for z. Whitening by the Hessian is the
+  Newton step.
+- **Drop z at test time (infer delta only, z at the prior mode).** This is well posed (like A2), but it changes the model: A9
+  would then have nothing to infer, and P2 would compare different window usage. It is kept only as a fallback if the check
+  finds no converged start-independent option.
+- **Laplace or posterior-mean forecast (average over the latent posterior).** This changes the estimator and needs sampling
+  or Hessian-based integration per cell. It is more defensible statistically, but it is a larger change than a pre-freeze
+  fix should be.
+- **Warm start from the nearest training cell's latent.** It adds a data-dependent design choice (the distance metric and
+  which cell is nearest), and it is still not converged.
+- **Leave it and disclose.** This is unacceptable: the reported scores would depend on an arbitrary step count that differs
+  between A1 and A9.
+
+## 4. Is this the best possible, or is there room?
+A converged MAP is the best defensible point estimate for this objective. Further gains would have to come from the
+objective itself, which is a separate decision, not part of this fix:
+- the prior scale of z and TAU (D020 C6);
+- the window weighting;
+- a posterior mean.
+If section 8 shows that the converged MAP forecasts worse than the early-stopped iterate on development data, the honest
+reading is that the prior is too weak for an early window. The judge should then consider an explicit change to the prior
+scale, decided on training sides only and the same for every arm, rather than keeping an implicit step count.
+
+## 5. What a JES reviewer would hit
+- "Test-time latent inference is an optimisation; is it converged?" The paper must report the tolerance, the cap, the
+  non-converged share, and the start-sensitivity check.
+- Unequal step budgets between the model and its ablation (200 vs 150) would read as a hidden handicap of A9.
+- The order of operations: this fix and its check came before the freeze and on development data only (P6b, D023).
+
+## 6. What would make a reviewer reject it
+- Forecasts that change with the random seed of the inversion, or with the number of steps (the current state).
+- A fix tuned on the test outcome, or one applied to A1 only.
+- Selection among starts by forecast error. Here the selection is by the causal objective only.
+
+## 7. Test plan and adoption rule (fixed and committed BEFORE the main run)
+**Data.**
+- ISU training sides only, exactly as P6b: `runs/splits/isu_testB.json`, folds 0-4, with the outer-test conditions never
+  loaded (`p6b_inner_folds.fold_data` asserts it).
+- Pseudo-train = the m = 8 max-min subset; pseudo-test = the fold's other training conditions; window W = 2 weeks.
+- No Samsung data.
+
+**Models.** A1, A9 and A2, refit with seed 0 using the P6b 2-fold configuration and tournament backbone of each fold
+(`runs/pilot_P6b/units/f<f>_k2_<arm>.json`, `tournament_f<f>_k2.json`).
+
+**Options (each applied identically to A1, A9 and A2).**
+- **O0:** the production replica (float32 Adam lr 0.05; 200 / 150 / 300 steps; budget doubled by continuing).
+- **O1:** float64 Adam, lr 0.05 cosine-decayed to 5e-4, 4000 steps (doubled: a fresh 8000-step run).
+- **O2:** per-cell damped Newton, float64, from the prior mode, cap 100 iterations (doubled: 200).
+- **O3:** O2 from S_A (the prior mode plus or minus 1 prior sd along every axis) with per-cell selection by the objective,
+  compared with the selection from S_B (the prior mode plus 4 seeded draws, z ~ N(0, 1), delta ~ N(0, TAU^2)).
+
+**Spread starts for O0-O2:** the prior mode plus 3 seeded draws, z ~ N(0, 0.5^2), delta ~ N(0, TAU^2) (as P6b). Seeds:
+`[20261106, 23, fold, arm index, j]`.
+
+**Measures, per pseudo-test cell, pooled over the 5 folds.** Cells with a single window point are excluded, because
+production sets them to the prior.
+- Convergence share (||g|| <= 1e-6 (1 + |f|)).
+- Budget change: the largest absolute forecast change in pp between the cap and the doubled cap.
+- Start spread: the largest range in pp across starts. For O3 it is the largest |selection(S_A) - selection(S_B)|.
+- Objective difference f(option) - f(O0).
+- For A2, the largest change against O0.
+
+**Adoption rule (`RULE` in `code/pilots/d023_inversion_check.py`, applied by `aggregate`; nobody chooses).** Go through the
+options in the order **O2, O1, O3** and adopt the first one for which all of the following hold:
+- (a) for A1 and for A9, the convergence share (of the base run, i.e. O2 for O3) is at least 0.99;
+- (b) for A1 and A9, the budget change has p99 <= 0.1 pp and max <= 1 pp;
+- (c) for A1 and A9, the start spread has median <= 0.1 pp and p95 <= 1 pp;
+- (d) for A1 and A9, the median objective difference against O0 is <= 0;
+- (e) for A2, the p99 change against O0 is <= 0.05 pp (A2 is already converged; the fix must not move it);
+- and all 15 units are complete.
+
+If no option passes, the verdict is **NONE**: nothing is adopted from this check, and the judge decides on the fallbacks of
+section 3 (z fixed at the prior mode, or a prior-scale change), with the descriptive table.
+The pseudo-test forecast scores per arm and option are reported as **descriptive only, with no rule**. No A1-vs-D\* contrast
+is computed.
+
+**Budget.** CPU only, 2 processes (folds {0, 1, 2} and {3, 4}), with a guard of 0.70 CPU-h per process (an incomplete run
+gives NONE). Expected cost about 0.3 CPU-h (timing check on fold 0: A1 fit 12.5 s, Adam step 0.004 s, Newton iteration
+0.031 s; A9 2.5 s, 0.0008 s and 0.005 s).
+
+**Mechanics smoke test** (before the commit, in the scratchpad outside `runs/`, 1 fold, 5 % training steps, tiny caps): it
+ran end to end. Its numbers are not used.
+
+## 8. Result (appended after the run; development data, ISU training sides, not evidence for Samsung)
+**Run facts.**
+- Rule and script committed in `0ba9f92` (14:04:51) before the main run.
+- All 15 units complete, no errors, 0.30 CPU-h on 2 processes.
+- The replica matches the production path: largest difference 1.9e-5 pp for A1 and 0 for A9 and A2.
+- Files: `runs/check_D023_inversion/decision.json`, `units/`, `log_a.txt`, `log_b.txt`.
+
+**Verdict of the fixed rule: NONE.**
+- O2, O1 and O3 all fail criterion (c), start spread, for A1 and for A9.
+- O1 also fails (a) and (b) for A1.
+- Criteria (a), (b), (d) and (e) pass for O2.
+- Nothing is adopted from this check (section 7). The judge decides.
+
+| arm, option | conv. share | budget change p99 / max (pp) | start spread median / p95 / max (pp) | median f - f(O0) | Hessian at solution |
+|---|---|---|---|---|---|
+| A1 O0 (production) | - | 2.35 / 4.58 | 7.83 / 65.6 / 119 | 0 | - |
+| A1 O1 (Adam 4000, cosine) | 0.627 | 1.23 / 17.7 | 5.71 / 52.0 / 139 | -0.78 | - |
+| A1 O2 (Newton-LM) | 0.994 | 0 / 0 | 7.76 / 46.4 / 90.3 | -1.00 | min eig > 0 in all cells; median condition number 2237 |
+| A1 O3 (S_A vs S_B selection) | (O2) | (O2) | 0 / 5.49 / 24.9 | -1.92 | best start is not the prior mode in 72-84 % of cells |
+| A9 O0 (production) | - | 12.0 / 42.3 | 1.13 / 50.4 / 128 | 0 | - |
+| A9 O1 | 1.000 | 0 / 0 | 0 / 46.0 / 111 | 0 | - |
+| A9 O2 | 1.000 | 0 / 0 | 0 / 50.0 / 111 | 0 | min eig > 0 in all cells; median condition number 6.9 |
+| A9 O3 | (O2) | (O2) | 0 / 1.63 / 65.8 | -0.0002 | best start is not the prior mode in 68-82 % of cells |
+| A2 O0, O1, O2, O3 | 1.000 | 0 / 0 | 0 / 0 / 0 | 0 | median condition number 1 |
+
+**What this shows (reading of the table).**
+1. **Non-convergence was real, and the second-order method removes it.**
+   - With O2, 99.4 % (A1) and 100 % (A9) of cells meet the gradient test.
+   - Doubling the cap changes no forecast (0 pp).
+   - This also holds for A2, whose forecasts do not move at all (criterion e).
+   - Adam needs thousands of steps for A1 and still leaves 37 % of cells unconverged (O1).
+2. **The dominant problem is non-uniqueness, not only non-convergence.**
+   - Converged runs from different starts end at different local minima: the Hessian is positive definite at each one.
+   - Those minima carry forecasts that differ by up to about 90 pp for A1 and 111 pp for A9.
+   - A9's per-cell problem is well conditioned (median condition number 6.9) but multimodal. A1's is both ill-conditioned
+     (2237) and multimodal.
+   - This supports diagnosis item 3: the early window does not pin z, and the tanh network gives several basins.
+3. **Selecting the lowest objective among starts (O3) does not give a stable answer.**
+   - Its p95 disagreement between two start sets is 5.5 pp (A1) and 1.6 pp (A9).
+   - Its best start is mostly not the prior mode.
+   - Descriptive only, no rule: the forecast scores move the wrong way. The A1 fold means are 4.98-5.84 pp for O0, 4.97-5.98
+     for O2 and 5.03-5.97 for O3. A9 fold 3 goes from 9.05 (O0) to 16.34 (O3).
+   - So a deeper minimum of the window MAP objective is not a better forecast. The window over-fits z when the search goes
+     looking for it.
+4. **O2 from the prior mode is a well-defined, deterministic and budget-independent estimator.** It is the local MAP in the
+   basin of the prior mode. Its descriptive forecast scores are close to production for both arms: A1 fold means 4.97-5.98
+   vs 4.98-5.84 pp; A9 9.32-21.67 vs 9.05-22.43 pp. Its dependence on the start is a property of the model, not of the
+   optimiser.
+
+**Recommendation to the judge (the proposer's, not a rule outcome).**
+- **(R-a) Adopt O2 from the prior mode for every inverting arm.** Name it in the paper for exactly what it is: "the local
+  posterior mode reached from the prior mode by a converged per-cell Newton method". Report the convergence share, and the
+  start-spread diagnostic as a stated limitation.
+  - It meets every criterion except (c), and (c) measures the model's multimodality, which no optimiser can remove.
+  - It removes the budget dependence and the unequal step counts between A1 and A9 (200 vs 150).
+  - Its cost is small (section 2).
+- **(R-b) Before the freeze, test whether the multimodality comes from the z prior being too weak for an early window.**
+  - This is a separate decision row, because it changes the objective.
+  - The check would compare a z prior weight of {1, 4, 16} (the same for A1 and A9; A2 has no z), on the same ISU training
+    sides, with O2 from the prior mode.
+  - Its criterion would be start spread (median <= 0.1 pp, p95 <= 1 pp) plus a non-inferiority guard on each arm's own
+    pseudo-test score. The guard is needed because the weight changes the estimator.
+  - Cost about 0.5 CPU-h. It is not run here, because it changes the model and needs its own committed rule.
+- **(R-c) Do not adopt O3 (multi-start selection by objective).** It is less stable and, descriptively, worse.
+- **Fallback if the judge rejects R-a:** fix z at the prior mode at test time (delta-only inversion, as A2). This is
+  unimodal by construction, but it changes A9 into a population forecast with no window use, so P2 would then compare unequal
+  window use. That is why it is not preferred.
+
+## 9. Opponent's attack and the proposer's answer
+(separate agent)
+
+## 10. Judge's verdict
+(separate agent)
+
+{
+ "complete": true,
+ "units": 15,
+ "verdict": "NONE",
+ "checks": {
+  "O2": {
+   "pass": false,
+   "conditions": [
+    {
+     "A1": {
+      "a": true,
+      "b": true,
+      "c": false,
+      "d": true
+     }
+    },
+    {
+     "A9": {
+      "a": true,
+      "b": true,
+      "c": false,
+      "d": true
+     }
+    },
+    {
+     "A2_e": true
+    }
+   ]
+  },
+  "O1": {
+   "pass": false,
+   "conditions": [
+    {
+     "A1": {
+      "a": false,
+      "b": false,
+      "c": false,
+      "d": true
+     }
+    },
+    {
+     "A9": {
+      "a": true,
+      "b": true,
+      "c": false,
+      "d": true
+     }
+    },
+    {
+     "A2_e": true
+    }
+   ]
+  },
+  "O3": {
+   "pass": false,
+   "conditions": [
+    {
+     "A1": {
+      "a": true,
+      "b": true,
+      "c": false,
+      "d": true
+     }
+    },
+    {
+     "A9": {
+      "a": true,
+      "b": true,
+      "c": false,
+      "d": true
+     }
+    },
+    {
+     "A2_e": true
+    }
+   ]
+  }
+ },
+ "rule": {
+  "order": [
+   "O2",
+   "O1",
+   "O3"
+  ],
+  "arms_gated": [
+   "A1",
+   "A9"
+  ],
+  "a_conv_share_min": 0.99,
+  "b_budget_p99_max_pp": 0.1,
+  "b_budget_max_pp": 1.0,
+  "c_spread_median_max_pp": 0.1,
+  "c_spread_p95_max_pp": 1.0,
+  "d_objective_median_delta_max": 0.0,
+  "e_A2_change_p99_max_pp": 0.05
+ },
+ "table": {
+  "A1|O0": {
+   "spread_median": 7.8260752558708235,
+   "spread_p95": 65.64069747924803,
+   "spread_max": 119.37465190887451,
+   "budget_median": 0.16022801399230846,
+   "budget_p99": 2.3453973531723085,
+   "budget_max": 4.578986167907717,
+   "grad_median": 30.38833812654368,
+   "grad_max": 6901.165199988122,
+   "score_pp_by_fold_descriptive": [
+    5.480671598000103,
+    5.838122584313143,
+    4.9755297932884845,
+    5.76275158914998,
+    5.557696455527668
+   ]
+  },
+  "A1|O1": {
+   "spread_median": 5.7122535903456,
+   "spread_p95": 51.97825632603285,
+   "spread_max": 138.88749456477737,
+   "budget_median": 2.220446049250313e-14,
+   "budget_p99": 1.2309009381000313,
+   "budget_max": 17.689381485809186,
+   "grad_median": 1.4045448128038198e-10,
+   "grad_max": 112.72922594534931,
+   "conv_share": 0.6266233766233766,
+   "f_minus_O0_median": -0.7826955466365431,
+   "change_vs_O0_median": 0.47491929240635056,
+   "change_vs_O0_p99": 5.9039392477004276,
+   "change_vs_O0_max": 8.71207403788663,
+   "score_pp_by_fold_descriptive": [
+    5.484383295482053,
+    5.736173610104223,
+    5.0061084950293475,
+    5.974490699292177,
+    5.763045577860152
+   ]
+  },
+  "A1|O2": {
+   "spread_median": 7.756113309595936,
+   "spread_p95": 46.36007727261995,
+   "spread_max": 90.34673522873845,
+   "budget_median": 0.0,
+   "budget_p99": 0.0,
+   "budget_max": 0.0,
+   "grad_median": 9.861659616027748e-07,
+   "grad_max": 0.0011686077111178284,
+   "conv_share": 0.9935064935064936,
+   "f_minus_O0_median": -1.0048363728301475,
+   "change_vs_O0_median": 0.6520918369068651,
+   "change_vs_O0_p99": 7.3271873608235545,
+   "change_vs_O0_max": 8.802087928164337,
+   "hess_min_median": 1020.3326993623007,
+   "share_hess_min_nonpos": 0.0,
+   "cond_median": 2237.3736694642785,
+   "score_pp_by_fold_descriptive": [
+    5.274754128239978,
+    5.726815506194142,
+    4.973580558847264,
+    5.974708264026955,
+    5.736818110043228
+   ]
+  },
+  "A1|O3": {
+   "spread_median": 1.5269685516017262e-08,
+   "spread_p95": 5.492406814504447,
+   "spread_max": 24.8900561086436,
+   "share_not_prior_mode": [
+    0.8091603053435115,
+    0.7154471544715447,
+    0.8403361344537815,
+    0.775,
+    0.8373983739837398
+   ],
+   "f_minus_O0_median": -1.9216771751343558,
+   "change_vs_O0_median": 0.8559739414365886,
+   "change_vs_O0_p99": 11.196822537405534,
+   "change_vs_O0_max": 12.800684114940308,
+   "score_pp_by_fold_descriptive": [
+    5.785042033349112,
+    5.729934032141561,
+    5.0278065996297885,
+    5.965381612848594,
+    5.830046760887544
+   ]
+  },
+  "A9|O0": {
+   "spread_median": 1.1277413368225075,
+   "spread_p95": 50.431450605392456,
+   "spread_max": 128.3725309371948,
+   "budget_median": 0.008574724197385475,
+   "budget_p99": 11.981205701828001,
+   "budget_max": 42.25897073745728,
+   "grad_median": 0.025193814004698452,
+   "grad_max": 34.16574591682778,
+   "score_pp_by_fold_descriptive": [
+    10.127213180237291,
+    13.695028769943846,
+    22.427434234840305,
+    9.046339291311629,
+    15.275722594576447
+   ]
+  },
+  "A9|O1": {
+   "spread_median": 1.1102230246251565e-14,
+   "spread_p95": 45.98594433541045,
+   "spread_max": 111.14910145056598,
+   "budget_median": 0.0,
+   "budget_p99": 2.369131835155974e-08,
+   "budget_max": 4.48209944714506e-06,
+   "grad_median": 4.3049590769691094e-15,
+   "grad_max": 1.27924385550174e-06,
+   "conv_share": 1.0,
+   "f_minus_O0_median": -3.992233593486105e-06,
+   "change_vs_O0_median": 0.00973043344575375,
+   "change_vs_O0_p99": 23.908490115871707,
+   "change_vs_O0_max": 42.22643302964767,
+   "score_pp_by_fold_descriptive": [
+    10.108444206177158,
+    13.703173660068808,
+    21.86621256744201,
+    9.05180811236593,
+    15.229064510975357
+   ]
+  },
+  "A9|O2": {
+   "spread_median": 6.985999306818869e-06,
+   "spread_p95": 50.043983979801624,
+   "spread_max": 111.14910163173109,
+   "budget_median": 0.0,
+   "budget_p99": 0.0,
+   "budget_max": 0.0,
+   "grad_median": 2.1606151157513873e-07,
+   "grad_max": 0.0004008702523028429,
+   "conv_share": 1.0,
+   "f_minus_O0_median": -4.61723156081062e-06,
+   "change_vs_O0_median": 0.011015911181722071,
+   "change_vs_O0_p99": 43.83255543168333,
+   "change_vs_O0_max": 50.973873953630445,
+   "hess_min_median": 6.603297161535732,
+   "share_hess_min_nonpos": 0.0,
+   "cond_median": 6.876614386277586,
+   "score_pp_by_fold_descriptive": [
+    10.104282509669767,
+    13.709717515412825,
+    21.673272337533103,
+    9.32177533575432,
+    14.831751004042175
+   ]
+  },
+  "A9|O3": {
+   "spread_median": 3.079582144849269e-08,
+   "spread_p95": 1.6261666964375614,
+   "spread_max": 65.8092331485387,
+   "share_not_prior_mode": [
+    0.7175572519083969,
+    0.8211382113821138,
+    0.6974789915966386,
+    0.6916666666666667,
+    0.6829268292682927
+   ],
+   "f_minus_O0_median": -0.00023082327469222536,
+   "change_vs_O0_median": 0.021989346454515113,
+   "change_vs_O0_p99": 63.539752011429435,
+   "change_vs_O0_max": 73.8728770165965,
+   "score_pp_by_fold_descriptive": [
+    9.585335342631053,
+    13.910607655193129,
+    21.547573295495532,
+    16.340256933097827,
+    15.284858751187993
+   ]
+  },
+  "A2|O0": {
+   "spread_median": 4.768371575369912e-06,
+   "spread_p95": 9.536743161842054e-06,
+   "spread_max": 1.4305114748314196e-05,
+   "budget_median": 0.0,
+   "budget_p99": 9.536743161842054e-06,
+   "budget_max": 9.536743161842054e-06,
+   "grad_median": 1.9527968365906645e-05,
+   "grad_max": 0.0005229250377851713,
+   "score_pp_by_fold_descriptive": [
+    8.480540291811211,
+    7.063084443187377,
+    7.609962150741091,
+    7.236171203535913,
+    7.983609471253781
+   ]
+  },
+  "A2|O1": {
+   "spread_median": 0.0,
+   "spread_p95": 1.1102230246251565e-14,
+   "spread_max": 2.220446049250313e-14,
+   "budget_median": 0.0,
+   "budget_p99": 1.1102230246251565e-14,
+   "budget_max": 2.220446049250313e-14,
+   "grad_median": 1.0658141036401503e-14,
+   "grad_max": 5.684341886080801e-13,
+   "conv_share": 1.0,
+   "f_minus_O0_median": -7.216449660063518e-13,
+   "change_vs_O0_median": 2.2684700673458735e-06,
+   "change_vs_O0_p99": 6.739287820023423e-06,
+   "change_vs_O0_max": 1.0762586988288803e-05,
+   "score_pp_by_fold_descriptive": [
+    8.480540203039636,
+    7.06308464597109,
+    7.609962179399131,
+    7.23617142234313,
+    7.983609438160757
+   ]
+  },
+  "A2|O2": {
+   "spread_median": 1.438413665955096e-07,
+   "spread_p95": 1.1622667162036748e-06,
+   "spread_max": 3.07363821061557e-06,
+   "budget_median": 0.0,
+   "budget_p99": 0.0,
+   "budget_max": 0.0,
+   "grad_median": 1.2949202243817126e-07,
+   "grad_max": 6.100498650596364e-05,
+   "conv_share": 1.0,
+   "f_minus_O0_median": -6.79067913011977e-13,
+   "change_vs_O0_median": 2.3289614514698798e-06,
+   "change_vs_O0_p99": 6.910063105047832e-06,
+   "change_vs_O0_max": 1.0734014832536332e-05,
+   "hess_min_median": 283.3534276534769,
+   "share_hess_min_nonpos": 0.0,
+   "cond_median": 1.0,
+   "score_pp_by_fold_descriptive": [
+    8.480540229886822,
+    7.063084705398161,
+    7.60996221649515,
+    7.23617144650106,
+    7.9836094762001
+   ]
+  },
+  "A2|O3": {
+   "spread_median": 3.7090164273223536e-09,
+   "spread_p95": 9.087831320808704e-08,
+   "spread_max": 3.996736497313691e-07,
+   "share_not_prior_mode": [
+    0.6946564885496184,
+    0.6178861788617886,
+    0.6470588235294118,
+    0.575,
+    0.5365853658536586
+   ],
+   "f_minus_O0_median": -7.291944825738028e-13,
+   "change_vs_O0_median": 2.265026100012335e-06,
+   "change_vs_O0_p99": 6.743121758745476e-06,
+   "change_vs_O0_max": 1.07613100541748e-05,
+   "score_pp_by_fold_descriptive": [
+    8.480540206144381,
+    7.063084646877019,
+    7.6099621806956,
+    7.236171427050745,
+    7.983609440288891
+   ]
+  }
+ },
+ "cpu_hours": 0.30049913194444444,
+ "replica_vs_production_pp_max": {
+  "A1": 1.9073486334786338e-05,
+  "A9": 0.0,
+  "A2": 0.0
+ },
+ "note": "development data (ISU training sides); the scores are descriptive and carry no rule"
+}
+Get-Content : Cannot find path 'C:\Users\Shlok\Downloads\PINN KAN battery paper\runs\check_D023_inversion\RESULT.md' 
+because it does not exist.
+At line:2 char:215
++ ... sion.json'; Get-Content -Raw 'C:\Users\Shlok\Downloads\PINN KAN batte ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\Shlok\...rsion\RESULT.md:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+# P6b result: four against two inner folds at m = 8 (D020 judge section 4, rule R2')
+
+**All numbers below: development data (ISU), not evidence for Samsung.** Non-confirmatory. ISU is not blind (PREREG 3.4); if ISU later becomes primary, this pilot is part of the ISU development exposure (judge section 4).
+
+## Verdict
+**KEEP 2 inner folds for m in {8, 16}** (`decision.json`: `"adopt": false`). Four of six arms have q > 0 (A4, A9, A11, A12); the rule needs at least five. The floor condition (min q > -ln(1.02) = -0.0198) is met (min q = -0.0088, A1), so the first condition alone decides. All 60 units finished; no failed unit, no failed tuning trial, no non-finite seed forecast.
+
+## What was run
+- ISU Test B (`runs/splits/isu_testB.json`, sha256 identical before and after). Five outer folds; the outer-test conditions (12-13 per fold) and cells were never loaded (`fold_audit.json`: intersection 0 with conditions and cells, `test_fold_scored: false`, fold hash ok).
+- Pseudo-train: the nested max-min subset of 8 of the fold's 51 training conditions. Pseudo-test: the other 42-43 conditions (171 cells in fold 0). Window W = 2 weeks, as `run.py` does at m < 32. 63 conditions in total, 43 pooled over folds for the median.
+- Arms A1, A2, A4 (= AG at m < 32), A9, A11, A12; N = 20 TPE trials (sampler seed = fold, tuning seed 1000 + fold); final refits seeds 0-4; inner_k in {2, 4}; the backbone tournament was run per (fold, inner_k) on the pseudo-train (it chose self_limiting in all 10 (fold, inner_k) cells).
+- Endpoint: ensemble score (mean of the five refit forecasts, non-finite values replaced seed-wise by persistence before averaging). The per-seed score is the descriptive row. Every cell had RMSE(ensemble) <= mean per-seed RMSE (checked per unit).
+- Rule R2' was applied by `aggregate` of the committed script; nobody chose the verdict. Script commit `93e478403a862c3e73465857a3a53c739f131425`, committed (10:59:43) before the first fit (10:59:58 start; first jobs began after). Script sha256 unchanged at the end.
+- Mechanics smoke test before the commit: 1 fold, 2 trials, 2 seeds, steps_scale 0.02, in a scratch directory outside `runs/` (only to find bugs; its numbers were not used). It exposed one table-formatting bug, fixed before the commit.
+- The lead's file contract asked for a boolean `adopt` key in `decision.json`. The script was not changed (a change after the first fit is a D020 re-open condition). `code/pilots/p6b_add_adopt_key.py` (commit 88e91eb) derives the key mechanically from `verdict` and `complete`; nothing was edited by hand.
+
+### Table A. Rule R2' (development data, ISU: not evidence for Samsung)
+
+| arm | q_a (ensemble endpoint) | bootstrap 95 % (descriptive) | q_a (per-seed endpoint, descriptive) | q_a > 0 |
+|---|---|---|---|---|
+| A1 | -0.00882 | [-0.0189, 0.0146] | -0.00651 | no |
+| A2 | -0.00604 | [-0.0100, -0.0006] | -0.00412 | no |
+| A4 | 0.06351 | [-0.0041, 0.0919] | 0.06092 | yes |
+| A9 | 0.06438 | [0.0393, 0.1164] | 0.05198 | yes |
+| A11 | 0.00322 | [-0.0608, 0.0421] | 0.00322 | yes |
+| A12 | 0.02681 | [0.0098, 0.0545] | 0.02888 | yes |
+
+Verdict: **KEEP_2_INNER_FOLDS**. 4 of 6 arms with q > 0 (need >= 5); min q = -0.00882 against floor -0.01980 -> KEEP two inner folds.
+
+Floor -ln(1.02) = -0.01980; arms with q > 0: 4 of 6; min q = -0.00882.
+
+### Table B. Per-fold median ln(S_2fold / S_4fold) over the fold's pseudo-test conditions (ensemble endpoint)
+
+| arm | fold 0 | fold 1 | fold 2 | fold 3 | fold 4 |
+|---|---|---|---|---|---|
+| A1 | -0.1087 | 0.0098 | 0.0319 | 0.1248 | -0.0956 |
+| A2 | -0.0003 | -0.0035 | -0.0226 | -0.0008 | 0.0022 |
+| A4 | 0.3277 | -0.0405 | 0.0042 | 0.0000 | 0.0031 |
+| A9 | -0.1915 | 0.0954 | 0.4944 | 0.0000 | -0.1372 |
+| A11 | -0.3178 | 0.2211 | 0.0000 | 0.0687 | -0.1817 |
+| A12 | -0.0173 | 0.0032 | 0.1449 | -0.0033 | 0.0286 |
+
+### Table C. Mean cross-condition ensemble score (pp), mean over folds; seed SD of the cross-condition mean (pp); median ln(per-seed / ensemble) score
+
+| arm | S 2-fold | S 4-fold | seed SD 2 | seed SD 4 | median ln(per-seed/ens) 2 | 4 | grid-edge share 2 | 4 | failed trials 2/4 | non-finite seed values 2/4 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| A1 | 5.486 | 5.517 | 0.249 | 0.328 | 0.0280 | 0.0361 | 0.40 | 0.32 | 0/0 | 0/0 |
+| A2 | 7.731 | 7.810 | 0.102 | 0.080 | 0.0016 | 0.0002 | 0.55 | 0.45 | 0/0 | 0/0 |
+| A4 | 6.233 | 5.892 | 0.281 | 0.281 | 0.0222 | 0.0243 | 0.13 | 0.20 | 0/0 | 0/0 |
+| A9 | 14.397 | 12.896 | 2.403 | 2.121 | 0.0645 | 0.0855 | 0.50 | 0.50 | 0/0 | 0/0 |
+| A11 | 6.646 | 6.852 | 0.000 | 0.000 | 0.0000 | 0.0000 | 0.00 | 0.40 | 0/0 | 0/0 |
+| A12 | 6.123 | 5.916 | 0.057 | 0.038 | 0.0019 | 0.0010 | 0.12 | 0.08 | 0/0 | 0/0 |
+
+### Table D. A1 against D* (inner-CV choice of A9, A11, A12 per fold and variant), ensemble endpoint, descriptive, non-binding
+
+| variant | D* by fold | median ln(S_D* / S_A1) | share of conditions where A1 is better | conditions |
+|---|---|---|---|---|
+| 2-fold | 0:A11, 1:A12, 2:A12, 3:A12, 4:A12 | 0.0472 | 0.535 | 43 |
+| 4-fold | 0:A12, 1:A12, 2:A12, 3:A12, 4:A12 | 0.0538 | 0.605 | 43 |
+
+### Table E. Inversion-convergence diagnostic (seed-0 refit, pseudo-test windows W = 2 weeks; no rule attached)
+
+| arm, variant | folds | grad norm initial (median) | grad norm final (median) | grad norm final (max) | final/initial (median) | final/initial (max) | spread over 4 inits, pp (median) | spread pp (max cell, max fold) | change when steps are doubled, pp (max) | score range over inits, pp (max) | replica vs production, pp (max) |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| A1 k=2 | 5 | 3.07e+04 | 25.1 | 6.9e+03 | 0.000726 | 0.321 | 7.3381 | 129.8795 | 4.5790 | 4.3867 | 0.00e+00 |
+| A1 k=4 | 5 | 3.13e+04 | 39.2 | 5.53e+03 | 0.000328 | 3.34 | 7.5868 | 113.1600 | 8.1174 | 1.7198 | 0.00e+00 |
+| A2 k=2 | 5 | 128 | 1.48e-05 | 0.000473 | 1.13e-07 | 0.00044 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.00e+00 |
+| A2 k=4 | 5 | 141 | 1.53e-05 | 0.000485 | 9.98e-08 | 3.13e-05 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.00e+00 |
+| A9 k=2 | 5 | 15.4 | 0.015 | 34.2 | 0.00144 | 2.68 | 5.1740 | 127.8337 | 42.2590 | 2.9334 | 0.00e+00 |
+| A9 k=4 | 5 | 15.6 | 0.0278 | 7.16 | 0.000425 | 4.11 | 0.8710 | 130.7075 | 20.8982 | 3.1717 | 0.00e+00 |
+
+### Table F. Run facts
+
+- CPU hours (sum over units, tournaments and error files): 5.647; wall hours: 2.889; units complete: True.
+- split sha256 before = after: True (c1227642a067e61c4e5110d577e0b84b6ccb6da1cd8e4b48b16e03b2ba4419d8).
+- script commit: 93e478403a862c3e73465857a3a53c739f131425 (committed 2026-11-05T10:59:43+05:45); script sha256 unchanged since the first fit: True.
+- pinnkan files whose content changed between the start and the end of the run: ['arms.py', 'guard.py', 'metrics.py', 'negcontrol.py', 'pinn.py', 'run.py', 'semi.py', 'stats_rows.py', 'stats_step.py', 'stats_v4.py', 'tuning.py'].
+- tuned per fold: pseudo-train conditions = 8; pseudo-test conditions per fold: f0: 43, f1: 42, f2: 43, f3: 42, f4: 42.
+
+## Reading (descriptive)
+- Effect sizes are small. A1 and A2 do slightly worse with four folds (q = -0.009, -0.006; for A2 the descriptive bootstrap interval excludes 0); A4 and A9 gain about 6 %; A12 gains 2.7 %; A11 is flat (+0.3 %). Per-fold signs flip for A1, A9 and A11 (Table B), so folds disagree, as expected with validation folds of 2 conditions.
+- The bootstrap intervals (resampling the pooled conditions, 5000 draws) are descriptive and ignore the dependence between conditions of the same fold.
+- Table D: with either variant, A1 is not clearly better than D*: the median ln(S_D*/S_A1) is +0.047 (2-fold) and +0.054 (4-fold), A1 better in 54 % and 61 % of conditions. Non-binding signal for Shlok (the P6 reading of J16 5.6); D* was chosen by inner CV only.
+- The per-seed against ensemble gap (median ln ratio 0.028 to 0.086 for A1, A4, A9) is where C1 helps; A11 has no seed variance, A2 and A12 almost none.
+- Grid-edge share (Table C) is 0.3 to 0.55 for A1, A2, A9: selected configurations often sit on the end of an ordered grid in both variants.
+
+## Inversion-convergence diagnostic (Table E; no rule attached)
+- A2 (delta only): converged. Final gradient norm about 1e-5, four starting points give identical forecasts, doubling the steps changes nothing.
+- A1 and A9 (z, and delta for A1): **not converged by this measure.** The gradient norm falls by three to four orders of magnitude from its start, but the median spread of the forecast across the production start and three random starts (z ~ N(0, 0.5^2), delta ~ N(0, TAU^2); my design choice, not in the ruling) is 7.3 pp (A1, 2-fold), 7.6 pp (A1, 4-fold), 5.2 pp (A9, 2-fold), 0.9 pp (A9, 4-fold), with maxima near 113-131 pp for single cells. Doubling the steps changes some forecasts by up to 4.6 to 42 pp. The mean score moves by up to 4.4 pp (A1) and 3.2 pp (A9) across starts. The replica of the production loop reproduces the production forecasts exactly (difference 0).
+- Per the ruling, any fix (more steps or starts, equal for every affected arm) needs its own decision row before the freeze; nothing was changed. Caveat: the inversion is non-convex, and random starts at this scale may land in basins the production start never reaches, so the spread is an upper-end indication; the doubled-step column is the cleaner sign that the 200- and 150-step budgets stop early.
+
+## Runtime and budget
+CPU 5.65 h (sum over units and tournaments), wall 2.89 h on 2 worker processes (one thread each), start 10:59:58, end 13:53:19. Judge's estimate was about 6 CPU-h; the 8 CPU-h abort guard was not reached. CPU only (`CUDA_VISIBLE_DEVICES=-1`, torch reports no CUDA).
+
+## Limits
+- ISU only: 3 stress inputs, no storage, no 5-D stress sparsity; says nothing about C1, C3, Samsung, or the size of A1's advantage there.
+- m = 8 only; m = 16 is assumed to follow (disclosed in the ruling).
+- Pseudo-test conditions are shared across folds; the median over 43 pooled conditions is not an independent sample.
+- Code changed on disk during the run: a coder edited `code/pinnkan/` files (arms, guard, metrics, negcontrol, pinn, run, semi, stats_*, tuning; modification times 11:11 to 12:33) while the run was in progress. The two worker processes had imported all modules used in training and scoring at about 11:00-11:02 and Python does not reload them, so the run used the start-of-run code; the uncommitted state at start was only `arms.py`, `run.py`, `stats_step.py` (scope flags, no behaviour used here). The per-file hashes at start and end are in `run_meta.json`. A reviewer who wants to be certain can re-run the committed script on commit-pinned code.
+- Selected configurations differ between variants and often sit on grid edges, so q partly reflects search noise at N = 20.
+
+## Files
+`decision.json`, `summary.json`, `tables.md`, `per_condition.csv`, `per_fold_condition.csv`, `fold_audit.json`, `run_meta.json`, `config_used.json`, `RUN.log`, `units/` (one JSON per fold, variant and arm; tournaments).
+
+
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+## 1. Prior-mode start: reproducible, not identified
+
+Starting Newton from the prior mode is a defensible **deterministic estimator** if it is frozen and applied identically wherever z is inferred. It is not evidence that the cell’s latent is identified, or that the optimizer found a unique MAP. The check found converged minima with materially different forecasts: A1’s start-spread median is 7.8 pp; A9’s p95 is 50 pp. Calling the result “the MAP” would invite a reviewer to ask which mode and why.
+
+Report convergence and start sensitivity separately: fraction meeting the gradient rule, budget sensitivity, forecast spread across the pre-specified starts, and whether different minima have similar objective values. Show this by arm and window length, and state that forecasts are conditional on the prior-mode basin. Do not select a basin using later outcomes. The pre-ruled verdict was **NONE**; adopting O2 can be a documented computational convention, but must not be presented as having passed the original start-independence criterion.
+
+## 2. Choosing the z-prior weight
+
+A pre-ruled check on ISU training sides is not test leakage, but it is weak grounds for a Samsung choice: ISU lacks the storage arm and has different stress coverage. It also risks consuming ISU’s development status if that dataset later becomes a fallback primary.
+
+Prefer selecting among `{1, 4, 16}` by **Samsung-fold inner CV, using training conditions only**, with the same candidate set, window, and tuning budget for A1 and A9. Freeze the procedure before outer scoring; report the selected weight by fold. This parameter does not apply to non-inverting D* comparators or A2’s scalar delta, so fairness means equal access to the same window and training labels—not inventing a z parameter for those methods. If Samsung inner tuning is not already permitted by the frozen protocol, do not quietly add it: retain the existing weight and disclose the sensitivity.
+
+## 3. Better options in 1–2 days
+
+- **Inner-CV prior-weight choice:** strongest practical option. It addresses regularization under the actual Samsung training conditions without touching outer outcomes. Risk: the small inner folds may choose unstable weights.
+- **Shrink z more for shorter windows:** plausible because early windows weakly constrain z. But a new window-dependent schedule is another modeling choice; tune it in inner CV or justify it independently and apply it symmetrically. Otherwise it looks post hoc.
+- **Set z to its prior mode at k=0:** already consistent with the proposal. For k=2, dropping z may stabilize forecasts, but changes the model and the comparison; only consider it as a pre-specified arm/window rule tested in inner CV.
+- **Reparameterize around `F=t*g`:** may improve numerical scaling, but cannot create information absent from the early window. It risks changing the model without fixing structural non-identifiability. Speculative as a quick remedy.
+- **Marginalize over z:** conceptually best when the posterior is genuinely multimodal, but averaging starts is not posterior integration. A defensible posterior forecast needs a specified distribution and integration method; that is a larger, riskier change for this timeline. Report a sensitivity envelope now; pursue marginalization later.
+
+## Verdict: revise
+
+1. Use prior-mode Newton only as a frozen, reproducible operating rule; disclose that it chooses a basin and publish the start-sensitivity diagnostics.
+2. If tuning z’s prior weight, do it in Samsung inner folds for both A1 and A9, training conditions only. Otherwise keep the weight fixed.
+3. Do not claim the inversion is identified or start-independent. If that property is essential to the paper’s claim, the current evidence does not support it.
+hook: Stop
+hook: Stop
+hook: Stop Completed
+hook: Stop Failed
+tokens used
+961,434
+## 1. Prior-mode start: reproducible, not identified
+
+Starting Newton from the prior mode is a defensible **deterministic estimator** if it is frozen and applied identically wherever z is inferred. It is not evidence that the cell’s latent is identified, or that the optimizer found a unique MAP. The check found converged minima with materially different forecasts: A1’s start-spread median is 7.8 pp; A9’s p95 is 50 pp. Calling the result “the MAP” would invite a reviewer to ask which mode and why.
+
+Report convergence and start sensitivity separately: fraction meeting the gradient rule, budget sensitivity, forecast spread across the pre-specified starts, and whether different minima have similar objective values. Show this by arm and window length, and state that forecasts are conditional on the prior-mode basin. Do not select a basin using later outcomes. The pre-ruled verdict was **NONE**; adopting O2 can be a documented computational convention, but must not be presented as having passed the original start-independence criterion.
+
+## 2. Choosing the z-prior weight
+
+A pre-ruled check on ISU training sides is not test leakage, but it is weak grounds for a Samsung choice: ISU lacks the storage arm and has different stress coverage. It also risks consuming ISU’s development status if that dataset later becomes a fallback primary.
+
+Prefer selecting among `{1, 4, 16}` by **Samsung-fold inner CV, using training conditions only**, with the same candidate set, window, and tuning budget for A1 and A9. Freeze the procedure before outer scoring; report the selected weight by fold. This parameter does not apply to non-inverting D* comparators or A2’s scalar delta, so fairness means equal access to the same window and training labels—not inventing a z parameter for those methods. If Samsung inner tuning is not already permitted by the frozen protocol, do not quietly add it: retain the existing weight and disclose the sensitivity.
+
+## 3. Better options in 1–2 days
+
+- **Inner-CV prior-weight choice:** strongest practical option. It addresses regularization under the actual Samsung training conditions without touching outer outcomes. Risk: the small inner folds may choose unstable weights.
+- **Shrink z more for shorter windows:** plausible because early windows weakly constrain z. But a new window-dependent schedule is another modeling choice; tune it in inner CV or justify it independently and apply it symmetrically. Otherwise it looks post hoc.
+- **Set z to its prior mode at k=0:** already consistent with the proposal. For k=2, dropping z may stabilize forecasts, but changes the model and the comparison; only consider it as a pre-specified arm/window rule tested in inner CV.
+- **Reparameterize around `F=t*g`:** may improve numerical scaling, but cannot create information absent from the early window. It risks changing the model without fixing structural non-identifiability. Speculative as a quick remedy.
+- **Marginalize over z:** conceptually best when the posterior is genuinely multimodal, but averaging starts is not posterior integration. A defensible posterior forecast needs a specified distribution and integration method; that is a larger, riskier change for this timeline. Report a sensitivity envelope now; pursue marginalization later.
+
+## Verdict: revise
+
+1. Use prior-mode Newton only as a frozen, reproducible operating rule; disclose that it chooses a basin and publish the start-sensitivity diagnostics.
+2. If tuning z’s prior weight, do it in Samsung inner folds for both A1 and A9, training conditions only. Otherwise keep the weight fixed.
+3. Do not claim the inversion is identified or start-independent. If that property is essential to the paper’s claim, the current evidence does not support it.

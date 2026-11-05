@@ -469,3 +469,43 @@ Row format:
   weight above 1 passes the start-spread criteria with non-inferior pseudo-test score for both A1 and A9 (changes the fixed weight only, never makes it tuned);
   ISU becomes primary; an identified inversion is required (new estimator, new version); the ported routine fails the regression test against the check's O2;
   an outer-test score exists before FROZEN.
+
+### D022a Extraction audit revised after the red-team review (2026-11-05, status: revised; supersedes 03_judge.md 2.2 (a) item 3, 2.2 (c) and 7 item 5)
+- **Decision:** debates/D022_datasets_kan/05_judge_audit_revision.md. FATAL F1 and F2 are upheld; M1-M8 and m1-m7 are
+  adopted (F1, M1, M3 and M7 in modified form).
+  - The unit of calibration is a whole synthetic dataset on the real fold design, run through the real 5-fold x 5-seed
+    procedure and the same label code.
+  - Labels are read from the extracted law's partial dependence, with a numerical additivity test for both arms and a
+    tie rule (a tie gives no family). Labels are licensed at g4 only. The calendar extracted law gets no edge wording.
+  - Strata: zero, linear, log, quadratic, hinge; 10 of 30 datasets non-additive; amplitudes log-uniform 0.05-0.5;
+    laboratory offsets on the real laboratory map; hyperparameters (including A15's h) drawn from the tuned spaces.
+  - C1, calibrated: the one-sided 95 % Clopper-Pearson upper limit of the share of datasets with any false printed
+    statement is <= 0.20 (D = 30: at most 2; D = 22: at most 1).
+  - C2, useful: correct-form recall >= 0.5 on the four many-level inputs.
+  - C3, necessary: the stability-only baseline fails C1.
+  - The audit is a contribution only if C1-C3 hold for A15 and G15. Otherwise the bullet is withdrawn and the audit is
+    reported descriptively (a stop, not a finding). An arm that fails C1 prints no labels.
+  - Guard: content controlled by the FROZEN SHA and a hash-chosen bit-identical re-run, not by mtimes; pins mandatory.
+  - CPU: 1500 fits, about 18 CPU-h expected and 33 ceiling (D021 times), cap 36, after FROZEN. The calibration need not
+    precede outer scores.
+  - Freeze delay about 1 to 1.5 days (estimate). If not held, the fallback is: strike the audit, report the 11a item 6
+    stability table descriptively, no contribution bullet.
+- **Alternatives and why they lost:**
+  - Keep v1: not calibrated for its label; unfalsifiable.
+  - Independent truths per fold: mis-models the shared-truth dependence.
+  - Per-stratum bounds at 0.10: needs at least 29 datasets per stratum, over 100 CPU-h.
+  - Inner-CV tuning inside the calibration: multiplies the cost by the trial count.
+  - Calibrating labels at g1 and on the calendar law: doubles the strata and cost.
+  - Strike now: gives up a contribution that can be tested within 2 days.
+- **Evidence:** debates/D022_datasets_kan/{04_redteam_audit,05_judge_audit_revision,calibration_rule}.md;
+  code/pinnkan/extraction_audit.json; runs/D021_cap_synth/log_p0.txt, log_p1.txt (pipeline times); judge's
+  Clopper-Pearson arithmetic.
+- **Proposer / opponent / judge:** D022 judge 2.2 and the coder (v1) / red team A3 (2 FATAL, 8 MAJOR, 7 MINOR) / D022
+  judge (independent of the code). No Samsung, NASA or CALCE capacity value was read.
+- **Re-open if:**
+  - the red-team re-check (B4) leaves a FATAL open;
+  - the re-run is not bit-identical;
+  - fewer than 22 datasets complete;
+  - the real tuned hyperparameters fall outside the sampled spaces;
+  - an outer score is used to change the rule;
+  - Shlok asks for labels at g1 or on the calendar law.

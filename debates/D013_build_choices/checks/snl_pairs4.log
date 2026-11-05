@@ -1,0 +1,10 @@
+{"fold": 4, "seed": 1000, "cfg": "A4 additive", "inner_cv_pp": 4.160970772003837, "n_cond": 18, "sec": 26.975812673568726}
+{"fold": 4, "seed": 1000, "cfg": "A5 builder(T-ch,T-DoD,DoD-dch)", "inner_cv_pp": 4.220661100597909, "n_cond": 18, "sec": 39.81253004074097}
+{"fold": 4, "seed": 1000, "cfg": "A5 design_rule(T-dch + flags x T + flags x dch)", "inner_cv_pp": 3.912997371085533, "n_cond": 18, "sec": 57.61622428894043}
+{"fold": 4, "seed": 1000, "cfg": "A5 T-dch only", "inner_cv_pp": 4.192522680375707, "n_cond": 18, "sec": 30.140477895736694}
+{"fold": 4, "seed": 1000, "cfg": "A1 KAN h4", "inner_cv_pp": 4.1753106169130065, "n_cond": 18, "sec": 32.532883167266846}
+{"fold": 4, "seed": 1001, "cfg": "A4 additive", "inner_cv_pp": 4.474478689203773, "n_cond": 18, "sec": 27.385291814804077}
+{"fold": 4, "seed": 1001, "cfg": "A5 builder(T-ch,T-DoD,DoD-dch)", "inner_cv_pp": 4.883863262066838, "n_cond": 18, "sec": 40.37725210189819}
+{"fold": 4, "seed": 1001, "cfg": "A5 design_rule(T-dch + flags x T + flags x dch)", "inner_cv_pp": 4.219449245309815, "n_cond": 18, "sec": 54.753644704818726}
+{"fold": 4, "seed": 1001, "cfg": "A5 T-dch only", "inner_cv_pp": 4.546062677400946, "n_cond": 18, "sec": 31.347245454788208}
+{"fold": 4, "seed": 1001, "cfg": "A1 KAN h4", "inner_cv_pp": 4.626635112736345, "n_cond": 18, "sec": 36.295830726623535}

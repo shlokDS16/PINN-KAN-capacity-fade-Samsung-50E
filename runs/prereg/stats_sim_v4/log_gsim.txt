@@ -1,0 +1,4 @@
+gsim g|f0.00|l0.00|rhoK0.90 0s
+gsim g|f0.00|l0.00|rhoK0.95 1s
+gsim g|f0.10|l0.05|rhoK0.90 2s
+gsim g|f0.10|l0.05|rhoK0.95 2s

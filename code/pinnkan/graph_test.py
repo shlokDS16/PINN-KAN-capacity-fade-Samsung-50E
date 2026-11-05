@@ -71,12 +71,15 @@ def order_stat_interval(L, alpha_two_sided: float):
 
 
 # --------------------------------------------------------------------------------------------------------------- graph
-def pinnkan_graph():
-    """(nodes, weights, G) of the D016 primary graph."""
+def pinnkan_graph(w_p: float = 0.5):
+    """(nodes, weights, G) of the D016 primary graph. w_p = initial weight on P1N (default 1/2); K1 gets 1 - w_p (D018: 0.78 / 0.22 is the one
+    pre-identified alternative)."""
+    if not 0.0 < w_p < 1.0:
+        raise ValueError("w_p must be in (0, 1)")
     idx = {k: i for i, k in enumerate(NODES)}
     w = np.zeros(len(NODES))
-    w[idx["P1N"]] = 0.5
-    w[idx["K1"]] = 0.5
+    w[idx["P1N"]] = w_p
+    w[idx["K1"]] = 1.0 - w_p
     G = np.zeros((len(NODES), len(NODES)))
     for a, b in (("P1N", "P1S"), ("P1S", "P2"), ("P2", "P3"), ("P3", "K1"),
                  ("K1", "K2N"), ("K2N", "K2S"), ("K2S", "P1N")):
@@ -154,3 +157,131 @@ def run_pinnkan_graph(p_by_node: dict, alpha: float = 0.025) -> GraphResult:
     if missing:
         raise KeyError(f"missing p-values for {missing}")
     return graph_test(np.array([p_by_node[k] for k in nodes], dtype=float), w, G, alpha)
+
+
+# ------------------------------------------------------------------------------------------ D018: fixed design-effect sign test
+RHO_S0 = 0.03          # D018 section 2.1: confirmatory value; the sensitivity grid is (0, 0.01, 0.02, 0.03, 0.05)
+RHO_GRID = (0.0, 0.01, 0.02, 0.03, 0.05)
+W_ALT = 0.78           # D018 section 3: the one pre-identified alternative weight on P1N
+
+
+def betabin_tail_table(n: int, rho_s: float = RHO_S0) -> np.ndarray:
+    """t[k] = P(X >= k), k = 0..n+1, X ~ Beta-binomial(n; a = b = (1/rho_s - 1)/2): exchangeable pairwise correlation rho_s of the sign
+    indicators, mean 1/2 (design effect 1 + (n-1) rho_s). rho_s = 0 is the binomial. Pure Python (lgamma)."""
+    from math import lgamma, exp
+    if rho_s <= 0:
+        return binom_tail_table(n)
+    a = (1.0 / rho_s - 1.0) / 2.0
+    lb = lambda x, y: lgamma(x) + lgamma(y) - lgamma(x + y)
+    lg_ab = lb(a, a)
+    pmf = np.array([exp(lgamma(n + 1) - lgamma(k + 1) - lgamma(n - k + 1) + lb(k + a, n - k + a) - lg_ab) for k in range(n + 1)])
+    pmf = pmf / pmf.sum()
+    t = np.zeros(n + 2)
+    t[: n + 1] = np.cumsum(pmf[::-1])[::-1]
+    t[0] = 1.0
+    return t
+
+
+def betabin_p(pos, n: int, rho_s: float = RHO_S0):
+    """One-sided p-value P(BetaBin >= pos) of the fixed design-effect sign test."""
+    return betabin_tail_table(n, rho_s)[np.asarray(pos, dtype=int)]
+
+
+def betabin_crit(n: int, alpha: float, rho_s: float = RHO_S0) -> int:
+    """Smallest number of positives k with P(BetaBin >= k) <= alpha (n + 1 if none: the level cannot be reached at this n)."""
+    t = betabin_tail_table(n, rho_s)
+    for k in range(n + 2):
+        if t[k] <= alpha * (1 + TOL):
+            return k
+    return n + 1
+
+
+def dep_sign_test_p(L, margin: float, rho_s: float = RHO_S0):
+    """(positives, p) of the fixed design-effect sign test of median(L) > margin (D018 confirmatory test; assumption-based)."""
+    L = np.asarray(L, dtype=float)
+    pos = int((L > margin).sum())
+    return pos, float(betabin_p(pos, L.size, rho_s))
+
+
+def dep_interval_rank(n: int, alpha_two_sided: float, rho_s: float = RHO_S0):
+    """Largest rank r such that [L_(r), L_(n+1-r)] has coverage 1 - 2 P(BetaBin <= r-1) >= 1 - alpha_two_sided (by symmetry
+    P(BetaBin <= r-1) = P(BetaBin >= n-r+1)). Returns (r, coverage); (0, nan) if no pair attains the level (then the range (min, max) is used)."""
+    t = betabin_tail_table(n, rho_s)
+    r, cov = 0, float("nan")
+    for rr in range(1, n // 2 + 1):
+        c = 1.0 - 2.0 * t[n - rr + 1]
+        if c >= 1.0 - alpha_two_sided - 1e-12:
+            r, cov = rr, float(c)
+    return r, cov
+
+
+def dep_order_stat_interval(L, alpha_two_sided: float, rho_s: float = RHO_S0):
+    """Fallback-rank order-statistic interval (lo, hi, r, coverage); the labelled range (min, max) with r = 0 if no pair attains the level."""
+    x = np.sort(np.asarray(L, dtype=float))
+    r, cov = dep_interval_rank(x.size, alpha_two_sided, rho_s)
+    if r == 0:
+        return float(x[0]), float(x[-1]), 0, float("nan")
+    return float(x[r - 1]), float(x[x.size - r]), r, cov
+
+
+# ---------------------------------------------------------------------------------- D018 secondary graph (PREREG_v4 9.5, GAP-2)
+def secondary_graph(m: int = 5):
+    """(nodes, weights, G) of the secondary family: for each test i a node N_i (initial weight 1/m) and a node S_i (initial weight 0);
+    edges N_i -> S_i (1) and S_i -> N_j (1/(m-1)) for j != i. With alpha = 0.025 the initial level of N_i is 0.025/m = 0.005 for m = 5."""
+    nodes = tuple(["N%d" % i for i in range(1, m + 1)] + ["S%d" % i for i in range(1, m + 1)])
+    w = np.zeros(2 * m)
+    w[:m] = 1.0 / m
+    G = np.zeros((2 * m, 2 * m))
+    for i in range(m):
+        G[i, m + i] = 1.0
+        for j in range(m):
+            if j != i:
+                G[m + i, j] = 1.0 / (m - 1)
+    return nodes, w, G
+
+
+# ---------------------------------------------------------------------------------------- D018 item (f): dependence estimate
+def sign_icc_anova(signs, groups, conf: float = 0.95):
+    """One-way ANOVA intraclass correlation of 0/1 sign indicators (= the pairwise sign correlation inside a group) with a one-sided upper
+    confidence limit (Searle's F-based limit for the one-way random model, unbalanced via n0):
+        F = MSB / MSW ;  F_U = F * F_{conf; N-k, k-1} ;  rho_U = (F_U - 1) / (F_U + n0 - 1).
+    Few groups make the limit wide (5 folds, 3 labs); it is REPORTED evidence, never a rule input (D018 2.3). Returns a dict."""
+    from scipy import stats
+    x = np.asarray(signs, dtype=float)
+    g = np.asarray(groups)
+    labs = np.unique(g)
+    k, N = labs.size, x.size
+    gs = [x[g == u] for u in labs]
+    n0 = (N - sum(len(v) ** 2 for v in gs) / N) / (k - 1)
+    msb = sum(len(v) * (v.mean() - x.mean()) ** 2 for v in gs) / (k - 1)
+    msw = sum(((v - v.mean()) ** 2).sum() for v in gs) / (N - k)
+    if msw <= 0:
+        return dict(icc=1.0, upper=1.0, k=k, n0=n0, msb=msb, msw=msw)
+    icc = (msb - msw) / (msb + (n0 - 1) * msw)
+    f_u = (msb / msw) * stats.f.ppf(conf, N - k, k - 1)
+    upper = (f_u - 1.0) / (f_u + n0 - 1.0)
+    return dict(icc=float(icc), upper=float(min(upper, 1.0)), k=int(k), n0=float(n0), msb=float(msb), msw=float(msw))
+
+
+def avg_pairwise_sign_corr(fold, lab, rho_fold: float, rho_lab: float) -> float:
+    """Average pairwise sign correlation implied by intra-fold and intra-lab correlations (negative values set to 0; additive,
+    pairs in the same fold and the same lab are counted in both): (pairs_same_fold * rho_F + pairs_same_lab * rho_L) / C(N, 2).
+    This is the quantity the Beta-binomial rho_s0 bounds."""
+    fold, lab = np.asarray(fold), np.asarray(lab)
+    N = fold.size
+    pf = sum(int(c) * (int(c) - 1) / 2 for c in np.unique(fold, return_counts=True)[1])
+    pl = sum(int(c) * (int(c) - 1) / 2 for c in np.unique(lab, return_counts=True)[1])
+    return float((pf * max(rho_fold, 0.0) + pl * max(rho_lab, 0.0)) / (N * (N - 1) / 2))
+
+
+def dependence_report(signs, fold, lab, conf: float = 0.95) -> dict:
+    """Item (f) estimator, defined before the freeze. signs = indicator (score difference > its median) per condition from the INNER-CV
+    training sides. Returns intra-fold and intra-lab sign ICC (point and one-sided upper limit) and the implied average pairwise sign
+    correlation (point and upper), to be compared with rho_s0 = 0.03. Disclosure rule D018 2.3 (ii): if rho_fold point > 0.03 the
+    Limitations sentence is added; nothing changes a critical count."""
+    f = sign_icc_anova(signs, fold, conf)
+    l = sign_icc_anova(signs, lab, conf)
+    return dict(rho_fold=f["icc"], rho_fold_upper=f["upper"], rho_lab=l["icc"], rho_lab_upper=l["upper"],
+                avg_pairwise=avg_pairwise_sign_corr(fold, lab, f["icc"], l["icc"]),
+                avg_pairwise_upper=avg_pairwise_sign_corr(fold, lab, f["upper"], l["upper"]),
+                exceeds_rho_s0=bool(f["icc"] > RHO_S0), rho_s0=RHO_S0, conf=conf)

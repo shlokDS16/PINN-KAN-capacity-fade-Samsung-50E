@@ -783,6 +783,100 @@ def run_b5(nrep):
     print("b5/c3 done %.0fs" % (time.time() - t0))
 
 
+# ------------------------------------------------------------------------------------------------ item g (D018 section 3): graph weights
+W_ALT = 0.78
+BB03 = tail_betabin(N, 0.03)
+G_SETTINGS = [(0.0, 0.0, 0.90), (0.0, 0.0, 0.95), (0.10, 0.05, 0.90), (0.10, 0.05, 0.95)]
+
+
+def _chains(rj):
+    """Indicator vectors (per replicate) of the six reported events."""
+    p_chain = rj[:, 0] & rj[:, 1]
+    return dict(P1=p_chain, P2=p_chain & rj[:, 2], P3=p_chain & rj[:, 2] & rj[:, 3],
+                K1=rj[:, 4], K1K2N=rj[:, 4] & rj[:, 5], K1K2NK2S=rj[:, 4] & rj[:, 5] & rj[:, 6])
+
+
+def run_gsim(nrep):
+    """Both graphs on the same draws (common random numbers); fallback counts (rho_s0 = 0.03); four settings of D018 section 3."""
+    t0 = time.time()
+    shape = SHAPES["isu_right"]
+    g_half = gt.pinnkan_graph(0.5)
+    g_alt = gt.pinnkan_graph(W_ALT)
+    rows = []
+    for (f, l, rk) in G_SETTINGS:
+        name = "g|f%.2f|l%.2f|rhoK%.2f" % (f, l, rk)
+        rng = rng_for(name)
+        model = build_model(0.75, 0.95, rk, rk, 0.6)
+        med = np.array([log_ratio(0.20), log_ratio(0.15), log_ratio(0.05), 0.0, log_ratio(0.05)])
+        ind = {0.5: {}, W_ALT: {}}
+        done = 0
+        while done < nrep:
+            b = min(5000, nrep - done)
+            L = to_L(gen_J(b, model, f, l, rng), model, shape, med)
+            P = pvals_from_counts(node_counts(L), BB03)
+            for wp, (nodes, w, G) in ((0.5, g_half), (W_ALT, g_alt)):
+                ev = _chains(gt.graph_test(P, w, G, A_FAM).rejected)
+                for k, v in ev.items():
+                    ind[wp].setdefault(k, []).append(v)
+            done += b
+        ind = {wp: {k: np.concatenate(v) for k, v in d.items()} for wp, d in ind.items()}
+        for wp in (0.5, W_ALT):
+            rows.append(dict(setting=name, f=f, l=l, rhoK=rk, w_P1N=wp, nrep=nrep, **{("P_" + k): float(v.mean()) for k, v in ind[wp].items()}))
+        d = {}
+        for k in ind[0.5]:
+            diff = ind[W_ALT][k].astype(float) - ind[0.5][k].astype(float)
+            d["d" + k] = float(diff.mean())
+            d["se_d" + k] = float(diff.std(ddof=1) / np.sqrt(nrep))
+        rows.append(dict(setting=name, f=f, l=l, rhoK=rk, w_P1N="delta (0.78 - 0.5)", nrep=nrep, **d))
+        print("gsim %s %.0fs" % (name, time.time() - t0), flush=True)
+    pd.DataFrame(rows).to_csv(os.path.join(OUT, "g_weights.csv"), index=False)
+
+
+def run_gguard(nrep):
+    """Implementation guard: item (d)'s 72 configurations with w = 0.78 on P1N, settings iid_fb0.03 and fold10_lab05_fb0.03."""
+    import itertools
+    t0 = time.time()
+    nodes, w, G = gt.pinnkan_graph(W_ALT)
+    rows = []
+    for tag, f, l in (("iid_fb0.03", 0.0, 0.0), ("fold10_lab05_fb0.03", 0.10, 0.05)):
+        model = build_model(0.75, 0.95, 0.95, 0.93, 0.6, 0.0)
+        shape = SHAPES["isu_right"]
+        for cfg in itertools.product(LEVELS_CFG["L1"], LEVELS_CFG["L2"], LEVELS_CFG["D"], LEVELS_CFG["K1"], LEVELS_CFG["K2"]):
+            c1, c2, cd, ck1, ck2 = cfg
+            rng = rng_for("gguard|%s|%s" % (tag, "|".join(cfg)))
+            med = meds(model, shape, LEVELS_CFG["L1"][c1], LEVELS_CFG["L2"][c2], LEVELS_CFG["D"][cd], LEVELS_CFG["K1"][ck1], LEVELS_CFG["K2"][ck2])
+            true_null = np.array([c1 == "null", c1 in ("null", "mid"), c2 == "null", cd == "null", ck1 == "null", ck2 == "null", ck2 in ("null", "mid")])
+            anyfalse, done = 0, 0
+            while done < nrep:
+                b = min(5000, nrep - done)
+                L = to_L(gen_J(b, model, f, l, rng), model, shape, med)
+                rj = gt.graph_test(pvals_from_counts(node_counts(L), BB03), w, G, A_FAM).rejected
+                anyfalse += int(rj[:, true_null].any(1).sum()) if true_null.any() else 0
+                done += b
+            rows.append(dict(setting=tag, w_P1N=W_ALT, cfg="|".join(cfg), n_true_null=int(true_null.sum()), fwer=anyfalse / nrep, nrep=nrep))
+        print("gguard %s %.0fs" % (tag, time.time() - t0), flush=True)
+    pd.DataFrame(rows).to_csv(os.path.join(OUT, "g_guard.csv"), index=False)
+
+
+def run_gdecide():
+    """Fixed decision rule of D018 section 3 (no discretion): adopt w = 0.78 iff the guard passes AND, in all four settings,
+    dP + dK > 0 and dK >= -0.10, with dP = P(P chain through P3) and dK = P(K1), differences 0.78 - 0.5."""
+    G = pd.read_csv(os.path.join(OUT, "g_weights.csv"))
+    D = G[G.w_P1N == "delta (0.78 - 0.5)"].copy()
+    D["dP"], D["dK"] = D["dP3"].astype(float), D["dK1"].astype(float)
+    D["ok"] = ((D.dP + D.dK) > 0) & (D.dK >= -0.10)
+    gg = pd.read_csv(os.path.join(OUT, "g_guard.csv"))
+    se = float(np.sqrt(0.025 * 0.975 / gg.nrep.iloc[0]))
+    guard = {"max_fwer": float(gg.fwer.max()), "bound": 0.025 + 2 * se, "mc_se": se, "passed": bool(gg.fwer.max() <= 0.025 + 2 * se),
+             "per_setting_max": {k: float(v) for k, v in gg.groupby("setting").fwer.max().items()}}
+    chosen = W_ALT if (guard["passed"] and bool(D.ok.all())) else 0.5
+    out = dict(chosen_w_P1N=chosen, guard=guard, settings=[dict(setting=r.setting, dP=r.dP, dK=r.dK, dP_plus_dK=r.dP + r.dK, ok=bool(r.ok)) for _, r in D.iterrows()],
+               rule="adopt 0.78 iff guard passes and in all four settings dP + dK > 0 and dK >= -0.10")
+    json.dump(out, open(os.path.join(OUT, "g_decision.json"), "w"), indent=1)
+    print(json.dumps(out, indent=1))
+    print("CHOSEN w (weight on P1N) = %.2f, weight on K1 = %.2f" % (chosen, 1 - chosen))
+
+
 if __name__ == "__main__":
     cmd = sys.argv[1]
     nrep = int(sys.argv[2]) if len(sys.argv) > 2 else None
@@ -796,6 +890,12 @@ if __name__ == "__main__":
         run_c(nrep or 40000)
     elif cmd == "d":
         run_d(nrep or 50000)
+    elif cmd == "gsim":
+        run_gsim(nrep or 20000)
+    elif cmd == "gguard":
+        run_gguard(nrep or 50000)
+    elif cmd == "gdecide":
+        run_gdecide()
     elif cmd == "b5":
         run_b5(nrep or 20000)
     elif cmd == "fbest":

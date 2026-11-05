@@ -1,0 +1,44 @@
+{
+ "chosen_w_P1N": 0.78,
+ "guard": {
+  "max_fwer": 0.01886,
+  "bound": 0.026396424004376896,
+  "mc_se": 0.000698212002188447,
+  "passed": true,
+  "per_setting_max": {
+   "fold10_lab05_fb0.03": 0.01886,
+   "iid_fb0.03": 0.00148
+  }
+ },
+ "settings": [
+  {
+   "setting": "g|f0.00|l0.00|rhoK0.90",
+   "dP": 0.16485,
+   "dK": -0.03635,
+   "dP_plus_dK": 0.1285,
+   "ok": true
+  },
+  {
+   "setting": "g|f0.00|l0.00|rhoK0.95",
+   "dP": 0.1599,
+   "dK": -0.0473,
+   "dP_plus_dK": 0.11259999999999998,
+   "ok": true
+  },
+  {
+   "setting": "g|f0.10|l0.05|rhoK0.90",
+   "dP": 0.12235,
+   "dK": -0.0377,
+   "dP_plus_dK": 0.08465,
+   "ok": true
+  },
+  {
+   "setting": "g|f0.10|l0.05|rhoK0.95",
+   "dP": 0.1181,
+   "dK": -0.03975,
+   "dP_plus_dK": 0.07835,
+   "ok": true
+  }
+ ],
+ "rule": "adopt 0.78 iff guard passes and in all four settings dP + dK > 0 and dK >= -0.10"
+}

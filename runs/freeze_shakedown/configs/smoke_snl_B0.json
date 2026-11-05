@@ -1,0 +1,3 @@
+{"run_id": "shk_smoke_snl_B0", "dataset": "snl", "test": "B", "fold": 0, "mode": "inner",
+ "arms": ["R1", "R2", "A10", "A11", "A12", "A2", "A9", "A5", "A1"], "n_trials": 2, "inner_k": 2, "steps_scale": 0.3,
+ "backbone": "self_limiting", "refit_timing": true}

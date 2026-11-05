@@ -372,3 +372,36 @@ temperature, so holding one condition out leaves too few training conditions to 
 needs the CALCE page text again once the site is back (the digest is a small-model summary, not the page).
 Judge section 1.3 (no CS2/CX2 within-condition row) is unaffected: its retired-theme argument concerns CS2_33-38 and the CX2
 cells, not types 5 and 6.
+
+### 9.5 Update after reading Saxena et al. (full text, 2026-11-05 afternoon)
+
+Reading depth: full text (`notes/papers/saxena2016_jps_calce_pl.md`). This section supersedes the "not confirmed" rows of 9.3 and
+the PL rows of 9.4; the earlier text is kept as written.
+
+| fact | confirmed value (paper location) |
+|---|---|
+| temperature | 25 +/- 2 C semi-controlled room (Section 2, p. 395). Cell temperature: within 6 C of ambient at C/2 and at 2C over 40-60 %; **more than 15 C above ambient at 2C over 20-80 % and 0-100 %** (p. 396). Not recorded in the files (no temperature variable in the PL17 data table) |
+| cell format | commercial graphite/LiCoO2 **pouch**, 1.5 Ah at C/5, 3.7 V nominal, 4.2 V and 2.75 V limits, manufacturer not named (p. 395); the paper also writes 2.7 V in the characterisation text |
+| conditions and cells | Table 1 (p. 396): five windows (0-100, 20-80, 40-60, 40-100, 0-60 %); C/2 for all five, 2C for 0-100, 20-80 and 40-60 only; **two cells in every cell of the matrix**; eight combinations, 16 cells. The CALCE page lists the same |
+| check-up cadence | a full CCCV-charge / CC-discharge cycle at C/2 between 2.75 and 4.2 V after every 50 or 100 partial cycles (p. 395). Capacity is measured at this fixed reference, not at the cycling condition |
+| window control | Coulomb counting against the latest check-up capacity (Eq. 1, p. 396): windows in Ah of current usable capacity, shrinking with fade; 20-80 % may stop short of 80 % when 4.2 V is reached first; 30 min rest after each charge and discharge step; charge always C/2, discharge C/2 (0.75 A) or 2C (3 A) |
+| cycle count and span | equivalent full cycles (cumulative discharge Ah divided by true capacity); up to about 800 EFC (about 1,000 Ah), 40-60 % only to about 450 EFC (about 600 Ah) |
+| anomalies | 0-60 % unexpectedly low fade and normalised values above 100 % (removed from the fit); sudden fade acceleration of 0-100 % after about 500 EFC; some rests longer than 30 min (equipment availability); 2C heating; the paper's model uses only C/2 data and the first 500 EFC |
+
+Consequences for the plan: (i) temperature is constant at the room level by design but not at the cell for four 2C cells, and it
+cannot be recovered from the files: flag the 20-80 % and 0-100 % 2C conditions (EXT-PL hull flags), do not use temperature as an
+input; (ii) stress coordinates SOC_mid and DSOC are nominal (Ah of current capacity); (iii) the check-up axis is in cycles with a
+50 or 100 block, which matches the operation-table block labels (50, 100; the 101-cycle blocks of the 0-100 % cells fit "100 plus a
+check cycle" but remain unverified); (iv) the paper supplies a named baseline (power law in EFC with A = 3.25 SOC_mean (1 + 3.25
+DSOC - 2.25 DSOC^2), b = 0.453) that fits the plan's "semi-empirical power-law cycle model"; (v) the paper gives no data licence
+or repository statement.
+
+The CALCE page came back during this session and was re-read for CS2/CX2: Type 5 "cycled between 3.77V and 2.7V with a 0.55A
+discharge current" (CS2-5, 6) and Type 6 "cycled between 4.2V and 3.77V with a 0.55A discharge current" (CS2-24, 25) are
+confirmed; CS2 types 1 and 2 (0.5C: CS2-8, 21, 33, 34; 1C: CS2-35 to 38) and the CX2 types (0.5C: eight cells; 3C: CX2-8) are
+confirmed; no test temperature is stated for CS2/CX2. The 1.7 message therefore needs the corrections of 9.4; the corrected
+wording with a source for each statement is `notes/data/professor_message_D022.md`.
+
+Download state at 14:35: the server answers again but slowly and resets often; partial sizes: `SOC_0-100_HalfC` 42.1 MB of 67.5,
+`SOC_40-60_HalfC` 4.1 MB of 72.8, `SOC_0-100_2C` 1.1 MB of 57.6, `SOC_40-60_2C` 0.6 MB of 57.7, `SOC_20-80_2C` 73.5 MB of 74.6;
+none complete. The queue (`tools/fetch_calce_queue.sh`) keeps retrying.

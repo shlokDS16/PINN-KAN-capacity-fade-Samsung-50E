@@ -1,0 +1,308 @@
+<title>PINN–KAN Fade Forecasting Proposal</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,650&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: single reading column (about 68ch) with full-width tables; a thin cobalt rule marks section starts. */
+:root {
+  --bg: #fbfcfd;
+  --surface: #f0f3f7;
+  --fg: #1b2330;
+  --muted: #566173;
+  --line: #d5dce6;
+  --accent: #2a4bb0;       /* cobalt */
+  --accent-soft: #e4eafa;
+  --pend: #8a5a00;         /* pending / risk */
+  --pend-soft: #fbf0d9;
+  --ok: #1f6b45;
+  --ok-soft: #e1f2e8;
+  --f-display: "Literata", "Georgia", "Times New Roman", serif;
+  --f-body: "Source Sans 3", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "JetBrains Mono", "Consolas", "Menlo", monospace;
+  --step-0: 1.0625rem;
+  --step-1: 1.25rem;
+  --step-2: 1.6rem;
+  --step-3: 2.2rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11151c; --surface: #19202a; --fg: #e3e8ef; --muted: #9aa6b8; --line: #2c3644;
+    --accent: #8ea7ff; --accent-soft: #1d2848; --pend: #e9b75c; --pend-soft: #33270f;
+    --ok: #7fd3a4; --ok-soft: #13301f; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11151c; --surface: #19202a; --fg: #e3e8ef; --muted: #9aa6b8; --line: #2c3644;
+  --accent: #8ea7ff; --accent-soft: #1d2848; --pend: #e9b75c; --pend-soft: #33270f;
+  --ok: #7fd3a4; --ok-soft: #13301f; color-scheme: dark;
+}
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--f-body); font-size: var(--step-0); line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 40px 72px;
+}
+main { max-width: 68ch; margin: 0 auto; display: flex; flex-direction: column; gap: 2.4rem; }
+.wide { max-width: 100%; }
+header { display: flex; flex-direction: column; gap: 0.9rem; padding-bottom: 1.6rem; border-bottom: 1px solid var(--line); }
+.eyebrow { font-family: var(--f-mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+h1 { font-family: var(--f-display); font-weight: 650; font-size: var(--step-3); line-height: 1.18; margin: 0; text-wrap: balance; }
+h2 { font-family: var(--f-display); font-weight: 650; font-size: var(--step-2); line-height: 1.25; margin: 0; text-wrap: balance;
+     padding-top: 0.9rem; border-top: 2px solid var(--accent); width: 100%; }
+h3 { font-family: var(--f-display); font-weight: 500; font-size: var(--step-1); margin: 0; text-wrap: balance; }
+section { display: flex; flex-direction: column; gap: 0.9rem; }
+p { margin: 0; }
+ul, ol { margin: 0; padding-left: 1.3rem; display: flex; flex-direction: column; gap: 0.35rem; }
+.meta { display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 1.2rem; font-size: 0.95rem; color: var(--muted); }
+.meta dt { font-family: var(--f-mono); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; padding-top: 0.18rem; }
+.meta dd { margin: 0; color: var(--fg); }
+.summary { background: var(--surface); border-left: 3px solid var(--accent); padding: 1.1rem 1.25rem; display: flex; flex-direction: column; gap: 0.7rem; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.93rem; min-width: 34rem; }
+th, td { text-align: left; vertical-align: top; padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--line); }
+th { font-weight: 600; background: var(--surface); }
+tr:last-child td { border-bottom: 0; }
+td.num, th.num { font-variant-numeric: tabular-nums; font-family: var(--f-mono); font-size: 0.86rem; white-space: nowrap; }
+caption { caption-side: bottom; text-align: left; font-size: 0.85rem; color: var(--muted); padding: 0.55rem 0.75rem; }
+.grid-cells { display: grid; grid-template-columns: auto repeat(3, minmax(0, 1fr)); gap: 4px; font-family: var(--f-mono); font-size: 0.85rem; max-width: 30rem; }
+.grid-cells div { padding: 0.55rem 0.5rem; text-align: center; background: var(--surface); border-radius: 4px; }
+.grid-cells .hd { background: transparent; color: var(--muted); }
+.grid-cells .g1 { background: var(--accent); color: var(--bg); font-weight: 600; }
+.grid-cells .g4 { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.chip { display: inline-block; font-family: var(--f-mono); font-size: 0.74rem; letter-spacing: 0.04em; padding: 0.1rem 0.45rem; border-radius: 3px; white-space: nowrap; }
+.chip.ok { background: var(--ok-soft); color: var(--ok); }
+.chip.pend { background: var(--pend-soft); color: var(--pend); }
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.2rem; }
+.two > div { min-width: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.box { border: 1px solid var(--line); border-radius: 6px; padding: 1rem 1.1rem; }
+.box.never { border-color: var(--pend); }
+.label { font-family: var(--f-mono); font-size: 0.76rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
+.refs { font-size: 0.9rem; gap: 0.45rem; }
+.refs li { padding-left: 0.2rem; }
+.mono { font-family: var(--f-mono); font-size: 0.88em; }
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sign { color: var(--muted); font-size: 0.95rem; }
+@media (max-width: 640px) {
+  .two { grid-template-columns: 1fr; }
+  :root { --step-3: 1.75rem; --step-2: 1.35rem; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<main>
+  <header>
+    <span class="eyebrow">Research proposal · Journal of Energy Storage (Elsevier)</span>
+    <h1>Physics-informed neural networks with Kolmogorov–Arnold stress functions for forecasting lithium-ion capacity fade from few cycling tests</h1>
+    <dl class="meta">
+      <dt>From</dt><dd>Shlok Kumar Goenka, VIT Vellore</dd>
+      <dt>Date</dt><dd>5 November 2026</dd>
+      <dt>Status</dt><dd>Design fixed and approved by the author; analysis plan in final review before it is frozen. No test-set result exists yet.</dd>
+      <dt>Article type</dt><dd>Full-length research article (about 6,000 words, 8–10 figures and tables)</dd>
+    </dl>
+  </header>
+
+  <section>
+    <div class="summary">
+      <span class="label">Summary</span>
+      <p>Battery ageing campaigns are slow and expensive: every additional cycling condition costs months of test-channel time. I propose to measure how much testing a physics-informed neural network (PINN) can save. The model joins a calendar-ageing term (Arrhenius in temperature times a Kolmogorov–Arnold network, KAN, in state of charge) and a cycling term (a KAN over temperature, state-of-charge window, depth of discharge and C-rates, scaled by charge throughput).</p>
+      <p>On the public Samsung INR21700-50E campaign (279 cells), I will train with only 8, 16 or 32 cycling conditions and with 0, 2 or all early check-ups of each held-out cell. I then forecast the capacity fade of 40 cycling conditions the model never saw, and compare against the best tuned data-driven learner.</p>
+      <p>Two further questions isolate each component. Does the gain come from the physics law? I answer this by removing the law from the same network. Does the KAN give a written-out stress law that predicts unseen conditions as well as the full network, and better than an equally simplified additive model? The analysis plan, including the wording of every possible conclusion, is fixed before any test result is seen.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>1. Problem and gap</h2>
+    <p>PINN and KAN models for battery state of health are now common in the Journal of Energy Storage, including physics-guided and physics-informed KAN estimators (PIKAN, PGKAN). These papers estimate the health of cells whose own data the model has already seen. They do not show whether the physics saves <em>ageing tests</em>, and they cannot say which component produced the gain. They also do not check that an extracted symbolic law holds on conditions outside the training set.</p>
+    <p>The closest work on test economy is different in kind:</p>
+    <ul>
+      <li>Lucu et al. measured the minimum number of laboratory tests a Gaussian-process ageing model needs, with no physics law and no ablation.</li>
+      <li>Stroebl et al. applied optimal experimental design to this same Samsung dataset. They calibrated a semi-empirical model and found that its cycle-ageing part was inadequate.</li>
+      <li>Zhang et al. trained an equivalent-circuit PINN on this dataset to recover circuit parameters. That work does not forecast capacity fade.</li>
+    </ul>
+    <div class="tablewrap wide">
+      <table>
+        <thead><tr><th>Work</th><th>Data efficiency measured</th><th>Physics law</th><th>Component attribution</th><th>Law tested on unseen conditions</th></tr></thead>
+        <tbody>
+          <tr><td>Lucu et al., JES 2020 (A, B)</td><td>Yes (number of tests)</td><td>No (Gaussian process)</td><td>No</td><td>No</td></tr>
+          <tr><td>Stroebl et al., JES 2026</td><td>Yes (parameter uncertainty)</td><td>Semi-empirical</td><td>No</td><td>No</td></tr>
+          <tr><td>Zhang et al., JES 2026</td><td>No</td><td>Equivalent circuit</td><td>No</td><td>No</td></tr>
+          <tr><td>PIKAN (Liu et al., JES 2026); PGKAN (Zhao et al., JES 2026)</td><td>No</td><td>Yes</td><td>No</td><td>No</td></tr>
+          <tr><td><strong>This proposal</strong></td><td><strong>Yes (conditions and check-ups)</strong></td><td><strong>Calendar + cycle law</strong></td><td><strong>Yes (ablation ladder)</strong></td><td><strong>Yes (KAN law vs additive law)</strong></td></tr>
+        </tbody>
+        <caption>Positioning against the closest verified prior work; details in the references. Lucu A/B, Jia et al. and Hallinger et al. are being read in full before any novelty sentence is written.</caption>
+      </table>
+    </div>
+    <p>Each element alone has precedent. The contribution is their combination on a designed storage-and-cycling campaign, and the paper will say exactly that.</p>
+  </section>
+
+  <section>
+    <h2>2. Research questions</h2>
+    <ol>
+      <li><strong>Data efficiency (PINN).</strong> With 8 cycling conditions and 2 check-ups per held-out cell, is the PINN's typical held-out-condition error lower than that of the best tuned data-driven learner (the better of a Gaussian process with automatic relevance determination, LightGBM and the same network without physics)? How does the gap change at 16 and 32 conditions?</li>
+      <li><strong>Attribution.</strong> How much of any advantage comes from the physics law? I test this against the same network without the law, and against the same law with an additive (GAM) stress map instead of the KAN.</li>
+      <li><strong>Readable law (KAN).</strong> Does a closed-form stress law extracted from the KAN predict held-out conditions no more than 10 % worse than the full network? Is it more accurate than an equally simplified additive law? Both are built with the same symbolic library, which is fixed in advance.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>3. Data</h2>
+    <ul>
+      <li><strong>Primary: Samsung INR21700-50E</strong> (Stroebl et al., <em>Scientific Data</em> 2024, CC BY 4.0). 279 cells in two stages from three laboratories. The calendar arm has 132 cells in 19 conditions and the cycling arm 147 cells in 40 conditions. Capacity comes from periodic check-ups. The full release (10.3 GB) is being downloaded with checksum verification.</li>
+      <li><strong>Supporting:</strong> ISU-ILCC (251 cells, 63 cycling conditions) for a training-side pilot, and Sandia (61 cells) as a structural check.</li>
+      <li><strong>Why not XJTU, TJU, MIT or HUST:</strong> these sets vary a few cycling protocols and have no storage arm, so they cannot separate calendar from cycle ageing or support a test of how many conditions are needed. Samsung's designed grid of storage and cycling conditions can.</li>
+      <li><strong>Known limitation, stated in the paper:</strong> temperature is partly aliased with laboratory. No activation-energy or temperature-mechanism claim is made for the cycling term, and results are reported per laboratory.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>4. Method</h2>
+    <h3>Model</h3>
+    <p>The PINN has a solution network for capacity loss with a hard initial condition. It is trained on check-up data plus a physics residual that ties its time derivative to the ageing law. The law has two parts:</p>
+    <ul>
+      <li>a calendar term, Arrhenius(T) × KAN(SOC);</li>
+      <li>a cycling term, a KAN over (T, SOC window, DoD, C<sub>ch</sub>, C<sub>dch</sub>) times the throughput rate.</li>
+    </ul>
+    <p>A per-cell offset is inferred causally from that cell's early check-ups only. All tuning (the same number of Bayesian-optimisation trials for every tuned model) uses training conditions only.</p>
+    <h3>Experimental grid</h3>
+    <p>The 40 held-out cycling conditions (5 folds of 8) are identical in every cell of the grid; only the training side is thinned. Training subsets are nested and chosen from stress coordinates alone, never from capacity data, with every cycling temperature represented at m = 8.</p>
+    <div class="grid-cells" role="table" aria-label="Grid of training cycling conditions m by check-ups k">
+      <div class="hd" role="columnheader">m \ k</div><div class="hd" role="columnheader">k = 0</div><div class="hd" role="columnheader">k = 2</div><div class="hd" role="columnheader">k = full</div>
+      <div class="hd" role="rowheader">m = 8</div><div>(8, 0)</div><div class="g1">g1 (8, 2)</div><div>(8, full)</div>
+      <div class="hd" role="rowheader">m = 16</div><div>(16, 0)</div><div>(16, 2)</div><div>(16, full)</div>
+      <div class="hd" role="rowheader">m = 32</div><div>(32, 0)</div><div>(32, 2)</div><div class="g4">g4 (32, full)</div>
+    </div>
+    <p class="sign">g1 is the scarce headline cell; g4 is the full-data reference. The storage arm stays in training throughout, so the paper's claim is about few <em>cycling</em> tests.</p>
+    <h3>Models compared at every cell</h3>
+    <div class="tablewrap wide">
+      <table>
+        <thead><tr><th>Role</th><th>Model</th></tr></thead>
+        <tbody>
+          <tr><td>Paper's model</td><td>PINN with KAN stress functions</td></tr>
+          <tr><td>Same network, physics off</td><td>Solution network without the ageing law</td></tr>
+          <tr><td>Same law, additive stress map</td><td>Law with a GAM in place of the KAN</td></tr>
+          <tr><td>Residual check</td><td>Exact integration of the same law (no soft residual)</td></tr>
+          <tr><td>Data-driven bar</td><td>Best of Gaussian process (ARD), LightGBM and the physics-off network, each given the same physics-motivated features (1/T, log C-rates, SOC terms, time, throughput) and tuned with the same budget</td></tr>
+          <tr><td>Domain model</td><td>The dataset authors' semi-empirical model (as published, and with a per-cell factor)</td></tr>
+          <tr><td>Readable laws</td><td>Closed-form law extracted from the KAN, and the same extraction applied to the GAM</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>5. Evaluation and statistics</h2>
+    <ul>
+      <li><strong>Unit:</strong> the held-out cycling condition (n = 40). The estimand is the median, over conditions, of the log ratio of forecast errors between two models.</li>
+      <li><strong>Pre-registration:</strong> hypotheses, margins (2 % for superiority, 10 % for non-inferiority), the multiple-testing graph and every abstract sentence are written down and hashed before any test score exists. Code locks the test folds until that file is frozen.</li>
+      <li><strong>Correlation-aware test:</strong> simulation showed that a plain sign test becomes too lenient when conditions in the same fold or laboratory share errors. The confirmatory test therefore uses a fixed design effect: 31 of 40 conditions must favour the PINN at the headline cell, instead of 28. Laboratories are fixed strata with per-laboratory results.</li>
+      <li><strong>What this means for detectability (simulation, not a result):</strong> the PINN needs a true gain of about 21–25 % at g1 to have an 80 % chance of showing it. Smaller gains will be reported with their intervals, as inconclusive rather than negative.</li>
+      <li><strong>Safeguards:</strong>
+        <ul>
+          <li>a label-invariance negative control in every run;</li>
+          <li>sensitivity rows that can only lower a claim: per laboratory, laboratory indicators, all check-ups retained, and random training subsets;</li>
+          <li>mean and worst-condition errors reported beside the median.</li>
+        </ul>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>6. Pre-committed outcomes</h2>
+    <p>Every combination of results maps to one fixed title and abstract sentence, so no wording is chosen after the data are seen. "PINN" states come from question 1, "KAN" states from question 3.</p>
+    <div class="tablewrap wide">
+      <table>
+        <thead><tr><th>PINN \ KAN</th><th>KAN law better than additive law</th><th>Law readable, no clear edge</th><th>Additive law better</th></tr></thead>
+        <tbody>
+          <tr><td><strong>PINN better</strong></td><td>T1: PINNs with readable KAN stress laws forecast fade from few cycling tests</td><td>T2: PINNs with KAN stress functions forecast fade from few cycling tests</td><td>T3: PINNs forecast fade from few cycling tests</td></tr>
+          <tr><td><strong>No clear difference</strong></td><td>T4: readable KAN stress laws, with learning curves</td><td>T5: how many cycling tests and check-ups do forecasts need?</td><td>T6: learning curves on a designed ageing dataset</td></tr>
+          <tr><td><strong>Data-driven better</strong></td><td>T7: a physics prior does not help, but yields readable laws</td><td colspan="2">T8: when a physics prior does not help</td></tr>
+        </tbody>
+        <caption>Titles abbreviated; full wording in the approved outcome table. Modifiers apply if exact integration beats the soft residual, or if the dataset authors' model is better still.</caption>
+      </table>
+    </div>
+    <p><strong>Realistic expectation:</strong> T2 (the PINN wins and the KAN law is readable) is the best plausible case. T5 (an honest learning-curve paper) is about as likely. Both are publishable in JES. The second is weaker, but it still answers a question test engineers ask.</p>
+  </section>
+
+  <section>
+    <h2>7. Getting the strongest result honestly</h2>
+    <p>The goal is the best result the method can earn, not the best-looking result. Before the plan is frozen, every lever that can raise the PINN's real performance is tuned on training data only. Every comparator gets the same care, because a weak baseline would make any win worthless to reviewers.</p>
+    <div class="two">
+      <div class="box">
+        <span class="label">What we do before the freeze</span>
+        <ul>
+          <li>An independent machine-learning review of the PINN for scarce data: priors and regularisation, loss weighting, per-cell offsets, tuning budget, ensembling, and use of the storage cells. Each change is applied equally to comparators where it applies.</li>
+          <li>A training-side pilot on ISU to decide the top changes by a rule fixed in advance.</li>
+          <li>A simulation-backed choice of how the error budget is split between the PINN and KAN questions. The decision rule is fixed now, and the split can raise the chance of the full PINN result from 0.36 to about 0.5 (simulation).</li>
+          <li>All check-ups of every cell from the full dataset download.</li>
+        </ul>
+      </div>
+      <div class="box never">
+        <span class="label">What we never do</span>
+        <ul>
+          <li>Tune, select or stop on held-out conditions.</li>
+          <li>Change the metric, margins, headline cell or wording after seeing results.</li>
+          <li>Drop conditions, cells or laboratories that hurt the result.</li>
+          <li>Weaken a baseline, or give the PINN features or budget the baselines lack.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>8. Expected contribution</h2>
+    <ul>
+      <li>A measured answer to a practical question for battery test planning: how many cycling conditions and check-ups a physics prior saves, with learning curves.</li>
+      <li>An attribution of any gain to the physics law versus the KAN, by a matched ablation ladder.</li>
+      <li>A closed-form stress law checked on conditions it never saw, against an equally simple additive law.</li>
+      <li>A fully reproducible release: code, frozen plan with its hash, splits and per-condition predictions (Zenodo DOI).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>9. Status and timeline</h2>
+    <div class="tablewrap wide">
+      <table>
+        <thead><tr><th>Step</th><th>State</th><th class="num">Target</th></tr></thead>
+        <tbody>
+          <tr><td>Topic, method, outcome table (decisions D005–D017, D019)</td><td><span class="chip ok">done</span></td><td class="num">5 Nov</td></tr>
+          <tr><td>Correlation-aware test rule (D018)</td><td><span class="chip ok">done</span></td><td class="num">5 Nov</td></tr>
+          <tr><td>Analysis plan v4 (pre-registration)</td><td><span class="chip pend">final items open</span></td><td class="num">9–10 Nov</td></tr>
+          <tr><td>Code for the grid, extraction and statistics</td><td><span class="chip pend">in progress</span></td><td class="num">8–9 Nov</td></tr>
+          <tr><td>Full Samsung download; paper reading for novelty</td><td><span class="chip pend">in progress</span></td><td class="num">6–7 Nov</td></tr>
+          <tr><td>Training-side pilot and strengthening review</td><td><span class="chip pend">in progress</span></td><td class="num">7–9 Nov</td></tr>
+          <tr><td>Freeze, then confirmatory runs (CPU)</td><td><span class="chip pend">planned</span></td><td class="num">10–12 Nov</td></tr>
+          <tr><td>Manuscript on the JES template, highlights, graphical abstract</td><td><span class="chip pend">planned</span></td><td class="num">13–16 Nov</td></tr>
+        </tbody>
+        <caption>Target dates are plans, not commitments; the freeze waits until every pre-registration item is met.</caption>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>10. Your guidance, please</h2>
+    <ol>
+      <li>Is the data-efficiency framing (few cycling tests and early check-ups) the right headline for JES, or would you lead with the readable stress law?</li>
+      <li>Are you comfortable with a pre-registered design whose honest outcome may be the learning-curve paper (T5) rather than a PINN win?</li>
+      <li>Authorship, corresponding author and affiliation details for the submission.</li>
+    </ol>
+    <p class="sign">Shlok Kumar Goenka · shlok.goenka2023@vitstudent.ac.in</p>
+  </section>
+
+  <section>
+    <h2>References</h2>
+    <ol class="refs">
+      <li>Stroebl F, Petersohn R, Schricker B, Schaeufl F, Bohlen O, Palm H. A multi-stage lithium-ion battery aging dataset using various experimental design methodologies. <em>Scientific Data</em> 11, 1020 (2024). <a href="https://doi.org/10.1038/s41597-024-03859-z" target="_blank" rel="noopener">doi:10.1038/s41597-024-03859-z</a></li>
+      <li>Stroebl F, Schaeufl F, Bohlen O, Palm H. Model-based optimal experimental design for lithium-ion battery aging: insights from a comprehensive multi-stage study with real-world data. <em>J. Energy Storage</em> 142, 119552 (2026). <a href="https://doi.org/10.1016/j.est.2025.119552" target="_blank" rel="noopener">doi:10.1016/j.est.2025.119552</a></li>
+      <li>Zhang T, Yu H, Yu Y, et al. Physics-informed learning of health-aware equivalent circuit parameter evolution for lithium-ion batteries. <em>J. Energy Storage</em> 182, 125097 (2026). <a href="https://doi.org/10.1016/j.est.2026.125097" target="_blank" rel="noopener">doi:10.1016/j.est.2026.125097</a></li>
+      <li>Liu L, Huang J, Peng B, et al. Physics-informed and interpretable state of health estimation framework for lithium-ion batteries (PIKAN). <em>J. Energy Storage</em> 153, 120860 (2026). <a href="https://doi.org/10.1016/j.est.2026.120860" target="_blank" rel="noopener">doi:10.1016/j.est.2026.120860</a></li>
+      <li>Zhao H, Peng B, Liu L, et al. Interpretable physics-guided neural networks for state of health estimation of lithium-ion battery (PGKAN). <em>J. Energy Storage</em> 182, 124768 (2026). <a href="https://doi.org/10.1016/j.est.2026.124768" target="_blank" rel="noopener">doi:10.1016/j.est.2026.124768</a></li>
+      <li>Koenig BC, Deng S. Learning continuous state of charge dependent thermal decomposition kinetics for Li-ion cathodes using Kolmogorov–Arnold Chemical Reaction Neural Networks (KA-CRNNs). <em>J. Energy Storage</em> 158, 121853 (2026). <a href="https://doi.org/10.1016/j.est.2026.121853" target="_blank" rel="noopener">doi:10.1016/j.est.2026.121853</a></li>
+      <li>Lucu M, Martinez-Laserna E, Gandiaga I, et al. Data-driven nonparametric Li-ion battery ageing model aiming at learning from real operation data – Part A: Storage operation. <em>J. Energy Storage</em> 30, 101409 (2020). <a href="https://doi.org/10.1016/j.est.2020.101409" target="_blank" rel="noopener">doi:10.1016/j.est.2020.101409</a></li>
+      <li>Lucu M, Martinez-Laserna E, Gandiaga I, et al. Data-driven nonparametric Li-ion battery ageing model aiming at learning from real operation data – Part B: Cycling operation. <em>J. Energy Storage</em> 30, 101410 (2020). <a href="https://doi.org/10.1016/j.est.2020.101410" target="_blank" rel="noopener">doi:10.1016/j.est.2020.101410</a></li>
+      <li>Jia X, Zhang C, Li Y, et al. Knee-point-conscious battery aging trajectory prediction based on physics-guided machine learning. <em>IEEE Transactions on Transportation Electrification</em> 10, 1056–1069 (2024). <a href="https://doi.org/10.1109/tte.2023.3266386" target="_blank" rel="noopener">doi:10.1109/tte.2023.3266386</a></li>
+      <li>Gasper P, Collath N, Hesse HC, et al. Machine-learning assisted identification of accurate battery lifetime models with uncertainty. <em>J. Electrochem. Soc.</em> 169, 080518 (2022). <a href="https://doi.org/10.1149/1945-7111/ac86a8" target="_blank" rel="noopener">doi:10.1149/1945-7111/ac86a8</a></li>
+    </ol>
+  </section>
+</main>

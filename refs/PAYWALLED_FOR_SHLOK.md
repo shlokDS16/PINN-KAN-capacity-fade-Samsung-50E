@@ -1,5 +1,12 @@
 # Papers to save by hand through the VIT e-gateway (2026-11-04)
 
+## URGENT (2026-11-05 afternoon): needed for the CALCE section (D022)
+- **Saxena et al., J. Power Sources 2016** (CALCE PL pouch design paper): https://doi.org/10.1016/j.jpowsour.2016.07.057
+  (ScienceDirect PII S0378775316309247). Save as `refs/pdf/saxena2016_jps_calce_pl.pdf`. Needed for: test temperature,
+  check-up cadence, SOC-window control. Without it the CALCE design facts stay unconfirmed and the professor message waits.
+- Already captured as full text (refs/fulltext/): Zhang JES 182, Stroebl JES 142, PIKAN, PGKAN, KA-CRNN, Chen 2025, Fan 2025,
+  Ren 2024; refs 1, 3-7 captured in Chrome, export pending. Li 2025 Applied Energy is outside VIT's subscription.
+
 Save each as `refs/pdf/<n>_<firstauthor><year>.pdf` (n = number in REFERENCES_FROM_SHLOK.md). Already in refs/pdf: 11 (arXiv preprint only), 23, 29, 33.
 Open-access items are listed too: the publishers block scripted downloads, a browser click works.
 

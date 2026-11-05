@@ -34,6 +34,10 @@ class SignRuleNotSetError(RuntimeError):
     """the confirmatory sign-test rule (plain exact or Beta-binomial with rho_s0) is not set in the config: the run refuses to score (PREREG_v4 9.3, D018)"""
 
 
+class ChainKMissingError(RuntimeError):
+    """the K-chain arms (A15, G15, A1 at g4) are missing but the config does not say that chain K is struck: P would silently be tested at the full level (review I3)"""
+
+
 class ItemFError(RuntimeError):
     """the item (f) dependence file is missing, altered, or was written after an outer score (D018 2.3 (ii)): the statistics step is blocked"""
 
@@ -279,7 +283,10 @@ def run_graph(nodes, w, alpha, k_struck=False):
 
 def primary_analysis(store, rule, cfg):
     nodes, Ls = primary_nodes(store, rule)
-    k_struck = bool(cfg["k_chain_struck"]) or "K1" not in nodes
+    k_struck = bool(cfg["k_chain_struck"])
+    if not k_struck and ("K1" not in nodes or "K2N" not in nodes):
+        raise ChainKMissingError("K1 / K2 cannot be computed (A15, G15 or A1 at g4 missing) and k_chain_struck is not set: chain K is struck only by an explicit config value (D016 section 8), "
+                                 "never silently, because P1 would then be tested at 0.025 instead of 0.0125")
     res, names = run_graph(nodes, cfg["graph_w"], cfg["alpha"], k_struck)
     rej = {nm: bool(res.rejected[i]) for i, nm in enumerate(names)}
     lvl = {nm: (float(res.level_at_rejection[i]) if res.rejected[i] else float(res.final_level[i])) for i, nm in enumerate(names)}
@@ -304,7 +311,7 @@ def primary_analysis(store, rule, cfg):
     if "K2N" in nodes:
         tiers["K2"] = "reverse S" if rev.get("K2rev") else ("S" if rej["K2S"] else ("N" if rej["K2N"] else "none"))
     return {"rule": rule.describe(), "graph_w": (1.0 if k_struck else cfg["graph_w"]), "k_chain_struck": k_struck, "alpha": a,
-            "initial_levels": {nm: float(a * (wv)) for nm, wv in zip(names, (gt.pinnkan_graph(cfg["graph_w"])[1]))},
+            "initial_levels": {nm: float(a * wv) for nm, wv in zip(names, (np.where(np.array(names) == "P1N", 1.0, 0.0) if k_struck else gt.pinnkan_graph(cfg["graph_w"])[1]))},
             "nodes": nodes, "rejected": rej, "tiers": tiers, "rejection_order": [names[i] for i in res.order]}, Ls
 
 

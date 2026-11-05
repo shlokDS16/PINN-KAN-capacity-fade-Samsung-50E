@@ -46,3 +46,18 @@ def test_I2_most_is_recomputed_under_the_downgrade_rows():
     store = make_store(P1g1=np.log(1.3), A9g1=np.array([np.log(1.2)] * 32 + [np.log(1.01)] * 8))
     store.lab = labs
     assert R.lab_stratified_tiers(v4.run_v4(store), store, B=500)[0]["most"] is not None
+
+
+# ------------------------------------------------------------------------------------------------ I3
+def test_I3_missing_k_arms_raise_unless_chain_k_is_struck_by_config():
+    store = make_store(k_chain=False)
+    with pytest.raises(v4.ChainKMissingError):
+        v4.run_v4(store)
+    out = v4.run_v4(store, {"k_chain_struck": True})["primary"]
+    assert out["k_chain_struck"] and out["initial_levels"]["P1N"] == pytest.approx(0.025) and out["initial_levels"]["K1"] == 0.0
+    ok = v4.run_v4(make_store())["primary"]
+    assert not ok["k_chain_struck"] and ok["initial_levels"]["P1N"] == pytest.approx(0.0125) and ok["initial_levels"]["K1"] == pytest.approx(0.0125)
+    partial = make_store()
+    del partial.tables[(32, "full")]["G15"]
+    with pytest.raises(v4.ChainKMissingError):
+        v4.run_v4(partial)

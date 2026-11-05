@@ -145,7 +145,7 @@ def test_K_equals_with_K1_pass_and_K1_fail_clauses():
 
 
 def test_chain_K_struck_puts_P_at_the_full_level():
-    pr = v4.run_v4(make_store(k_chain=False))["primary"]
+    pr = v4.run_v4(make_store(k_chain=False), {"k_chain_struck": True})["primary"]
     assert pr["k_chain_struck"] and pr["graph_w"] == 1.0
     assert pr["nodes"]["P1N"]["level"] == pytest.approx(0.025) and pr["nodes"]["P1N"]["crit_positives"] == 30
     assert "K1" not in pr["tiers"]
@@ -443,7 +443,7 @@ def test_store_from_runs_resolves_dstar_and_ag_per_fold_and_run_stats_v4_end_to_
         for f in os.listdir(d):
             if f.startswith("condition_scores"):
                 os.utime(os.path.join(d, f), (time.time() + 5, time.time() + 5))
-    out = ss.run_stats_v4(os.path.join(tmp, "analysis"), dirs, item_f_dir=fdir)
+    out = ss.run_stats_v4(os.path.join(tmp, "analysis"), dirs, {"k_chain_struck": True}, item_f_dir=fdir)
     assert os.path.isfile(os.path.join(tmp, "analysis", "contrasts_v4_B.json"))
     assert out["primary"]["nodes"]["P1S"]["positives"] == 40 and out["outcome"]["P"] == "P+" and out["item_f"] == {"rho_fold": 0.0}
     assert out["primary"]["k_chain_struck"]                                      # no A15 / G15 in these fake runs: chain K absent, P at the full level

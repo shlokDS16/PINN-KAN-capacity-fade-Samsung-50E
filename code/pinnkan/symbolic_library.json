@@ -267,6 +267,6 @@
   "version": "symbolic-v1"
  },
  "library_sha256": "2bb5532ec941ae62542b894a671b7c56eb3d643a750386328047c4f50934abc4",
- "max_coeffs_per_edge": null,
+ "max_coeffs_per_edge": 2,
  "note": "max_coeffs_per_edge is set by the method-architect before the freeze (PREREG_v4 7.3 item 1, [ARCH: cap]); None = extraction refuses to run"
 }

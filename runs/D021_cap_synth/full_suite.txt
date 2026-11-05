@@ -1,0 +1,128 @@
+........................................................................ [ 15%]
+........................................................................ [ 31%]
+........................................................................ [ 46%]
+........................................................................ [ 62%]
+........................................................................ [ 77%]
+........................................................................ [ 93%]
+................................                                         [100%]
+============================== warnings summary ===============================
+code/tests/test_pk_models.py::test_stress_maps_shapes_params_and_edges
+  C:\Users\Shlok\Downloads\PINN KAN battery paper\code\tests\test_pk_models.py:59: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+  Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+    assert float(m.spline_l2()) >= 0.0
+
+code/tests/test_pk_models.py::test_hard_ode_recovers_log_rate_surface_on_g0
+  C:\Users\Shlok\Downloads\PINN KAN battery paper\code\tests\test_pk_models.py:212: DeprecationWarning: __array_wrap__ must accept context and return_scalar arguments (positionally) in the future. (Deprecated NumPy 2.0)
+    assert rm < 0.35 * pers and np.isfinite(delta).all()
+
+code/tests/test_pk_models.py: 1 warning
+code/tests/test_pk_negcontrol.py: 2 warnings
+code/tests/test_pk_review_fixes.py: 2 warnings
+code/tests/test_pk_v2_d020.py: 3 warnings
+code/tests/test_pk_v2_dstar.py: 3 warnings
+code/tests/test_pk_v2_windows.py: 4 warnings
+  C:\Users\Shlok\AppData\Roaming\Python\Python314\site-packages\sklearn\gaussian_process\kernels.py:450: ConvergenceWarning: The optimal value found for dimension 2 of parameter k1__k2__length_scale is close to the specified upper bound 1000.0. Increasing the bound and calling fit again may find a better value.
+    warnings.warn(
+
+code/tests/test_pk_models.py::test_data_only_learners_a11_a12_run
+code/tests/test_pk_negcontrol.py::test_clean_arms_pass_nc1_bit_identically[A11]
+code/tests/test_pk_negcontrol.py::test_no_arm_depends_on_the_extent_of_its_forecast_set[A11]
+code/tests/test_pk_review_fixes.py::test_m2_forecast_does_not_depend_on_where_the_query_list_ends[A11]
+code/tests/test_pk_review_fixes.py::test_m6_training_set_asymmetry_is_recorded
+code/tests/test_pk_v2_dstar.py::test_run_writes_comparators_from_inner_scores_and_refuses_a5_below_m32
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+  C:\Users\Shlok\AppData\Roaming\Python\Python314\site-packages\sklearn\gaussian_process\kernels.py:450: ConvergenceWarning: The optimal value found for dimension 5 of parameter k1__k2__length_scale is close to the specified upper bound 1000.0. Increasing the bound and calling fit again may find a better value.
+    warnings.warn(
+
+code/tests/test_pk_models.py::test_data_only_learners_a11_a12_run
+code/tests/test_pk_review_fixes.py::test_m2_forecast_does_not_depend_on_where_the_query_list_ends[A11]
+code/tests/test_pk_review_fixes.py::test_m6_training_set_asymmetry_is_recorded
+code/tests/test_pk_v2_dstar.py::test_pinn_feature_learners_are_causal_and_work_at_k0_and_k2[0-A11-kw0]
+code/tests/test_pk_v2_dstar.py::test_run_writes_comparators_from_inner_scores_and_refuses_a5_below_m32
+code/tests/test_pk_v2_windows.py::test_k0_predictions_do_not_depend_on_any_post_reference_label[A11]
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+  C:\Users\Shlok\AppData\Roaming\Python\Python314\site-packages\sklearn\gaussian_process\kernels.py:450: ConvergenceWarning: The optimal value found for dimension 10 of parameter k1__k2__length_scale is close to the specified upper bound 1000.0. Increasing the bound and calling fit again may find a better value.
+    warnings.warn(
+
+code/tests/test_pk_models.py::test_data_only_learners_a11_a12_run
+code/tests/test_pk_negcontrol.py::test_clean_arms_pass_nc1_bit_identically[A11]
+code/tests/test_pk_negcontrol.py::test_no_arm_depends_on_the_extent_of_its_forecast_set[A11]
+code/tests/test_pk_review_fixes.py::test_m2_forecast_does_not_depend_on_where_the_query_list_ends[A11]
+code/tests/test_pk_review_fixes.py::test_m6_training_set_asymmetry_is_recorded
+code/tests/test_pk_v2_dstar.py::test_run_writes_comparators_from_inner_scores_and_refuses_a5_below_m32
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+  C:\Users\Shlok\AppData\Roaming\Python\Python314\site-packages\sklearn\gaussian_process\kernels.py:450: ConvergenceWarning: The optimal value found for dimension 12 of parameter k1__k2__length_scale is close to the specified upper bound 1000.0. Increasing the bound and calling fit again may find a better value.
+    warnings.warn(
+
+code/tests/test_pk_negcontrol.py::test_clean_arms_pass_nc1_bit_identically[A11]
+code/tests/test_pk_negcontrol.py::test_no_arm_depends_on_the_extent_of_its_forecast_set[A11]
+code/tests/test_pk_v2_dstar.py::test_pinn_feature_learners_are_causal_and_work_at_k0_and_k2[0-A11-kw0]
+code/tests/test_pk_v2_dstar.py::test_run_writes_comparators_from_inner_scores_and_refuses_a5_below_m32
+code/tests/test_pk_v2_dstar.py::test_run_writes_comparators_from_inner_scores_and_refuses_a5_below_m32
+code/tests/test_pk_v2_windows.py::test_k0_predictions_do_not_depend_on_any_post_reference_label[A11]
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+  C:\Users\Shlok\AppData\Roaming\Python\Python314\site-packages\sklearn\gaussian_process\kernels.py:450: ConvergenceWarning: The optimal value found for dimension 1 of parameter k1__k2__length_scale is close to the specified upper bound 1000.0. Increasing the bound and calling fit again may find a better value.
+    warnings.warn(
+
+code/tests/test_pk_negcontrol.py::test_clean_arms_pass_nc1_bit_identically[A11]
+code/tests/test_pk_negcontrol.py::test_no_arm_depends_on_the_extent_of_its_forecast_set[A11]
+code/tests/test_pk_v2_rows.py::test_dstar_learners_get_the_indicator_columns_and_stay_causal
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+  C:\Users\Shlok\AppData\Roaming\Python\Python314\site-packages\sklearn\gaussian_process\kernels.py:450: ConvergenceWarning: The optimal value found for dimension 3 of parameter k1__k2__length_scale is close to the specified upper bound 1000.0. Increasing the bound and calling fit again may find a better value.
+    warnings.warn(
+
+code/tests/test_pk_review_fixes.py::test_m6_training_set_asymmetry_is_recorded
+code/tests/test_pk_v2_dstar.py::test_run_writes_comparators_from_inner_scores_and_refuses_a5_below_m32
+code/tests/test_pk_v2_rows.py::test_dstar_learners_get_the_indicator_columns_and_stay_causal
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+  C:\Users\Shlok\AppData\Roaming\Python\Python314\site-packages\sklearn\gaussian_process\kernels.py:450: ConvergenceWarning: The optimal value found for dimension 7 of parameter k1__k2__length_scale is close to the specified upper bound 1000.0. Increasing the bound and calling fit again may find a better value.
+    warnings.warn(
+
+code/tests/test_pk_v2_d020.py::test_a11_is_deterministic_and_a10_and_a12_are_seed_dependent
+code/tests/test_pk_v2_d020.py::test_a11_is_deterministic_and_a10_and_a12_are_seed_dependent
+code/tests/test_pk_v2_d020.py::test_a11_is_deterministic_and_a10_and_a12_are_seed_dependent
+code/tests/test_pk_v2_dstar.py::test_pinn_feature_learners_are_causal_and_work_at_k0_and_k2[0-A11-kw0]
+code/tests/test_pk_v2_windows.py::test_k0_predictions_do_not_depend_on_any_post_reference_label[A11]
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+  C:\Users\Shlok\AppData\Roaming\Python\Python314\site-packages\sklearn\gaussian_process\kernels.py:450: ConvergenceWarning: The optimal value found for dimension 8 of parameter k1__k2__length_scale is close to the specified upper bound 1000.0. Increasing the bound and calling fit again may find a better value.
+    warnings.warn(
+
+code/tests/test_pk_v2_d020.py::test_a11_is_deterministic_and_a10_and_a12_are_seed_dependent
+code/tests/test_pk_v2_d020.py::test_a11_is_deterministic_and_a10_and_a12_are_seed_dependent
+code/tests/test_pk_v2_d020.py::test_a11_is_deterministic_and_a10_and_a12_are_seed_dependent
+  C:\Users\Shlok\AppData\Roaming\Python\Python314\site-packages\sklearn\gaussian_process\kernels.py:450: ConvergenceWarning: The optimal value found for dimension 9 of parameter k1__k2__length_scale is close to the specified upper bound 1000.0. Increasing the bound and calling fit again may find a better value.
+    warnings.warn(
+
+code/tests/test_pk_v2_dstar.py::test_run_writes_comparators_from_inner_scores_and_refuses_a5_below_m32
+code/tests/test_pk_v2_rows.py::test_dstar_learners_get_the_indicator_columns_and_stay_causal
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+  C:\Users\Shlok\AppData\Roaming\Python\Python314\site-packages\sklearn\gaussian_process\kernels.py:450: ConvergenceWarning: The optimal value found for dimension 4 of parameter k1__k2__length_scale is close to the specified upper bound 1000.0. Increasing the bound and calling fit again may find a better value.
+    warnings.warn(
+
+code/tests/test_pk_v2_dstar.py::test_run_writes_comparators_from_inner_scores_and_refuses_a5_below_m32
+code/tests/test_pk_v2_rows.py::test_dstar_learners_get_the_indicator_columns_and_stay_causal
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+  C:\Users\Shlok\AppData\Roaming\Python\Python314\site-packages\sklearn\gaussian_process\kernels.py:450: ConvergenceWarning: The optimal value found for dimension 11 of parameter k1__k2__length_scale is close to the specified upper bound 1000.0. Increasing the bound and calling fit again may find a better value.
+    warnings.warn(
+
+code/tests/test_pk_v2_windows.py::test_k0_predictions_do_not_depend_on_any_post_reference_label[A11]
+code/tests/test_pk_v2_windows.py::test_grid_run_scores_every_k_cell_and_checks_invariance_at_each
+  C:\Users\Shlok\AppData\Roaming\Python\Python314\site-packages\sklearn\gaussian_process\kernels.py:450: ConvergenceWarning: The optimal value found for dimension 6 of parameter k1__k2__length_scale is close to the specified upper bound 1000.0. Increasing the bound and calling fit again may find a better value.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+464 passed, 84 warnings in 529.86s (0:08:49)

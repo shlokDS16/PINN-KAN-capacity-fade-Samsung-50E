@@ -26,15 +26,21 @@ SPEC = SPECS["synthetic"]
 
 
 # ------------------------------------------------------------------------------------------------ frozen library, hash, cap
-def test_library_file_matches_the_code_and_the_cap_is_unset():
+PINNED_CAP = 2          # D021 (debates/D021_cap/01_architect.md): the cap pinned in symbolic_library.json before the freeze
+
+
+def test_library_file_matches_the_code_and_the_cap_is_the_pinned_value():
     rec = json.load(open(S.LIB_FILE, encoding="utf8"))
     assert rec["library_sha256"] == S.library_hash() and rec["library"] == json.loads(json.dumps(S.library_description()))
-    assert rec["max_coeffs_per_edge"] is None and S.library_file_cap() is None
+    assert rec["max_coeffs_per_edge"] == PINNED_CAP and S.library_file_cap() == PINNED_CAP and S.resolve_cap(None) == PINNED_CAP
     assert set(rec["library"]["families"]) == {"zero", "linear", "quadratic", "power", "log", "exponential", "arrhenius", "hinge"}
     assert len(S.library_hash()) == 64
+    # D021: at the pinned cap the eligible families are exactly the two-coefficient ones (and zero); the other five stay in the hashed library but are never selected
+    assert {f for f, n in S.N_COEFS.items() if n <= PINNED_CAP} == {"zero", "linear", "log"}
 
 
-def test_extraction_refuses_to_run_while_the_cap_is_unset(tmp_path):
+def test_extraction_refuses_to_run_while_the_cap_is_unset(tmp_path, monkeypatch):
+    monkeypatch.setattr(S, "library_file_cap", lambda path=S.LIB_FILE: None)            # the situation before D021: neither a config value nor a file value
     with pytest.raises(S.CapNotSetError):
         S.resolve_cap(None)
     assert S.resolve_cap(3) == 3
@@ -42,6 +48,21 @@ def test_extraction_refuses_to_run_while_the_cap_is_unset(tmp_path):
     s = np.random.default_rng(0).uniform(-0.8, 0.8, (20, 5))
     with pytest.raises(S.CapNotSetError):
         S.extract_stack(kan, S.stress_geos(SPEC, s), s)
+
+
+def test_the_cap_is_a_three_way_switch_and_caps_above_the_largest_family_change_nothing():
+    """D021 reading of the code: N_COEFS tops out at 3, so cap 0/1 prune every edge, cap 2 leaves {zero, linear, log}, cap >= 3 is the whole library"""
+    geo = _geo("T")
+    x = np.linspace(geo.lo, geo.hi, S.G_GRID)
+    for fam, (kind, theta) in TRUTH.items():
+        g = _geo(kind)
+        xx = np.linspace(g.lo, g.hi, S.G_GRID)
+        y = S.eval_family(fam, g, theta, xx)
+        f3, f4, f9 = (S.choose_family(g, xx, y, c, 1e-6) for c in (3, 4, 9))
+        assert f3.family == f4.family == f9.family and np.array_equal(f3.theta, f4.theta) and np.array_equal(f3.theta, f9.theta) and set(f3.table) == set(f4.table) == set(f9.table)
+        assert S.choose_family(g, xx, y, 1, 1e-6).family == "zero" and S.choose_family(g, xx, y, 0, 1e-6).family == "zero"
+        assert S.choose_family(g, xx, y, 2, 1e-6).family in ("zero", "linear", "log")
+    assert S.choose_family(geo, x, S.eval_family("linear", geo, [0.5, 0.1], x), 1, 1e-6).n_coefs == 0
 
 
 def test_library_hash_changes_with_the_rule(monkeypatch):
@@ -94,6 +115,16 @@ def test_the_cap_removes_families_and_bic_prefers_fewer_coefficients_at_equal_fi
     lin = 0.5 * geo.u(x) + 0.1
     f = S.choose_family(geo, x, lin, 3, 1e-6)
     assert f.family == "linear" and f.table["quadratic"][1] < 1e-18               # quadratic fits equally well, linear wins on the penalty
+
+
+def test_extraction_without_an_explicit_cap_uses_the_pinned_cap_and_only_two_coefficient_families():
+    funcs = [lambda z: 0.8 * z, lambda z: 0.5 * z * z - 0.1 * z, lambda z: 0.3 * z, lambda z: -0.6 * z, lambda z: 0.0 * z]
+    a15, _ = _kan_pair(funcs)
+    s = _train_stress()
+    stack, rep = S.extract_stack(a15, S.stress_geos(SPEC, s), s)                 # no cap argument: the file value
+    assert rep["cap"] == PINNED_CAP
+    assert all(e["family"] in ("zero", "linear", "log") for L in rep["layers"] for row in L["edges"] for e in row)
+    assert all(e["n_coefs"] <= PINNED_CAP for L in rep["layers"] for row in L["edges"] for e in row)
 
 
 def test_torch_edge_equals_the_numpy_family():
@@ -240,8 +271,9 @@ def test_symbolic_arm_fits_refits_and_predicts(parent, arm_id):
     assert arm.model.train_data_mse <= arm.parent_train_data_mse * 3 + 1e-3             # the refit does not wreck the parent's fit
 
 
-def test_symbolic_arm_without_a_cap_raises(parent):
+def test_symbolic_arm_without_a_cap_raises(parent, monkeypatch):
     tr, te, b, m = parent
+    monkeypatch.setattr(S, "library_file_cap", lambda path=S.LIB_FILE: None)
     with pytest.raises(S.CapNotSetError):
         A.make_arm("A15", SPEC, A.default_hp("A15"), 0, {**CTX, "symbolic": {}}).fit(tr)
 

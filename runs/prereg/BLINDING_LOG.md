@@ -10,3 +10,5 @@ outer-test cells. Every exposure, intended or not, is recorded here and disclose
 | 2026-11-05 03:15 | lead | retention sequences of two cells while checking QC flags (5 check-ups each) | TP_z02_01_s2, TP_z02_02_s2 | to be looked up at the freeze | QC rule design (time-scaled drop allowance), no model decision |
 | 2026-11-05 ~04:00 | builder agent (grep) | ten rows of samsung_checkups.csv printed to its terminal; nothing copied | TP_z24_01_s1 | split search output: /B/folds/1/test_cells
 /A/folds/0/test_cells | none (agent's disclosure, RESULT.md 7.5) |
+
+- 2026-11-05 (D024 judge, gate-auditor agent): printed the qc_pass bit (True/False) of the 6 incident check-up rows while ruling on the stage scope of the incident drop (one False). No capacity or retention value was shown. Logged by the lead for transparency; the freeze judge decides whether it matters (judged immaterial by the D024 judge: a QC flag, not an outcome, and the rows are dropped or kept by the dataset paper's incident list, not by the flag).

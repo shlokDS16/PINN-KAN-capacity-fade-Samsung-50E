@@ -446,3 +446,26 @@ Row format:
 - **Evidence:** debates/D021_cap/01_architect.md, study_rule.md, runs/D021_cap_synth/.
 - **Proposer / opponent / judge:** method-architect / Codex turn 7 (D022) / D022 judge.
 - **Re-open if:** D022 re-open conditions.
+
+### D023 Test-time latent inversion for every inverting arm (2026-11-05, status: accepted with revisions)
+- **Decision:** (1) One routine for A1, A4/A5/AG, A9, A13, A15, G15 and A2: per-cell Levenberg-Marquardt Newton, float64, started at the prior mode,
+  stop at ||g_c|| <= 1e-6 (1 + |f_c|) or 100 iterations, accepted steps never raise the cell's objective, non-converged cells keep the last accepted
+  iterate and are counted, k = 0 rule and objective unchanged, no multi-start selection; adopted by the judge as a computational convention after the
+  committed check rule returned NONE (O2 fails only criterion (c), start spread, which measures the model's multimodality). (2) z-prior weight fixed at 1
+  (equal to the training-loss prior), not tuned: no {1, 4, 16} search. (3) Mandatory diagnostics without consequence: convergence share, cap-doubling change,
+  start spread over the prior mode plus three seeded starts, basin shares; Methods paragraph, Supplement table, one fixed Limitations sentence; descriptive
+  sensitivity rows (v) other starts and (vi) weights 4 and 16, inference only. (4) The outcome table (D017, D019) is unchanged; the latent is described as
+  "the local posterior mode reached from the prior mode", never identified, unique, start-independent or global; P2 is stated as a contrast between two
+  estimators sharing one inversion rule.
+- **Alternatives and why they lost:** production Adam budgets (200 / 150 / 300 steps; forecasts move up to 42.3 pp for A9 when the steps double; unequal
+  between A1 and A9); Adam 4000 steps with cosine decay (A1 convergence share 0.627); multi-start selection by objective (self-disagreement p95 5.49 pp A1,
+  descriptively worse for A9 fold 3: 9.05 to 16.34); delta-only inversion (changes P2 and the identity of A1; kept as fallback); posterior mean or Laplace forecast
+  (larger change, deferred); tuned z-prior weight (applied across k of one m, two-condition inner folds, no measurement of the weight, would have to reach A4/A5
+  as well, new dimension in 7.1); ISU check of the weight R-b (changes the estimator, spends ISU exposure, no decision depends on it).
+- **Evidence:** debates/D023_inversion/01_proposal.md, 02_judge.md; runs/check_D023_inversion/decision.json (development data, ISU training sides);
+  runs/pilot_P6b/RESULT.md Table E; debates/codex_panel/turn08_response.md; code/pilots/d023_inversion_check.py.
+- **Proposer / opponent / judge:** ml-expert / Codex panel turn 8 (revise) / D023 judge (independent).
+- **Re-open if:** the Samsung dry run shows a convergence share below 0.99 for A1 or A9 or a Newton failure; a development rule committed beforehand shows a fixed
+  weight above 1 passes the start-spread criteria with non-inferior pseudo-test score for both A1 and A9 (changes the fixed weight only, never makes it tuned);
+  ISU becomes primary; an identified inversion is required (new estimator, new version); the ported routine fails the regression test against the check's O2;
+  an outer-test score exists before FROZEN.

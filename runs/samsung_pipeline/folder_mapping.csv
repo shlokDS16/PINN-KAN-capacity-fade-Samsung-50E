@@ -1,21 +1,280 @@
 folder,serial,stage,cell_id,assigned_by,lab_meta,internal_serial_meta,internal_serial_design,first_meta_date,last_meta_date,design_T_C,notes
-TP_k03_01__f47627626,TP_k03_01,2,TP_k03_01_s2,internal_serial,SIE,055,055,2023-01-10,2023-02-28,23,
-TP_z01_01__f47632462,TP_z01_01,2,TP_z01_01_s2,internal_serial,SIE,021,021,2023-01-30,2024-01-10,45,
-TP_z01_01__f47632513,TP_z01_01,1,TP_z01_01_s1,internal_serial,SIE,S019,S019,2021-09-21,2022-08-09,23,
-TP_z02_01__f47631268,TP_z02_01,,TP_z02_01_s?,ambiguous,,,,,,,
-TP_z02_01__f47632552,TP_z02_01,1,TP_z02_01_s1,internal_serial,SIE,S022,S022,2021-09-21,2022-08-09,23,
-TP_z03_01__f47632537,TP_z03_01,2,TP_z03_01_s2,internal_serial,SIE,183,183,2023-01-30,2024-01-10,45,
-TP_z04_01__f47632750,TP_z04_01,2,TP_z04_01_s2,internal_serial,INT,INT059,INT059,2023-02-17,2024-01-17,23,
-TP_z05_01__f47632663,TP_z05_01,2,TP_z05_01_s2,internal_serial,INT,INT073,INT073,2023-02-17,2024-01-17,23,
-TP_z06_01__f47632657,TP_z06_01,2,TP_z06_01_s2,internal_serial,INT,INT018,INT018,2023-02-17,2024-01-17,23,
-TP_z07_01__f47632753,TP_z07_01,2,TP_z07_01_s2,internal_serial,INT,INT065,INT065,2023-02-17,2024-01-17,23,
-TP_z08_01__f47632615,TP_z08_01,2,TP_z08_01_s2,internal_serial,INT,INT191,INT191,2023-02-17,2024-01-17,35,
-TP_z09_01__f47632780,TP_z09_01,2,TP_z09_01_s2,internal_serial,INT,INT031,INT031,2023-02-17,2024-01-17,35,
-TP_z10_01__f47632333,TP_z10_01,1,TP_z10_01_s1,date,INT,INT028,INT037,2021-10-12,2022-08-19,35,meta_internal_serial_differs_from_table: ['INT028'] vs INT037
-TP_z11_01__f47632681,TP_z11_01,2,TP_z11_01_s2,internal_serial,INT,INT107,INT107,2023-02-17,2024-01-17,35,
-TP_z12_01__f47632804,TP_z12_01,2,TP_z12_01_s2,internal_serial,HM,TP_z12_01,TP_z12_01,2023-02-02,2023-12-17,23,
-TP_z13_01__f47632597,TP_z13_01,2,TP_z13_01_s2,internal_serial,HM,TP_z13_01,TP_z13_01,2023-02-02,2024-01-19,45,
-TP_z14_01__f47632654,TP_z14_01,2,TP_z14_01_s2,internal_serial,HM,TP_z14_01,TP_z14_01,2023-02-02,2024-01-19,45,
-TP_z15_01__f47632531,TP_z15_01,1,TP_z15_01_s1,lab,INT,INT043,INT052,2021-10-12,2022-08-22,35,meta_internal_serial_differs_from_table: ['INT043'] vs INT052
-TP_z17_01__f47632522,TP_z17_01,1,TP_z17_01_s1,internal_serial,HM,HM034,HM034,2021-10-01,2022-08-11,45,
-TP_z18_01__f47632630,TP_z18_01,2,TP_z18_01_s2,internal_serial,HM,TP_z18_01,TP_z18_01,2023-02-12,2023-06-20,45,zyk_setpoint_ok
+TP_k01_01__f47627050,TP_k01_01,1,TP_k01_01_s1,internal_serial,SIE,S001,S001,2021-09-08,2022-09-12,10,
+TP_k01_01__f47627620,TP_k01_01,2,TP_k01_01_s2,internal_serial,SIE,"057,57",057,2022-12-06,2024-01-15,10,
+TP_k01_02__f47627056,TP_k01_02,1,TP_k01_02_s1,internal_serial,SIE,S002,S002,2021-09-08,2022-09-12,10,
+TP_k01_02__f47627599,TP_k01_02,2,TP_k01_02_s2,internal_serial,SIE,167,167,2022-12-06,2024-01-15,10,
+TP_k01_03__f47627068,TP_k01_03,1,TP_k01_03_s1,internal_serial,SIE,S003,S003,2021-09-08,2022-09-12,10,
+TP_k01_03__f47627656,TP_k01_03,2,TP_k01_03_s2,internal_serial,SIE,"012,12",012,2022-12-06,2024-01-15,10,
+TP_k01_04__f47628241,TP_k01_04,2,TP_k01_04_s2,internal_serial,SIE,"070,70",070,2022-12-01,2024-01-29,10,
+TP_k01_04__f47639005,TP_k01_04,1,TP_k01_04_s1,internal_serial,SIE,S010,S010,2021-09-21,2022-09-22,10,
+TP_k01_05__f47627092,TP_k01_05,1,TP_k01_05_s1,internal_serial,SIE,S011,S011,2021-09-21,2022-09-22,10,
+TP_k01_05__f47628373,TP_k01_05,2,TP_k01_05_s2,internal_serial,SIE,168,168,2022-12-01,2024-01-29,10,
+TP_k01_06__f47627089,TP_k01_06,1,TP_k01_06_s1,internal_serial,SIE,S012,S012,2021-09-21,2022-09-22,10,
+TP_k01_06__f47628313,TP_k01_06,2,TP_k01_06_s2,internal_serial,SIE,123,123,2022-12-01,2024-01-29,10,
+TP_k02_01__f47627095,TP_k02_01,1,TP_k02_01_s1,internal_serial,SIE,S004,S004,2021-09-08,2022-09-12,10,
+TP_k02_01__f47627638,TP_k02_01,2,TP_k02_01_s2,internal_serial,SIE,131,131,2022-12-06,2024-01-15,10,
+TP_k02_02__f47627464,TP_k02_02,1,TP_k02_02_s1,internal_serial,SIE,S005,S005,2021-09-08,2022-09-12,10,
+TP_k02_02__f47627629,TP_k02_02,2,TP_k02_02_s2,internal_serial,SIE,"019,19",019,2022-12-06,2024-01-15,10,
+TP_k02_03__f47627059,TP_k02_03,1,TP_k02_03_s1,internal_serial,SIE,S006,S006,2021-09-08,2022-09-12,10,
+TP_k02_03__f47627647,TP_k02_03,2,TP_k02_03_s2,internal_serial,SIE,197,197,2022-12-06,2024-01-15,10,
+TP_k02_04__f47627062,TP_k02_04,1,TP_k02_04_s1,internal_serial,SIE,S013,S013,2021-10-05,2022-10-04,10,
+TP_k02_04__f47628259,TP_k02_04,2,TP_k02_04_s2,internal_serial,SIE,145,145,2022-12-01,2024-01-29,10,
+TP_k02_05__f47627053,TP_k02_05,1,TP_k02_05_s1,internal_serial,SIE,S014,S014,2021-10-05,2022-10-04,10,
+TP_k02_05__f47627623,TP_k02_05,2,TP_k02_05_s2,internal_serial,SIE,186,186,2022-12-01,2024-01-29,10,
+TP_k02_06__f47627080,TP_k02_06,1,TP_k02_06_s1,internal_serial,SIE,S015,S015,2021-10-05,2022-10-04,10,
+TP_k02_06__f47628265,TP_k02_06,2,TP_k02_06_s2,internal_serial,SIE,"095,95",095,2022-12-01,2024-01-29,10,
+TP_k03_01__f47627083,TP_k03_01,1,TP_k03_01_s1,internal_serial,SIE,S007,S007,2021-09-21,2022-09-22,10,
+TP_k03_01__f47627626,TP_k03_01,2,TP_k03_01_s2,internal_serial,SIE,"055,55",055,2023-01-10,2024-01-29,23,
+TP_k03_02__f47627524,TP_k03_02,2,TP_k03_02_s2,internal_serial,SIE,"039,39",039,2023-01-10,2024-01-29,23,
+TP_k03_02__f47639008,TP_k03_02,1,TP_k03_02_s1,internal_serial,SIE,S008,S008,2021-09-21,2022-09-22,10,
+TP_k03_03__f47627098,TP_k03_03,1,TP_k03_03_s1,internal_serial,SIE,S009,S009,2021-09-21,2022-09-22,10,
+TP_k03_03__f47627644,TP_k03_03,2,TP_k03_03_s2,internal_serial,SIE,130,130,2023-01-10,2024-01-29,23,
+TP_k03_04__f47627071,TP_k03_04,1,TP_k03_04_s1,internal_serial,SIE,S016,S016,2021-10-05,2022-10-04,10,
+TP_k03_04__f47628319,TP_k03_04,2,TP_k03_04_s2,internal_serial,SIE,189,189,2022-12-01,2024-01-29,23,
+TP_k03_05__f47627074,TP_k03_05,1,TP_k03_05_s1,internal_serial,SIE,S017,S017,2021-10-05,2022-10-04,10,
+TP_k03_05__f47627641,TP_k03_05,2,TP_k03_05_s2,internal_serial,SIE,013,013,2022-12-01,2024-01-29,23,
+TP_k03_06__f47628376,TP_k03_06,2,TP_k03_06_s2,internal_serial,SIE,118,118,2022-12-01,2024-01-29,23,
+TP_k03_06__f47639011,TP_k03_06,1,TP_k03_06_s1,internal_serial,SIE,S018,S018,2021-10-05,2022-10-04,10,
+TP_k04_01__f47628277,TP_k04_01,1,TP_k04_01_s1,internal_serial,INT,INT001,INT001,2021-09-30,2022-10-12,23,
+TP_k04_01__f47630383,TP_k04_01,2,TP_k04_01_s2,internal_serial,INT,INT085,INT085,2023-01-19,2024-02-26,23,
+TP_k04_02__f47628253,TP_k04_02,1,TP_k04_02_s1,internal_serial,INT,INT002,INT002,2021-09-30,2022-10-12,23,
+TP_k04_02__f47630371,TP_k04_02,2,TP_k04_02_s2,internal_serial,INT,INT004,INT004,2023-01-19,2024-02-26,23,
+TP_k04_03__f47628247,TP_k04_03,1,TP_k04_03_s1,internal_serial,INT,INT003,INT003,2021-09-30,2022-10-12,23,
+TP_k04_03__f47630440,TP_k04_03,2,TP_k04_03_s2,internal_serial,INT,INT103,INT103,2023-01-19,2024-02-26,23,
+TP_k04_04__f47627107,TP_k04_04,1,TP_k04_04_s1,date,INT,INT046,INT010,2021-09-30,2022-10-12,23,meta_internal_serial_differs_from_table: ['INT046'] vs INT010
+TP_k04_04__f47629915,TP_k04_04,2,TP_k04_04_s2,internal_serial,INT,INT090,INT090,2023-01-19,2024-02-26,23,
+TP_k04_05__f47627110,TP_k04_05,1,TP_k04_05_s1,date,INT,INT047,INT011,2021-09-30,2022-10-09,23,meta_internal_serial_differs_from_table: ['INT047'] vs INT011
+TP_k04_05__f47629822,TP_k04_05,2,TP_k04_05_s2,internal_serial,INT,INT165,INT165,2023-01-19,2024-02-26,23,
+TP_k04_06__f47627104,TP_k04_06,1,TP_k04_06_s1,date,INT,INT048,INT012,2021-09-30,2022-10-12,23,meta_internal_serial_differs_from_table: ['INT048'] vs INT012
+TP_k04_06__f47629819,TP_k04_06,2,TP_k04_06_s2,internal_serial,INT,INT190,INT190,2023-01-19,2024-02-26,23,
+TP_k05_01__f47628256,TP_k05_01,1,TP_k05_01_s1,internal_serial,INT,INT004,INT004,2021-09-30,2022-10-12,23,
+TP_k05_01__f47630362,TP_k05_01,2,TP_k05_01_s2,internal_serial,INT,INT195,INT195,2023-01-19,2024-02-26,23,
+TP_k05_02__f47628238,TP_k05_02,1,TP_k05_02_s1,internal_serial,INT,INT005,INT005,2021-09-30,2022-10-12,23,
+TP_k05_02__f47630686,TP_k05_02,2,TP_k05_02_s2,internal_serial,INT,INT114,INT114,2023-01-19,2024-02-26,23,
+TP_k05_03__f47628244,TP_k05_03,1,TP_k05_03_s1,internal_serial,INT,INT006,INT006,2021-09-30,2022-10-12,23,
+TP_k05_03__f47630359,TP_k05_03,2,TP_k05_03_s2,internal_serial,INT,INT051,INT051,2023-01-19,2024-02-26,23,
+TP_k05_04__f47627461,TP_k05_04,1,TP_k05_04_s1,date,INT,INT049,INT013,2021-09-30,2022-10-12,23,meta_internal_serial_differs_from_table: ['INT049'] vs INT013
+TP_k05_04__f47629906,TP_k05_04,2,TP_k05_04_s2,internal_serial,INT,INT066,INT066,2023-01-19,2024-02-26,23,
+TP_k05_05__f47627449,TP_k05_05,1,TP_k05_05_s1,date,INT,INT050,INT014,2021-09-30,2022-10-12,23,meta_internal_serial_differs_from_table: ['INT050'] vs INT014
+TP_k05_05__f47629804,TP_k05_05,2,TP_k05_05_s2,date,INT,INT027,INT023,2023-01-19,2024-02-26,23,meta_internal_serial_differs_from_table: ['INT027'] vs INT023
+TP_k05_06__f47627452,TP_k05_06,1,TP_k05_06_s1,date,INT,INT051,INT015,2021-09-30,2022-10-12,23,meta_internal_serial_differs_from_table: ['INT051'] vs INT015
+TP_k05_06__f47629846,TP_k05_06,2,TP_k05_06_s2,internal_serial,INT,INT119,INT119,2023-01-19,2024-02-26,23,
+TP_k06_01__f47628271,TP_k06_01,1,TP_k06_01_s1,internal_serial,INT,INT007,INT007,2021-09-30,2022-10-12,23,
+TP_k06_01__f47630443,TP_k06_01,2,TP_k06_01_s2,internal_serial,INT,INT009,INT009,2023-01-19,2024-02-26,23,
+TP_k06_02__f47628262,TP_k06_02,1,TP_k06_02_s1,internal_serial,INT,INT008,INT008,2021-09-30,2022-10-12,23,
+TP_k06_02__f47630689,TP_k06_02,2,TP_k06_02_s2,internal_serial,INT,INT140,INT140,2023-01-19,2024-02-26,23,
+TP_k06_03__f47628274,TP_k06_03,1,TP_k06_03_s1,internal_serial,INT,INT009,INT009,2021-09-30,2022-10-12,23,
+TP_k06_03__f47630692,TP_k06_03,2,TP_k06_03_s2,internal_serial,INT,INT091,INT091,2023-01-19,2024-02-26,23,
+TP_k06_04__f47627446,TP_k06_04,1,TP_k06_04_s1,date,INT,INT052,INT016,2021-09-30,2022-10-12,23,meta_internal_serial_differs_from_table: ['INT052'] vs INT016
+TP_k06_04__f47629813,TP_k06_04,2,TP_k06_04_s2,internal_serial,INT,INT043,INT043,2023-01-19,2024-02-26,23,
+TP_k06_05__f47627434,TP_k06_05,1,TP_k06_05_s1,date,INT,INT053,INT017,2021-09-30,2022-10-12,23,meta_internal_serial_differs_from_table: ['INT053'] vs INT017
+TP_k06_05__f47629942,TP_k06_05,2,TP_k06_05_s2,internal_serial,INT,INT176,INT176,2023-01-19,2024-02-26,23,
+TP_k06_06__f47627458,TP_k06_06,1,TP_k06_06_s1,date,INT,INT054,INT018,2021-09-30,2022-10-12,23,meta_internal_serial_differs_from_table: ['INT054'] vs INT018
+TP_k06_06__f47629945,TP_k06_06,2,TP_k06_06_s2,internal_serial,INT,INT098,INT098,2023-01-19,2024-02-26,23,
+TP_k07_01__f47628334,TP_k07_01,1,TP_k07_01_s1,internal_serial,HM,HM001,HM001,2021-09-10,2022-09-28,45,
+TP_k07_01__f47630437,TP_k07_01,2,TP_k07_01_s2,internal_serial,INT,INT003,INT003,2023-01-19,2024-02-26,23,
+TP_k07_02__f47628328,TP_k07_02,1,TP_k07_02_s1,internal_serial,HM,HM002,HM002,2021-09-10,2022-09-28,45,
+TP_k07_02__f47630674,TP_k07_02,2,TP_k07_02_s2,internal_serial,INT,INT045,INT045,2023-01-19,2024-02-26,23,
+TP_k07_03__f47628322,TP_k07_03,1,TP_k07_03_s1,internal_serial,HM,HM003,HM003,2021-09-10,2022-09-28,45,
+TP_k07_03__f47630677,TP_k07_03,2,TP_k07_03_s2,internal_serial,INT,INT080,INT080,2023-01-19,2024-02-26,23,
+TP_k07_04__f47627428,TP_k07_04,1,TP_k07_04_s1,internal_serial,HM,HM016,HM016,2021-09-10,2022-09-28,45,
+TP_k07_04__f47629834,TP_k07_04,2,TP_k07_04_s2,internal_serial,INT,INT134,INT134,2023-01-19,2024-02-26,23,
+TP_k07_05__f47627440,TP_k07_05,1,TP_k07_05_s1,internal_serial,HM,HM017,HM017,2021-09-10,2022-09-28,45,
+TP_k07_05__f47629909,TP_k07_05,2,TP_k07_05_s2,internal_serial,INT,INT052,INT052,2023-01-19,2024-02-26,23,
+TP_k07_06__f47627431,TP_k07_06,1,TP_k07_06_s1,internal_serial,HM,HM018,HM018,2021-09-10,2022-09-28,45,
+TP_k07_06__f47629831,TP_k07_06,2,TP_k07_06_s2,lab,INT,INT153,INT151,2023-01-19,2024-02-26,23,meta_internal_serial_differs_from_table: ['INT153'] vs INT151
+TP_k08_01__f47628304,TP_k08_01,1,TP_k08_01_s1,internal_serial,HM,HM004,HM004,2021-09-10,2022-09-28,45,
+TP_k08_01__f47630431,TP_k08_01,2,TP_k08_01_s2,internal_serial,HM,TP_k08_01,TP_k08_01,2022-12-06,2024-02-28,23,
+TP_k08_02__f47628343,TP_k08_02,1,TP_k08_02_s1,internal_serial,HM,HM005,HM005,2021-09-10,2022-09-28,45,
+TP_k08_02__f47630380,TP_k08_02,2,TP_k08_02_s2,internal_serial,HM,TP_k08_02,TP_k08_02,2022-12-06,2024-02-28,23,
+TP_k08_03__f47628346,TP_k08_03,1,TP_k08_03_s1,internal_serial,HM,HM006,HM006,2021-09-10,2022-09-28,45,
+TP_k08_03__f47630680,TP_k08_03,2,TP_k08_03_s2,internal_serial,HM,TP_k08_03,TP_k08_03,2022-12-06,2024-02-28,23,
+TP_k08_04__f47627401,TP_k08_04,1,TP_k08_04_s1,internal_serial,HM,HM019,HM019,2021-09-10,2022-09-28,45,
+TP_k08_04__f47628571,TP_k08_04,2,TP_k08_04_s2,internal_serial,HM,TP_k08_04,TP_k08_04,2022-12-06,2024-02-28,23,
+TP_k08_05__f47627437,TP_k08_05,1,TP_k08_05_s1,internal_serial,HM,HM020,HM020,2021-09-10,2022-09-28,45,
+TP_k08_05__f47629393,TP_k08_05,2,TP_k08_05_s2,internal_serial,HM,TP_k08_05,TP_k08_05,2022-12-06,2024-02-28,23,
+TP_k08_06__f47627425,TP_k08_06,1,TP_k08_06_s1,internal_serial,HM,HM021,HM021,2021-09-10,2022-09-28,45,
+TP_k08_06__f47629402,TP_k08_06,2,TP_k08_06_s2,internal_serial,HM,TP_k08_06,TP_k08_06,2022-12-06,2024-02-28,23,
+TP_k09_01__f47628292,TP_k09_01,1,TP_k09_01_s1,internal_serial,HM,HM007,HM007,2021-09-10,2022-09-28,45,
+TP_k09_01__f47630716,TP_k09_01,2,TP_k09_01_s2,internal_serial,HM,TP_k09_01,TP_k09_01,2022-12-06,2024-02-28,23,
+TP_k09_02__f47628331,TP_k09_02,1,TP_k09_02_s1,internal_serial,HM,HM008,HM008,2021-09-10,2022-09-28,45,
+TP_k09_02__f47630728,TP_k09_02,2,TP_k09_02_s2,internal_serial,HM,TP_k09_02,TP_k09_02,2022-12-06,2024-02-28,23,
+TP_k09_03__f47628352,TP_k09_03,1,TP_k09_03_s1,internal_serial,HM,HM009,HM009,2021-09-10,2022-09-28,45,
+TP_k09_03__f47630722,TP_k09_03,2,TP_k09_03_s2,internal_serial,HM,TP_k09_03,TP_k09_03,2022-12-06,2024-02-28,23,
+TP_k09_04__f47627404,TP_k09_04,1,TP_k09_04_s1,internal_serial,HM,HM022,HM022,2021-09-10,2022-09-28,45,
+TP_k09_04__f47629396,TP_k09_04,2,TP_k09_04_s2,internal_serial,HM,TP_k09_04,TP_k09_04,2022-12-06,2024-02-28,23,
+TP_k09_05__f47627413,TP_k09_05,1,TP_k09_05_s1,internal_serial,HM,HM023,HM023,2021-09-10,2022-09-28,45,
+TP_k09_05__f47629381,TP_k09_05,2,TP_k09_05_s2,internal_serial,HM,TP_k09_05,TP_k09_05,2022-12-06,2024-02-28,23,
+TP_k09_06__f47627455,TP_k09_06,1,TP_k09_06_s1,internal_serial,HM,HM024,HM024,2021-09-10,2022-09-28,45,
+TP_k09_06__f47629390,TP_k09_06,2,TP_k09_06_s2,internal_serial,HM,TP_k09_06,TP_k09_06,2022-12-06,2024-02-28,23,
+TP_k10_01__f47628307,TP_k10_01,1,TP_k10_01_s1,internal_serial,HM,HM010,HM010,2021-09-10,2022-09-28,45,
+TP_k10_01__f47630698,TP_k10_01,2,TP_k10_01_s2,internal_serial,HM,TP_k10_01,TP_k10_01,2022-12-06,2024-02-28,45,
+TP_k10_02__f47628358,TP_k10_02,1,TP_k10_02_s1,internal_serial,HM,HM011,HM011,2021-09-10,2022-09-28,45,
+TP_k10_02__f47630701,TP_k10_02,2,TP_k10_02_s2,internal_serial,HM,TP_k10_02,TP_k10_02,2022-12-06,2024-02-28,45,
+TP_k10_03__f47628403,TP_k10_03,1,TP_k10_03_s1,internal_serial,HM,HM012,HM012,2021-09-10,2022-09-28,45,
+TP_k10_03__f47630719,TP_k10_03,2,TP_k10_03_s2,internal_serial,HM,TP_k10_03,TP_k10_03,2022-12-06,2024-02-28,45,
+TP_k10_04__f47627494,TP_k10_04,1,TP_k10_04_s1,internal_serial,HM,HM025,HM025,2021-09-10,2022-09-28,45,
+TP_k10_04__f47629387,TP_k10_04,2,TP_k10_04_s2,internal_serial,HM,TP_k10_04,TP_k10_04,2022-12-06,2024-02-28,45,
+TP_k10_05__f47627506,TP_k10_05,1,TP_k10_05_s1,internal_serial,HM,HM026,HM026,2021-09-10,2022-09-28,45,
+TP_k10_05__f47629369,TP_k10_05,2,TP_k10_05_s2,internal_serial,HM,TP_k10_05,TP_k10_05,2022-12-06,2024-02-28,45,
+TP_k10_06__f47627518,TP_k10_06,1,TP_k10_06_s1,internal_serial,HM,HM027,HM027,2021-09-10,2022-09-28,45,
+TP_k10_06__f47629423,TP_k10_06,2,TP_k10_06_s2,internal_serial,HM,TP_k10_06,TP_k10_06,2022-12-06,2024-02-28,45,
+TP_k11_01__f47628388,TP_k11_01,1,TP_k11_01_s1,internal_serial,HM,HM013,HM013,2021-09-10,2022-09-28,45,
+TP_k11_01__f47630773,TP_k11_01,2,TP_k11_01_s2,internal_serial,HM,TP_k11_01,TP_k11_01,2022-12-06,2024-02-28,45,
+TP_k11_02__f47628406,TP_k11_02,1,TP_k11_02_s1,internal_serial,HM,HM014,HM014,2021-09-10,2022-09-28,45,
+TP_k11_02__f47630755,TP_k11_02,2,TP_k11_02_s2,internal_serial,HM,TP_k11_02,TP_k11_02,2022-12-06,2024-02-28,45,
+TP_k11_03__f47628409,TP_k11_03,1,TP_k11_03_s1,internal_serial,HM,HM015,HM015,2021-09-10,2022-09-28,45,
+TP_k11_03__f47630776,TP_k11_03,2,TP_k11_03_s2,internal_serial,HM,TP_k11_03,TP_k11_03,2022-12-06,2024-02-28,45,
+TP_k11_04__f47627491,TP_k11_04,1,TP_k11_04_s1,internal_serial,HM,HM028,HM028,2021-09-10,2022-09-28,45,
+TP_k11_04__f47629411,TP_k11_04,2,TP_k11_04_s2,internal_serial,HM,TP_k11_04,TP_k11_04,2022-12-06,2024-02-28,45,
+TP_k11_05__f47627509,TP_k11_05,1,TP_k11_05_s1,internal_serial,HM,HM029,HM029,2021-09-10,2022-09-28,45,
+TP_k11_05__f47629774,TP_k11_05,2,TP_k11_05_s2,internal_serial,HM,TP_k11_05,TP_k11_05,2022-12-06,2024-02-28,45,
+TP_k11_06__f47627515,TP_k11_06,1,TP_k11_06_s1,internal_serial,HM,HM030,HM030,2021-09-10,2022-09-28,45,
+TP_k11_06__f47629687,TP_k11_06,2,TP_k11_06_s2,internal_serial,HM,TP_k11_06,TP_k11_06,2022-12-06,2024-02-28,45,
+TP_z01_01__f47632462,TP_z01_01,2,TP_z01_01_s2,internal_serial,SIE,021,021,2023-01-30,2024-01-30,45,zyk_setpoint_ok
+TP_z01_01__f47632513,TP_z01_01,1,TP_z01_01_s1,internal_serial,SIE,S019,S019,2021-09-21,2022-09-27,23,zyk_setpoint_ok
+TP_z01_02__f47632450,TP_z01_02,2,TP_z01_02_s2,internal_serial,SIE,047,047,2023-01-30,2024-01-30,45,zyk_setpoint_ok
+TP_z01_02__f47632465,TP_z01_02,1,TP_z01_02_s1,internal_serial,SIE,S020,S020,2021-09-21,2022-09-27,23,zyk_setpoint_ok
+TP_z01_03__f47632447,TP_z01_03,2,TP_z01_03_s2,internal_serial,SIE,182,182,2023-01-30,2024-01-30,45,zyk_setpoint_ok
+TP_z01_03__f47632480,TP_z01_03,1,TP_z01_03_s1,internal_serial,SIE,S021,S021,2021-09-21,2022-09-27,23,zyk_setpoint_ok
+TP_z02_01__f47631268,TP_z02_01,2,TP_z02_01_s2,internal_serial,SIE,117,117,2023-01-30,2024-01-30,45,zyk_setpoint_ok
+TP_z02_01__f47632552,TP_z02_01,1,TP_z02_01_s1,internal_serial,SIE,S022,S022,2021-09-21,2022-09-27,23,zyk_setpoint_ok
+TP_z02_02__f47631133,TP_z02_02,2,TP_z02_02_s2,internal_serial,SIE,025,025,2023-01-30,2024-01-30,45,zyk_setpoint_ok
+TP_z02_02__f47632510,TP_z02_02,1,TP_z02_02_s1,internal_serial,SIE,S023,S023,2021-01-19,2022-09-27,23,zyk_setpoint_ok
+TP_z02_03__f47630314,TP_z02_03,2,TP_z02_03_s2,internal_serial,SIE,139,139,2023-01-30,2024-04-12,45,zyk_setpoint_ok
+TP_z02_03__f47632525,TP_z02_03,1,TP_z02_03_s1,internal_serial,SIE,S024,S024,2021-09-21,2022-09-27,23,zyk_setpoint_ok
+TP_z03_01__f47632507,TP_z03_01,1,TP_z03_01_s1,internal_serial,SIE,S025,S025,2021-09-21,2022-09-27,23,zyk_setpoint_ok
+TP_z03_01__f47632537,TP_z03_01,2,TP_z03_01_s2,internal_serial,SIE,183,183,2023-01-30,2024-01-30,45,zyk_setpoint_ok
+TP_z03_02__f47632417,TP_z03_02,1,TP_z03_02_s1,internal_serial,SIE,S026,S026,2021-09-21,2022-09-27,23,zyk_setpoint_ok
+TP_z03_02__f47632561,TP_z03_02,2,TP_z03_02_s2,internal_serial,SIE,"075,75",075,2023-01-30,2024-01-30,45,zyk_setpoint_ok
+TP_z03_03__f47632432,TP_z03_03,1,TP_z03_03_s1,internal_serial,SIE,S027,S027,2021-09-21,2022-09-27,23,zyk_setpoint_ok
+TP_z03_03__f47632555,TP_z03_03,2,TP_z03_03_s2,internal_serial,SIE,"010,10",010,2023-01-30,2024-01-30,45,zyk_setpoint_ok
+TP_z04_01__f47629486,TP_z04_01,1,TP_z04_01_s1,date,INT,INT010,INT019,2021-09-30,2022-02-06,23,meta_internal_serial_differs_from_table: ['INT010'] vs INT019; zyk_setpoint_ok
+TP_z04_01__f47632750,TP_z04_01,2,TP_z04_01_s2,internal_serial,INT,INT059,INT059,2023-02-17,2024-02-15,23,zyk_setpoint_ok
+TP_z04_02__f47630293,TP_z04_02,1,TP_z04_02_s1,date,INT,INT011,INT020,2021-09-30,2022-03-14,23,meta_internal_serial_differs_from_table: ['INT011'] vs INT020; zyk_setpoint_ok
+TP_z04_02__f47632810,TP_z04_02,2,TP_z04_02_s2,internal_serial,INT,INT037,INT037,2023-02-17,2024-02-15,23,zyk_setpoint_ok
+TP_z04_03__f47629642,TP_z04_03,1,TP_z04_03_s1,date,INT,INT012,INT021,2021-01-21,2022-02-06,23,meta_internal_serial_differs_from_table: ['INT012'] vs INT021; zyk_setpoint_ok
+TP_z04_03__f47639014,TP_z04_03,2,TP_z04_03_s2,date,INT,INT029,INT027,2023-02-17,2024-02-15,23,meta_internal_serial_differs_from_table: ['INT029'] vs INT027; zyk_setpoint_ok
+TP_z05_01__f47632477,TP_z05_01,1,TP_z05_01_s1,date,INT,INT013,INT022,2021-09-30,2022-09-29,23,meta_internal_serial_differs_from_table: ['INT013'] vs INT022; zyk_setpoint_ok
+TP_z05_01__f47632663,TP_z05_01,2,TP_z05_01_s2,internal_serial,INT,INT073,INT073,2023-02-17,2024-02-15,23,zyk_setpoint_ok
+TP_z05_02__f47632648,TP_z05_02,2,TP_z05_02_s2,internal_serial,INT,INT161,INT161,2023-02-17,2024-02-15,23,zyk_setpoint_ok
+TP_z05_02__f47639023,TP_z05_02,1,TP_z05_02_s1,date,INT,INT014,INT023,2021-09-30,2022-09-29,23,meta_internal_serial_differs_from_table: ['INT014'] vs INT023; zyk_setpoint_ok
+TP_z05_03__f47632489,TP_z05_03,1,TP_z05_03_s1,date,INT,INT015,INT024,2021-09-30,2022-09-29,23,meta_internal_serial_differs_from_table: ['INT015'] vs INT024; zyk_setpoint_ok
+TP_z05_03__f47632660,TP_z05_03,2,TP_z05_03_s2,internal_serial,INT,INT200,INT200,2023-02-17,2024-02-15,23,zyk_setpoint_ok
+TP_z06_01__f47632540,TP_z06_01,1,TP_z06_01_s1,date,INT,INT016,INT025,2021-10-12,2022-09-29,23,meta_internal_serial_differs_from_table: ['INT016'] vs INT025; zyk_setpoint_ok
+TP_z06_01__f47632657,TP_z06_01,2,TP_z06_01_s2,internal_serial,INT,INT018,INT018,2023-02-17,2024-02-15,23,zyk_setpoint_ok
+TP_z06_02__f47632483,TP_z06_02,1,TP_z06_02_s1,date,INT,INT017,INT026,2021-10-12,2022-09-29,23,meta_internal_serial_differs_from_table: ['INT017'] vs INT026; zyk_setpoint_ok
+TP_z06_02__f47632783,TP_z06_02,2,TP_z06_02_s2,internal_serial,INT,INT007,INT007,2023-02-17,2024-02-15,23,zyk_setpoint_ok
+TP_z06_03__f47632534,TP_z06_03,1,TP_z06_03_s1,date,INT,INT018,INT027,2021-10-12,2022-09-29,23,meta_internal_serial_differs_from_table: ['INT018'] vs INT027; zyk_setpoint_ok
+TP_z06_03__f47632807,TP_z06_03,2,TP_z06_03_s2,date,INT,INT160,INT153,2023-02-17,2024-02-15,23,meta_internal_serial_differs_from_table: ['INT160'] vs INT153; zyk_setpoint_ok
+TP_z07_01__f47632312,TP_z07_01,1,TP_z07_01_s1,date,INT,INT019,INT028,2021-10-12,2022-09-29,35,meta_internal_serial_differs_from_table: ['INT019'] vs INT028; zyk_setpoint_ok
+TP_z07_01__f47632753,TP_z07_01,2,TP_z07_01_s2,internal_serial,INT,INT065,INT065,2023-02-17,2024-02-26,23,zyk_setpoint_ok
+TP_z07_02__f47632486,TP_z07_02,1,TP_z07_02_s1,date,INT,INT020,INT029,2021-10-12,2022-09-29,35,meta_internal_serial_differs_from_table: ['INT020'] vs INT029; zyk_setpoint_ok
+TP_z07_02__f47632675,TP_z07_02,2,TP_z07_02_s2,internal_serial,INT,INT163,INT163,2023-02-17,2024-02-26,23,zyk_setpoint_ok
+TP_z07_03__f47632471,TP_z07_03,1,TP_z07_03_s1,date,INT,INT021,INT030,2021-10-12,2022-09-29,35,meta_internal_serial_differs_from_table: ['INT021'] vs INT030; zyk_setpoint_ok
+TP_z07_03__f47632744,TP_z07_03,2,TP_z07_03_s2,internal_serial,INT,INT078,INT078,2023-02-17,2024-02-26,23,zyk_setpoint_ok
+TP_z08_01__f47632414,TP_z08_01,1,TP_z08_01_s1,date,INT,INT022,INT031,2021-10-12,2022-09-29,35,meta_internal_serial_differs_from_table: ['INT022'] vs INT031; zyk_setpoint_ok
+TP_z08_01__f47632615,TP_z08_01,2,TP_z08_01_s2,internal_serial,INT,INT191,INT191,2023-02-17,2024-02-26,35,zyk_setpoint_ok
+TP_z08_02__f47632420,TP_z08_02,1,TP_z08_02_s1,date,INT,INT023,INT032,2021-10-12,2022-09-29,35,meta_internal_serial_differs_from_table: ['INT023'] vs INT032; zyk_setpoint_ok
+TP_z08_02__f47632618,TP_z08_02,2,TP_z08_02_s2,internal_serial,INT,INT061,INT061,2023-02-17,2024-02-26,35,zyk_setpoint_ok
+TP_z08_03__f47632444,TP_z08_03,1,TP_z08_03_s1,date,INT,INT024,INT033,2021-10-12,2022-09-29,35,meta_internal_serial_differs_from_table: ['INT024'] vs INT033; zyk_setpoint_ok
+TP_z08_03__f47632633,TP_z08_03,2,TP_z08_03_s2,internal_serial,INT,INT060,INT060,2023-02-17,2024-02-26,35,zyk_setpoint_ok
+TP_z09_01__f47632384,TP_z09_01,1,TP_z09_01_s1,date,INT,INT025,INT034,2021-10-12,2022-09-29,35,meta_internal_serial_differs_from_table: ['INT025'] vs INT034; zyk_setpoint_ok
+TP_z09_01__f47632780,TP_z09_01,2,TP_z09_01_s2,internal_serial,INT,INT031,INT031,2023-02-17,2024-02-15,35,zyk_setpoint_ok
+TP_z09_02__f47632429,TP_z09_02,1,TP_z09_02_s1,date,INT,INT026,INT035,2021-10-12,2022-09-29,35,meta_internal_serial_differs_from_table: ['INT026'] vs INT035; zyk_setpoint_ok
+TP_z09_02__f47632792,TP_z09_02,2,TP_z09_02_s2,internal_serial,INT,INT088,INT088,2023-02-17,2024-02-15,35,zyk_setpoint_ok
+TP_z09_03__f47632327,TP_z09_03,1,TP_z09_03_s1,date,INT,INT027,INT036,2021-10-12,2022-09-29,35,meta_internal_serial_differs_from_table: ['INT027'] vs INT036; zyk_setpoint_ok
+TP_z09_03__f47632741,TP_z09_03,2,TP_z09_03_s2,internal_serial,INT,INT020,INT020,2023-02-17,2024-02-15,35,zyk_setpoint_ok
+TP_z10_01__f47631232,TP_z10_01,2,TP_z10_01_s2,internal_serial,INT,INT149,INT149,2023-02-17,2023-06-30,35,zyk_setpoint_ok
+TP_z10_01__f47632333,TP_z10_01,1,TP_z10_01_s1,date,INT,INT028,INT037,2021-10-12,2022-09-29,35,meta_internal_serial_differs_from_table: ['INT028'] vs INT037; zyk_setpoint_ok
+TP_z10_02__f47632315,TP_z10_02,2,TP_z10_02_s2,internal_serial,INT,INT005,INT005,2023-02-17,2023-08-29,35,zyk_setpoint_ok
+TP_z10_02__f47632324,TP_z10_02,1,TP_z10_02_s1,date,INT,INT029,INT038,2021-10-12,2022-09-29,35,meta_internal_serial_differs_from_table: ['INT029'] vs INT038; zyk_setpoint_ok
+TP_z10_03__f47632330,TP_z10_03,2,TP_z10_03_s2,internal_serial,INT,INT054,INT054,2023-02-17,2023-10-02,35,zyk_setpoint_ok
+TP_z10_03__f47639020,TP_z10_03,1,TP_z10_03_s1,date,INT,INT030,INT039,2021-10-12,2022-09-29,35,meta_internal_serial_differs_from_table: ['INT030'] vs INT039; zyk_setpoint_ok
+TP_z11_01__f47632357,TP_z11_01,1,TP_z11_01_s1,date,INT,INT031,INT040,2021-10-12,2022-09-29,35,meta_internal_serial_differs_from_table: ['INT031'] vs INT040; zyk_setpoint_ok
+TP_z11_01__f47632681,TP_z11_01,2,TP_z11_01_s2,internal_serial,INT,INT107,INT107,2023-02-17,2024-02-15,35,zyk_setpoint_ok
+TP_z11_02__f47632474,TP_z11_02,1,TP_z11_02_s1,date,INT,INT032,INT041,2021-10-12,2022-09-29,35,meta_internal_serial_differs_from_table: ['INT032'] vs INT041; zyk_setpoint_ok
+TP_z11_02__f47632774,TP_z11_02,2,TP_z11_02_s2,internal_serial,INT,INT044,INT044,2023-02-17,2024-02-15,35,zyk_setpoint_ok
+TP_z11_03__f47632369,TP_z11_03,1,TP_z11_03_s1,date,INT,INT033,INT042,2021-10-12,2022-09-29,35,meta_internal_serial_differs_from_table: ['INT033'] vs INT042; zyk_setpoint_ok
+TP_z11_03__f47632756,TP_z11_03,2,TP_z11_03_s2,internal_serial,INT,INT011,INT011,2023-02-17,2024-02-15,35,zyk_setpoint_ok
+TP_z12_01__f47632360,TP_z12_01,1,TP_z12_01_s1,lab,INT,INT034,INT043,2021-10-12,2022-09-29,35,meta_internal_serial_differs_from_table: ['INT034'] vs INT043; zyk_setpoint_ok
+TP_z12_01__f47632804,TP_z12_01,2,TP_z12_01_s2,internal_serial,HM,TP_z12_01,TP_z12_01,2023-02-02,2024-02-13,23,zyk_setpoint_ok
+TP_z12_02__f47632411,TP_z12_02,1,TP_z12_02_s1,lab,INT,INT035,INT044,2021-10-12,2022-09-29,35,meta_internal_serial_differs_from_table: ['INT035'] vs INT044; zyk_setpoint_ok
+TP_z12_02__f47632831,TP_z12_02,2,TP_z12_02_s2,internal_serial,HM,TP_z12_02,TP_z12_02,2023-02-02,2024-02-13,23,zyk_setpoint_ok
+TP_z12_03__f47632405,TP_z12_03,1,TP_z12_03_s1,lab,INT,INT036,INT045,2021-10-12,2022-09-29,35,meta_internal_serial_differs_from_table: ['INT036'] vs INT045; zyk_setpoint_ok
+TP_z12_03__f47632834,TP_z12_03,2,TP_z12_03_s2,internal_serial,HM,TP_z12_03,TP_z12_03,2023-02-02,2024-02-13,23,zyk_setpoint_ok
+TP_z13_01__f47632228,TP_z13_01,1,TP_z13_01_s1,lab,INT,INT037,INT046,2021-10-12,2022-10-12,35,meta_internal_serial_differs_from_table: ['INT037'] vs INT046; zyk_setpoint_ok
+TP_z13_01__f47632597,TP_z13_01,2,TP_z13_01_s2,internal_serial,HM,TP_z13_01,TP_z13_01,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z13_02__f47632366,TP_z13_02,1,TP_z13_02_s1,lab,INT,INT038,INT047,2021-10-12,2022-09-12,35,meta_internal_serial_differs_from_table: ['INT038'] vs INT047; zyk_setpoint_ok
+TP_z13_02__f47632603,TP_z13_02,2,TP_z13_02_s2,internal_serial,HM,TP_z13_02,TP_z13_02,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z13_03__f47632408,TP_z13_03,1,TP_z13_03_s1,lab,INT,"INT038,INT039",INT048,2021-10-12,2022-09-12,35,"meta_internal_serial_differs_from_table: ['INT038', 'INT039'] vs INT048; zyk_setpoint_ok"
+TP_z13_03__f47632588,TP_z13_03,2,TP_z13_03_s2,internal_serial,HM,TP_z13_03,TP_z13_03,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z14_01__f47632426,TP_z14_01,1,TP_z14_01_s1,lab,INT,INT040,INT049,2021-10-12,2022-09-12,35,meta_internal_serial_differs_from_table: ['INT040'] vs INT049; zyk_setpoint_ok
+TP_z14_01__f47632654,TP_z14_01,2,TP_z14_01_s2,internal_serial,HM,TP_z14_01,TP_z14_01,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z14_02__f47632375,TP_z14_02,1,TP_z14_02_s1,lab,INT,INT041,INT050,2021-10-12,2022-09-12,35,meta_internal_serial_differs_from_table: ['INT041'] vs INT050; zyk_setpoint_ok
+TP_z14_02__f47632627,TP_z14_02,2,TP_z14_02_s2,internal_serial,HM,TP_z14_02,TP_z14_02,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z14_03__f47632345,TP_z14_03,1,TP_z14_03_s1,lab,INT,INT042,INT051,2021-10-12,2022-09-12,35,meta_internal_serial_differs_from_table: ['INT042'] vs INT051; zyk_setpoint_ok
+TP_z14_03__f47632645,TP_z14_03,2,TP_z14_03_s2,internal_serial,HM,TP_z14_03,TP_z14_03,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z15_01__f47632252,TP_z15_01,2,TP_z15_01_s2,internal_serial,HM,TP_z15_01,TP_z15_01,2023-02-02,2023-09-04,45,zyk_setpoint_ok
+TP_z15_01__f47632531,TP_z15_01,1,TP_z15_01_s1,lab,INT,INT043,INT052,2021-10-12,2022-09-12,35,meta_internal_serial_differs_from_table: ['INT043'] vs INT052; zyk_setpoint_ok
+TP_z15_02__f47632339,TP_z15_02,2,TP_z15_02_s2,internal_serial,HM,TP_z15_02,TP_z15_02,2023-02-02,2023-10-23,45,zyk_setpoint_ok
+TP_z15_02__f47632516,TP_z15_02,1,TP_z15_02_s1,lab,INT,INT044,INT053,2021-10-12,2022-09-12,35,meta_internal_serial_differs_from_table: ['INT044'] vs INT053; zyk_setpoint_ok
+TP_z15_03__f47632336,TP_z15_03,2,TP_z15_03_s2,internal_serial,HM,TP_z15_03,TP_z15_03,2023-02-02,2023-10-23,45,zyk_setpoint_ok
+TP_z15_03__f47632441,TP_z15_03,1,TP_z15_03_s1,lab,INT,INT045,INT054,2021-10-12,2022-09-12,35,meta_internal_serial_differs_from_table: ['INT045'] vs INT054; zyk_setpoint_ok
+TP_z16_01__f47632378,TP_z16_01,1,TP_z16_01_s1,internal_serial,HM,HM031,HM031,2021-10-01,2022-09-28,45,zyk_setpoint_ok
+TP_z16_01__f47632678,TP_z16_01,2,TP_z16_01_s2,internal_serial,HM,TP_z16_01,TP_z16_01,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z16_02__f47632528,TP_z16_02,1,TP_z16_02_s1,internal_serial,HM,HM032,HM032,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z16_02__f47632672,TP_z16_02,2,TP_z16_02_s2,internal_serial,HM,TP_z16_02,TP_z16_02,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z16_03__f47632684,TP_z16_03,2,TP_z16_03_s2,internal_serial,HM,TP_z16_03,TP_z16_03,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z16_03__f47639029,TP_z16_03,1,TP_z16_03_s1,internal_serial,HM,HM033,HM033,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z17_01__f47632321,TP_z17_01,2,TP_z17_01_s2,internal_serial,HM,TP_z17_01,TP_z17_01,2023-02-02,2023-10-23,45,zyk_setpoint_ok
+TP_z17_01__f47632522,TP_z17_01,1,TP_z17_01_s1,internal_serial,HM,HM034,HM034,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z17_02__f47632342,TP_z17_02,2,TP_z17_02_s2,internal_serial,HM,TP_z17_02,TP_z17_02,2023-02-02,2023-10-23,45,zyk_setpoint_ok
+TP_z17_02__f47632387,TP_z17_02,1,TP_z17_02_s1,internal_serial,HM,HM035,HM035,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z17_03__f47632351,TP_z17_03,2,TP_z17_03_s2,internal_serial,HM,TP_z17_03,TP_z17_03,2023-02-02,2023-10-23,45,zyk_setpoint_ok
+TP_z17_03__f47632453,TP_z17_03,1,TP_z17_03_s1,internal_serial,HM,HM036,HM036,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z18_01__f47632549,TP_z18_01,1,TP_z18_01_s1,internal_serial,HM,HM037,HM037,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z18_01__f47632630,TP_z18_01,2,TP_z18_01_s2,internal_serial,HM,TP_z18_01,TP_z18_01,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z18_02__f47632543,TP_z18_02,1,TP_z18_02_s1,internal_serial,HM,HM038,HM038,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z18_02__f47632621,TP_z18_02,2,TP_z18_02_s2,internal_serial,HM,TP_z18_02,TP_z18_02,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z18_03__f47632558,TP_z18_03,1,TP_z18_03_s1,internal_serial,HM,HM039,HM039,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z18_03__f47632624,TP_z18_03,2,TP_z18_03_s2,internal_serial,HM,TP_z18_03,TP_z18_03,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z19_01__f47632282,TP_z19_01,1,TP_z19_01_s1,internal_serial,HM,HM040,HM040,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z19_01__f47632735,TP_z19_01,2,TP_z19_01_s2,internal_serial,HM,TP_z19_01,TP_z19_01,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z19_02__f47632270,TP_z19_02,1,TP_z19_02_s1,internal_serial,HM,HM041,HM041,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z19_02__f47639017,TP_z19_02,2,TP_z19_02_s2,internal_serial,HM,TP_z19_02,TP_z19_02,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z19_03__f47632288,TP_z19_03,1,TP_z19_03_s1,internal_serial,HM,HM042,HM042,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z19_03__f47632789,TP_z19_03,2,TP_z19_03_s2,internal_serial,HM,TP_z19_03,TP_z19_03,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z20_01__f47630320,TP_z20_01,2,TP_z20_01_s2,internal_serial,HM,TP_z20_01,TP_z20_01,2023-02-02,2023-04-25,45,zyk_setpoint_ok
+TP_z20_01__f47632273,TP_z20_01,1,TP_z20_01_s1,internal_serial,HM,HM043,HM043,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z20_02__f47629771,TP_z20_02,2,TP_z20_02_s2,internal_serial,HM,TP_z20_02,TP_z20_02,2023-02-02,2023-03-13,45,zyk_setpoint_ok
+TP_z20_02__f47632300,TP_z20_02,1,TP_z20_02_s1,internal_serial,HM,HM044,HM044,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z20_03__f47630290,TP_z20_03,2,TP_z20_03_s2,internal_serial,HM,TP_z20_03,TP_z20_03,2023-02-02,2023-04-25,45,zyk_setpoint_ok
+TP_z20_03__f47632372,TP_z20_03,1,TP_z20_03_s1,internal_serial,HM,HM045,HM045,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z21_01__f47632279,TP_z21_01,1,TP_z21_01_s1,internal_serial,HM,HM046,HM046,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z21_01__f47632591,TP_z21_01,2,TP_z21_01_s2,internal_serial,HM,TP_z21_01,TP_z21_01,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z21_02__f47632297,TP_z21_02,1,TP_z21_02_s1,internal_serial,HM,HM047,HM047,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z21_02__f47632639,TP_z21_02,2,TP_z21_02_s2,internal_serial,HM,TP_z21_02,TP_z21_02,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z21_03__f47632456,TP_z21_03,1,TP_z21_03_s1,internal_serial,HM,HM048,HM048,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z21_03__f47632636,TP_z21_03,2,TP_z21_03_s2,internal_serial,HM,TP_z21_03,TP_z21_03,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z22_01__f47632390,TP_z22_01,1,TP_z22_01_s1,internal_serial,HM,HM049,HM049,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z22_01__f47632798,TP_z22_01,2,TP_z22_01_s2,internal_serial,HM,TP_z22_01,TP_z22_01,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z22_02__f47632291,TP_z22_02,1,TP_z22_02_s1,internal_serial,HM,HM050,HM050,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z22_02__f47632795,TP_z22_02,2,TP_z22_02_s2,internal_serial,HM,TP_z22_02,TP_z22_02,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z22_03__f47632294,TP_z22_03,1,TP_z22_03_s1,internal_serial,HM,HM051,HM051,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z22_03__f47632669,TP_z22_03,2,TP_z22_03_s2,internal_serial,HM,TP_z22_03,TP_z22_03,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z23_01__f47629825,TP_z23_01,2,TP_z23_01_s2,internal_serial,HM,TP_z23_01,TP_z23_01,2023-02-02,2023-03-13,45,zyk_setpoint_ok
+TP_z23_01__f47632303,TP_z23_01,1,TP_z23_01_s1,internal_serial,HM,HM052,HM052,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z23_02__f47629960,TP_z23_02,2,TP_z23_02_s2,internal_serial,HM,TP_z23_02,TP_z23_02,2023-02-02,2023-03-23,45,zyk_setpoint_ok
+TP_z23_02__f47639026,TP_z23_02,1,TP_z23_02_s1,internal_serial,HM,HM053,HM053,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z23_03__f47630323,TP_z23_03,2,TP_z23_03_s2,internal_serial,HM,TP_z23_03,TP_z23_03,2023-02-02,2023-04-25,45,zyk_setpoint_ok
+TP_z23_03__f47632381,TP_z23_03,1,TP_z23_03_s1,internal_serial,HM,HM054,HM054,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z24_01__f47632309,TP_z24_01,1,TP_z24_01_s1,internal_serial,HM,HM055,HM055,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z24_01__f47632747,TP_z24_01,2,TP_z24_01_s2,internal_serial,HM,TP_z24_01,TP_z24_01,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z24_02__f47632666,TP_z24_02,2,TP_z24_02_s2,internal_serial,HM,TP_z24_02,TP_z24_02,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z24_02__f47639032,TP_z24_02,1,TP_z24_02_s1,internal_serial,HM,HM056,HM056,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z24_03__f47632399,TP_z24_03,1,TP_z24_03_s1,internal_serial,HM,HM057,HM057,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z24_03__f47632786,TP_z24_03,2,TP_z24_03_s2,internal_serial,HM,TP_z24_03,TP_z24_03,2023-02-02,2024-02-13,45,zyk_setpoint_ok
+TP_z25_01__f47632393,TP_z25_01,1,TP_z25_01_s1,unique_name,HM,HM058,HM058,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z25_02__f47632285,TP_z25_02,1,TP_z25_02_s1,unique_name,HM,HM059,HM059,2021-10-01,2022-09-12,45,zyk_setpoint_ok
+TP_z25_03__f47632234,TP_z25_03,1,TP_z25_03_s1,unique_name,HM,HM060,HM060,2021-10-01,2022-09-12,45,zyk_setpoint_ok

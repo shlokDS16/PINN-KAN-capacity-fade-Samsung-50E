@@ -1,13 +1,13 @@
 """Samsung INR21700-50E (Stroebl et al. 2024): one row per check-up, built from the raw CU files.
 
-Run (from ROOT):  .venv/Scripts/python.exe -P code/data/samsung_checkups.py [--jobs N] [--no-cache]
+Run (from ROOT):  .venv/Scripts/python.exe -P code/data/samsung_checkups.py [--jobs N] [--no-cache] [--raw DIR] [--lists DIR] [--out-dir DIR] [--run-dir DIR] [--cu-only]
 
 Inputs (all parsed with pandas / plain text only; nothing from a download is executed):
-  data/raw/samsung50e_members/<serial>/*_CU.csv, *_exCU.csv, *_ET_T23.csv, *_AT_T23.csv (if present)
-  data/raw/samsung50e_members/<serial>/*_meta.txt         measurement start date, chamber set point
+  data/raw/samsung50e_full_x/<serial>__f<figshare id>/*_CU.csv, *_exCU.csv, *_ET_T23.csv, *_AT_T23.csv   (--raw; made from the
+                                                          zips of the full release by code/data/samsung_extract.py)
+  data/raw/samsung50e_full_x/<folder>/*_meta.txt          measurement start date, chamber set point
   data/raw/samsung50e_meta/experiments_meta.csv           design (T, SOC_max, DoD, C_ch, C_dch) per cell
-  runs/pilot_P0/member_lists/<serial>.txt (or runs/pilot_P0/<serial>_members.tsv)
-                                                          optional: zip member names, used for the
+  runs/samsung_pipeline_full/member_lists/<folder>.txt    (--lists) zip member names of every zip, used for the
                                                           expected file sequence and completeness
 Outputs:
   data/processed/samsung_checkups.csv   one row per check-up
@@ -46,17 +46,51 @@ import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
-RAW = ROOT / "data" / "raw" / "samsung50e_members"
+# Defaults point at the FULL release (2026-11-05): data/raw/samsung50e_full_x/<serial>__f<figshare id>/ is made from the 279 zips of
+# data/raw/samsung50e_full by code/data/samsung_extract.py (folder key = zip stem), member lists come from the same zips.
+# The per-member fetch of the first pipeline (data/raw/samsung50e_members + runs/pilot_P0/member_lists) stays usable through
+# configure(raw=..., lists=...) / --raw / --lists, and CU_ONLY reproduces its file set (regression test).
+RAW_FULL = ROOT / "data" / "raw" / "samsung50e_full_x"
+RAW_MEMBERS = ROOT / "data" / "raw" / "samsung50e_members"
+LISTS_FULL = ROOT / "runs" / "samsung_pipeline_full" / "member_lists"
+LISTS_MEMBERS = ROOT / "runs" / "pilot_P0" / "member_lists"
+RAW = RAW_FULL
 META_CSV = ROOT / "data" / "raw" / "samsung50e_meta" / "experiments_meta.csv"
-LISTS = ROOT / "runs" / "pilot_P0" / "member_lists"
+LISTS = LISTS_FULL
 PROBE_DIR = ROOT / "runs" / "pilot_P0"
 OUT_DIR = ROOT / "data" / "processed"
 OUT_CHECKUPS = OUT_DIR / "samsung_checkups.csv"
 OUT_CELLS = OUT_DIR / "samsung_cells.csv"
 CACHE = OUT_DIR / ".samsung_file_cache.json"
 RUN_DIR = ROOT / "runs" / "samsung_pipeline"
+CU_ONLY = False   # True: read only the CU csv files (the file set of the first, per-member pipeline); False: CU, exCU, ET_T23, AT_T23
 
-CODE_VERSION = "2026-11-05.7"  # bump to invalidate the per-file cache
+
+def configure(raw=None, lists=None, out_dir=None, run_dir=None, cu_only=None, meta_csv=None):
+    """Re-point the module (paths are read at call time by build / expected_sequence / main)."""
+    global RAW, LISTS, OUT_DIR, OUT_CHECKUPS, OUT_CELLS, CACHE, RUN_DIR, CU_ONLY, META_CSV
+    if raw is not None:
+        RAW = Path(raw)
+    if lists is not None:
+        LISTS = Path(lists)
+    if out_dir is not None:
+        OUT_DIR = Path(out_dir)
+        OUT_CHECKUPS, OUT_CELLS, CACHE = OUT_DIR / "samsung_checkups.csv", OUT_DIR / "samsung_cells.csv", OUT_DIR / ".samsung_file_cache.json"
+    if run_dir is not None:
+        RUN_DIR = Path(run_dir)
+    if cu_only is not None:
+        CU_ONLY = bool(cu_only)
+    if meta_csv is not None:
+        META_CSV = Path(meta_csv)
+
+
+def _is_capacity_csv(kind: str, temp) -> bool:
+    """File kinds that enter the capacity series."""
+    if CU_ONLY:
+        return kind == "CU"
+    return kind in ("CU", "exCU") or (kind in ("ET", "AT") and temp == str(REF_TEMP_C))
+
+CODE_VERSION = "2026-11-05.7"  # bump to invalidate the per-file cache (the 2026-11-05 full-release re-pointing changes no per-file result)  # bump to invalidate the per-file cache
 
 # ---- constants taken from the dataset paper (notes/papers/samsung50e_dataset_paper.md, Table 3) ----
 Q_NOM_AH = 4.9                    # rated capacity; C-rates refer to it
@@ -369,13 +403,7 @@ def process_cell(serial: str, cond: pd.Series | None, folder: Path, analysed: di
             first_test, first_src = min(zyk), "ZYK_meta"
 
     # ---- capacity files that enter the series ----
-    cap_keys = []
-    for (idx, kind, temp), p in files["csv"].items():
-        if kind in ("CU", "exCU"):
-            cap_keys.append((idx, kind, temp))
-        elif kind in ("ET", "AT") and temp == str(REF_TEMP_C):
-            cap_keys.append((idx, kind, temp))
-    cap_keys.sort()
+    cap_keys = sorted((idx, kind, temp) for (idx, kind, temp) in files["csv"] if _is_capacity_csv(kind, temp))
 
     rows = []
     for idx, kind, temp in cap_keys:
@@ -674,7 +702,7 @@ def build(jobs: int = 2, use_cache: bool = True):
         for p in sorted(f.iterdir()):
             m = FILE_RE.match(p.name)
             if m and m.group("csv") and not m.group("meta"):
-                if m.group("kind") in ("CU", "exCU") or (m.group("kind") in ("ET", "AT") and m.group("temp") == str(REF_TEMP_C)):
+                if _is_capacity_csv(m.group("kind"), m.group("temp")):
                     cap_paths.append(p)
     analysed = analyse_all(cap_paths, jobs, use_cache)
 
@@ -836,7 +864,13 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--jobs", type=int, default=2)
     ap.add_argument("--no-cache", action="store_true")
+    ap.add_argument("--raw", default=None, help="folder of cell folders (default: the full release, data/raw/samsung50e_full_x)")
+    ap.add_argument("--lists", default=None, help="folder of zip member lists <folder>.txt (default: runs/samsung_pipeline_full/member_lists)")
+    ap.add_argument("--out-dir", default=None, help="where samsung_checkups.csv / samsung_cells.csv go (default data/processed)")
+    ap.add_argument("--run-dir", default=None, help="where config/metrics/issues/summary files go (default runs/samsung_pipeline)")
+    ap.add_argument("--cu-only", action="store_true", help="read only CU csv files (file set of the first per-member pipeline)")
     a = ap.parse_args(argv)
+    configure(raw=a.raw, lists=a.lists, out_dir=a.out_dir, run_dir=a.run_dir, cu_only=a.cu_only or None)
     df, cells, issues, design, folders = build(a.jobs, not a.no_cache)
     cells_full = cell_gap_table(df, cells)
     OUT_DIR.mkdir(parents=True, exist_ok=True)

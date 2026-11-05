@@ -1,4 +1,57 @@
 serial,file,issue,detail
-TP_z02_01,,design_row_ambiguous,
+TP_k04_04,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT046'] vs INT010
+TP_k04_05,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT047'] vs INT011
+TP_k04_06,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT048'] vs INT012
+TP_k05_04,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT049'] vs INT013
+TP_k05_05,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT050'] vs INT014
+TP_k05_05,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT027'] vs INT023
+TP_k05_06,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT051'] vs INT015
+TP_k06_04,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT052'] vs INT016
+TP_k06_05,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT053'] vs INT017
+TP_k06_06,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT054'] vs INT018
+TP_k07_06,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT153'] vs INT151
+TP_z02_02,TP_z02_02_09_CU.csv,meta_missing,
+TP_z02_03,idx 12,start_date_decreases_with_file_index,2024-04-12 -> 2024-01-30
+TP_z04_01,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT010'] vs INT019
+TP_z04_02,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT011'] vs INT020
+TP_z04_03,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT012'] vs INT021
+TP_z04_03,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT029'] vs INT027
+TP_z05_01,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT013'] vs INT022
+TP_z05_02,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT014'] vs INT023
+TP_z05_03,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT015'] vs INT024
+TP_z06_01,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT016'] vs INT025
+TP_z06_02,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT017'] vs INT026
+TP_z06_03,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT018'] vs INT027
+TP_z06_03,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT160'] vs INT153
+TP_z07_01,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT019'] vs INT028
+TP_z07_02,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT020'] vs INT029
+TP_z07_03,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT021'] vs INT030
+TP_z08_01,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT022'] vs INT031
+TP_z08_02,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT023'] vs INT032
+TP_z08_02,TP_z08_02_19_exCU.csv,chamber_setpoint_not_23C,35.0
+TP_z08_03,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT024'] vs INT033
+TP_z09_01,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT025'] vs INT034
+TP_z09_02,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT026'] vs INT035
+TP_z09_02,idx 21,start_date_decreases_with_file_index,2022-06-07 -> 2022-05-02
+TP_z09_03,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT027'] vs INT036
 TP_z10_01,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT028'] vs INT037
+TP_z10_02,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT029'] vs INT038
+TP_z10_03,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT030'] vs INT039
+TP_z11_01,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT031'] vs INT040
+TP_z11_02,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT032'] vs INT041
+TP_z11_03,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT033'] vs INT042
+TP_z12_01,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT034'] vs INT043
+TP_z12_02,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT035'] vs INT044
+TP_z12_03,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT036'] vs INT045
+TP_z12_03,TP_z12_03_07_exCU_meta.txt,start_date_unparsable,None
+TP_z13_01,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT037'] vs INT046
+TP_z13_02,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT038'] vs INT047
+TP_z13_03,,meta_internal_serial_differs_from_table,"meta_internal_serial_differs_from_table: ['INT038', 'INT039'] vs INT048"
+TP_z14_01,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT040'] vs INT049
+TP_z14_02,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT041'] vs INT050
+TP_z14_03,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT042'] vs INT051
 TP_z15_01,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT043'] vs INT052
+TP_z15_02,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT044'] vs INT053
+TP_z15_03,,meta_internal_serial_differs_from_table,meta_internal_serial_differs_from_table: ['INT045'] vs INT054
+TP_z19_01,TP_z19_01_31_CU_meta.txt,start_date_unparsable,22.10.222
+TP_z25_01,idx 9,start_date_decreases_with_file_index,2021-11-04 -> 2021-10-14

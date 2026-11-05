@@ -1,65 +1,101 @@
 {
-  "generated": "2026-11-05T00:09:22",
-  "code_version": "2026-11-05.5",
+  "generated": "2026-11-05T16:27:02",
+  "code_version": "2026-11-05.7",
   "cells_in_design": 279,
-  "cells_dirs_present": 20,
-  "cells_with_capacity_rows": 19,
-  "checkup_rows": 163,
+  "cells_dirs_present": 279,
+  "cells_with_capacity_rows": 279,
+  "checkup_rows": 2766,
   "rows_by_kind": {
-    "CU": 163
+    "CU": 1532,
+    "exCU": 682,
+    "ET": 279,
+    "AT": 273
   },
-  "qc_pass_rows": 163,
+  "qc_pass_rows": 2717,
   "rows_by_type": {
-    "k": 1,
-    "z": 162
+    "k": 681,
+    "z": 2085
   },
-  "flag_counts": {},
+  "flag_counts": {
+    "multiple_runs_21": 1,
+    "charge_not_to_4p2V": 2,
+    "no_start_date": 3,
+    "duration21_out_of_range": 12,
+    "charge_discharge_mismatch": 24,
+    "date_out_of_order": 3,
+    "surface_temp_at_discharge_start_far_from_23C": 20,
+    "step22_missing": 3,
+    "current21_off_nominal": 10,
+    "setpoint_not_23C": 1,
+    "capacity_outlier_vs_neighbours": 5,
+    "duration22_out_of_range": 3,
+    "current22_off_nominal": 2,
+    "negative_exposure_time": 5
+  },
   "info_counts": {
-    "long_file": 25,
-    "voltage_glitch_below_2V": 40
+    "long_file": 1322,
+    "capacity_rise_gt_0p5pct": 7,
+    "AT_after_10C_45C_tests": 273,
+    "voltage_glitch_below_2V": 669,
+    "stub_run_21": 1,
+    "stub_run_22": 1
   },
-  "cells_complete_cu": 17,
+  "cells_complete_cu": 279,
   "cells_without_member_list": 0,
-  "cells_meta_cu_without_csv": 1,
+  "cells_meta_cu_without_csv": 0,
   "cells_with_trajectory_ge3": {
-    "z": 18
+    "k": 66,
+    "z": 147
   },
   "cells_with_trajectory_ge5": {
-    "z": 17
+    "k": 66,
+    "z": 145
   },
   "conditions_in_design": 59,
-  "conditions_with_trajectory_ge3": 17,
+  "conditions_with_trajectory_ge3": 59,
   "conditions_with_trajectory_ge3_by_type": {
-    "z": 17
+    "k": 19,
+    "z": 40
   },
   "conditions_present_by_type": {
-    "k": 1,
-    "z": 17
+    "k": 19,
+    "z": 40
   },
   "cadence_gap_days_by_type": {
+    "k": {
+      "n": 417,
+      "median": 56.0,
+      "min": 19.0,
+      "max": 89.0,
+      "q25": 43.0,
+      "q75": 63.0
+    },
     "z": {
-      "n": 144,
-      "median": 29.0,
-      "min": 7.0,
-      "max": 78.0,
-      "q25": 17.0,
-      "q75": 45.5
+      "n": 1792,
+      "median": 27.0,
+      "min": -36.0,
+      "max": 388.0,
+      "q25": 15.0,
+      "q75": 30.0
     }
   },
   "first_checkup_elapsed_days_by_type": {
     "k": {
-      "median": 49.0,
-      "min": 49.0,
-      "max": 49.0
+      "median": 48.5,
+      "min": 41.0,
+      "max": 95.0
     },
     "z": {
-      "median": 26.0,
-      "min": 7.0,
+      "median": 22.0,
+      "min": 11.0,
       "max": 77.0
     }
   },
   "issue_counts": {
-    "meta_internal_serial_differs_from_table": 2,
-    "design_row_ambiguous": 1
+    "meta_internal_serial_differs_from_table": 49,
+    "start_date_decreases_with_file_index": 3,
+    "start_date_unparsable": 2,
+    "meta_missing": 1,
+    "chamber_setpoint_not_23C": 1
   }
 }

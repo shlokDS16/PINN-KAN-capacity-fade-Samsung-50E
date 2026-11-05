@@ -96,3 +96,7 @@ state; it is idempotent and caches per-file results). Run: `.venv/Scripts/python
 - ET_T23 / exCU / AT_T23 csv for true Q0 and double the intermediate points (code path exists for ET_T23, exCU and AT_T23
   but is untested on real files, none present).
 - Re-run after the download completes; empty/in-progress folders are reported, not guessed.
+
+
+---
+Update 2026-11-05: the pipeline now reads the full release (all 279 zips, CU + exCU + ET_T23 + AT_T23); the counts above describe the earlier per-member snapshot. Current numbers and the freeze-blocker evidence: runs/samsung_pipeline_full/RESULT.md.

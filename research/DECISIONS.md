@@ -436,3 +436,13 @@ Row format:
   - the audit is not built by the freeze;
   - a Samsung outer score exists before FROZEN;
   - Shlok changes the table or asks for the closed-form SOC readout.
+
+### D021 Per-edge cap of the symbolic library (record-only row; 2026-11-05, status: accepted, confirmed in D022)
+- **Decision:** max_coeffs_per_edge = 2 for A15 and G15 (eligible forms zero, linear, log), set by the method-architect with the
+  decision rule committed before the synthetic study (c0a9793, 2334666). Confirmed by the D022 judge, with the list of forbidden
+  claims (no recovered Arrhenius, power, hinge or non-monotone SOC form) in debates/D022_datasets_kan/03_judge.md section 4.
+- **Alternatives and why they lost:** cap 3+ (whole library): chose 3-coefficient forms on 37 of 40 truly linear synthetic edges;
+  cap 0-1: prunes every edge. Details in debates/D021_cap/01_architect.md.
+- **Evidence:** debates/D021_cap/01_architect.md, study_rule.md, runs/D021_cap_synth/.
+- **Proposer / opponent / judge:** method-architect / Codex turn 7 (D022) / D022 judge.
+- **Re-open if:** D022 re-open conditions.

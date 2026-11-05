@@ -62,6 +62,9 @@ def row_tiers(out, store, rule, cells="g1g4"):
     if has("A1", G1) and has("A9", G1) and "P2" in lv:
         _, L, _ = store.L("A1", "A9", G1)
         t["P2"] = _positives_reach(rule, L, v4.LOG_S, lv["P2"])
+    md = v4.most_d(store)
+    if md is not None and "P2" in lv:                    # review I2: the GAP-1 'most' test is recomputed under every row (binary pass/fail at 0.025)
+        t["most"] = _positives_reach(rule, md[3], 0.0, rev)
     if cells == "g1":
         return t
     if "P3" in lv and has("A1", G1) and has("A1", G4) and has("D*", G1) and has("D*", G4):
@@ -165,6 +168,9 @@ def lab_stratified_tiers(out, store, B=B_BOOT):
     if has("A1", G1) and has("A9", G1) and "P2" in lv:
         c, L, _ = store.L("A1", "A9", G1)
         t["P2"] = binary("P2", L, c, lv["P2"], v4.LOG_S)
+    md = v4.most_d(store)
+    if md is not None and "P2" in lv:
+        t["most"] = binary("most", md[3], md[0], rev, 0.0)
     if "P3" in lv and all(has(a, g) for a in ("A1", "D*") for g in (G1, G4)):
         c1, L1, _ = store.L("A1", "D*", G1)
         c4, L4, _ = store.L("A1", "D*", G4)

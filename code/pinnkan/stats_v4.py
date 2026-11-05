@@ -447,8 +447,8 @@ def _tier_ge(a, b):
     return a is not None and TIER_ORDER.index(a) >= TIER_ORDER.index(b)
 
 
-def most_test(store, rule, cfg, e1_reached):
-    """GAP-1 (D018 section 4): d_c = L_law,c - 0.5 L_total,c at g1; 'most' holds iff e1 is reached and the sign test of median(d_c) > 0 at 0.025 reaches its count"""
+def most_d(store):
+    """per-condition d_c = L_law,c - 0.5 L_total,c at g1 (D018 section 4); None when A1, A9 or D* is missing at g1"""
     if not (store.has("A1", *G1) and store.has("A9", *G1) and store.has("D*", *G1)):
         return None
     c9, L9, _ = store.L("A1", "A9", G1)
@@ -456,7 +456,15 @@ def most_test(store, rule, cfg, e1_reached):
     common = sorted(set(c9) & set(cD))
     law_ = np.array([L9[c9.index(c)] for c in common])
     tot = np.array([LD[cD.index(c)] for c in common])
-    d = law_ - 0.5 * tot
+    return common, law_, tot, law_ - 0.5 * tot
+
+
+def most_test(store, rule, cfg, e1_reached):
+    """GAP-1 (D018 section 4): d_c = L_law,c - 0.5 L_total,c at g1; 'most' holds iff e1 is reached and the sign test of median(d_c) > 0 at 0.025 reaches its count"""
+    md = most_d(store)
+    if md is None:
+        return None
+    common, law_, tot, d = md
     pos, n, p = rule.test(d, 0.0)
     crit = rule.crit(n, cfg["alpha"])
     lo, hi, r, cov = rule.interval(d, 0.05)

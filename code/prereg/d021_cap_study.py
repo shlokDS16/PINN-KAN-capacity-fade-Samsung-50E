@@ -111,7 +111,7 @@ def one_cell(kind, m, seed, log):
             cr["E_law"] = law_err(model.law.cyc, raw_probe, t_probe, rng_y)
             cr["E_test"] = law_err(model.law.cyc, te_raw, t_te, rng_y)
             try:
-                preds, _ = predict_pinn(model, SPEC, [p.win for p in prep], float(hp.get("lam_res", 1.0)), seed, steps=60)
+                preds, _ = predict_pinn(model, SPEC, [p.win for p in prep], float(hp.get("lam_res", 1.0)), seed)
                 rows_ = metrics.score_prepared(preds, prep)
                 cr["forecast_rmse_pp"] = float(np.mean([r["rmse_pp"] for r in rows_]))
             except Exception as ex:                                  # a failed inversion must not lose the cell

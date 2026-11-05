@@ -207,7 +207,7 @@ def parent():
     S0 = synth.make_synthetic("G0", n_cyc_cond=14, n_sto_cond=6, reps=2, seed=4)
     tr, te = synth.split_conditions(S0.cells, 0.25, 4)
     b = law.batch_from_cells(SPEC, tr)
-    m = pinn.fit_pinn(b, SPEC, {"map": "kan", "h": 2, "grid": 3, "l2": 1e-4, "sparsity": 0.0, "lam_res": 0.1}, "self_limiting", 0, steps=60)
+    m = pinn.fit_pinn(b, SPEC, {"map": "kan", "h": 2, "grid": 3, "l2": 1e-4, "sparsity": 0.0, "lam_res": 0.1}, "self_limiting", 0)
     return tr, te, b, m
 
 
@@ -229,8 +229,8 @@ def test_untruncated_extraction_reproduces_a1_to_float_tolerance(parent):
     swapped = A.swap_law(m, sym_cyc, sym_cal)
     base = D.WindowRule.for_spec(SPEC, k_cycling=3, k_storage=2)
     pr = D.prepare_many([c for c in te if c.kind == "cycling"], base)
-    p1, _ = pinn.predict_pinn(m, SPEC, [p.win for p in pr], 0.1, 0, steps=30)
-    p2, _ = pinn.predict_pinn(swapped, SPEC, [p.win for p in pr], 0.1, 0, steps=30)
+    p1, _ = pinn.predict_pinn(m, SPEC, [p.win for p in pr], 0.1, 0)
+    p2, _ = pinn.predict_pinn(swapped, SPEC, [p.win for p in pr], 0.1, 0)
     for k in p1:
         assert np.allclose(p1[k], p2[k], atol=2e-5)
     assert rep["untruncated"] and rep["n_coefs"] > 0

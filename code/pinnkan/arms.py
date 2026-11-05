@@ -10,7 +10,7 @@ import torch
 
 import copy
 
-from . import baselines, semi
+from . import baselines, inversion, semi
 from . import symbolic
 from .data import prepare_many
 from . import free
@@ -256,7 +256,19 @@ class SemiArm(Arm):
         return self
 
     def predict(self, wcells):
-        return semi.predict_semi(self.form, self.theta, wcells, per_cell_factor=bool(self.ctx.get("per_cell_factor", True)) and self.arm_id != "A10P", beta=self.beta)
+        pcf = bool(self.ctx.get("per_cell_factor", True)) and self.arm_id != "A10P"
+        out = semi.predict_semi(self.form, self.theta, wcells, per_cell_factor=pcf, beta=self.beta)
+        if pcf and inversion.TAG:                      # D023 action 2: log the A10 per-cell factors that sit at the bound [-2, 2] (a value at +-2 means the bound set it)
+            from .data import indicator_vector
+            hits = n = 0
+            for w in wcells:
+                if len(w.t_win) > 1:
+                    mu = 0.0 if self.beta is None else float(self.beta[0] + indicator_vector(w.lab, w.stage).astype(float) @ self.beta[1:])
+                    n += 1
+                    hits += int(abs(semi.cell_factor(self.form, self.theta, w, mu)) >= 2.0 - 1e-6)
+            inversion.LOG.append({"arm": inversion.TAG.get("arm", self.arm_id), "kind": "semi", "k": inversion.TAG.get("k"), "seed": inversion.TAG.get("seed"), "n_cells": len(wcells),
+                                  "n_inverted": n, "n_nonconverged": 0, "convergence_share": 1.0, "gnorm_max": 0.0, "n_iter": 0, "nonfinite": 0, "n_at_bound": hits})
+        return out
 
 
 class P3Arm(Arm):

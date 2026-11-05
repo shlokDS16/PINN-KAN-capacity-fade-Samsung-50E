@@ -52,25 +52,13 @@ def fit_hard(batch: Batch, spec, hp, backbone, seed, steps=1200, lr=0.02, clip=G
     return m
 
 
-def fit_delta(m: HardODE, bw: Batch, steps=300, lr=0.05):
-    """MAP of per-cell offsets from window points, model frozen (prior sd TAU, noise SIGMA)."""
-    flags = [p.requires_grad for p in m.parameters()]
-    for p in m.parameters():
-        p.requires_grad_(False)
-    mu = (m.prior_mean(bw.ind).detach() if (m.beta is not None and bw.ind is not None) else torch.zeros(bw.C))
-    delta = mu.clone().requires_grad_(True)
-    opt = torch.optim.Adam([delta], lr=lr)
-    for _ in range(steps):
-        opt.zero_grad()
-        r = m.predict_y(bw, delta) - bw.obs_y
-        ((r ** 2).sum() / SIGMA ** 2 + ((delta - mu) ** 2).sum() / _law.TAU ** 2).backward()
-        opt.step()
-    for p, f in zip(m.parameters(), flags):
-        p.requires_grad_(f)
-    delta = delta.detach().clone()
-    ref_only = torch.bincount(bw.obs_cell, minlength=bw.C) <= 1
-    delta[ref_only] = mu[ref_only]      # k = 0: no window check-up -> the prior mean (0 in the primary analysis)
-    return delta
+def fit_delta(m: HardODE, bw: Batch):
+    """per-cell offsets of held-out cells from their window points, model frozen: the common inversion routine (damped Newton, float64, prior mode, D023); prior N(mu, TAU^2) with mu the
+    indicator prior mean (0 in the primary analysis); a window with the reference point only keeps the prior mean (k = 0)."""
+    from . import inversion
+    prob = inversion.hard_problem(m, bw)
+    res = inversion.solve(prob, "hard")
+    return res.P[:, 0].float()
 
 
 def split_by_cell(b: Batch, values):
@@ -82,9 +70,9 @@ def split_by_cell(b: Batch, values):
     return out
 
 
-def predict_hard(m: HardODE, spec, wcells, steps=300):
+def predict_hard(m: HardODE, spec, wcells):
     bw = batch_from_windows(spec, wcells, indicator=m.beta is not None)
-    delta = fit_delta(m, bw, steps=steps)
+    delta = fit_delta(m, bw)
     bq = batch_forecast_query(spec, wcells)
     with torch.no_grad():
         y = m.predict_y(bq, delta)

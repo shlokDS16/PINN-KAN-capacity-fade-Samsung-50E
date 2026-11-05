@@ -99,7 +99,7 @@ def test_k0_latents_and_offsets_are_the_prior_means(g0):
     arm = make_arm("A4", SPEC, default_hp("A4"), 0, dict(CTX, rule=base)).fit(tr)
     for k, zero in ((0, True), (2, False)):
         pr = D.prepare_many([c for c in te if c.kind == "cycling"], D.WindowRule.for_grid(SPEC, k, base))
-        _, (z, delta) = predict_pinn(arm.model, SPEC, [p.win for p in pr], 1.0, 0, steps=20)
+        _, (z, delta) = predict_pinn(arm.model, SPEC, [p.win for p in pr], 1.0, 0)
         assert bool((z == 0).all() and (delta == 0).all()) == zero
 
 

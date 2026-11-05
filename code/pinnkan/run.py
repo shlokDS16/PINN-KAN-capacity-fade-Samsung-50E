@@ -24,7 +24,7 @@ import numpy as np
 import torch
 
 from . import ROOT as _ROOT
-from . import emit, guard, h7, law, margins, metrics, negcontrol, selectors, semi, stats_step, subsets, synth, tuning
+from . import emit, guard, h7, inversion, inversion_diag, law, margins, metrics, negcontrol, selectors, semi, stats_step, subsets, synth, tuning
 from .arms import ARMS, H1B_POOL, NEURAL, OUT_OF_SCOPE_ARMS, default_hp, make_arm
 from .data import WindowRule, apply_subset, grid_ks, load_split, prepare_many, sha256_file
 from .law import TAU
@@ -39,7 +39,7 @@ DEFAULTS = {"mode": "inner", "test": "B", "fold": 0, "arms": ["A1", "A2", "A9", 
             # cells 04-06 as two-point records (i); min_fc_points: scored cells need this many forecast points (i, "cells with >= 3 forecast points" -> 3);
             # law_overrides: {Y0, gamma, tau} for the A2-only tournament row (m), {delta_scope: "total"} for row (l); throughput_fallback: "analytic" lets a
             # cycling cell without ZYK entries use the designed throughput under throughput="zyk" (otherwise ZykDataMissing)
-            "include_at": False, "include_storage_0406": False, "min_fc_points": 1, "m": None, "subset": "maxmin", "subset_draw": 0, "k": None, "design": "R2", "extraction_audit_sha256": None, "calibration_rule_sha256": None, "nc1_scramble_k": None, "symbolic": {}, "endpoint": "ensemble", "inner_k_thin": 2, "p6b_decision": None, "law_overrides": {}, "throughput_fallback": "none", "forecast_failure": False, "lab_indicator": False}
+            "include_at": False, "include_storage_0406": False, "min_fc_points": 1, "m": None, "subset": "maxmin", "subset_draw": 0, "k": None, "design": "R2", "inversion_config_sha256": None, "inversion_diagnostics": None, "extraction_audit_sha256": None, "calibration_rule_sha256": None, "nc1_scramble_k": None, "symbolic": {}, "endpoint": "ensemble", "inner_k_thin": 2, "p6b_decision": None, "law_overrides": {}, "throughput_fallback": "none", "forecast_failure": False, "lab_indicator": False}
 TARGET_BY_TEST = {"B": "cycling", "C": "cycling", "A": "cycling", "S2": "storage", "S3": "storage"}   # the tuned task is the scored task (review M3)
 
 
@@ -203,6 +203,12 @@ def _run(cfg_in, root=None, runs_dir=None):
                     raise ConfigError(f"{key} is required in a real-data confirmatory run with A15 / G15 (sha256 of {os.path.basename(path)})")
             elif not os.path.isfile(path) or cfg[key] != _xa.sha256_file(path):
                 raise ConfigError(f"{key} does not match the file {os.path.basename(path)} in this tree")
+    if {"A1", "A2", "A4", "A5", "A9", "A13", "A15", "G15"} & set(cfg["arms"]):         # D023: the inversion constants are a config key (hence in the config hash)
+        if cfg["inversion_config_sha256"] is None:
+            if cfg["mode"] == "confirmatory" and ds != "synthetic":
+                raise ConfigError("inversion_config_sha256 is required in a real-data confirmatory run (sha256 of inversion.config_dict(); D023 action 2)")
+        elif cfg["inversion_config_sha256"] != inversion.config_sha256():
+            raise ConfigError("inversion_config_sha256 does not match inversion.CONFIG (tolerance, cap, damping constants, dtype, z-prior weight)")
     if cfg["design"] not in ("R2", "V3_legacy"):
         raise ConfigError("design must be 'R2' (PREREG_v4) or 'V3_legacy' (history only)")
     if cfg["design"] == "R2" and (cfg["mode"] in ("confirmatory", "nc1_full", "h7") or cfg["m"] is not None or cfg["k"] is not None):
@@ -381,14 +387,19 @@ def _run(cfg_in, root=None, runs_dir=None):
         _json(os.path.join(run_dir, "backbone_tournament.json"), tb)
         rec.log(f"backbone tournament: chosen {tb['chosen']} (best {tb['best']})")
     tuned = {}
+    inversion.LOG.clear()
     for a in arms:
         t0 = time.time()
+        inversion.TAG.clear()
+        inversion.TAG.update({"arm": a, "k": "inner"})
         r = tuning.tune(a, train, spec, rule_tune, cfg["n_trials"], cfg["inner_k"], cfg["fold"], ctx, tk)
         tuned[a] = r
         timings[a] = {"tuning_seconds": time.time() - t0, "median_fit_seconds": r["median_fit_seconds"], "n_trials": r["n_trials"], "n_failed": r["n_failed"]}
         rec.add_preds("inner_oof", a, 1000 + cfg["fold"], r["rows"])
         _json(os.path.join(run_dir, f"tuning_{a}.json"), {k: (strip_rows(v) if k == "rows" else v) for k, v in r.items()})
         rec.log(f"tuned {a}: inner-CV {r['inner_cv_pp']:.3f} pp, best {r['best_hp']}, median fit {r['median_fit_seconds']:.1f} s, failed {r['n_failed']}")
+    inner_inv = inversion.drain_log()                      # every inversion of the tuning (count only)
+    inversion.TAG.clear()
     metrics_out["k_full"] = rule.k_cycling if rule.W is None else None
     _json(os.path.join(run_dir, "train_condition_meta.json"), metrics.train_condition_meta(train))      # identifiers only: laboratory of each training condition (item (f) dependence estimate)
     metrics_out["tuning_window"] = {"k_cycling": rule_tune.k_cycling, "k_storage": rule_tune.k_storage, "W": rule_tune.W, "m": cfg["m"]}
@@ -445,6 +456,7 @@ def _run(cfg_in, root=None, runs_dir=None):
     cond_scores_out, per_arm, cell_scores_out = {kl: {} for kl in KC}, {kl: {} for kl in KC}, {kl: {} for kl in KC}
     seed_scores_out = {kl: {} for kl in KC}            # per-seed condition scores (mean over seeds of the per-seed condition RMSE): K1 / K2 and the descriptive row
     fitted, inv_records, law_records = {}, {}, []
+    inv_calls, seed0_arms = [], {}
     for a in arms:
         ks_a = [kl for kl in KC if not (kl == "0" and a in ("R1", "R2"))]            # R1 and R2 need a window check-up (k >= 1): k = 0 is its own reference
         per_seed = {kl: ([], []) for kl in ks_a}
@@ -456,11 +468,16 @@ def _run(cfg_in, root=None, runs_dir=None):
                     tf0 = time.time()
                     arm = make_arm(a, spec, tuned[a]["best_hp"], sd_, dict(ctx, rule=KC[kl]["rule"])).fit(train)
                     fit_s += time.time() - tf0                                      # the fit alone: predict and the NC-1 re-predict are not part of the reported wall clock (review M1)
+                inversion.LOG.clear()
+                inversion.TAG.clear()
+                inversion.TAG.update({"arm": a, "k": kl, "seed": sd_})
                 preds = arm.predict(KC[kl]["wc"])
+                inv_calls += [dict(r, fold=cfg["fold"], m=cfg["m"]) for r in inversion.drain_log()]          # convergence of every inversion call of the primary prediction
                 rows = metrics.score_prepared(preds, KC[kl]["prep"])
                 per_seed[kl][0].append(rows)
                 per_seed[kl][1].append(preds)
                 key = f"{a}|{sd_}" if kl is None else f"{a}|{sd_}|k{kl}"
+                inversion.TAG.clear()
                 inv_records[key] = negcontrol.check_invariance(arm.predict, D["test"], KC[kl]["rule"], spec, cfg["oracle_throughput"], base_preds=preds, base_prepared=KC[kl]["prep"])
                 if kl == primary and a in ("A1", "A2", "A4", "A10"):
                     fitted.setdefault(a, []).append(arm)
@@ -469,6 +486,9 @@ def _run(cfg_in, root=None, runs_dir=None):
                 from . import extraction_audit as _xa
                 akey = "G15" if a == "G15" else f"A15h{int(tuned[a]['best_hp'].get('h', 0))}"
                 law_records.append(_xa.law_record(akey, cfg["fold"], sd_, arm.report, spec, arm.model.law.cyc, arm.parent_cyc, arm.s_cyc_train))
+            inversion.LOG.clear()                                                          # the invariance re-predictions are not part of the diagnostics
+            if sd_ == cfg["seeds"][0] and arm is not None:
+                seed0_arms[a] = arm
             timings[a][f"refit_seed{sd_}_seconds"] = fit_s
             timings[a][f"refit_seed{sd_}_total_seconds"] = time.time() - t0     # fit + predict + invariance re-predict, for the record
         for kl in ks_a:
@@ -522,6 +542,7 @@ def _run(cfg_in, root=None, runs_dir=None):
         _json(os.path.join(run_dir, "extracted_laws.json"), {"m": 32 if cfg["m"] is None else int(cfg["m"]), "fold": cfg["fold"], "laws": law_records,
                                                             "levels": _xa.distinct_levels(sorted({c.cond for c in train if c.kind == "cycling"})), "extraction_audit_sha256": _xa.thresholds_sha256()})
     _json(os.path.join(run_dir, "condition_scores.json"), cond_scores_out[primary])     # written last: its presence marks a scored run
+    _inversion_diagnostics(cfg, run_dir, rec, spec, arms, KC, seed0_arms, inv_calls, inner_inv, comp)
     _finish(rec, run_dir, timings, metrics_out, t_start)
     return run_dir
 
@@ -545,6 +566,45 @@ def _score_windows(cfg, rule_test, spec):
     if len({l for l, _ in out}) != len(out):
         raise ConfigError("duplicate k cells")
     return out
+
+
+def _inversion_diagnostics(cfg, run_dir, rec, spec, arms, KC, seed0_arms, inv_calls, inner_inv, comp):
+    """D023 section 4, after the primary scores are written: pooled convergence (inner-CV calls as a count), cap doubling, start spread, basin shares, rows (v) and (vi). Window cells only."""
+    want = cfg["inversion_diagnostics"]
+    if want is None:
+        want = bool(cfg["mode"] == "confirmatory" and cfg["dataset"] != "synthetic")
+    p = os.path.join(run_dir, "diagnostics.json")
+    d = json.load(open(p, encoding="utf8")) if os.path.exists(p) else {}
+    inv = {"config": inversion.config_dict(), "config_sha256": inversion.config_sha256(), "z_prior_weight": inversion.Z_PRIOR_WEIGHT,
+           "inner_cv": inversion.pooled_convergence(inner_inv), "primary": inversion_diag.summarise(inv_calls), "n_calls": len(inv_calls),
+           "nonconverged_by_call": [{k: r[k] for k in ("arm", "k", "seed", "fold", "m", "n_inverted", "n_nonconverged", "gnorm_max")} for r in inv_calls if r["n_nonconverged"]],
+           "diagnostics_computed": bool(want)}
+    if want:
+        agname = (comp.get("AG") or {}).get("arm")
+        full_arms = {"A1", "A9", agname} - {None}
+        out, sens = [], {}
+        for a in arms:
+            arm = seed0_arms.get(a)
+            if arm is None or not inversion_diag.inverts(arm):
+                continue
+            for kl, kc in KC.items():
+                if kl in (None, "0"):
+                    continue
+                full = a in full_arms
+                g1g4 = (cfg["m"] == 8 and kl == "2") or ((cfg["m"] in (None, 32)) and kl == "full")
+                r = inversion_diag.diagnose(arm, kc["wc"], a, cfg["fold"], cfg["m"], kl, full=full, rows=bool(full and g1g4))
+                fc = r.pop("forecasts", None)
+                out.append(r)
+                if fc:
+                    for row, d_ in fc.items():
+                        for tag, preds in d_.items():
+                            sens.setdefault(f"{row}{tag}_k{kl}", {})[a] = metrics.condition_scores(metrics.score_prepared(preds, kc["prep"]))
+        inv["per_arm_cell"] = out
+        for name, sc in sens.items():                      # descriptive rows (v) and (vi), seed 0 of the final refit; no consequence for any state or tier
+            _json(os.path.join(run_dir, f"condition_scores_sens_{name}.json"), sc)
+        inv["sensitivity_rows_written"] = sorted(sens)
+    d["inversion"] = inv
+    _json(p, d)
 
 
 LAM_GRID = ARMS["A1"].space["lam_res"][1]

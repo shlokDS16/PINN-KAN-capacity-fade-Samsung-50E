@@ -218,7 +218,7 @@ def test_stats_step_on_real_training_folds_uses_inner_cv_only(tmp_path):
     c = json.load(open(tmp_path / "an" / "contrasts_ISU.json"))
     assert c["source"] == ["inner_cv_training_conditions"] and "H1a" in c["contrasts"] and c["contrasts"]["H1b"]["comp"] in ("A4", "A5", "A7")
     with pytest.raises(guard.TestFoldAccessError):
-        run.run({**cfg, "run_id": "isu_conf", "mode": "confirmatory", "steps_scale": 1.0}, runs_dir=str(tmp_path))                  # the guard still blocks the outer test
+        run.run({**cfg, "run_id": "isu_conf", "mode": "confirmatory", "steps_scale": 1.0, "inversion_config_sha256": __import__("pinnkan.inversion", fromlist=["x"]).config_sha256()}, runs_dir=str(tmp_path))                  # the guard still blocks the outer test
 
 
 def test_stats_step_on_snl_training_fold(tmp_path):

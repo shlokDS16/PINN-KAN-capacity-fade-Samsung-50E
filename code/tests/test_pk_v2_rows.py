@@ -100,7 +100,7 @@ def test_k0_prior_mean_is_used_at_k0_in_the_indicator_row(labelled):
     a = A.make_arm("A4", SPEC, A.default_hp("A4"), 0, {**CTX, "rule": base, "lab_indicator": True}).fit(tr)
     from pinnkan.pinn import predict_pinn
     pr = D.prepare_many([c for c in te if c.kind == "cycling"], D.WindowRule.for_grid(SPEC, 0, base))
-    _, (z, delta) = predict_pinn(a.model, SPEC, [p.win for p in pr], 1.0, 0, steps=10)
+    _, (z, delta) = predict_pinn(a.model, SPEC, [p.win for p in pr], 1.0, 0)
     mu = a.model.prior_mean(torch.tensor(np.stack([D.indicator_vector(p.win.lab, p.win.stage) for p in pr])))
     assert torch.allclose(delta, mu.detach()) and bool((z == 0).all())
 

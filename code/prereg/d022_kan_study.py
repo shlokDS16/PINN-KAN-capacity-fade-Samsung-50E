@@ -251,7 +251,7 @@ def one_cell(kind, m, seed, log):
                 try:
                     if not FORECAST:
                         raise RuntimeError('forecast skipped (time limit)')
-                    preds, _ = predict_pinn(model, SPEC, [p.win for p in prep], float(hp["lam_res"]), seed, steps=60)
+                    preds, _ = predict_pinn(model, SPEC, [p.win for p in prep], float(hp["lam_res"]), seed)
                     rec["forecast_rmse_pp"] = float(np.mean([r["rmse_pp"] for r in metrics.score_prepared(preds, prep)]))
                 except Exception as ex:
                     rec["forecast_rmse_pp"] = float("nan")

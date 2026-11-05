@@ -187,44 +187,21 @@ def fit_pinn(b: Batch, spec, hp, backbone, seed, steps=2000, lr=5e-3, extra_twin
     return m
 
 
-def invert_pinn(m: PINNModel, bw: Batch, lam, seed, n_col=16, steps=200, lr=0.05):
-    """z_c, delta_c from window points + residual over (window end, t_max]; network and law frozen. Causal: no label after the window."""
-    spec = m.spec
-    flags = [p.requires_grad for p in m.parameters()]
-    for p in m.parameters():
-        p.requires_grad_(False)
-    Ct = bw.C
-    # per-cell collocation draws seeded by (seed, cell id): a cell's prediction does not depend on its position in the batch (review m5)
-    u = torch.tensor(np.stack([np.random.default_rng([int(seed), zlib.crc32(cid.encode())]).random(n_col) for cid in bw.ids]), dtype=torch.float32)
-    tc = (bw.t_end.unsqueeze(1) + u * (m.col_t_max - bw.t_end).clamp_min(0.0).unsqueeze(1))
-    to_n = spec.t_scale / spec.efc_scale
-    nu = torch.stack([torch.tensor(bw.curves[c].rate(tc[c].numpy() * spec.t_scale) * to_n, dtype=torch.float32) for c in range(Ct)])
-    cc = torch.arange(Ct).unsqueeze(1).expand(Ct, n_col).reshape(-1)
-    tc, nu = tc.reshape(-1), nu.reshape(-1)
-    mu = (m.prior_mean(bw.ind).detach() if (m.beta is not None and bw.ind is not None) else torch.zeros(Ct))     # prior mean of delta_c (0 in the primary analysis)
-    z = torch.zeros(Ct, m.zdim, requires_grad=True)
-    delta = mu.clone().requires_grad_(True)
-    opt = torch.optim.Adam([z, delta], lr=lr)
-    for _ in range(steps):
-        opt.zero_grad()
-        F = m.F(bw.obs_t, bw.s[bw.obs_cell], z[bw.obs_cell])
-        data = ((F - bw.obs_y) ** 2).sum()
-        A_cal, A_cyc = m.law.amplitudes(bw.s, bw.is_cyc, delta)
-        R = m.residual(tc, bw.s[cc], z[cc], A_cal[cc], A_cyc[cc], nu)
-        L = (data + lam * m.pts_per_cell * Ct * (R ** 2).mean()) / SIGMA ** 2 + ((delta - mu) ** 2).sum() / TAU ** 2 + (z ** 2).sum()
-        L.backward()
-        opt.step()
-    for p, f in zip(m.parameters(), flags):
-        p.requires_grad_(f)
-    z, delta = z.detach().clone(), delta.detach().clone()
-    ref_only = torch.bincount(bw.obs_cell, minlength=Ct) <= 1      # k = 0 (PREREG_v4 4.1): no window check-up -> latents and offset stay at their prior means (z = 0, delta = 0)
-    z[ref_only], delta[ref_only] = 0.0, mu[ref_only]
-    return z, delta
+def invert_pinn(m: PINNModel, bw: Batch, lam, seed, n_col=16, z_weight=None):
+    """z_c, delta_c of held-out cells: ONE routine for every inverting arm (inversion.invert_latents: per-cell damped Newton, float64, from the prior mode z = 0, delta = prior mean,
+    stop at ||g|| <= 1e-6 (1 + |f|) or 100 iterations, non-converged cells kept and counted; D023). Objective: window points + A1's residual over (window end, t_max] with per-cell seeded
+    collocation draws + priors; the z prior has weight 1, the weight of the training loss (fit_pinn: (z**2).sum() / n against the mean data term). Causal: no label after the window.
+    A cell whose window holds the reference point only keeps the prior mode (k = 0). Returns float32 latents for the (float32) trained network."""
+    from . import inversion
+    prob = inversion.pinn_problem(m, bw, None, lam, seed, n_col, z_weight)
+    res = inversion.solve(prob, "pinn")
+    z, delta = prob["split"](res.P)
+    return z.float(), delta.float()
 
 
-def predict_pinn(m: PINNModel, spec, wcells, lam, seed, steps=200):
+def predict_pinn(m: PINNModel, spec, wcells, lam, seed, z_weight=None):
     bw = batch_from_windows(spec, wcells, indicator=m.beta is not None)
-    z, delta = invert_pinn(m, bw, lam, seed, steps=steps)
+    z, delta = invert_pinn(m, bw, lam, seed, z_weight=z_weight)
     bq = batch_forecast_query(spec, wcells)
     with torch.no_grad():
         F = m.F(bq.obs_t, bq.s[bq.obs_cell], z[bq.obs_cell])
@@ -269,23 +246,13 @@ def fit_data_only(b: Batch, spec, hp, seed, steps=1500, lr=5e-3, clip=GRAD_CLIP)
     return m
 
 
-def predict_data_only(m: DataOnlyF, spec, wcells, steps=150, lr=0.05):
+def predict_data_only(m: DataOnlyF, spec, wcells, z_weight=None):
+    """A9 forecast: z_c by the same routine as every inverting arm (prior mode z = prior mean, damped Newton in float64; D023); z prior weight 1 = the training loss weight."""
+    from . import inversion
     bw = batch_from_windows(spec, wcells, indicator=m.B is not None)
-    flags = [p.requires_grad for p in m.parameters()]
-    for p in m.parameters():
-        p.requires_grad_(False)
-    zmu = torch.as_tensor(m.z_prior(bw.ind)).detach() * torch.ones(bw.C, m.zdim)
-    z = zmu.clone().requires_grad_(True)
-    opt = torch.optim.Adam([z], lr=lr)
-    for _ in range(steps):
-        opt.zero_grad()
-        r = m.F(bw.obs_t, bw.s[bw.obs_cell], z[bw.obs_cell]) - bw.obs_y
-        ((r ** 2).sum() / SIGMA ** 2 + ((z - zmu) ** 2).sum()).backward()
-        opt.step()
-    for p, f in zip(m.parameters(), flags):
-        p.requires_grad_(f)
-    z = z.detach().clone()
-    z[torch.bincount(bw.obs_cell, minlength=bw.C) <= 1] = zmu[torch.bincount(bw.obs_cell, minlength=bw.C) <= 1]      # k = 0 (no window check-up): the prior mean, forced rather than left to the architecture (review M7)
+    prob = inversion.data_problem(m, bw, None, z_weight)
+    res = inversion.solve(prob, "data")
+    z = res.P.float()
     bq = batch_forecast_query(spec, wcells)
     with torch.no_grad():
         F = m.F(bq.obs_t, bq.s[bq.obs_cell], z[bq.obs_cell])

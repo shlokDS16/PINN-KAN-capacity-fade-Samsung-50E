@@ -576,3 +576,13 @@ Row format:
   judge (debates/D026_item_f_blinding/02_judge.md).
 - **Re-open if:** the timing run puts the item-f runs above 15 % of core compute; an item-f fold cannot finish; or the
   descriptive concordance row shows a different D* in more than one fold.
+
+### D010 Topic debate identifier (record-only row; written 2026-11-05 23:45 by the lead to close RT F12.6 / freeze condition C19)
+- **Decision:** none of its own. "D010" is the identifier of the topic debate folder `debates/D010_topic/` (00 candidates,
+  01 novelty audit, 02 proposal, 03 opponent, 04 judge, 05 novelty re-audit); its judge ruling is recorded as **D005** and the
+  re-audit as **D006**. Citations of "D010" in D005 and the PREREG files point to that folder, not to a separate ruling.
+  D008's "open to the D011 judge" was confirmed inside D011 (no separate row).
+- **Alternatives and why they lost:** renumbering D005/D006 would break append-only history.
+- **Evidence:** debates/D010_topic/04_judge.md, 05_novelty_reaudit.md; debates/D015_redteam_v3/01_redteam.md finding F12.6.
+- **Proposer / opponent / judge:** lead (record-only; no ruling).
+- **Re-open if:** never (bookkeeping only).

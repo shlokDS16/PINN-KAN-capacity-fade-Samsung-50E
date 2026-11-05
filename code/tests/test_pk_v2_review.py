@@ -248,3 +248,18 @@ def test_M5_item_f_hash_can_be_pinned_outside_the_file_system_and_inner_folds_co
     fo = json.load(open(os.path.join(d, "inner_folds.json")))
     td = json.load(open(os.path.join(d, "tuning_done.json")))
     assert set(fo) == set(td["arms"]["A9"]["cond_scores"]) and set(fo.values()) == {0, 1}
+
+
+# ------------------------------------------------------------------------------------------------ I7
+def test_I7_mean_against_median_rule_adds_mean_bca_and_worst_condition_when_the_signs_disagree():
+    L = np.array([0.3] * 25 + [-3.0] * 15)                          # median log ratio > 0 (A1 better) but the mean pp difference < 0 (a few conditions where A1 is far worse)
+    out = v4.run_v4(make_store(P1g1=L))
+    mm = out["mean_vs_median"]
+    r = mm["contrasts"]["P1"]
+    assert r["disagree"] and r["median_L"] > 0 and r["mean_pp"] < 0 and "P1" in mm["triggered"] and r["mean_pp_ci"] is not None
+    assert r["worst_condition_pp"]["target"] == pytest.approx(2.0) and r["worst_condition_pp"]["comparator"] == pytest.approx(2.0 * np.exp(0.3))
+    add = [a for a in mm["abstract_additions"] if a.startswith("For P1 ")][0]
+    assert "mean paired difference was -" in add and "95 % BCa interval [" in add and "worst-condition error" in add
+    assert out["outcome"]["abstract_additions"] == mm["abstract_additions"]
+    clean = v4.run_v4(make_store())["mean_vs_median"]
+    assert clean["triggered"] == [] and clean["abstract_additions"] == [] and {"P1", "P2", "K1", "K2", "QH_g1", "QT_g1", "QA10_g1:A10", "QA10_g1:A10P"} <= set(clean["contrasts"])

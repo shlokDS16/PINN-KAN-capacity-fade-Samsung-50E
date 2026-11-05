@@ -823,6 +823,31 @@ def _qual_form(store, t, kind):
     return min(forms, key=lambda f: med[f])
 
 
+def mean_vs_median(store, rule):
+    """PREREG_v4 9.8 rule 1 (review I7): whenever the sign of the mean paired pp difference disagrees with the sign of the median log ratio of a gated or secondary contrast at g1 or g4, the
+    abstract adds the mean difference with its BCa interval and the worst-condition error. Contrasts: P1, P2 (g1), K1, K2 (g4, per-seed scores), Q-H, Q-A10 (both forms), Q-T. P3 is a
+    contrast of two log ratios with no single pp difference and is not covered. The sentence wording is this build's (the rule fixes the content, not the words)."""
+    kv = store.seed_view()
+    items = [("P1", store, "A1", "D*", G1, "the best tuned data-driven learner"), ("P2", store, "A1", "A9", G1, "the same network without the physics law"),
+             ("K1", kv, "A15", "A1", G4, "the full Kolmogorov-Arnold network"), ("K2", kv, "A15", "G15", G4, "the equally simplified additive law")]
+    for name, arm, cell in SECONDARY:
+        for f in (A10_FORMS if arm == "A10" else (arm,)):
+            items.append((f"{name}:{f}" if arm == "A10" else name, store, "A1", f, cell, A10_NAME if arm == "A10" else {"A2": "the hard ODE", "A13": "training without the storage cells"}[arm]))
+    rows, additions = {}, []
+    for name, st, t, c, cell, cname in items:
+        if not (st.has(t, *cell) and st.has(c, *cell)):
+            continue
+        e = entry(st, name, t, c, cell, rule)
+        med, mean = e["median_L"], e["mean_pp"]
+        dis = bool(med != 0 and mean != 0 and (med > 0) != (mean > 0))
+        rows[name] = {"cell": list(cell), "median_L": med, "mean_pp": mean, "mean_pp_ci": e.get("mean_pp_ci"), "worst_condition_pp": e["worst_condition_pp"], "disagree": dis}
+        if dis:
+            ci = e.get("mean_pp_ci") or [float("nan")] * 2
+            additions.append(f"For {name} (g{cell[0]}, k = {cell[1]}) the mean paired difference was {mean:+.2f} percentage points (95 % BCa interval [{ci[0]:.2f}, {ci[1]:.2f}]) while the median condition "
+                             f"log ratio was {med:+.3f}; the worst-condition error was {e['worst_condition_pp']['target']:.2f} pp for {t} and {e['worst_condition_pp']['comparator']:.2f} pp for {cname}.")
+    return {"rule": "PREREG_v4 9.8 rule 1: mean against median", "contrasts": rows, "triggered": [k for k, v in rows.items() if v["disagree"]], "abstract_additions": additions}
+
+
 ENDPOINT_NOTE = ("P-chain, secondary family, ladder, downgrade rows, Test C, S2 and NC-2 score the five-seed prediction ensemble; K1 and K2 score the per-seed rule for A1, A15 and G15 alike "
                  "(an average of five laws is not one law). A1 therefore has an ensemble score in the P chain and a per-seed score in the K chain; both are printed (D020 C1).")
 
@@ -867,10 +892,11 @@ def run_v4(store, cfg=None, gate=None, row_tiers=None):
         "rule": rule.describe(), "config": {k: c[k] for k in ("sign_rule", "rho_s0", "graph_w", "alpha", "e1_prime_approved", "k_chain_struck")}, "seed_root": MC_SEED_ROOT,
         "primary": prim, "secondary": sec, "plain_descriptive": plain_rows(store, c), "most_test": most, "dependence_sensitivity": dependence_sensitivity(store, rule, c),
         "estimated": estimated_tables(store, rule), "lab_rows": lab_rows(store, rule, CONTRASTS_FOR_LABS), "effective_tiers": tiers,
-        "per_seed_descriptive": per_seed_descriptive(store), "endpoint_note": ENDPOINT_NOTE,
+        "per_seed_descriptive": per_seed_descriptive(store), "endpoint_note": ENDPOINT_NOTE, "mean_vs_median": mean_vs_median(store, rule),
     }
     if "P1" in tiers:
         out["outcome"] = assemble_outcome(tiers, primary_numbers(store, rule, tiers, sec), c, gate, None if most is None else most["most"])
+        out["outcome"]["abstract_additions"] = out["mean_vs_median"]["abstract_additions"]
         q = {}
         for key, kind in (("QH_g1", "QH"), ("QH_g4", "QH"), ("QA10_g1", "QA10"), ("QA10_g4", "QA10"), ("QT_g1", "QT")):
             t = sec["tests"][key]

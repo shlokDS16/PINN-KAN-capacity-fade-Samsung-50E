@@ -346,3 +346,14 @@ Row format:
     conditions;
   - the ISU fallback triggers (its counts must be filed first);
   - the fallback's size is shown above 1.2 x nominal inside R4.
+
+### D019 Shlok approves clause e1' (2026-11-05, status: accepted)
+- **Decision:** Shlok approved clause e1' as proposed in debates/D018_test_rule/01_judge.md section 4 (action A6): when P2 and
+  P3 reach tier S but the "most" test (PREREG_v4 9.8 rule 4, median d_c > 0, 30 of 40 under the fallback) fails, the abstract
+  uses "(e1') the same network without the physics law was [Y] % worse, and the advantage was larger with 8 than with 32
+  cycling conditions". e1, e2 and e3 and the rest of the D017 table stay word for word. Meets PREREG_v4 17.2 C22.
+- **Alternatives and why they lost:** declining e1' (offered, not chosen) would have left no true approved clause for that
+  outcome.
+- **Evidence:** Shlok's reply "Approve e1'" in the lead session, 2026-11-05.
+- **Proposer / opponent / judge:** D018 judge (clause) / Codex turn 5 (GAP-1 attack) / Shlok (approval).
+- **Re-open if:** Shlok changes it before the freeze.

@@ -249,7 +249,8 @@ def test_soc_turning_detects_a_peak_above_80_and_nothing_below():
     assert physval.soc_turning(soc, soc.astype(float)) == []
 
 
-def test_physval_items_on_constructed_stress_function_files(tmp_path):
+def test_physval_items_on_constructed_stress_function_files(tmp_path, monkeypatch):
+    monkeypatch.setitem(semi.A10_FORM, "verified", False)               # the blocked-comparison mechanism (A10_FORM is True since FB-2 closed)
     a, b = _sf(tmp_path, "fold0"), _sf(tmp_path, "fold1")
     out = physval.physval_11a([a, b])
     assert out["n_members"] == 6 and out["item1"]["activation_energy"]["n_members"] == 6
@@ -328,7 +329,8 @@ def test_law_overrides_run_a2_only_and_restore_the_constants(build2_runs):
     assert s0 != s1                                                                                      # the override reached the fit
 
 
-def test_run_stats_writes_sensitivity_and_physval_files(build2_runs, tmp_path):
+def test_run_stats_writes_sensitivity_and_physval_files(build2_runs, tmp_path, monkeypatch):
+    monkeypatch.setitem(semi.A10_FORM, "verified", False)               # these runs have no A10 arm; the blocked record is the unverified-form mechanism
     out = tmp_path / "an"
     st.run_stats(str(out), {"B": [str(build2_runs / "base")]}, physval_runs=[str(build2_runs / "base")])
     s = json.load(open(out / "sensitivity_B.json"))

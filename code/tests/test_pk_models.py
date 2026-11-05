@@ -285,8 +285,10 @@ def test_a10_per_cell_factor_removes_a_cell_scale_error():
     assert np.abs(with_f - p.fc_true).max() < 0.5 * np.abs(without - p.fc_true).max()
 
 
-def test_a10_is_provisional_and_confirmatory_use_is_refused():
-    assert semi.A10_FORM["verified"] is False and semi.A10_FORM["todo"]
+def test_a10_is_verified_and_the_refusal_mechanism_still_works(monkeypatch):
+    assert semi.A10_FORM["verified"] is True and semi.A10_FORM["todo"] == [] and semi.A10_FORM["deviations"] and "Eq. (18)" in semi.A10_FORM["equations"]["calendar"]
+    semi.require_verified()                                              # FB-2 closed 2026-11-05: JES 142 Eq. (17), (18), SI S.3; recovery in test_pk_a10_paper_form.py
+    monkeypatch.setitem(semi.A10_FORM, "verified", False)
     with pytest.raises(semi.UnverifiedArmError):
         semi.require_verified()
     for ds in ("isu", "snl"):                                            # cyclic-only analogue fits too

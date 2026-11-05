@@ -1,15 +1,23 @@
-"""A10: the dataset authors' semi-empirical calendar + cycle superposition (Stroebl et al., data paper SI S.1.1, after Muehlbauer et al.).
+"""A10: the dataset authors' semi-empirical calendar + cycle superposition (Stroebl et al.; after Muehlbauer et al.).
 
-STATUS: PROVISIONAL (A10_FORM['verified'] is False). The form below is the one in notes/papers/samsung50e_dataset_paper.md lines 94-103,
-where the exponent placement is marked garbled by the PDF conversion. It is implemented so that the fitter, the per-cell factor and the
-recovery test exist; a confirmatory run refuses A10 until the form is checked against the SI and the unread JES 142, 119552 full text [FB-2].
-
-    loss_rel = kappa_c * ( Q_cal + Q_cyc )                                       (retention-loss fraction)
+STATUS: VERIFIED 2026-11-05 against the full text [FB-2]. Sources and equation numbers (notes/papers/stroebl2025_JES142_OED.md has the claim-evidence table):
+    Stroebl et al., J. Energy Storage 142, 119552 (doi 10.1016/j.est.2025.119552): Eq. (17) superposition, Eq. (18) calendar, Eq. (21) cycle, Tables D.2 / D.3;
+    Stroebl et al., Sci. Data 11, 1020 (2024), Supplement S.1.1: Eq. S.1 superposition, S.2 calendar, S.3 cycle.
+  Published form (relative capacity LOSS as a fraction of Q0; T in K; t in days; FEC = fully equivalent cycles):
+    Q_loss = Q_cal + Q_cyc                                                                            (JES 17; SI S.1)
+    Q_cal = (1-EOLC) exp(-th0 (1/T - 1/Tref)) (SOC/SOCref)^(1/th1) (t/tref)^th2                       (JES 18; SI S.2)
+    Q_cyc = (1-EOLC) exp(-th0 (1/T - 1/Tref)) (SOCmax/ref)^(1/th1) (Cch/ref)^(1/th2) (Cdch/ref)^(1/th3) (DoD/ref)^(1/th4) (FEC/FECref)^th5     (SI S.3; JES 21 prints the
+    exponents th2..th4 without the reciprocal -- a source conflict; the function class is the same and Table D.3 magnitudes agree with the SI reading, see the note)
+  Implemented (a re-parameterisation with free log-scales; the map is exercised in code/tests/test_pk_a10_paper_form.py on hand-worked inputs and in a recovery test):
+    loss_rel = Q_cal + Q_cyc
     Q_cal = exp(lc_cal) * [ exp(-p0 * 1e4 * (1/T - 1/Tref)) * (SOC/0.5)^p1 * t_n ]^(1/r_cal)
     Q_cyc = exp(lc_cyc) * [ exp(-q0 * 1e4 * (1/T - 1/Tref)) * prod_j (x_j / ref_j)^q_j * E_n ]^(1/r_cyc)
-(x_j: SOC_max, C_ch, C_dch, DoD for Samsung; EOLC, the reference values tref/FECref and the (1 - EOLC) factor are absorbed by the free
-log-scales lc_*. TODO [FB-2]: (i) exponent placement, (ii) SOC argument of the calendar term for cycling cells (SOC_mid is assumed here),
-(iii) published parameter bounds / start values.)
+    with r_cal = 1/th2_cal, p0 = th0_cal r_cal / 1e4, p1 = r_cal / th1_cal;  r_cyc = 1/th5_cyc, q0 = th0_cyc r_cyc / 1e4, q_j = (exponent of factor j) r_cyc.
+  (x_j: SOC_max, C_ch, C_dch, DoD for Samsung; for the SOC argument of the calendar term of a CYCLING cell the paper gives no rule: SOC_mid is the code's choice.)
+Documented deviations from the published fit (none changes the function class; M1, M3-M5 in the note): (M1) the published model has no free scale (EOLC fixed, reference values not
+published), here lc_cal and lc_cyc are free, so the published form is nested; (M3) one joint least-squares fit of both terms on all training cells, whereas the authors fit Q_cal on storage cells
+and Q_cyc on cycling cells separately; (M4) the calendar term is added for cycling cells (superposition, Eq. 17) with SOC_mid; (M5) the authors drop SOC = 100 % storage from the calendar
+fit (non-monotonic, JES Sec. 3.1) and remove flagged outliers; this code applies no such filter (the data layer decides).
 Per-cell factor (A10 primary, 1.4): kappa_c = exp(delta_c), delta_c by MAP from the window with prior sd TAU; `per_cell_factor=False` is the
 "A10 as published" sensitivity row. ISU / SNL analogue (prereg 3.4): cyclic term only (no calendar), same power-law structure on the stresses
 the dataset has; chemistry flags (SNL) enter as additive log-scale offsets. The analogue's factor set is the builder's choice (flagged in README).
@@ -19,9 +27,14 @@ from scipy.optimize import least_squares, minimize_scalar
 
 from .law import SIGMA, TAU
 
-A10_FORM = {"status": "PROVISIONAL_FROM_DATASET_NOTES", "verified": False,
-            "todo": ["exponent placement (garbled in the local conversion)", "SOC argument of the calendar term for cycling cells (SOC_mid assumed)",
-                     "published parameter bounds and start values", "EOLC and reference values (absorbed in free log-scales)"]}
+A10_FORM = {"status": "VERIFIED_AGAINST_STROEBL_JES142_EQ17_18_21_AND_SI_S1_S3", "verified": True, "verified_on": "2026-11-05",
+            "equations": {"superposition": "JES142 Eq. (17); SI Eq. S.1", "calendar": "JES142 Eq. (18); SI Eq. S.2", "cycle": "SI Eq. S.3 (JES142 Eq. (21) differs in the exponent convention of C_ch, C_dch, DoD)",
+                          "parameters": "JES142 Tables D.2 (calendar) and D.3 (cycle)"},
+            "deviations": ["M1 free log-scales lc_cal, lc_cyc (published model has none; EOLC and reference values are not published)",
+                           "M3 joint least-squares fit of both terms (authors fit calendar on storage cells, cycle on cycling cells)",
+                           "M4 calendar term added for cycling cells with SOC_mid as its SOC (superposition is published, the SOC argument for cycling cells is not)",
+                           "M5 no exclusion of SOC = 100 % storage (authors exclude it from the calendar fit) and no outlier rule inside this module"],
+            "todo": []}
 
 
 class UnverifiedArmError(RuntimeError):
@@ -31,7 +44,7 @@ class UnverifiedArmError(RuntimeError):
 def require_verified():
     if not A10_FORM["verified"]:
         raise UnverifiedArmError("A10 equations are not verified against Stroebl SI S.1.1 / JES 142, 119552 [FB-2]; confirmatory use refused. "
-                                 + "; ".join(A10_FORM["todo"]))
+                                 + "; ".join(A10_FORM.get("todo") or []))
 
 
 TREF = 298.15

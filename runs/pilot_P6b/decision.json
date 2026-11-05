@@ -1,0 +1,92 @@
+{
+ "pilot": "P6b",
+ "status": "development, non-confirmatory; ISU is not blind (PREREG 3.4); not evidence for Samsung",
+ "rule": "adopt four inner folds for m in {8, 16} iff q_a > 0 for at least 5 of the 6 arms AND min_a q_a > -ln(1.02); otherwise keep 2. q_a = median over pooled pseudo-test conditions of ln(S_a,2-fold / S_a,4-fold), S = ensemble (5-seed mean forecast) condition score",
+ "verdict": "KEEP_2_INNER_FOLDS",
+ "verdict_reason": "4 of 6 arms with q > 0 (need >= 5); min q = -0.00882 against floor -0.01980 -> KEEP two inner folds",
+ "q_a": {
+  "A1": -0.008820271611958152,
+  "A2": -0.006042365137787328,
+  "A4": 0.06351129577159492,
+  "A9": 0.06438077571401273,
+  "A11": 0.0032154289234767874,
+  "A12": 0.026809505432746156
+ },
+ "q_a_bootstrap95_descriptive": {
+  "A1": [
+   -0.018949747705054767,
+   0.014619810966038461
+  ],
+  "A2": [
+   -0.00998943063424807,
+   -0.0006308828538923662
+  ],
+  "A4": [
+   -0.004069144856021457,
+   0.09188618367161128
+  ],
+  "A9": [
+   0.03929365929495833,
+   0.11638321295523044
+  ],
+  "A11": [
+   -0.06082365783429066,
+   0.042063716352709016
+  ],
+  "A12": [
+   0.009802079993399479,
+   0.0544854443418096
+  ]
+ },
+ "n_positive": 4,
+ "min_q": -0.008820271611958152,
+ "floor": -0.01980262729617973,
+ "arms": [
+  "A1",
+  "A2",
+  "A4",
+  "A9",
+  "A11",
+  "A12"
+ ],
+ "complete": true,
+ "missing_units": [],
+ "script": "code/pilots/p6b_inner_folds.py",
+ "script_sha256": "621c7f5af304f019ceb8e6cc988ae908f5dea1e3e5bbd37054f01151f9fc2336",
+ "script_sha256_now": "621c7f5af304f019ceb8e6cc988ae908f5dea1e3e5bbd37054f01151f9fc2336",
+ "script_commit": "93e478403a862c3e73465857a3a53c739f131425",
+ "script_commit_time": "2026-11-05T10:59:43+05:45",
+ "config_sha256": "f7932b3a141af86710e31b5394b48e2451c10b7b7feb73bbc7ac0b513dc803b3",
+ "config_commit": "93e478403a862c3e73465857a3a53c739f131425",
+ "head_commit_at_start": "93e478403a862c3e73465857a3a53c739f131425",
+ "script_committed_before_first_fit": true,
+ "split_file": "runs/splits/isu_testB.json",
+ "split_sha256_before": "c1227642a067e61c4e5110d577e0b84b6ccb6da1cd8e4b48b16e03b2ba4419d8",
+ "split_sha256_after": "c1227642a067e61c4e5110d577e0b84b6ccb6da1cd8e4b48b16e03b2ba4419d8",
+ "split_unchanged": true,
+ "started": "2026-11-05T10:59:58+0545",
+ "ended": "2026-11-05T13:53:19+0545",
+ "cpu_hours_sum_of_units": 5.647495659722222,
+ "wall_hours": 2.8892603466908136,
+ "pinnkan_files_changed_during_run": [
+  "arms.py",
+  "guard.py",
+  "metrics.py",
+  "negcontrol.py",
+  "pinn.py",
+  "run.py",
+  "semi.py",
+  "stats_rows.py",
+  "stats_step.py",
+  "stats_v4.py",
+  "tuning.py"
+ ],
+ "pinnkan_dirty_at_start": [
+  "M code/pinnkan/arms.py",
+  " M code/pinnkan/run.py",
+  " M code/pinnkan/stats_step.py"
+ ],
+ "outer_test_scored": false,
+ "adopt": false,
+ "adopt_key_note": "true = use 4 inner folds at m in {8, 16}; false = keep 2. Added mechanically by code/pilots/p6b_add_adopt_key.py from 'verdict' (lead's file contract); the rule text is in 'rule', per-arm values in 'q_a'."
+}

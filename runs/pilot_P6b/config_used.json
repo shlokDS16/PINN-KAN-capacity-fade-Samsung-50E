@@ -1,0 +1,61 @@
+{
+ "pilot": "P6b",
+ "status": "development, non-confirmatory (ISU is not blind, PREREG 3.4); never evidence for Samsung",
+ "spec": "debates/D020_strengthen/02_judge.md section 4 (rule R2'); design basis debates/D020_strengthen/01_mlexpert.md section 4 (R1 and the C3 factor deleted)",
+ "dataset": "isu",
+ "test": "B",
+ "split_file": "runs/splits/isu_testB.json",
+ "folds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "m": 8,
+ "subset": "maxmin",
+ "window_W_weeks": 2.0,
+ "inner_k_variants": [
+  2,
+  4
+ ],
+ "arms": [
+  "A1",
+  "A2",
+  "A4",
+  "A9",
+  "A11",
+  "A12"
+ ],
+ "n_trials": 20,
+ "final_seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "steps_scale": 1.0,
+ "backbone": "tournament",
+ "workers": 2,
+ "cpu_hours_abort": 8.0,
+ "rule_R2prime": {
+  "min_positive_arms": 5,
+  "of_arms": 6,
+  "floor_ratio": 1.02,
+  "text": "adopt four inner folds for m in {8, 16} iff q_a > 0 for at least 5 of the 6 arms AND min_a q_a > -ln(1.02); otherwise keep 2. q_a = median over pooled pseudo-test conditions of ln(S_a,2-fold / S_a,4-fold), S = ensemble (5-seed mean forecast) condition score"
+ },
+ "diagnostics": {
+  "arms": [
+   "A1",
+   "A2",
+   "A9"
+  ],
+  "seed": 0,
+  "n_random_inits": 3,
+  "init_sd_z": 0.5,
+  "init_sd_delta": "TAU (0.15)",
+  "k_window": "W = 2 weeks"
+ },
+ "config_path": "C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\code\\pilots\\p6b_config.json"
+}

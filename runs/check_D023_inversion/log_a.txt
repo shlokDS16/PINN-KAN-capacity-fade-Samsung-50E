@@ -1,0 +1,9 @@
+fold 0 A1 done, 146 cpu-s
+fold 0 A9 done, 31 cpu-s
+fold 0 A2 done, 42 cpu-s
+fold 1 A1 done, 169 cpu-s
+fold 1 A9 done, 17 cpu-s
+fold 1 A2 done, 31 cpu-s
+fold 2 A1 done, 135 cpu-s
+fold 2 A9 done, 17 cpu-s
+fold 2 A2 done, 30 cpu-s

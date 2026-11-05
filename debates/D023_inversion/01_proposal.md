@@ -22,7 +22,10 @@ No production code was edited. No Samsung label and no ISU outer-test fold was r
   - a convergence test, with an iteration cap and a logged non-converged share;
   - optionally, K fixed starts with per-cell selection by the arm's own causal inversion objective.
   The objective itself is unchanged.
-- **The small check (section 7) was committed before running.** Its result is in section 8. The adoption rule uses only
+- **The small check (section 7) was committed before running.** Its result is in section 8: the verdict is **NONE**. O2
+  converges (99.4 % of A1 cells, 100 % of A9 cells) and is budget-independent, but converged starts land in different local
+  minima (A1 start spread median 7.8 pp), so the start-spread criterion fails for every option. The proposer recommends R-a
+  (O2 from the prior mode, with the multimodality disclosed) and a separate check of the z-prior weight (R-b). The adoption rule uses only
   convergence, budget stability, start spread and the objective, never an A1-vs-D\* gap.
 
 ## 1. Diagnosis from the code
@@ -187,8 +190,73 @@ gives NONE). Expected cost about 0.3 CPU-h (timing check on fold 0: A1 fit 12.5 
 **Mechanics smoke test** (before the commit, in the scratchpad outside `runs/`, 1 fold, 5 % training steps, tiny caps): it
 ran end to end. Its numbers are not used.
 
-## 8. Result (appended after the run)
-(pending)
+## 8. Result (appended after the run; development data, ISU training sides, not evidence for Samsung)
+**Run facts.**
+- Rule and script committed in `0ba9f92` (14:04:51) before the main run.
+- All 15 units complete, no errors, 0.30 CPU-h on 2 processes.
+- The replica matches the production path: largest difference 1.9e-5 pp for A1 and 0 for A9 and A2.
+- Files: `runs/check_D023_inversion/decision.json`, `units/`, `log_a.txt`, `log_b.txt`.
+
+**Verdict of the fixed rule: NONE.**
+- O2, O1 and O3 all fail criterion (c), start spread, for A1 and for A9.
+- O1 also fails (a) and (b) for A1.
+- Criteria (a), (b), (d) and (e) pass for O2.
+- Nothing is adopted from this check (section 7). The judge decides.
+
+| arm, option | conv. share | budget change p99 / max (pp) | start spread median / p95 / max (pp) | median f - f(O0) | Hessian at solution |
+|---|---|---|---|---|---|
+| A1 O0 (production) | - | 2.35 / 4.58 | 7.83 / 65.6 / 119 | 0 | - |
+| A1 O1 (Adam 4000, cosine) | 0.627 | 1.23 / 17.7 | 5.71 / 52.0 / 139 | -0.78 | - |
+| A1 O2 (Newton-LM) | 0.994 | 0 / 0 | 7.76 / 46.4 / 90.3 | -1.00 | min eig > 0 in all cells; median condition number 2237 |
+| A1 O3 (S_A vs S_B selection) | (O2) | (O2) | 0 / 5.49 / 24.9 | -1.92 | best start is not the prior mode in 72-84 % of cells |
+| A9 O0 (production) | - | 12.0 / 42.3 | 1.13 / 50.4 / 128 | 0 | - |
+| A9 O1 | 1.000 | 0 / 0 | 0 / 46.0 / 111 | 0 | - |
+| A9 O2 | 1.000 | 0 / 0 | 0 / 50.0 / 111 | 0 | min eig > 0 in all cells; median condition number 6.9 |
+| A9 O3 | (O2) | (O2) | 0 / 1.63 / 65.8 | -0.0002 | best start is not the prior mode in 68-82 % of cells |
+| A2 O0, O1, O2, O3 | 1.000 | 0 / 0 | 0 / 0 / 0 | 0 | median condition number 1 |
+
+**What this shows (reading of the table).**
+1. **Non-convergence was real, and the second-order method removes it.**
+   - With O2, 99.4 % (A1) and 100 % (A9) of cells meet the gradient test.
+   - Doubling the cap changes no forecast (0 pp).
+   - This also holds for A2, whose forecasts do not move at all (criterion e).
+   - Adam needs thousands of steps for A1 and still leaves 37 % of cells unconverged (O1).
+2. **The dominant problem is non-uniqueness, not only non-convergence.**
+   - Converged runs from different starts end at different local minima: the Hessian is positive definite at each one.
+   - Those minima carry forecasts that differ by up to about 90 pp for A1 and 111 pp for A9.
+   - A9's per-cell problem is well conditioned (median condition number 6.9) but multimodal. A1's is both ill-conditioned
+     (2237) and multimodal.
+   - This supports diagnosis item 3: the early window does not pin z, and the tanh network gives several basins.
+3. **Selecting the lowest objective among starts (O3) does not give a stable answer.**
+   - Its p95 disagreement between two start sets is 5.5 pp (A1) and 1.6 pp (A9).
+   - Its best start is mostly not the prior mode.
+   - Descriptive only, no rule: the forecast scores move the wrong way. The A1 fold means are 4.98-5.84 pp for O0, 4.97-5.98
+     for O2 and 5.03-5.97 for O3. A9 fold 3 goes from 9.05 (O0) to 16.34 (O3).
+   - So a deeper minimum of the window MAP objective is not a better forecast. The window over-fits z when the search goes
+     looking for it.
+4. **O2 from the prior mode is a well-defined, deterministic and budget-independent estimator.** It is the local MAP in the
+   basin of the prior mode. Its descriptive forecast scores are close to production for both arms: A1 fold means 4.97-5.98
+   vs 4.98-5.84 pp; A9 9.32-21.67 vs 9.05-22.43 pp. Its dependence on the start is a property of the model, not of the
+   optimiser.
+
+**Recommendation to the judge (the proposer's, not a rule outcome).**
+- **(R-a) Adopt O2 from the prior mode for every inverting arm.** Name it in the paper for exactly what it is: "the local
+  posterior mode reached from the prior mode by a converged per-cell Newton method". Report the convergence share, and the
+  start-spread diagnostic as a stated limitation.
+  - It meets every criterion except (c), and (c) measures the model's multimodality, which no optimiser can remove.
+  - It removes the budget dependence and the unequal step counts between A1 and A9 (200 vs 150).
+  - Its cost is small (section 2).
+- **(R-b) Before the freeze, test whether the multimodality comes from the z prior being too weak for an early window.**
+  - This is a separate decision row, because it changes the objective.
+  - The check would compare a z prior weight of {1, 4, 16} (the same for A1 and A9; A2 has no z), on the same ISU training
+    sides, with O2 from the prior mode.
+  - Its criterion would be start spread (median <= 0.1 pp, p95 <= 1 pp) plus a non-inferiority guard on each arm's own
+    pseudo-test score. The guard is needed because the weight changes the estimator.
+  - Cost about 0.5 CPU-h. It is not run here, because it changes the model and needs its own committed rule.
+- **(R-c) Do not adopt O3 (multi-start selection by objective).** It is less stable and, descriptively, worse.
+- **Fallback if the judge rejects R-a:** fix z at the prior mode at test time (delta-only inversion, as A2). This is
+  unimodal by construction, but it changes A9 into a population forecast with no window use, so P2 would then compare unequal
+  window use. That is why it is not preferred.
 
 ## 9. Opponent's attack and the proposer's answer
 (separate agent)

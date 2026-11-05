@@ -292,3 +292,57 @@ Row format:
 - **Evidence:** Shlok's reply "Approve the table" in the lead session, 2026-11-05 07:50 (system clock).
 - **Proposer / opponent / judge:** D016 judge (table) / Codex turn 4 and red team D015 (attacks) / Shlok (approval).
 - **Re-open if:** Shlok changes the table before the freeze; D016 re-open conditions apply unchanged.
+
+### D018 Confirmatory test rule after the size simulation failed (2026-11-05, status: accepted)
+- **Decision:**
+  - Estimand: labs are fixed strata, with equal weight per held-out condition (implied lab weights HM 17, INT 19, SIE 4 of 40).
+    Every gated contrast is reported per lab. No claim about new labs or about temperature alone.
+  - Confirmatory test for every Test B sign test with a tier, safety, wording or downgrade consequence: the Beta-binomial
+    design-effect sign test with a fixed rho_s0 = 0.03. Positives needed of 40: 33 at 0.005, 32 at 0.00625 and 0.00833,
+    31 at 0.0125, 30 at 0.025. This includes NC-2 (30, not 27).
+  - Interval ranks: 8 for the simultaneous interval; 11 for the 95 % interval (judge's arithmetic, to be confirmed by the
+    statistician). The test is named assumption-based, never exact or distribution-free.
+  - The plain exact test becomes a descriptive "independent-conditions" row. Also reported, with no tier consequence: a
+    dependence-sensitivity row (rho_s0 0-0.05) and the item (f) training-side sign-correlation estimate, hashed before any
+    outer score.
+  - The gate auditor's pre-score approval of the fallback (D016 section 2 (a); PREREG_v4 17.2 C2 sub-item) is given. C2 as a
+    whole stays open.
+  - Graph weights: 1/2-1/2 by default. w = 0.78 on P1N (local 0.0195, 30 of 40) and 0.22 on K1 (0.0055, 32 of 40) is
+    adopted only by the pre-fixed simulation rule of 01_judge.md section 3: in all four settings, dP + dK > 0 and
+    dK >= -0.10. If not filed before the freeze, 1/2 stands.
+  - GAP-1: "most" holds iff e1 is reached and the fallback sign test of median(d_c) > 0 at 0.025 reaches 30 of 40, with
+    d_c = ln(S_A9/S_A1) - 0.5 ln(S_D*/S_A1) at g1. The test sits outside the graph and is disclosed. If "most" fails, the
+    added clause e1' (words of e1 only) needs Shlok's approval; this is a freeze condition. e1, e2 and e3 are unchanged.
+  - GAP-2 to GAP-11 accepted; GAP-2, GAP-4 (lab weights 1/3), GAP-5 and GAP-7 with specifications.
+  - Novelty: the "first" scope of 03_novelty_recheck section 3 is adopted. The abstract has no novelty sentence until
+    conditions (a)-(d) hold. The Introduction presents data efficiency and the ladder as extensions of Lucu, Jia, Stroebl
+    JES 142 and Guo.
+  - Stroebl JES 142 and Zhang JES 182 (FT-partial) do not trigger the D016 re-open condition. Titles and abstract claim
+    sentences are unchanged.
+- **Alternatives and why they lost:**
+  - Plain exact test: fails the 1.2 x nominal criterion from intra-fold 0.03-0.05; graph FWER 0.0877 at the R4 corner;
+    fixed labs do not rescue it (1.83 / 1.72).
+  - rho_s0 = 0.02 under fixed labs: fails at the R4 corner (FWER 0.0299) and rests on an unmeasured fold bound with no
+    lab-by-fold component; the power gain is modest (0.82 against 0.71 at r = 0.20).
+  - Training-side upper-bound rule: too few, non-independent inner-CV clusters; estimated design effects are liberal or
+    vacuous (RESULT 4.4); D016 (f) "no rule changes"; the critical count would be unknown at the freeze.
+  - Permutation, bootstrap or mixed model: 1/32 = 0.031 minimum p; too few clusters.
+  - Labs as a random effect: 3 labs, temperature aliased.
+  - Graph weights 2/3 or 3/4: dominated by discreteness. Fixed sequence: costs K1.
+  - Opponent's difference-of-medians "most": no exact interval.
+- **Evidence:** debates/D018_test_rule/01_judge.md; runs/prereg/stats_sim_v4/RESULT.md (sections 3-7, 9-10);
+  debates/codex_panel/turn05_response.md; runs/prereg/PREREG_v4.md (9, 10, 11, 21, 22); debates/D016_roles/02_judge.md;
+  debates/D016_roles/03_novelty_recheck.md; refs/fulltext/ft_stroebl2025_OED_JES142_119552.txt;
+  refs/fulltext/ft_zhang2026_JES182_125097.txt. Judge's recomputation of the Beta-binomial counts matches RESULT 4.4;
+  code/tests/test_graph_test.py 12 passed.
+- **Proposer / opponent / judge:** statistician (RESULT.md sections 9-10) / Codex panel turn 5 (REVISE) / D018 judge
+  (gate auditor, independent).
+- **Re-open if:**
+  - the counts are not reproduced by the code or tables;
+  - the weight simulation's FWER guard fails;
+  - any Samsung outer score is computed before FROZEN;
+  - Shlok declines e1' (GAP-1 only);
+  - Hallinger, Lucu A/B or Jia full texts contain a learning curve of a learned forecaster over ageing conditions on held-out
+    conditions;
+  - the ISU fallback triggers (its counts must be filed first);
+  - the fallback's size is shown above 1.2 x nominal inside R4.

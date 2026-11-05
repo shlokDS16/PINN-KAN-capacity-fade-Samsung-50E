@@ -1,0 +1,29 @@
+{
+ "version": "extraction-audit-v1",
+ "source": "debates/D022_datasets_kan/03_judge.md section 2.2 (a) item 3; every number is a design choice fixed before any result",
+ "cap": 2,
+ "eligible_families": ["zero", "linear", "log"],
+ "inputs": ["T_C", "soc_mid", "dod", "c_ch", "c_dch"],
+ "pruned_min_share": 0.8,
+ "identified_min_share": 0.8,
+ "additive_min_share": 0.8,
+ "min_levels_identified": 3,
+ "max_false_family_rate": 0.1,
+ "sign_min_share": 0.8,
+ "max_sign_error_rate": 0.1,
+ "min_synthetic_edges_per_truth_family": 20,
+ "approx_rms_over_range": 0.1,
+ "approx_flag_min_share": 0.5,
+ "pd_grid_points": 41,
+ "fold_by_seed_g4": 25,
+ "wording": {
+  "results_sentence": "Of the {n} inputs of the extracted {law} law, the training design identified the form of {j} and the sign of {s}; {a} were ambiguous and are reported without a named form.",
+  "pruned_sentence": "{p} of the {n} inputs were pruned (zero in at least 80 % of the fold-by-seed laws).",
+  "ambiguous_input": "the training design does not identify the form of this effect",
+  "approx_input": "the cap-2 form is an approximation of a curved learned effect",
+  "bic_caveat": "BIC is computed on the KAN's grid, not on the data",
+  "discussion_sentence": "Readable means that the extracted law is a short closed form that can be written out and evaluated; the audit reports separately which of its effects the training design identifies.",
+  "law_names": {"A15": "KAN", "G15": "additive"},
+  "labels": {"pruned": "pruned", "identified": "identified: {family}", "sign": "sign identified", "composed": "composed: no single form", "ambiguous": "ambiguous"}
+ }
+}

@@ -194,6 +194,8 @@ class SymbolicArm(DiagMixin, Arm):
         if sym_cal is not None:
             law_s.cal = sym_cal
         self.parent_train_data_mse = float(parent.train_data_mse)
+        self.parent_cyc = copy.deepcopy(parent.law.cyc)           # the parent's learned stress map and the training hull: the audit's approximation flag compares the cap-2 form with it
+        self.s_cyc_train = s_cyc
         self.total_steps = parent_steps + refit
         self.model = fit_pinn(b, self.spec, hp, self.ctx["backbone"], self.seed, steps=refit, extra_twin_raw=self.ctx.get("extra_twin_raw"), law=law_s, init_from=parent, **pk)
         self.refit_diverged = not bool(np.isfinite(self.model.train_data_mse))      # reported, never hidden: a non-finite forecast is scored with the persistence error and counted (PREREG_v4 6)

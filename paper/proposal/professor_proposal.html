@@ -109,7 +109,7 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
       <p>Battery ageing campaigns are slow and expensive: every additional cycling condition costs months of test-channel time. I propose to measure how much testing a physics-informed neural network (PINN) can save. The model joins a calendar-ageing term (Arrhenius in temperature times a Kolmogorov–Arnold network, KAN, in state of charge) and a cycling term (a KAN over temperature, state-of-charge window, depth of discharge and C-rates, scaled by charge throughput).</p>
       <p>On the public Samsung INR21700-50E campaign (279 cells), I will train with only 8, 16 or 32 cycling conditions and with 0, 2 or all early check-ups of each held-out cell. I then forecast the capacity fade of 40 cycling conditions the model never saw, and compare against the best tuned data-driven learner.</p>
       <p>Two further questions isolate each component. Does the gain come from the physics law? I answer this by removing the law from the same network. Does the KAN give a written-out stress law that predicts unseen conditions as well as the full network, and better than an equally simplified additive model? The analysis plan, including the wording of every possible conclusion, is fixed before any test result is seen.</p>
-      <p>Two additions follow your suggestion and the need for a KAN-side contribution. First, the same forecasting task is repeated on NASA and CALCE ageing data as a separate, pre-specified descriptive section. Second, the extracted KAN law is put through a pre-registered identifiability audit: a calibrated table of how often the extraction invents structure that is not there, with a rule to abstain from naming a functional form the data cannot identify.</p>
+      <p>Two additions follow your suggestion and the need for a KAN-side contribution. First, the same forecasting task is repeated on NASA and CALCE ageing data as a separate, pre-specified descriptive section. Second, the KAN's contribution is tested directly: the closed-form stress law extracted from it must predict held-out conditions, and is compared with an equally simplified additive law built by the same frozen procedure. Its complexity cap was set by a synthetic false-structure study before any real data were used.</p>
     </div>
   </section>
 
@@ -143,7 +143,7 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
     <ol>
       <li><strong>Data efficiency (PINN).</strong> With 8 cycling conditions and 2 check-ups per held-out cell, is the PINN's typical held-out-condition error lower than that of the best tuned data-driven learner (the better of a Gaussian process with automatic relevance determination, LightGBM and the same network without physics)? How does the gap change at 16 and 32 conditions?</li>
       <li><strong>Attribution.</strong> How much of any advantage comes from the physics law? I test this against the same network without the law, and against the same law with an additive (GAM) stress map instead of the KAN.</li>
-      <li><strong>Readable law (KAN).</strong> Does a closed-form stress law extracted from the KAN predict held-out conditions no more than 10 % worse than the full network? Is it more accurate than an equally simplified additive law? Both are built with the same symbolic library, which is fixed in advance. Every extracted edge is audited: its form is named only if a design-matched calibration shows the extraction can identify it, and the same audit applies to the additive law.</li>
+      <li><strong>Readable law (KAN).</strong> Does a closed-form stress law extracted from the KAN predict held-out conditions no more than 10 % worse than the full network? Is it more accurate than an equally simplified additive law? Both are built with the same symbolic library, which is fixed in advance. The extracted laws are limited to simple forms (zero, linear, logarithmic), a cap chosen on synthetic data, and the paper makes no claim of recovering a temperature mechanism, because temperature and test laboratory are entangled in this dataset.</li>
     </ol>
   </section>
 
@@ -264,7 +264,6 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
       <li>A measured answer to a practical question for battery test planning: how many cycling conditions and check-ups a physics prior saves, with learning curves.</li>
       <li>An attribution of any gain to the physics law versus the KAN, by a matched ablation ladder.</li>
       <li>A closed-form stress law checked on conditions it never saw, against an equally simple additive law.</li>
-      <li>An identifiability audit for laws extracted from KANs: a calibrated false-structure table and an abstention rule, so the paper names a functional form only where the test design can support it. This holds whatever the accuracy results show.</li>
       <li>The same forecasting task repeated on NASA and CALCE data, reported descriptively.</li>
       <li>A fully reproducible release: code, frozen plan with its hash, splits and per-condition predictions (Zenodo DOI).</li>
     </ul>
@@ -282,7 +281,6 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
           <tr><td>Code for the grid, extraction and statistics</td><td><span class="chip pend">in progress</span></td><td class="num">8–9 Nov</td></tr>
           <tr><td>Full Samsung download; paper reading for novelty</td><td><span class="chip pend">in progress</span></td><td class="num">6–7 Nov</td></tr>
           <tr><td>Training-side pilot and strengthening review</td><td><span class="chip pend">in progress</span></td><td class="num">7–9 Nov</td></tr>
-          <tr><td>Extraction audit (code and calibration rule)</td><td><span class="chip pend">in progress</span></td><td class="num">7–9 Nov</td></tr>
           <tr><td>NASA and CALCE section (own plan, then runs)</td><td><span class="chip pend">planned</span></td><td class="num">after the freeze</td></tr>
           <tr><td>Freeze, then confirmatory runs (CPU)</td><td><span class="chip pend">planned</span></td><td class="num">10–12 Nov</td></tr>
           <tr><td>Manuscript on the JES template, highlights, graphical abstract</td><td><span class="chip pend">planned</span></td><td class="num">13–16 Nov</td></tr>

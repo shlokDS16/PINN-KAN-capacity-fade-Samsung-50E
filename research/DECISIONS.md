@@ -357,3 +357,29 @@ Row format:
 - **Evidence:** Shlok's reply "Approve e1'" in the lead session, 2026-11-05.
 - **Proposer / opponent / judge:** D018 judge (clause) / Codex turn 5 (GAP-1 attack) / Shlok (approval).
 - **Re-open if:** Shlok changes it before the freeze.
+
+### D020 Pre-freeze strengthening: ensemble endpoint, inner folds, loss weighting (2026-11-05, status: accepted in part, revised in part)
+- **Decision:**
+  - C1 adopted modified: every arm with final-refit seeds 0-4 (A1, A2, A4/A5 and AG, A9, A12, A13) is scored as the mean of its
+    five refit forecasts, with no pilot gate; deterministic arms unchanged; K1/K2 (A1, A15, G15) stay per-seed (one law);
+    per-seed scores descriptive; tuning and D\*/AG selection stay one fit per trial.
+  - C2 adopted modified and conditional: inner folds for m in {8, 16} become 4 for every tuned arm and the tournament iff pilot
+    P6b (ISU training sides, development only, arms A1, A2, A4, A9, A11, A12) gives q_a > 0 in at least 5 of 6 arms and min q_a
+    > -ln(1.02); otherwise 2; the Partial plan forces 2; unfinished P6b means no change.
+  - C3 rejected for this run (loss weighting disparity disclosed instead). R1 and the optional C3 factor of P6b deleted.
+  - PREREG 7 text corrected: tournament once per (outer fold, m) on the thinned training side.
+  - No Samsung-label pilot before FROZEN. C4-C8 not adopted (not before the judge).
+  - D017/D019 table, g1, margins, rho_s0, w, subsets and folds unchanged.
+- **Alternatives and why they lost:**
+  - R1 gate on A1/A9: favourable selection among two arms.
+  - Ensemble for A1/A9 only or in the K chain: A1-only advantage; five laws are not one law.
+  - Five-seed scoring inside tuning: five-fold tuning cost.
+  - Four folds unconditionally: no measurement, CPU cost.
+  - The expert's R2 (median of four): adopts a null change about half the time and omits A2, A4.
+  - C3 in all objectives, or for A1/A9 only: unmeasurable before the freeze (storage), A11 cannot be made condition-balanced
+    in the same sense, weakening D\* is forbidden, A1-only is forbidden.
+- **Evidence:** debates/D020_strengthen/01_mlexpert.md; debates/D020_strengthen/02_judge.md;
+  debates/codex_panel/turn06_response.md; runs/prereg/PREREG_v4.md (3.4, 4.1, 6, 7, 8, 16, 17); debates/D018_test_rule/01_judge.md.
+- **Proposer / opponent / judge:** ml-expert / Codex panel turn 6 (REVISE) / D020 judge. No outer-test data or score was read.
+- **Re-open if:** a Samsung outer score exists before FROZEN; the ensemble cannot be applied seed-wise or breaks NC-1; the P6b
+  script or decision.json is altered after the first fit; Shlok asks for a change not applied to every comparator.

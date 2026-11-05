@@ -1,0 +1,76 @@
+{
+ "conditions": {
+  "T23|SOCmax0.25|DoD0.05|Cch0.4|Cdch0.3": "INT",
+  "T23|SOCmax0.36|DoD0.05|Cch0.8|Cdch1.7": "INT",
+  "T23|SOCmax0.4|DoD0.05|Cch0.8|Cdch0.6": "INT",
+  "T23|SOCmax0.65|DoD0.35|Cch0.4|Cdch1.5": "SIE",
+  "T23|SOCmax0.69|DoD0.2|Cch1|Cdch0.5": "INT",
+  "T23|SOCmax0.7|DoD0.3|Cch0.6|Cdch1.1": "SIE",
+  "T23|SOCmax0.8|DoD0.15|Cch0.9|Cdch2": "SIE",
+  "T23|SOCmax0.8|DoD0.25|Cch0.2|Cdch1.4": "HM",
+  "T23|SOCmax0.8|DoD0.5|Cch0.8|Cdch0.3": "INT",
+  "T23|SOCmax0.8|DoD0.6|Cch0.5|Cdch1": "INT",
+  "T35|SOCmax0.35|DoD0.05|Cch0.2|Cdch1": "INT",
+  "T35|SOCmax0.35|DoD0.15|Cch0.9|Cdch0.9": "INT",
+  "T35|SOCmax0.55|DoD0.25|Cch0.4|Cdch1.4": "INT",
+  "T35|SOCmax0.55|DoD0.3|Cch0.8|Cdch0.5": "INT",
+  "T35|SOCmax0.5|DoD0.1|Cch1|Cdch0.4": "INT",
+  "T35|SOCmax0.5|DoD0.25|Cch0.4|Cdch0.7": "INT",
+  "T35|SOCmax0.63|DoD0.4|Cch0.5|Cdch0.2": "INT",
+  "T35|SOCmax0.74|DoD0.15|Cch0.5|Cdch1.3": "INT",
+  "T35|SOCmax0.7|DoD0.05|Cch0.3|Cdch1.2": "INT",
+  "T35|SOCmax0.7|DoD0.5|Cch0.7|Cdch1.7": "INT",
+  "T35|SOCmax0.8|DoD0.15|Cch0.5|Cdch0.8": "INT",
+  "T35|SOCmax0.8|DoD0.1|Cch0.7|Cdch0.8": "INT",
+  "T35|SOCmax0.8|DoD0.5|Cch0.9|Cdch1.1": "INT",
+  "T45|SOCmax0.3|DoD0.1|Cch0.8|Cdch0.9": "HM",
+  "T45|SOCmax0.41|DoD0.05|Cch1|Cdch1": "HM",
+  "T45|SOCmax0.45|DoD0.05|Cch1|Cdch1.8": "HM",
+  "T45|SOCmax0.47|DoD0.15|Cch0.7|Cdch1.9": "SIE",
+  "T45|SOCmax0.52|DoD0.05|Cch0.3|Cdch0.7": "HM",
+  "T45|SOCmax0.65|DoD0.45|Cch0.5|Cdch1.4": "HM",
+  "T45|SOCmax0.6|DoD0.15|Cch0.4|Cdch1.3": "HM",
+  "T45|SOCmax0.6|DoD0.15|Cch0.9|Cdch1.9": "HM",
+  "T45|SOCmax0.75|DoD0.4|Cch0.7|Cdch0.2": "HM",
+  "T45|SOCmax0.7|DoD0.2|Cch0.2|Cdch0.9": "HM",
+  "T45|SOCmax0.8|DoD0.05|Cch0.9|Cdch1.6": "HM",
+  "T45|SOCmax0.8|DoD0.35|Cch0.8|Cdch0.4": "HM",
+  "T45|SOCmax0.8|DoD0.6|Cch0.24|Cdch2": "HM",
+  "T45|SOCmax0.8|DoD0.6|Cch0.2|Cdch0.44": "HM",
+  "T45|SOCmax0.8|DoD0.6|Cch0.8|Cdch0.6": "HM",
+  "T45|SOCmax0.8|DoD0.6|Cch1|Cdch0.26": "HM",
+  "T45|SOCmax0.8|DoD0.6|Cch1|Cdch2": "HM"
+ },
+ "conditions_by_lab": {
+  "HM": 17,
+  "INT": 19,
+  "SIE": 4
+ },
+ "conditions_sha256": "629358d675771bc076180c158b626aee15ff6a2247cadf2e2bc81d702d03f687",
+ "design_cycling_cells_by_lab": {
+  "HM": 69,
+  "INT": 60,
+  "SIE": 18
+ },
+ "exact_ties": [
+  "T23|SOCmax0.8|DoD0.25|Cch0.2|Cdch1.4"
+ ],
+ "mixed_conditions_cell_counts": {
+  "T23|SOCmax0.8|DoD0.25|Cch0.2|Cdch1.4": {
+   "HM": 3,
+   "INT": 3
+  },
+  "T45|SOCmax0.8|DoD0.6|Cch0.24|Cdch2": {
+   "HM": 6,
+   "SIE": 3
+  },
+  "T45|SOCmax0.8|DoD0.6|Cch1|Cdch2": {
+   "HM": 6,
+   "SIE": 3
+  }
+ },
+ "n_conditions": 40,
+ "rule": "most cells in the condition (design table, all cells); exact tie -> laboratory with more cycling cells in the whole design; then alphabetical",
+ "source": "data\\processed\\samsung_cells.csv",
+ "source_sha256": "2a10647833c54127b48a4d68bea037b354e054e0224a33f3106bfd736d20adab"
+}

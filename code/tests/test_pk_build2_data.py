@@ -57,33 +57,79 @@ def test_guard_default_is_prereg_v3():
 
 
 # ------------------------------------------------------------------------------------------------ consecutive incident drops
-def test_consecutive_incident_rule_drops_later_files_only():
-    ser = ["TP_z24_01"] * 4 + ["TP_z17_01"] * 3 + ["TP_z17_03"] * 2 + ["TP_z05_01"] * 2 + ["TP_z25_01"] * 3
-    idx = [1, 3, 5, 7] + [17, 19, 21] + [18, 19] + [1, 9] + [3, 5, 7]
-    df = pd.DataFrame({"serial": ser, "file_idx": idx})
+def test_consecutive_incident_rule_drops_later_files_only_and_by_stage():
+    ser = ["TP_z24_01"] * 4 + ["TP_z17_01"] * 3 + ["TP_z17_03"] * 2 + ["TP_z05_01"] * 2 + ["TP_z25_01"] * 3 + ["TP_z07_03"] * 2 + ["TP_z07_03"] * 2 + ["TP_z17_03"] * 2
+    idx = [1, 3, 5, 7] + [17, 19, 21] + [18, 19] + [1, 9] + [3, 5, 7] + [17, 19] + [17, 19] + [19, 21]
+    stage = [1] * 4 + [1] * 3 + [1] * 2 + [1] * 2 + [1] * 3 + [1] * 2 + [2] * 2 + [2] * 2
+    df = pd.DataFrame({"serial": ser, "file_idx": idx, "stage": stage})
     m = D.consecutive_drop_mask(df)
-    dropped = list(zip(np.array(ser)[m], np.array(idx)[m]))
-    # TP_z24_01: segment 2 -> every check-up after it; TP_z17 (all cells): from segment 18 -> file numbers > 18; TP_z25_01 segment 4 -> 5, 7 dropped, 3 kept
-    assert [d for d in dropped if d[0] == "TP_z24_01"] == [("TP_z24_01", 3), ("TP_z24_01", 5), ("TP_z24_01", 7)]
-    assert sorted(d for d in dropped if d[0].startswith("TP_z17")) == [("TP_z17_01", 19), ("TP_z17_01", 21), ("TP_z17_03", 19)]
-    assert [d for d in dropped if d[0] == "TP_z25_01"] == [("TP_z25_01", 5), ("TP_z25_01", 7)]
+    dropped = list(zip(np.array(ser)[m], np.array(stage)[m], np.array(idx)[m]))
+    # TP_z24_01 (stage 1): segment 2 -> every check-up after it; TP_z25_01 (stage 1) segment 4 -> 5, 7 dropped, 3 kept
+    assert [d for d in dropped if d[0] == "TP_z24_01"] == [("TP_z24_01", 1, 3), ("TP_z24_01", 1, 5), ("TP_z24_01", 1, 7)]
+    assert [d for d in dropped if d[0] == "TP_z25_01"] == [("TP_z25_01", 1, 5), ("TP_z25_01", 1, 7)]
+    # TP_z17: cell 03 of stage 1 only (D024 section 5); cells 01 and 02 and stage 2 of cell 03 keep their files
+    assert sorted(d for d in dropped if d[0].startswith("TP_z17")) == [("TP_z17_03", 1, 19)]
+    # TP_z07_03: the incident is listed under stage 2 only
+    assert [d for d in dropped if d[0] == "TP_z07_03"] == [("TP_z07_03", 2, 17), ("TP_z07_03", 2, 19)]
     assert not any(d[0] == "TP_z05_01" for d in dropped)
     assert D.INCIDENT_CONSECUTIVE_DROPS_IMPLEMENTED is True
+    assert ("TP_z07_03", 2, 16) in D.INCIDENT_CONSECUTIVE_DROPS and all(r[1] == 1 for r in D.INCIDENT_CONSECUTIVE_DROPS if r[0] != "TP_z07_03")
 
 
 def test_consecutive_rule_matches_serial_prefix_not_substring():
-    df = pd.DataFrame({"serial": ["TP_z170_01", "TP_z17_02"], "file_idx": [30, 30]})
-    assert D.consecutive_drop_mask(df).tolist() == [False, True]
+    df = pd.DataFrame({"serial": ["TP_z170_01", "TP_z17_02"], "file_idx": [30, 30], "stage": [1, 1]})
+    assert D.consecutive_drop_mask(df, rules=[("TP_z17", 1, 18)]).tolist() == [False, True]
+
+
+def test_stage_scoped_rule_needs_a_stage_column():
+    with pytest.raises(ValueError):
+        D.consecutive_drop_mask(pd.DataFrame({"serial": ["TP_z17_03"], "file_idx": [30]}))
+
+
+def test_file_drops_are_stage_one_only_and_the_et_entry_is_gone():
+    assert all(r[1] == 1 for r in D.INCIDENT_FILE_DROPS) and len(D.INCIDENT_FILE_DROPS) == 5
+    assert not any(r[3] == "ET" for r in D.INCIDENT_FILE_DROPS)              # TP_z25_01_01_ET_T45 is not read; the ET_T23 row must never be dropped
+    assert "TP_z25_01_01_ET_T45" in D.INCIDENT_NOOP_FILES
+    rows = (_checkups_rows("TP_z01_03", 1, "z", [(1, "ET"), (9, "CU"), (11, "CU"), (13, "CU")], cell_no=3, tp=1)
+            + _checkups_rows("TP_z01_03", 2, "z", [(1, "ET"), (9, "CU"), (11, "CU"), (13, "CU")], cell_no=3, tp=1)
+            + _checkups_rows("TP_z25_01", 1, "z", [(1, "ET"), (3, "CU"), (5, "CU")], cell_no=1, tp=25))
+    df = pd.DataFrame(rows)
+    m = D.file_drop_mask(df)
+    assert [(r.cell_id, r.file_idx) for r in df[m].itertuples()] == [("TP_z01_03_s1", 11)]      # stage 2 file 11 stays; no ET row is touched
+
+
+def test_reference_is_decided_before_incident_and_qc_steps_and_is_et_for_all(tmp_path):
+    rows = (_checkups_rows("TP_z25_01", 1, "z", [(1, "ET"), (2, "CU"), (3, "CU"), (4, "CU")], cell_no=1, tp=25)
+            + _checkups_rows("TP_z01_03", 1, "z", [(1, "ET"), (9, "CU"), (11, "CU"), (13, "CU")], cell_no=3, tp=1)
+            + _checkups_rows("TP_z01_03", 2, "z", [(1, "ET"), (9, "CU"), (11, "CU"), (13, "CU")], cell_no=3, tp=1))
+    root = _write_root(tmp_path, rows)
+    cells = D._load_samsung(root)
+    assert {c.meta["reference"] for c in cells} == {"ET"} and len(cells) == 3
+    assert {c.meta["n_incident_rows_dropped_dataset"] for c in cells} == {1}
+    z25 = next(c for c in cells if c.cell_id == "TP_z25_01_s1")
+    assert z25.n == 4                                                   # ET + 3 CU: the ET_T23 row of TP_z25_01 is kept
+    # an ET row that fails QC cannot silently turn the reference into the first CU
+    rows2 = list(rows)
+    rows2[0] = dict(rows2[0], qc_pass=False)
+    root2 = _write_root(tmp_path / "b", rows2)
+    with pytest.raises(ValueError, match="ET_T23 for all cells"):
+        D._load_samsung(root2)
+    # a cell without any ET row makes the fallback apply to everybody (decided on row existence)
+    rows3 = [r for r in rows if not (r["cell_id"] == "TP_z25_01_s1" and r["kind"] == "ET")]
+    cells3 = D._load_samsung(_write_root(tmp_path / "c", rows3))
+    assert {c.meta["reference"] for c in cells3} == {"first_CU"}
 
 
 def test_loader_applies_consecutive_drops_and_counts_them(tmp_path):
     rows = (_checkups_rows("TP_z24_01", 1, "z", [(3, "CU"), (5, "CU"), (7, "exCU"), (9, "CU")])
+            + _checkups_rows("TP_z07_03", 2, "z", [(3, "CU"), (5, "CU"), (15, "CU"), (17, "CU"), (19, "CU")], cell_no=3, tp=7)
             + _checkups_rows("TP_z07_03", 1, "z", [(3, "CU"), (5, "CU"), (15, "CU"), (17, "CU"), (19, "CU")], cell_no=3, tp=7)
             + _checkups_rows("TP_z05_01", 1, "z", [(3, "CU"), (5, "CU"), (17, "CU")], cell_no=1, tp=5))
     root = _write_root(tmp_path, rows)
     cells = {c.cell_id: c for c in D._load_samsung(root)}
     assert "TP_z24_01_s1" not in cells                                  # segment 02 is bad: every check-up after it is dropped, nothing is left
-    assert cells["TP_z07_03_s1"].n == 3 and cells["TP_z05_01_s1"].n == 3     # files 17 and 19 follow the bad segment 16 of TP_z07_03; TP_z05_01 has no incident
+    assert cells["TP_z07_03_s2"].n == 3 and cells["TP_z05_01_s1"].n == 3     # files 17 and 19 follow the bad segment 16 of TP_z07_03 (stage 2); TP_z05_01 has no incident
+    assert cells["TP_z07_03_s1"].n == 5                                 # the same-named stage-1 cell is not affected
     assert cells["TP_z05_01_s1"].meta["n_consecutive_incident_rows_dropped"] == 4 + 2
     off = {c.cell_id for c in D._load_samsung(root, drop_incidents=False)}
     assert "TP_z24_01_s1" in off                                        # the rule is part of drop_incidents
@@ -97,7 +143,7 @@ def test_zyk_segment_integral_matches_the_designed_cycle(tmp_path):
     assert r["discharge_ah"] == pytest.approx(2.45, rel=5e-3)          # 4.9 A for 0.5 h
     assert r["charge_ah"] == pytest.approx(2.45, rel=5e-3)             # 2.45 A for 1 h
     assert r["efc"] == pytest.approx(2.45 / 4.9, rel=5e-3)             # = 0.5 equivalent full cycles (one half-depth cycle)
-    assert r["complete"] and "sampling_gap" not in r["flags"]
+    assert r["complete"] and "active_gap" not in r["flags"] and r["i_dch_med_a"] == pytest.approx(4.9)
     assert r["hours"] == pytest.approx(1.5, rel=1e-3)                  # hours > 24 in run_time are parsed
 
 
@@ -109,11 +155,43 @@ def test_zyk_gap_makes_a_segment_incomplete_and_bad_file_is_a_flag(tmp_path):
     p = tmp_path / "TP_z10_01_04_ZYK.csv"
     _write_zyk_csv(p, gap_after_s=3 * 3600.0)
     r = zyk.read_zyk_segment(str(p))
-    assert not r["complete"] and "sampling_gap" in r["flags"]
+    assert not r["complete"] and "active_gap" in r["flags"] and r["dt_max_active_s"] > 10000        # the pause follows a current sample: the trapezoid would invent a ramp
     bad = tmp_path / "TP_z10_01_06_ZYK.csv"
     bad.write_text("not,a,zyk\n1,2,3\n")
     rb = zyk.read_zyk_segment(str(bad))
     assert not rb["complete"] and rb["flags"].startswith("read_error")
+
+
+def _seg(t, i):
+    return zyk.segment_from_arrays(np.asarray(t, float), np.asarray(i, float))
+
+
+def test_zyk_rest_only_gap_is_not_an_incompleteness_below_24h_but_is_above():
+    t = np.concatenate([np.arange(0, 100, 10.0), 100 + 5 * 3600.0 + np.arange(0, 100, 10.0)])           # current flows, 5 h rest-only gap, current flows again
+    i = np.concatenate([np.full(10, -4.9), np.zeros(0), np.full(10, -4.9)])
+    # both endpoints of the long gap carry current -> active gap
+    assert not _seg(t, i)["complete"] and "active_gap" in _seg(t, i)["flags"]
+    i = np.concatenate([np.full(9, -4.9), [0.0], [0.0], np.full(9, -4.9)])                                # the gap sits between two rest samples
+    r = _seg(t, i)
+    assert r["complete"] and r["dt_max_s"] > 17000 and r["dt_max_active_s"] <= 10.0
+    t2 = t.copy()
+    t2[10:] += 20 * 3600.0                                                                                # 25 h rest-only gap
+    r2 = _seg(t2, i)
+    assert not r2["complete"] and "rest_gap_gt_24h" in r2["flags"]
+
+
+def test_zyk_other_incompleteness_rules():
+    t = np.arange(0, 200, 10.0)
+    i = np.full(len(t), -4.9)
+    assert _seg(t, i)["complete"]
+    j = i.copy(); j[3] = np.nan
+    assert "nan_current" in _seg(t, j)["flags"] and not _seg(t, j)["complete"]
+    tt = t.copy(); tt[5] = tt[4] - 1.0
+    assert "time_not_monotonic" in _seg(tt, i)["flags"] and not _seg(tt, i)["complete"]
+    assert "fewer_than_10_rows" in _seg(t[:9], i[:9])["flags"] and not _seg(t[:9], i[:9])["complete"]
+    assert zyk.ACTIVE_I_A == 0.05 and zyk.GAP_FLAG_S == 600.0 and zyk.REST_GAP_MAX_S == 86400.0 and zyk.MIN_ROWS == 10 and zyk.DOD_CLASS_EDGES == (0.15, 0.35)
+    k = np.array([-4.9, -4.9, 2.45, 2.45, 0.0, 0.0, -0.02, -4.9, -4.9, -4.9])
+    assert _seg(np.arange(10) * 10.0, k)["i_dch_med_a"] == pytest.approx(4.9)                              # samples below -0.05 A only
 
 
 def test_build_zyk_table_marks_files_named_by_the_member_list_but_absent(tmp_path):

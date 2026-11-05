@@ -172,7 +172,8 @@ def _zyk_zip(args) -> list[dict]:
             if not m or m.group("kind") != "ZYK" or not m.group("csv") or m.group("meta"):
                 continue
             row = dict(folder=folder, cell_id=cell_id, serial=m.group("serial"), file_idx=int(m.group("idx")), member=base, size_bytes=info.file_size,
-                       schema_ok=False, dt_max_active_s=np.nan, n_rows=0, discharge_ah=np.nan, charge_ah=np.nan, efc=np.nan, hours=np.nan, dt_max_s=np.nan, complete=False, flags="")
+                       schema_ok=False, dt_max_active_s=np.nan, i_dch_med_a=np.nan, n_rows=0, discharge_ah=np.nan, charge_ah=np.nan, efc=np.nan, hours=np.nan,
+                       dt_max_s=np.nan, complete=False, flags="")
             try:
                 with z.open(info) as f:
                     d = pd.read_csv(f, usecols=lambda c: c.strip() in CORE, low_memory=False)
@@ -183,18 +184,12 @@ def _zyk_zip(args) -> list[dict]:
                 else:
                     t = Z._parse_time(d["run_time"])
                     cur = pd.to_numeric(d["c_cur"], errors="coerce").to_numpy(float)
-                    seg = Z.segment_from_arrays(t, cur)
+                    seg = Z.segment_from_arrays(t, cur)          # the D024 completeness rule lives in zyk.py
                     fl = [x for x in seg.pop("flags").split(";") if x]
-                    if len(d) < 10:
-                        fl.append("fewer_than_10_rows")
                     if pd.to_numeric(d["c_vol"], errors="coerce").isna().any():
-                        fl.append("nan_voltage")
+                        fl.append("info_nan_voltage")
                     row.update(seg)
                     row["flags"] = ";".join(fl)
-                    if not np.isnan(t).any() and len(t) > 1:
-                        dt = np.diff(t)
-                        act = (np.abs(np.nan_to_num(cur[1:])) > 0.05) | (np.abs(np.nan_to_num(cur[:-1])) > 0.05)
-                        row["dt_max_active_s"] = float(dt[act].max()) if act.any() else 0.0
             except Exception as e:  # noqa: BLE001 - third-party file: report, never crash
                 row["flags"] = f"read_error:{type(e).__name__}"
             out.append(row)
@@ -273,12 +268,12 @@ def main(argv=None):
         return {"n": int(len(s)), "min": int(s.min()), "q25": float(s.quantile(.25)), "median": float(s.median()), "q75": float(s.quantile(.75)), "max": int(s.max()),
                 "counts": {int(k): int(v) for k, v in s.value_counts().sort_index().items()}}
     # the same after the file-level incident drops (prereg 3.3(4), both stages of a serial), as a sensitivity
-    drops = {(s, i, k) for s, i, k in D.INCIDENT_FILE_DROPS if k in ("CU", "exCU")}
+    drops = {(s, g, i, k) for s, g, i, k in D.INCIDENT_FILE_DROPS if k in ("CU", "exCU")}
 
     def n_after_drop(r):
         n = r["n_intermediate"]
-        for s, i, k in drops:
-            if r["serial"] == s and i in (r["cu_csv_idx"] if k == "CU" else r["excu_csv_idx"]):
+        for s, g, i, k in drops:
+            if r["serial"] == s and int(r["stage"]) == g and i in (r["cu_csv_idx"] if k == "CU" else r["excu_csv_idx"]):
                 n -= 1
         return n
     wc["n_intermediate_after_incident_drops"] = wc.apply(n_after_drop, axis=1)
@@ -312,7 +307,7 @@ def main(argv=None):
         all_cells_with_et23_csv=int((wc.n_et23_csv > 0).sum()), all_cells_with_at23_csv=int((wc.n_at23_csv > 0).sum()))
     # incident files: which stage's zip contains them
     inc = {}
-    for s, i, k in D.INCIDENT_FILE_DROPS:
+    for s, g, i, k in D.INCIDENT_FILE_DROPS:
         hits = []
         for r in wc.itertuples():
             if r.serial != s:
@@ -320,7 +315,7 @@ def main(argv=None):
             idx = r.cu_csv_idx if k == "CU" else r.excu_csv_idx if k == "exCU" else None
             if (idx is not None and i in idx) or (k == "ET" and r.n_et_csv > 0):
                 hits.append(r.cell_id)
-        inc[f"{s}_{i:02d}_{k}"] = hits
+        inc[f"{s}_s{g}_{i:02d}_{k}"] = hits       # cells (both stages) that contain a file of this name; the drop applies to stage g only
     st["incident_files_present_in"] = inc
 
     # ---- FB-5 ZYK
@@ -336,8 +331,8 @@ def main(argv=None):
             meta_idx = {int(S.FILE_RE.match(n).group("idx")) for n in names if S.FILE_RE.match(n) and S.FILE_RE.match(n).group("kind") == "ZYK" and S.FILE_RE.match(n).group("meta")}
             csv_idx = {int(S.FILE_RE.match(n).group("idx")) for n in names if S.FILE_RE.match(n) and S.FILE_RE.match(n).group("kind") == "ZYK" and S.FILE_RE.match(n).group("csv")}
             for i in sorted(meta_idx - csv_idx):
-                miss.append(dict(cell_id=r.cell_id, serial=r.serial, file_idx=i, discharge_ah=np.nan, charge_ah=np.nan, efc=np.nan, hours=np.nan, dt_max_s=np.nan, n_rows=0,
-                                 complete=False, flags="missing_file"))
+                miss.append(dict(cell_id=r.cell_id, serial=r.serial, file_idx=i, discharge_ah=np.nan, charge_ah=np.nan, efc=np.nan, hours=np.nan, dt_max_s=np.nan, dt_max_active_s=np.nan, i_dch_med_a=np.nan,
+                                 n_rows=0, complete=False, flags="missing_file"))
         tab = pd.concat([zt[Z.TABLE_COLS], pd.DataFrame(miss, columns=Z.TABLE_COLS)], ignore_index=True).sort_values(["cell_id", "file_idx"])
         tab.to_csv(PROC / "samsung_zyk_efc.csv", index=False)
         per = zt.groupby("cell_id").agg(n_csv=("member", "size"), n_schema_ok=("schema_ok", "sum"), n_complete=("complete", "sum")).reset_index()
@@ -349,45 +344,58 @@ def main(argv=None):
                 flag_counts[x] = flag_counts.get(x, 0) + 1
         per.to_csv(OUT / "zyk_per_cell.csv", index=False)
         wk = zt[zt.cell_id.isin(wc[wc.type == "z"].cell_id)]
+        wk = wk.copy()
+        wk["complete"] = wk["complete"].astype(bool) & wk["schema_ok"].astype(bool)
+        inc_cells = set(wk[~wk["complete"]]["cell_id"]) | {m["cell_id"] for m in miss}
+        cyc_ids = list(cyc["cell_id"])
+        full = [c for c in cyc_ids if c not in inc_cells]
+        dodc = cells_d.set_index("cell_id")["dod_tp"].map(lambda v: Z.dod_class(float(v)))
+        labc = cells_d.set_index("cell_id")["lab"]
+        classlab: dict = {}
+        for c in full:
+            classlab[f"class{int(dodc[c])}|{labc[c]}"] = classlab.get(f"class{int(dodc[c])}|{labc[c]}", 0) + 1
         st["zyk"] = dict(
+            rule="D024: incomplete iff gap>600 s with an endpoint |I|>0.05 A, rest-only gap>24 h, time not monotonic, NaN current, <10 rows, or file absent",
             cycling_cells=int(len(cyc)), cycling_cells_with_any_zyk_csv=int((per.n_csv > 0).sum()), cycling_cells_without_zyk_csv=per[per.n_csv == 0]["cell_id"].tolist(),
             zyk_csv_members_in_listing=int(wc[wc.type == "z"].n_zyk_csv.sum()), zyk_csv_read=int(len(wk)), schema_ok=int(wk.schema_ok.sum()), parse_failed=int((~wk.schema_ok).sum()),
             complete=int(wk.complete.sum()), incomplete=int((~wk.complete).sum()), flag_counts=flag_counts, meta_without_csv=int(len(miss)),
-            cells_with_meta_without_csv=sorted({m["cell_id"] for m in miss}), cells_all_zyk_complete=int(((per.n_csv > 0) & (per.n_complete == per.n_csv) & (per.n_meta_only == 0)).sum()),
-            cells_with_incomplete_zyk=per[(per.n_complete < per.n_csv) | (per.n_meta_only > 0)]["cell_id"].tolist(),
-            storage_cells_with_zyk_csv=int(wc[wc.type == "k"].n_zyk_csv.sum()), gap_flag_s=Z.GAP_FLAG_S, files_with_dt_max_gt_gap=int((wk.dt_max_s > Z.GAP_FLAG_S).sum()),
-            files_with_dt_max_gt_60s=int((wk.dt_max_s > 60).sum()), files_with_gap_gt_gapflag_while_current_flows=int((wk.dt_max_active_s > Z.GAP_FLAG_S).sum()),
-            files_with_gap_gt_60s_while_current_flows=int((wk.dt_max_active_s > 60).sum()),
+            incomplete_by_reason={k: int(wk[~wk.complete]["flags"].str.contains(k).sum()) for k in ("active_gap", "time_not_monotonic", "fewer_than_10_rows", "rest_gap_gt_24h", "nan_current", "bad_schema")},
+            cells_with_meta_without_csv=sorted({m["cell_id"] for m in miss}), cells_with_incomplete_zyk=sorted(inc_cells & set(cyc_ids)), n_cells_with_incomplete_zyk=len(inc_cells & set(cyc_ids)),
+            cells_fully_logged=len(full), fully_logged_by_dod_class_and_lab=dict(sorted(classlab.items())),
+            storage_cells_with_zyk_csv=int(wc[wc.type == "k"].n_zyk_csv.sum()),
+            info_files_with_dt_max_gt_600=int((wk.dt_max_s > Z.GAP_FLAG_S).sum()), info_files_with_active_gap_gt_60=int((wk.dt_max_active_s > 60).sum()),
+            info_files_with_rest_gap_gt_24h=int(wk["flags"].str.contains("rest_gap_gt_24h").sum()),
+            info_incomplete_file_ids=[f"{r.cell_id}:{int(r.file_idx)}" for r in wk[~wk.complete].itertuples()],
             dt_max_s_bins={lab: int(((wk.dt_max_s > lo) & (wk.dt_max_s <= hi)).sum()) for lab, lo, hi in (("<=10", -1, 10), ("10-60", 10, 60), ("60-600", 60, 600), ("600-3600", 600, 3600), (">3600", 3600, 1e12))},
             dt_max_active_s_bins={lab: int(((wk.dt_max_active_s > lo) & (wk.dt_max_active_s <= hi)).sum()) for lab, lo, hi in (("<=10", -1, 10), ("10-60", 10, 60), ("60-600", 60, 600), ("600-3600", 600, 3600), (">3600", 3600, 1e12))},
             zyk_table=str(PROC / "samsung_zyk_efc.csv"), zyk_table_sha256=sha(PROC / "samsung_zyk_efc.csv"))
-        try:
-            st["zyk"]["validation_informational"] = D.zyk.validate_from_root(str(ROOT))
-        except Exception as e:  # noqa: BLE001
-            st["zyk"]["validation_informational"] = f"not run: {type(e).__name__}: {str(e)[:200]}"
+        # identity check (D024 section 6): median discharge current of the complete ZYK files of a cycling cell against C_dch x 4.9 A of the zip-name condition
+        idr = []
+        cdch = cells_d.set_index("cell_id")["c_dch_tp"]
+        for c in cyc_ids:
+            g = wk[(wk.cell_id == c) & wk.complete & wk.i_dch_med_a.notna()]
+            exp = float(cdch[c]) * S.Q_NOM_AH
+            med = float(g.i_dch_med_a.median()) if len(g) else float("nan")
+            dev = abs(med - exp) / exp if len(g) else float("nan")
+            idr.append(dict(cell_id=c, n_files=int(len(g)), median_dch_current_a=med, expected_dch_current_a=exp, rel_dev=dev, excluded_gt_10pct=bool(not np.isfinite(dev) or dev > 0.10)))
+        idf = pd.DataFrame(idr)
+        idf.to_csv(OUT / "identity_check.csv", index=False)
+        st["zyk"]["identity_check"] = dict(cells=int(len(idf)), excluded=idf[idf.excluded_gt_10pct]["cell_id"].tolist(), max_rel_dev=float(idf.rel_dev.max()),
+                                           median_rel_dev=float(idf.rel_dev.median()), cells_without_complete_files=int((idf.n_files == 0).sum()))
 
     if a.skip_zyk and (OUT / "fb_status.json").exists():
         prev = json.loads((OUT / "fb_status.json").read_text(encoding="utf-8"))
         if "zyk" in prev:
             st["zyk"] = prev["zyk"]
 
-    # ---- FB-5 informational: how many ZYK files stay complete if a gap only counts while current flows. The constant GAP_FLAG_S and the gap definition
-    # are the lead's to fix (zyk.py marks them as assumptions); nothing here changes the ZYK table on disk and no validation verdict is drawn from it.
-    if (OUT / "zyk_files.csv").exists() and isinstance(st.get("zyk"), dict):
-        from pinnkan import zyk as Z
-        zt = pd.read_csv(OUT / "zyk_files.csv", keep_default_na=False, dtype={"flags": str})
-        zt["dt_max_active_s"] = pd.to_numeric(zt["dt_max_active_s"], errors="coerce")
-        bad = zt["flags"].str.contains("time_not_monotonic|nan_current|unparsable|bad_schema|read_error|fewer_than_10_rows")
-        alt = zt["schema_ok"].astype(str).eq("True") & ~bad & ~(zt["dt_max_active_s"] > Z.GAP_FLAG_S)
-        st["zyk"].pop("validation_alt_gap_rule_informational", None)
-        st["zyk"].pop("incomplete_only_by_sampling_gap_and_no_gap_while_current_flows", None)
-        sg = zt["flags"].str.contains("sampling_gap")
-        st["zyk"]["sampling_gap_flagged_files"] = int(sg.sum())
-        st["zyk"]["sampling_gap_flagged_files_with_gap_while_current_flows"] = int((sg & (zt["dt_max_active_s"] > Z.GAP_FLAG_S)).sum())
-        st["zyk"]["sampling_gap_flagged_files_gap_in_rest_only"] = int((sg & ~(zt["dt_max_active_s"] > Z.GAP_FLAG_S)).sum())
-        st["zyk"]["files_complete_under_alt_rule"] = int(alt.sum())
-        st["zyk"]["files_incomplete_under_alt_rule"] = int((~alt).sum())
-        st["zyk"]["cells_all_complete_under_alt_rule"] = int(zt.assign(alt=alt).groupby("cell_id")["alt"].all().sum())
+    # ---- the documented data-loss files of the dataset paper must be incomplete in the ZYK table (D024 C1); recomputed from the table on disk on every run
+    if (PROC / "samsung_zyk_efc.csv").exists() and isinstance(st.get("zyk"), dict):
+        zt_all = pd.read_csv(PROC / "samsung_zyk_efc.csv", usecols=["cell_id", "file_idx", "complete", "flags"], keep_default_na=False)
+        zt_all["complete"] = zt_all["complete"].astype(str).str.lower().eq("true")
+        documented = [("TP_z19_01_s1", 4), ("TP_z21_01_s1", 22), ("TP_z24_01_s1", 22), ("TP_z25_02_s1", 22)] + [(f"TP_z0{k}_0{n}_s2", 24) for k, ns in ((1, (1, 2, 3)), (3, (1, 2, 3))) for n in ns]
+        st["zyk"]["documented_loss_files_incomplete"] = {f"{c}:{i:02d}": bool(((zt_all["cell_id"] == c) & (zt_all["file_idx"] == i) & ~zt_all["complete"]).any()) for c, i in documented}
+        st["zyk"]["missing_file_rows"] = int((zt_all["flags"] == "missing_file").sum())
+        st["zyk"]["table_rows"] = int(len(zt_all))
 
     # ---- QC flag counts and the rows with STRUCTURAL problems (identifiers and flag names; capacity-derived flags are counted only)
     CAP_DERIVED = {"capacity_outlier_vs_neighbours", "implausible_capacity", "charge_discharge_mismatch"}
@@ -405,6 +413,30 @@ def main(argv=None):
                     cells_with_a_failed_row=int(qc[~qc_pass]["cell_id"].nunique()), rows_with_structural_flag=int((fl_rows["structural_flags"] != "").sum()),
                     outlier_rule={"OUTLIER_REL": S.OUTLIER_REL, "OUTLIER_DROP_MULT": S.OUTLIER_DROP_MULT, "causal": True})
 
+    # ---- C5: aggregate outlier-flag counts by kind (no cell, no value) and the ET repeated-cycle structure of the documented incident cells
+    out_rows = qc[qc["flags"].str.contains("capacity_outlier_vs_neighbours")]
+    cu_first = pd.read_csv(PROC / "samsung_checkups.csv", usecols=["cell_id", "kind", "cu_idx", "flags"], dtype={"flags": str}, keep_default_na=False)
+    first_cu = cu_first[(cu_first.kind == "CU") & (cu_first.cu_idx.astype(str).isin(["1", "1.0"]))]
+    st["qc"]["outlier_flag_rows_by_kind"] = {k: int(v) for k, v in out_rows.groupby("kind").size().items()}
+    st["qc"]["first_cu_rows"] = int(len(first_cu))
+    st["qc"]["first_cu_rows_flagged_outlier"] = int(first_cu["flags"].str.contains("capacity_outlier_vs_neighbours").sum())
+    et_struct = []
+    for cid in ("TP_k08_01_s1", "TP_k09_01_s1", "TP_k10_01_s1", "TP_k11_01_s1"):
+        folder = mapping[mapping.cell_id == cid].iloc[0]["folder"]
+        f = next((RAWX / folder).glob("*_01_ET_T23.csv"))
+        d = pd.read_csv(f, usecols=lambda c: c.strip() in S.CORE_COLS, low_memory=False)
+        d.columns = [c.strip() for c in d.columns]
+        t = S.parse_run_time(d["run_time"])
+        cur = pd.to_numeric(d["c_cur"], errors="coerce").to_numpy(float)
+        vol = pd.to_numeric(d["c_vol"], errors="coerce").to_numpy(float)
+        step = pd.to_numeric(d["step_type"], errors="coerce").to_numpy(float)
+        r21, r22 = S.step_runs(t, cur, vol, step, 21), S.step_runs(t, cur, vol, step, 22)
+        et_struct.append(dict(cell_id=cid, n_runs_step21=len(r21), n_runs_step22=len(r22), charge_before_discharge=bool(r21 and r22 and r21[0]["i_first_idx"] < r22[0]["i_first_idx"]),
+                              dur21_h=round(r21[0]["dur_h"], 2) if r21 else None, dur22_h=round(r22[0]["dur_h"], 2) if r22 else None))
+    pd.DataFrame(et_struct).to_csv(OUT / "et_incident_structure.csv", index=False)
+    st["et_incident_cells"] = dict(single_charge_discharge_pair=bool(all(r["n_runs_step21"] == 1 and r["n_runs_step22"] == 1 and r["charge_before_discharge"] for r in et_struct)),
+                                   cells=[r["cell_id"] for r in et_struct])
+
     # ---- Test B completeness of the cell table (lab map)
     cells = pd.read_csv(PROC / "samsung_cells.csv")
     cz = cells[cells["type"] == "z"].copy()
@@ -419,8 +451,10 @@ def main(argv=None):
     cond = cond.reset_index()
     cond["in_splits_v2"] = cond["key"].isin(split_conds)
     cond.to_csv(OUT / "test_b_conditions.csv", index=False)
-    from prereg import extraction_calibration as EC
-    labs, labs_hash = EC.majority_labs(str(ROOT))
+    from pinnkan import labmap
+    labs, labs_hash = labmap.load_lab_map(str(ROOT), required=True)
+    rebuilt = labmap.build_lab_map(cells)
+    lab_map_matches_cell_table = bool(rebuilt["conditions"] == labs)
     need = ["cell_id", "lab", "stage", "tp", "cell", "T_C", "SOC_max", "DoD", "C_ch", "C_dch", "type"]
     st["test_b"] = dict(
         conditions_in_design=int(dz["key"].nunique()), conditions_in_cell_table=int(cz["key"].nunique()), conditions_in_splits_v2=len(split_conds),
@@ -430,6 +464,7 @@ def main(argv=None):
         cell_table_null_cells={c: int(cz[c].isna().sum()) for c in need if int(cz[c].isna().sum())}, split_test_cells=len(split_cells),
         split_test_cells_missing_in_table=sorted(set(split_cells) - set(cz.cell_id)), table_cells_not_in_splits=int(len(set(cz.cell_id) - set(split_cells))),
         mixed_lab_condition_cell_counts={k: cz[cz.key == k].groupby("lab").size().astype(int).to_dict() for k in cond[cond.labs.fillna("").str.contains(",")]["key"]},
+        lab_map_matches_cell_table=lab_map_matches_cell_table, lab_map_conditions_by_lab=rebuilt["conditions_by_lab"], lab_map_exact_ties=rebuilt["exact_ties"],
         majority_lab_map_conditions=len(labs), majority_lab_map_sha256=labs_hash, labs_per_condition_mixed=cond[cond.labs.fillna("").str.contains(",")]["key"].tolist(),
         cells_csv_sha256=sha(PROC / "samsung_cells.csv"), checkups_csv_sha256=sha(PROC / "samsung_checkups.csv"))
     st["storage_conditions"] = dict(design=int(design[design["type"] == "k"][["amb_temp_tp", "soc_max_tp"]].drop_duplicates().shape[0]),

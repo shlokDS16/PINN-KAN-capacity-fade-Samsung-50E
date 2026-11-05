@@ -102,17 +102,10 @@ def dataset_truth(j, hull=None):
 
 
 def majority_labs(root=ROOT):
-    """cycling condition identifier -> majority laboratory (most cells; ties: first in sorted order) from the Samsung cell table (identifiers only), and the sha256 of the map"""
-    import pandas as pd
-    df = pd.read_csv(os.path.join(root, "data", "processed", "samsung_cells.csv"))
-    df = df[df["type"] == "z"]
-    cnt = {}
-    for _, r in df.iterrows():
-        key = samsung_cond_key("cycling", float(r["T_C"]), float(r["SOC_max"]), float(r["DoD"]), float(r["C_ch"]), float(r["C_dch"]))
-        cnt.setdefault(key, {}).setdefault(str(r["lab"]), 0)
-        cnt[key][str(r["lab"])] += 1
-    out = {k: sorted(v.items(), key=lambda kv: (-kv[1], kv[0]))[0][0] for k, v in cnt.items()}
-    return out, hashlib.sha256(json.dumps(out, sort_keys=True).encode()).hexdigest()
+    """cycling condition identifier -> laboratory, and the sha256 of the map: read from the frozen file runs/prereg/lab_map.json (D024 section 4: most cells, an exact tie to
+    the laboratory with more cycling cells in the design). The file is written by `python -P -m pinnkan.labmap --write`; it is required here."""
+    from pinnkan import labmap
+    return labmap.load_lab_map(root, required=True)
 
 
 def lab_offsets(j, labs):

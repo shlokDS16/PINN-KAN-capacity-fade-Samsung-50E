@@ -218,27 +218,42 @@ def prepare_many(cells, rule, oracle=False):
 
 # ------------------------------------------------------------------------------------------------ Samsung
 
-# Dropped at file level (prereg 3.3(4)). Names as printed in the dataset paper: <serial>_<file>_<kind>. The paper does not name the
-# stage, so a drop applies to BOTH stages of that serial (over-drop risk, counted in meta). TODO [FB-4]: map each to its stage.
-INCIDENT_FILE_DROPS = [("TP_z25_01", 1, "ET"), ("TP_z01_03", 11, "CU"), ("TP_z17_03", 13, "exCU"), ("TP_z17_03", 17, "CU"),
-                       ("TP_z17_02", 19, "exCU"), ("TP_k11_02", 3, "exCU")]
-# Consecutive-file drops (prereg 3.3(4), second sentence, as listed there): "every later check-up of a cell whose cycling segment shows undefined load or a wrong
-# SOC_max, i.e. TP_z24_01_02, TP_z25_01_04, TP_z07_03_16, TP_z20_03_16, TP_z17 from segment 18". Entry = (serial or serial prefix, segment file number): every
-# row of a matching cell with file number > segment is dropped (the segment itself is a ZYK file and has no capacity row). A key without a cell number ("TP_z17")
-# matches all cells of that test point (TP_z17_01..03). Both stages are matched (the paper does not name the stage; over-drop possible, counted in meta).
-# Segments with only missing log data keep their check-ups (they are not in this list). The wording of the dataset paper's "Known incidents" list was not read
-# by the builder: the entries are those of the prereg text; the lead confirms the list at the freeze.
-INCIDENT_CONSECUTIVE_DROPS = [("TP_z24_01", 2), ("TP_z25_01", 4), ("TP_z07_03", 16), ("TP_z20_03", 16), ("TP_z17", 18)]
+# Incident handling (prereg 3.3(4); D024 section 5, 2026-11-05). The dataset paper's "Known incidents" list is organised under the headings "Stage 1" and
+# "Stage 2" (refs/samsung50e_paper/paper.txt lines 94-125); all six check-up files named below stand under "Stage 1". Entries are (serial, stage, file number, kind):
+# the file is dropped for that stage only; the same-named stage-2 files are ordinary check-ups.
+INCIDENT_FILE_DROPS = [("TP_z01_03", 1, 11, "CU"), ("TP_z17_03", 1, 13, "exCU"), ("TP_z17_03", 1, 17, "CU"), ("TP_z17_02", 1, 19, "exCU"), ("TP_k11_02", 1, 3, "exCU")]
+# Documented no-ops: TP_z25_01_01_ET_T45 (undefined load) and TP_z12_*_31_AT_T45 (aborted) are files the pipeline does not read (ET at 23 C only; AT excluded). The
+# earlier entry ("TP_z25_01", 1, "ET") removed the ET_T23 row, a different file, and flipped the reference anchor for every cell (defect found by the D024 judge).
+INCIDENT_NOOP_FILES = ["TP_z25_01_01_ET_T45", "TP_z12_*_31_AT_T45"]
+# Consecutive-file drops (prereg 3.3(4), second sentence): every later check-up of a cell whose cycling segment shows undefined load or a wrong SOC_max.
+# Entry = (serial, stage, segment file number): every row of that cell and stage with file number > segment is dropped (the segment itself is a ZYK file and has no
+# capacity row). Stage scope from the paper's headings: stage 1 for TP_z24_01 (after 2), TP_z25_01 (after 4), TP_z20_03 (after 16), TP_z17_03 (after 18); stage 2 for
+# TP_z07_03 (after 16). "TP_z17 from segment 18" is read as cell 03 (the incident names TP_z17_03; D024 section 5, a reading of PREREG's own definition). A key
+# without a cell number would still match every cell of that test point; a stage of None matches both stages. Segments with only missing log data keep their check-ups.
+INCIDENT_CONSECUTIVE_DROPS = [("TP_z24_01", 1, 2), ("TP_z25_01", 1, 4), ("TP_z07_03", 2, 16), ("TP_z20_03", 1, 16), ("TP_z17_03", 1, 18)]
 INCIDENT_CONSECUTIVE_DROPS_IMPLEMENTED = True
 
 
 def consecutive_drop_mask(df, rules=None):
-    """boolean mask of the rows removed by the consecutive-file incident rule (see INCIDENT_CONSECUTIVE_DROPS)"""
+    """boolean mask of the rows removed by the consecutive-file incident rule (see INCIDENT_CONSECUTIVE_DROPS); rules: (key, stage, segment) or legacy (key, segment)"""
     m = np.zeros(len(df), bool)
     ser = df["serial"].astype(str)
-    for key, seg in (INCIDENT_CONSECUTIVE_DROPS if rules is None else rules):
+    for rule in (INCIDENT_CONSECUTIVE_DROPS if rules is None else rules):
+        key, stage, seg = rule if len(rule) == 3 else (rule[0], None, rule[1])
         match = (ser == key) | ser.str.startswith(key + "_")
+        if stage is not None:
+            if "stage" not in df.columns:
+                raise ValueError("a stage-scoped incident rule needs a 'stage' column")
+            match = match & (pd.to_numeric(df["stage"], errors="coerce") == stage)
         m |= (match & (df["file_idx"] > seg)).to_numpy()
+    return m
+
+
+def file_drop_mask(df, rules=None):
+    """boolean mask of the rows removed by the file-level incident rule (INCIDENT_FILE_DROPS, stage-aware)"""
+    m = np.zeros(len(df), bool)
+    for ser, stage, fidx, knd in (INCIDENT_FILE_DROPS if rules is None else rules):
+        m |= ((df["serial"] == ser) & (pd.to_numeric(df["stage"], errors="coerce") == stage) & (df["file_idx"] == fidx) & (df["kind"] == knd)).to_numpy()
     return m
 
 
@@ -257,11 +272,15 @@ def _load_samsung(root, retain_all=False, throughput="analytic", include_at=Fals
         # QC-failed check-ups still count; an interval with missing log data takes the designed throughput (3.3(4)); no table / no cell entry -> ZykDataMissing
         if "efc_zyk_cum" not in df.columns:
             df = zyk.attach_zyk_cumulative(df, zyk.load_zyk_table(root), fallback=throughput_fallback)
+    # ONE reference rule for all analysed cells (prereg 3.3(2), D024 section 2): ET_T23 capacity iff an ET row exists for every analysed cell. The test is made ONCE, on
+    # the rows of the pipeline table before any incident or QC step (row existence only, no capacity value), and is not re-decided from the rows that survive.
+    all_ids = set(df["cell_id"])
+    et_ids = set(df.loc[df["kind"] == "ET", "cell_id"])
+    et_all = bool(all_ids) and all_ids <= et_ids
+    reference = "ET" if et_all else "first_CU"
     n_incident = n_consec = 0
     if drop_incidents:
-        m = np.zeros(len(df), bool)
-        for ser, fidx, knd in INCIDENT_FILE_DROPS:
-            m |= ((df["serial"] == ser) & (df["file_idx"] == fidx) & (df["kind"] == knd)).to_numpy()
+        m = file_drop_mask(df)
         n_incident = int(m.sum())
         mc = consecutive_drop_mask(df) & ~m
         n_consec = int(mc.sum())
@@ -270,14 +289,12 @@ def _load_samsung(root, retain_all=False, throughput="analytic", include_at=Fals
         df = df[df["qc_pass"].astype(str).str.lower().isin(["true", "1"])]
     if not include_at:
         df = df[df["kind"] != "AT"]
-    # ONE reference rule for all analysed cells (prereg 3.3(2), review m3): ET_T23 capacity iff an ET row exists for every analysed cell,
-    # otherwise the first check-up of every cell (ET rows are then dropped for everybody). Decided from row existence only, no capacity value.
-    all_ids = set(df["cell_id"])
-    et_ids = set(df.loc[df["kind"] == "ET", "cell_id"])
-    et_all = bool(all_ids) and all_ids <= et_ids
     if not et_all:
-        df = df[df["kind"] != "ET"]
-    reference = "ET" if et_all else "first_CU"
+        df = df[df["kind"] != "ET"]            # fallback: the first check-up of every cell is the reference, ET rows are dropped for everybody
+    else:
+        lost = sorted(all_ids - set(df.loc[df["kind"] == "ET", "cell_id"]))
+        if lost:
+            raise ValueError(f"reference is ET_T23 for all cells, but the ET row of {lost[:5]} ({len(lost)} cells) was removed by a QC or incident step")
     cells = []
     for cid, g in df.groupby("cell_id", sort=True):
         g = g.sort_values(["elapsed_days", "file_idx"], kind="stable")
@@ -306,7 +323,8 @@ def _load_samsung(root, retain_all=False, throughput="analytic", include_at=Fals
         cells.append(Cell(cid, "samsung", kind, cond, raw, t, ret, e, fc_ok,
                           lab=str(r0["lab"]), stage=str(int(r0["stage"])),
                           meta={"cell_no": int(r0["cell"]), "tp": int(r0["tp"]), "n_incident_rows_dropped_dataset": n_incident,
-                                "n_consecutive_incident_rows_dropped": n_consec, "reference": reference, "efc_decreases_fixed": n_fix,
+                                "n_consecutive_incident_rows_dropped": n_consec, "reference": reference,
+                                "reference_decided_on_n_cells": len(all_ids), "reference_decided_before_incident_and_qc": True, "efc_decreases_fixed": n_fix,
                                 "throughput_source": throughput, "zyk_intervals": (dict(g["zyk_interval_source"].value_counts()) if throughput == "zyk" and "zyk_interval_source" in g else {})}))
     return cells
 

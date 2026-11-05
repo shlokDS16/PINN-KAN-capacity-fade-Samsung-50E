@@ -755,6 +755,9 @@ def build(jobs: int = 2, use_cache: bool = True):
             r["efc_method"] = ("analytic: FEC/h = C_ch*C_dch/(C_ch+C_dch), CC only, zero rest, exposure = 7 d at the first check-up (design schedule) + calendar gaps - check-up file durations "
                                "(CU measured, exCU 30 h); NOT validated against ZYK") if r["type"] == "z" else ""
             all_rows.append(r)
+        ints_meta = {m["internal_serial"].strip().upper() for m in metas if m["internal_serial"]}
+        # D024 section 6: the serial inside the metadata contradicts the design table (reporting column; no cell is excluded or re-assigned for it)
+        cell["meta_serial_conflict"] = bool(cond is not None and ints_meta and str(cond["serial_internal"]).strip().upper() not in ints_meta)
         cell.update({"cell_id": cell_id, "stage_match": how, "folder": f.name,
                      "endpoint_only_cell": bool(cond is not None and cond["type"] == "k" and int(cond["cell"]) >= 4)})
         if cond is not None:

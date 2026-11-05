@@ -242,30 +242,28 @@
   "all_cells_with_at23_csv": 273
  },
  "incident_files_present_in": {
-  "TP_z25_01_01_ET": [
-   "TP_z25_01_s1"
-  ],
-  "TP_z01_03_11_CU": [
+  "TP_z01_03_s1_11_CU": [
    "TP_z01_03_s2",
    "TP_z01_03_s1"
   ],
-  "TP_z17_03_13_exCU": [
+  "TP_z17_03_s1_13_exCU": [
    "TP_z17_03_s2",
    "TP_z17_03_s1"
   ],
-  "TP_z17_03_17_CU": [
+  "TP_z17_03_s1_17_CU": [
    "TP_z17_03_s2",
    "TP_z17_03_s1"
   ],
-  "TP_z17_02_19_exCU": [
+  "TP_z17_02_s1_19_exCU": [
    "TP_z17_02_s1"
   ],
-  "TP_k11_02_03_exCU": [
+  "TP_k11_02_s1_03_exCU": [
    "TP_k11_02_s1",
    "TP_k11_02_s2"
   ]
  },
  "zyk": {
+  "rule": "D024: incomplete iff gap>600 s with an endpoint |I|>0.05 A, rest-only gap>24 h, time not monotonic, NaN current, <10 rows, or file absent",
   "cycling_cells": 147,
   "cycling_cells_with_any_zyk_csv": 147,
   "cycling_cells_without_zyk_csv": [],
@@ -273,15 +271,23 @@
   "zyk_csv_read": 1893,
   "schema_ok": 1893,
   "parse_failed": 0,
-  "complete": 523,
-  "incomplete": 1370,
+  "complete": 1875,
+  "incomplete": 18,
   "flag_counts": {
-   "sampling_gap": 1370,
+   "active_gap": 15,
    "info_charge_discharge_imbalance": 4,
    "fewer_than_10_rows": 1,
    "time_not_monotonic": 2
   },
   "meta_without_csv": 6,
+  "incomplete_by_reason": {
+   "active_gap": 15,
+   "time_not_monotonic": 2,
+   "fewer_than_10_rows": 1,
+   "rest_gap_gt_24h": 0,
+   "nan_current": 0,
+   "bad_schema": 0
+  },
   "cells_with_meta_without_csv": [
    "TP_z01_01_s2",
    "TP_z01_02_s2",
@@ -290,153 +296,79 @@
    "TP_z03_02_s2",
    "TP_z03_03_s2"
   ],
-  "cells_all_zyk_complete": 9,
   "cells_with_incomplete_zyk": [
    "TP_z01_01_s2",
-   "TP_z01_01_s1",
    "TP_z01_02_s2",
-   "TP_z01_02_s1",
    "TP_z01_03_s2",
-   "TP_z01_03_s1",
-   "TP_z02_01_s2",
-   "TP_z02_01_s1",
-   "TP_z02_02_s2",
-   "TP_z02_02_s1",
-   "TP_z02_03_s2",
-   "TP_z02_03_s1",
-   "TP_z03_01_s1",
    "TP_z03_01_s2",
-   "TP_z03_02_s1",
    "TP_z03_02_s2",
-   "TP_z03_03_s1",
    "TP_z03_03_s2",
-   "TP_z04_01_s1",
-   "TP_z04_02_s1",
-   "TP_z04_03_s1",
    "TP_z04_03_s2",
-   "TP_z05_01_s1",
-   "TP_z05_02_s1",
-   "TP_z05_03_s1",
-   "TP_z06_01_s1",
-   "TP_z06_02_s1",
-   "TP_z06_03_s1",
    "TP_z06_03_s2",
-   "TP_z07_01_s1",
-   "TP_z07_02_s1",
    "TP_z07_02_s2",
-   "TP_z07_03_s1",
-   "TP_z08_01_s1",
-   "TP_z08_01_s2",
-   "TP_z08_02_s1",
    "TP_z08_02_s2",
-   "TP_z08_03_s1",
    "TP_z08_03_s2",
-   "TP_z09_01_s1",
    "TP_z09_01_s2",
-   "TP_z09_02_s1",
-   "TP_z09_02_s2",
-   "TP_z09_03_s1",
    "TP_z09_03_s2",
-   "TP_z10_01_s2",
-   "TP_z10_01_s1",
-   "TP_z10_02_s2",
-   "TP_z10_02_s1",
-   "TP_z10_03_s2",
-   "TP_z10_03_s1",
-   "TP_z11_01_s1",
    "TP_z11_01_s2",
-   "TP_z11_02_s1",
    "TP_z11_02_s2",
-   "TP_z11_03_s1",
-   "TP_z11_03_s2",
-   "TP_z12_01_s1",
-   "TP_z12_01_s2",
-   "TP_z12_02_s1",
-   "TP_z12_02_s2",
-   "TP_z12_03_s1",
-   "TP_z12_03_s2",
-   "TP_z13_01_s1",
-   "TP_z13_01_s2",
-   "TP_z13_02_s1",
-   "TP_z13_02_s2",
-   "TP_z13_03_s1",
-   "TP_z13_03_s2",
-   "TP_z14_01_s1",
-   "TP_z14_01_s2",
-   "TP_z14_02_s1",
-   "TP_z14_02_s2",
-   "TP_z14_03_s1",
-   "TP_z14_03_s2",
-   "TP_z15_01_s2",
-   "TP_z15_01_s1",
-   "TP_z15_02_s2",
-   "TP_z15_02_s1",
-   "TP_z15_03_s2",
-   "TP_z15_03_s1",
-   "TP_z16_01_s1",
-   "TP_z16_01_s2",
    "TP_z16_02_s1",
-   "TP_z16_02_s2",
-   "TP_z16_03_s2",
-   "TP_z16_03_s1",
-   "TP_z17_01_s2",
-   "TP_z17_01_s1",
-   "TP_z17_02_s2",
-   "TP_z17_02_s1",
-   "TP_z17_03_s2",
-   "TP_z17_03_s1",
-   "TP_z18_01_s1",
-   "TP_z18_01_s2",
-   "TP_z18_02_s1",
-   "TP_z18_02_s2",
-   "TP_z18_03_s1",
-   "TP_z18_03_s2",
    "TP_z19_01_s1",
-   "TP_z19_01_s2",
-   "TP_z19_02_s1",
-   "TP_z19_02_s2",
-   "TP_z19_03_s1",
-   "TP_z19_03_s2",
-   "TP_z20_01_s2",
-   "TP_z20_01_s1",
-   "TP_z20_02_s2",
-   "TP_z20_02_s1",
-   "TP_z20_03_s2",
-   "TP_z20_03_s1",
    "TP_z21_01_s1",
-   "TP_z21_01_s2",
-   "TP_z21_02_s1",
-   "TP_z21_02_s2",
-   "TP_z21_03_s1",
-   "TP_z21_03_s2",
-   "TP_z22_01_s1",
-   "TP_z22_01_s2",
-   "TP_z22_02_s1",
-   "TP_z22_02_s2",
-   "TP_z22_03_s1",
-   "TP_z22_03_s2",
-   "TP_z23_01_s2",
    "TP_z23_01_s1",
-   "TP_z23_02_s2",
-   "TP_z23_02_s1",
-   "TP_z23_03_s2",
-   "TP_z23_03_s1",
    "TP_z24_01_s1",
-   "TP_z24_01_s2",
-   "TP_z24_02_s2",
    "TP_z24_02_s1",
-   "TP_z24_03_s1",
-   "TP_z24_03_s2",
-   "TP_z25_01_s1",
-   "TP_z25_02_s1",
-   "TP_z25_03_s1"
+   "TP_z25_02_s1"
   ],
+  "n_cells_with_incomplete_zyk": 22,
+  "cells_fully_logged": 125,
+  "fully_logged_by_dod_class_and_lab": {
+   "class0|HM": 15,
+   "class0|INT": 25,
+   "class0|SIE": 3,
+   "class1|HM": 9,
+   "class1|INT": 13,
+   "class1|SIE": 6,
+   "class2|HM": 38,
+   "class2|INT": 13,
+   "class2|SIE": 3
+  },
   "storage_cells_with_zyk_csv": 0,
-  "gap_flag_s": 600.0,
-  "files_with_dt_max_gt_gap": 1370,
-  "files_with_dt_max_gt_60s": 1790,
-  "files_with_gap_gt_gapflag_while_current_flows": 15,
-  "files_with_gap_gt_60s_while_current_flows": 46,
+  "info_files_with_dt_max_gt_600": 1370,
+  "info_files_with_active_gap_gt_60": 46,
+  "info_files_with_rest_gap_gt_24h": 0,
+  "info_incomplete_file_ids": [
+   "TP_z03_01_s2:22",
+   "TP_z03_02_s2:22",
+   "TP_z04_03_s2:24",
+   "TP_z06_03_s2:24",
+   "TP_z07_02_s2:24",
+   "TP_z08_02_s2:24",
+   "TP_z08_03_s2:24",
+   "TP_z09_01_s2:24",
+   "TP_z09_03_s2:24",
+   "TP_z11_01_s2:24",
+   "TP_z11_02_s2:24",
+   "TP_z16_02_s1:16",
+   "TP_z19_01_s1:4",
+   "TP_z21_01_s1:22",
+   "TP_z23_01_s1:22",
+   "TP_z24_01_s1:22",
+   "TP_z24_02_s1:22",
+   "TP_z25_02_s1:22"
+  ],
+  "documented_loss_files_incomplete": {
+   "TP_z19_01_s1:04": true,
+   "TP_z21_01_s1:22": true,
+   "TP_z24_01_s1:22": true,
+   "TP_z25_02_s1:22": true,
+   "TP_z01_01_s2:24": true,
+   "TP_z01_02_s2:24": true,
+   "TP_z01_03_s2:24": true,
+   "TP_z03_01_s2:24": true,
+   "TP_z03_02_s2:24": true,
+   "TP_z03_03_s2:24": true
+  },
   "dt_max_s_bins": {
    "<=10": 1,
    "10-60": 102,
@@ -452,47 +384,16 @@
    ">3600": 5
   },
   "zyk_table": "C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\data\\processed\\samsung_zyk_efc.csv",
-  "zyk_table_sha256": "546e03b0aa451b0ccee1efbaa4e263fbf676a5d5825997b711ccc331b22fac4d",
-  "validation_informational": {
-   "accept_analytic": false,
-   "coverage_ok": true,
-   "cells_per_class_lab": {
-    "class0|INT": 6,
-    "class1|INT": 6
-   },
-   "short_cells": {},
-   "median_abs_rel_diff": 0.2415981878692911,
-   "worst_last_checkup_rel_diff": 0.25364537308788127,
-   "cells_over_last_tol": [
-    "TP_z04_01_s2",
-    "TP_z04_02_s2",
-    "TP_z04_03_s2",
-    "TP_z05_01_s2",
-    "TP_z05_02_s2",
-    "TP_z05_03_s2",
-    "TP_z06_01_s2",
-    "TP_z06_02_s2",
-    "TP_z06_03_s2",
-    "TP_z07_01_s2",
-    "TP_z07_02_s2",
-    "TP_z07_03_s2"
-   ],
-   "n_cells": 12,
-   "n_pairs": 120,
-   "median_tol": 0.05,
-   "last_tol": 0.1,
-   "dod_class_edges": [
-    0.15,
-    0.35
-   ],
-   "decision": "use ZYK-logged throughput for every cycling cell (or complete the sample if coverage is short)"
+  "zyk_table_sha256": "dfc379a6544f0fc5e6465be95e9f005f823f68ecba31d89ccad10270ce64295d",
+  "identity_check": {
+   "cells": 147,
+   "excluded": [],
+   "max_rel_dev": 0.00023890078049528107,
+   "median_rel_dev": 6.595497336489847e-07,
+   "cells_without_complete_files": 0
   },
-  "files_complete_under_alt_rule": 1875,
-  "files_incomplete_under_alt_rule": 18,
-  "cells_all_complete_under_alt_rule": 129,
-  "sampling_gap_flagged_files": 1370,
-  "sampling_gap_flagged_files_with_gap_while_current_flows": 15,
-  "sampling_gap_flagged_files_gap_in_rest_only": 1355
+  "missing_file_rows": 6,
+  "table_rows": 1899
  },
  "qc": {
   "rows": 2766,
@@ -532,7 +433,22 @@
    "OUTLIER_REL": 0.01,
    "OUTLIER_DROP_MULT": 3.0,
    "causal": true
-  }
+  },
+  "outlier_flag_rows_by_kind": {
+   "CU": 4,
+   "exCU": 1
+  },
+  "first_cu_rows": 213,
+  "first_cu_rows_flagged_outlier": 0
+ },
+ "et_incident_cells": {
+  "single_charge_discharge_pair": true,
+  "cells": [
+   "TP_k08_01_s1",
+   "TP_k09_01_s1",
+   "TP_k10_01_s1",
+   "TP_k11_01_s1"
+  ]
  },
  "test_b": {
   "conditions_in_design": 40,
@@ -562,6 +478,15 @@
     "SIE": 3
    }
   },
+  "lab_map_matches_cell_table": true,
+  "lab_map_conditions_by_lab": {
+   "HM": 17,
+   "INT": 19,
+   "SIE": 4
+  },
+  "lab_map_exact_ties": [
+   "T23|SOCmax0.8|DoD0.25|Cch0.2|Cdch1.4"
+  ],
   "majority_lab_map_conditions": 40,
   "majority_lab_map_sha256": "629358d675771bc076180c158b626aee15ff6a2247cadf2e2bc81d702d03f687",
   "labs_per_condition_mixed": [
@@ -569,7 +494,7 @@
    "T45|SOCmax0.8|DoD0.6|Cch0.24|Cdch2",
    "T45|SOCmax0.8|DoD0.6|Cch1|Cdch2"
   ],
-  "cells_csv_sha256": "e48c216611d50f0d39504253067ecb5a49a99e2e7c4f5ff52cd9b597c0a1a86e",
+  "cells_csv_sha256": "2a10647833c54127b48a4d68bea037b354e054e0224a33f3106bfd736d20adab",
   "checkups_csv_sha256": "6fa9b85e30ca816e8cfcb476792f544fc7437de2aaa6d06976b301c44ae47c4f"
  },
  "storage_conditions": {

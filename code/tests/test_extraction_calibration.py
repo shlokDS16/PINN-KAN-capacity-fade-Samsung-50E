@@ -120,6 +120,10 @@ def test_majority_laboratory_of_a_condition_from_the_cell_table(tmp_path):
     rows += ["z,SIE,10,0.8,0.1,0.5,1", "z,HM,10,0.8,0.1,0.5,1"]                                           # tie: first in sorted order
     rows += ["k,HM,23,0.5,0,0,0"]                                                                          # storage: ignored
     (d / "samsung_cells.csv").write_text("\n".join(rows) + "\n")
+    from pinnkan import labmap
+    with pytest.raises(FileNotFoundError):
+        C.majority_labs(str(tmp_path))                                  # the frozen file is required
+    labmap.write_lab_map(str(tmp_path))
     m, h = C.majority_labs(str(tmp_path))
     assert m == {"T35|SOCmax0.55|DoD0.25|Cch0.5|Cdch1": "INT", "T10|SOCmax0.8|DoD0.1|Cch0.5|Cdch1": "HM"} and h == hashlib.sha256(json.dumps(m, sort_keys=True).encode()).hexdigest()
     with pytest.raises(C.CalibrationGuardError, match="no laboratory"):

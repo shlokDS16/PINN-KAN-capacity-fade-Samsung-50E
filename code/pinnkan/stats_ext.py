@@ -17,6 +17,7 @@ import os
 
 import numpy as np
 
+from . import labmap
 from .negcontrol import mc_rng
 from .stats_step import LOG_N, LOG_S, median_order_ci, sign_p
 
@@ -44,7 +45,7 @@ def condition_strata(folds):
         if m is None:
             return None
         for c, e in m.items():
-            out[c] = dict(lab=majority(e["lab"]), stage=majority(e["stage"]), n_cells=int(e["n_cells"]), labs=e["lab"], stages=e["stage"])
+            out[c] = dict(lab=labmap.lab_of(c, e["lab"]), stage=majority(e["stage"]), n_cells=int(e["n_cells"]), labs=e["lab"], stages=e["stage"])
     return out
 
 

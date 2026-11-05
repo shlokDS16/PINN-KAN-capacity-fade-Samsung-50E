@@ -1,0 +1,5 @@
+cell_id,n_runs_step21,n_runs_step22,charge_before_discharge,dur21_h,dur22_h
+TP_k08_01_s1,1,1,True,2.33,1.06
+TP_k09_01_s1,1,1,True,2.32,1.05
+TP_k10_01_s1,1,1,True,2.35,1.07
+TP_k11_01_s1,1,1,True,2.72,1.04

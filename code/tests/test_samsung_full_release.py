@@ -152,3 +152,93 @@ def test_stage_aware_cell_ids_are_unique_and_cover_the_design():
     assert mp.cell_id.is_unique and not mp.cell_id.str.endswith("_s?").any()
     assert set(mp.cell_id) == {f"{r.serial}_s{int(r.stage)}" for r in design.itertuples()}
     assert mp.folder.str.contains("__f").all()
+
+
+# ---------------------------------------------------------------- D024 rulings on the real files (skip when the data is absent)
+ZYK_TABLE = os.path.join(ROOT, "data", "processed", "samsung_zyk_efc.csv")
+CHECKUPS = os.path.join(ROOT, "data", "processed", "samsung_checkups.csv")
+CELLS = os.path.join(ROOT, "data", "processed", "samsung_cells.csv")
+HAVE_TABLES = os.path.exists(ZYK_TABLE) and os.path.exists(CHECKUPS) and os.path.exists(CELLS)
+
+
+@pytest.mark.skipif(not HAVE_TABLES, reason="processed tables absent")
+def test_zyk_table_follows_the_d024_rule_on_the_real_files():
+    t = pd.read_csv(ZYK_TABLE, keep_default_na=False)
+    t["complete"] = t["complete"].astype(str).str.lower().eq("true")
+    read = t[t["flags"] != "missing_file"]
+    assert len(read) == 1893 and (t["flags"] == "missing_file").sum() == 6 and len(t) == 1899
+    bad = read[~read["complete"]]
+    assert len(bad) == 18 and bad["flags"].str.contains("active_gap").sum() == 15 and bad["flags"].str.contains("time_not_monotonic").sum() == 2 and bad["flags"].str.contains("fewer_than_10_rows").sum() == 1
+    assert not read["flags"].str.contains("rest_gap_gt_24h").any()
+    miss = t[t["flags"] == "missing_file"]
+    assert sorted(miss["cell_id"]) == ["TP_z01_01_s2", "TP_z01_02_s2", "TP_z01_03_s2", "TP_z03_01_s2", "TP_z03_02_s2", "TP_z03_03_s2"] and set(miss["file_idx"]) == {24}
+    incomplete_cells = set(bad["cell_id"]) | set(miss["cell_id"])
+    assert len(incomplete_cells) == 22
+    for cid, idx in [("TP_z19_01_s1", 4), ("TP_z21_01_s1", 22), ("TP_z24_01_s1", 22), ("TP_z25_02_s1", 22)] + [(c, 24) for c in miss["cell_id"]]:
+        assert not t[(t.cell_id == cid) & (t.file_idx == idx)]["complete"].any(), (cid, idx)
+    cells = pd.read_csv(CELLS)
+    cyc = cells[cells["type"] == "z"]
+    assert t["cell_id"].nunique() == 147 and set(t["cell_id"]) == set(cyc["cell_id"])
+    full = cyc[~cyc["cell_id"].isin(incomplete_cells)]
+    assert len(full) == 125
+    from pinnkan import zyk
+    cls = full.assign(c=[zyk.dod_class(float(d)) for d in full["DoD"]]).groupby(["lab", "c"]).size()
+    assert [int(cls[("SIE", c)]) for c in (0, 1, 2)] == [3, 6, 3] and cls.min() >= 2
+
+
+@pytest.mark.skipif(not HAVE_TABLES, reason="processed tables absent")
+def test_identity_check_logged_discharge_current_matches_the_zip_name_condition():
+    t = pd.read_csv(ZYK_TABLE, keep_default_na=False)
+    t["complete"] = t["complete"].astype(str).str.lower().eq("true")
+    cells = pd.read_csv(CELLS).set_index("cell_id")
+    t["i"] = pd.to_numeric(t["i_dch_med_a"], errors="coerce")
+    t = t[t["complete"] & (t["i"] > 0)]
+    med = t.groupby("cell_id")["i"].median()
+    assert len(med) == 147
+    dev = (med - cells.loc[med.index, "C_dch"] * S.Q_NOM_AH).abs() / (cells.loc[med.index, "C_dch"] * S.Q_NOM_AH)
+    assert (dev <= 0.10).all()
+
+
+@pytest.mark.skipif(not HAVE_TABLES, reason="processed tables absent")
+def test_loader_on_the_real_table_anchors_every_cell_on_et_and_drops_five_incident_rows():
+    from pinnkan import data as D
+    cells = D._load_samsung(ROOT)
+    assert len(cells) == 279
+    assert {c.meta["reference"] for c in cells} == {"ET"}                     # the reference is ET_T23 for 279 of 279 cells (the D024 defect made it first_CU)
+    assert {c.meta["n_incident_rows_dropped_dataset"] for c in cells} == {5}
+    analysed = [c for c in cells if c.kind == "cycling" or c.meta["cell_no"] <= 3]
+    assert len(analysed) == 213 and all(c.meta["reference"] == "ET" for c in analysed)
+
+
+@pytest.mark.skipif(not HAVE_TABLES, reason="processed tables absent")
+def test_cell_table_has_the_meta_serial_conflict_column():
+    c = pd.read_csv(CELLS)
+    assert int(c["meta_serial_conflict"].sum()) == 49 and c.loc[c.meta_serial_conflict, "lab"].eq("INT").all()
+
+
+@pytest.mark.skipif(not HAVE_TABLES, reason="processed tables absent")
+def test_et_incident_cells_have_exactly_one_charge_discharge_pair():
+    p = os.path.join(ROOT, "runs", "samsung_pipeline_full", "et_incident_structure.csv")
+    if not os.path.exists(p):
+        pytest.skip("structure file absent")
+    d = pd.read_csv(p)
+    assert sorted(d["cell_id"]) == ["TP_k08_01_s1", "TP_k09_01_s1", "TP_k10_01_s1", "TP_k11_01_s1"]
+    assert (d["n_runs_step21"] == 1).all() and (d["n_runs_step22"] == 1).all() and d["charge_before_discharge"].all()
+
+
+def test_gap_variants_only_tighten_the_ruled_completeness():
+    from pinnkan import zyk
+    tab = pd.DataFrame({"cell_id": ["a"] * 4, "file_idx": [2, 4, 6, 8], "complete": [True, True, True, False],
+                        "dt_max_active_s": [10.0, 100.0, 10.0, 900.0], "dt_max_s": [10.0, 100.0, 20000.0, 900.0]})
+    assert zyk.apply_gap_variant(tab, "ruled")["complete"].tolist() == [True, True, True, False]
+    assert zyk.apply_gap_variant(tab, "active60")["complete"].tolist() == [True, False, True, False]
+    assert zyk.apply_gap_variant(tab, "anygap")["complete"].tolist() == [True, True, False, False]
+
+
+def test_validation_drops_pairs_with_undefined_analytic_throughput_and_counts_them():
+    from pinnkan import zyk
+    rows = []
+    for k, (a, z) in enumerate([(0.0, 0.0), (10.0, 10.0), (float("nan"), 20.0), (30.0, 30.0)]):
+        rows.append(dict(cell_id="c1", type="z", lab="HM", DoD=0.1, kind="CU", file_idx=3 + 2 * k, efc_est_cum=a, efc_zyk_cum=z, zyk_interval_source="logged"))
+    r = zyk.validate_throughput(pd.DataFrame(rows), min_cells=1)
+    assert r["n_pairs_dropped_analytic_undefined"] == 1 and r["median_abs_rel_diff"] == 0.0 and r["accept_analytic"] is True

@@ -101,7 +101,8 @@ def condition_meta(prepared):
 
 
 def train_condition_meta(cells):
-    """cycling training condition -> {n_cells, lab (majority; ties: first in sorted order)}; identifiers only"""
+    """cycling training condition -> {n_cells, lab, labs}; identifiers only. `lab` is the frozen map of runs/prereg/lab_map.json (D024 section 4) for Samsung conditions,
+    the local majority (ties alphabetical) for conditions not in the map; `labs` counts the training cells."""
     out = {}
     for c in cells:
         if c.kind != "cycling":
@@ -109,8 +110,9 @@ def train_condition_meta(cells):
         e = out.setdefault(c.cond, {"n_cells": 0, "labs": {}})
         e["n_cells"] += 1
         e["labs"][c.lab or ""] = e["labs"].get(c.lab or "", 0) + 1
-    for e in out.values():
-        e["lab"] = sorted(e["labs"].items(), key=lambda kv: (-kv[1], kv[0]))[0][0]
+    from . import labmap
+    for cond, e in out.items():
+        e["lab"] = labmap.lab_of(cond, e["labs"])
     return out
 
 

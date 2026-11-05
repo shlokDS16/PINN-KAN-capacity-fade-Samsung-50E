@@ -282,3 +282,13 @@ Row format:
   - the extraction is not ready by the freeze (chain K struck, K state fixed at K=, its weight goes to P);
   - k_full < 2;
   - Shlok changes the table.
+
+### D017 Shlok approves the closed outcome table of D016 (2026-11-05 07:50, status: accepted)
+- **Decision:** Shlok approved the closed outcome table in debates/D016_roles/02_judge.md section 4 as written
+  (states G, P+/P0/P-, K+/K=/K-, modifiers M1 and M2, titles T1-T8, T9a/T9b, ISU fallback, abstract claim
+  sentences, qualifier sentences, banned words). This meets the D016 freeze condition "Shlok's approval row for
+  the table". Any later change to the table is a new decision row made before the freeze, never after scoring.
+- **Alternatives and why they lost:** "Discuss changes" (offered, not chosen).
+- **Evidence:** Shlok's reply "Approve the table" in the lead session, 2026-11-05 07:50 (system clock).
+- **Proposer / opponent / judge:** D016 judge (table) / Codex turn 4 and red team D015 (attacks) / Shlok (approval).
+- **Re-open if:** Shlok changes the table before the freeze; D016 re-open conditions apply unchanged.

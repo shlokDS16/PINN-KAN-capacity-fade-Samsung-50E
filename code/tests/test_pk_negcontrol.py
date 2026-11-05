@@ -114,7 +114,7 @@ def test_a_deliberate_leak_is_caught(g2):
     assert not negcontrol.check_invariance(arm2.predict, te, rule, SPEC, predict_rule=leaky)["passed"]
 
 
-CFG = {"dataset": "synthetic", "mode": "confirmatory", "n_trials": 1, "inner_k": 2, "steps_scale": 0.03, "seeds": [0, 1], "backbone": "self_limiting", "arms": ["A2", "A9", "R1", "R2"],
+CFG = {"design": "V3_legacy", "dataset": "synthetic", "mode": "confirmatory", "n_trials": 1, "inner_k": 2, "steps_scale": 0.03, "seeds": [0, 1], "backbone": "self_limiting", "arms": ["A2", "A9", "R1", "R2"],
        "synthetic": {"kind": "G2", "n_cyc_cond": 14, "n_sto_cond": 6, "reps": 2, "seed": 7}}
 
 

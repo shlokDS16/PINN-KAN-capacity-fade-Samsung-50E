@@ -148,3 +148,21 @@ logged inside the window, the window's mean rate afterwards) and keep the foreca
 - Implemented after review: the negative control (D014: NC-1 invariance gate, NC-2 permuted stress; see above), and the secondary metrics R^2, MAPE, error by horizon and RUL error in the outer-test `metrics.json`.
 - **Physical validation analyses** of prereg 11a items 1, 2, 4, 5: built in `physval.py`; the comparisons with A10 (items 1(a) and 5) raise `UnverifiedArmError` until `A10_FORM["verified"]`, and 1(b) (published activation energies) is omitted unless the lead supplies sources with a DOI and a location.
 - Sensitivity rows implemented: windows (`shift`), oracle throughput, A10 as published, retain-every-check-up, AT included, storage cells 04-06, cells with >= 3 forecast points, clip and warm-up (`pinn`), delta scope total and the A2-only tournament scales (`law_overrides`), margin sensitivities, lab/stage rows, leave-one-lab-out, lab-stratified and two-stage bootstraps (`sensitivity_<test>.json`). Not built (hard errors): lab-indicator rows and the forecast-failure rule.
+
+## Design R2 (build_v2; PREREG_v4, D016-D018). Supersedes the V3 statements above where they differ
+
+Read `runs/build_v2/RESULT.md` and `CHOICES.md` first. The V3 text above (Holm over H1a/H1b/H6, the H1c gate, H2 order, H3, Test C Holm-2, H5, "A8 not implemented", PREREG_v2 references) is history.
+
+| piece | module | notes |
+|---|---|---|
+| nested max-min training subsets, m in {8, 16, 32}; random variant | `subsets.py`, `data.apply_subset`, config `m`, `subset`, `subset_draw` | identifiers only; `runs/prereg/subsets.json` by `code/prereg/make_subsets.py`; m = 32 is the unthinned side (bit for bit) |
+| k = 0 / 2 / k_full windows | `data.WindowRule.for_grid`, `data.grid_ks`, config `k` ("grid" or a list) | k = 0: reference only, design throughput, latents at prior means; R1/R2 not scored at k = 0; tuning at k = 2 (m < 32) or k_full (m = 32) |
+| A15 / G15 symbolic laws | `symbolic.py`, `symbolic_library.json`, `arms.SymbolicArm` | one code path; per-edge cap must be set (`symbolic.cap` or the library file), else `CapNotSetError` |
+| D* options, A12R, h = 1, selectors | `arms.py` (FEAT, STORAGE, H_GRID), `baselines.py`, `selectors.py` | `comparators.json` written after tuning; A5 only at m = 32 |
+| statistics | `stats_v4.py` (+ `stats_step.run_stats_v4`, CLI `--design r2`), `graph_test.py` | sign rule from config (D018: Beta-binomial, rho_s0 = 0.03), graph weight `graph_w`, item (f) guard |
+| downgrade rows | `stats_rows.py`; run options `lab_indicator`, `retain_all`, `m` + `subset: random` | `run_v4_full` |
+| scope | config `design` ("R2" default, "V3_legacy" history); `arms.ARMS[a].scope`; `stats_step.OutOfScopeError` | A3, A6, A7, A8, A14, H3, the G2 "KAN win", the V3 analysis are refused on the grid / confirmatory path |
+
+Run (grid cell): `{"design": "R2", "m": 8, "k": "grid", "window": {"k_cycling": <k_full>}, "arms": [...]}`; files `condition_scores.json` (k_full cell), `condition_scores_k0.json`, `condition_scores_k2.json`, `comparators.json`, `subsets.json`, `train_condition_meta.json`.
+Statistics: `.venv/Scripts/python.exe -P code/run_pinnkan_stats.py --analysis-dir <dir> --runs B=<run dirs of every (fold, m)> --item-f-dir <dir> [--sign-rule '{"graph_w": 0.78}']`.
+Tests: `code/tests/test_pk_v2_*.py`.

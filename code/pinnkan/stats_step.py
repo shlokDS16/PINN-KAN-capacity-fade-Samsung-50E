@@ -16,6 +16,20 @@ from scipy import stats
 from . import margins as mg
 from .negcontrol import MC_SEED_ROOT, mc_rng
 
+class OutOfScopeError(RuntimeError):
+    """the PREREG_v3 analysis (H1a-H6 family, H1c gate, H2 order, H3, Test C Holm-2, H5) is struck for Design R2; Design R2 runs are read by stats_v4 (run_stats_v4)"""
+
+
+V3_OUT_OF_SCOPE = ("H1a", "H1b", "H1c", "H2 as a decision contrast (now Q-H)", "H3 (KAN wording against the GAMs; the G2 'KAN win')", "H4 Holm-2 on Test C (Test C is descriptive)",
+                   "H5 (S2 is descriptive)", "X1 (now Q-T)", "H7 beyond the G0 pipeline check")
+
+
+def _refuse_design_r2(cfgs, what):
+    for c in cfgs:
+        if c.get("design") == "R2" or c.get("m") is not None or c.get("k") is not None:
+            raise OutOfScopeError(f"{what}: the V3 analysis is out of scope for Design R2 grid runs ({', '.join(V3_OUT_OF_SCOPE)}); use stats_step.run_stats_v4 / stats_v4")
+
+
 ALPHA = 0.025
 LOG_S, LOG_N = float(np.log(1.02)), float(-np.log(1.10))
 POOLS = {"B": ("A3", "A4", "A5", "A7"), "ISU": ("A4", "A5", "A7"), "SNL": ("A4", "A5", "A7")}
@@ -80,6 +94,7 @@ def load_fold(run_dir):
 class Builder:
     def __init__(self, folds, test, alpha=ALPHA, g2=None):
         """g2: the G2 verdict dict of the H7 batch (h7.g2_status; key 'passes'), needed for the H3 'win' wording; None = H7 batch not available"""
+        _refuse_design_r2([f["cfg"] for f in folds], "Builder")
         self.folds, self.test, self.alpha, self.g2 = folds, test, alpha, g2
         self.mc_labels = []
         self.arms = set.intersection(*[set(f["scores"]) for f in folds])
@@ -145,7 +160,7 @@ class Builder:
             out = "tie"
         else:
             out = "unresolved"
-        e.update(outcome=out, status="derived: KAN wording against the GAMs", level_win=lvl, tier_S_met=bool(s_met), g2_passes=g2_pass, win_blocked_by_g2=bool(s_met and g2_pass is not True),
+        e.update(outcome=out, status="OUT OF SCOPE (H3 and the G2 'KAN win' are struck, PREREG_v4 2): history only", out_of_scope=True, level_win=lvl, tier_S_met=bool(s_met), g2_passes=g2_pass, win_blocked_by_g2=bool(s_met and g2_pass is not True),
                  p_worse=p_worse, tie_tost=bool(tie), g2=self.g2)
         return e
 
@@ -230,7 +245,8 @@ class Builder:
                 fam[f"vs_{a}"] = x
         else:
             raise ValueError(t)
-        return dict(test=t, rule="exact one-sided sign test on L-m (TYPE1_SIGNFLIP.md, D012); estimand: median over conditions; pp tier of D009 beside it",
+        return dict(test=t, scope="OUT OF SCOPE for Design R2 (PREREG_v3 analysis kept for history; stats_v4 reads Design R2 runs)", out_of_scope=list(V3_OUT_OF_SCOPE),
+                rule="exact one-sided sign test on L-m (TYPE1_SIGNFLIP.md, D012); estimand: median over conditions; pp tier of D009 beside it",
                     alpha=self.alpha, margins=dict(S=LOG_S, N=LOG_N), n=len(self.conds), n_folds=len(self.folds), contrasts=fam,
                     comparator_rule="inner-CV score on the training side of each outer fold; never the outer-test error",
                     synthetic=any(f["cfg"].get("dataset") == "synthetic" for f in self.folds), source=sorted({f["source"] for f in self.folds}),
@@ -387,7 +403,28 @@ def build_controls(negative_runs=None, contrasts_B=None, stress_functions=None, 
 
 
 def gate_g(controls):
-    """Outcome row G (PREREG 11): NC-1 trips or a positive control fails. NC-2 is not a gate. A control that could not be evaluated (value None or absent) is listed under
+    """Gate G of Design R2 (PREREG_v4 10 and 11): NC-1 trips or the G0 pipeline check PC-1 (nRMSE <= 0.15) fails. PC-2 (calendar rate monotone in T) and PC-3 (A1 beats persistence at g4)
+    are reported control checks and NOT gate inputs (GAP-6); a test-fold read and an unmet freeze condition are decided by the guard and the freeze, not here. A control that could not
+    be evaluated is listed under `not_evaluated` (neither tripped nor cleared)."""
+    neg, pos = controls.get("negative") or {}, controls.get("positive") or {}
+    reasons = []
+    if neg.get("nc1") and not neg["nc1"]["passed"]:
+        reasons.append("NC-1 tripped")
+    pc1 = pos.get("P1_G0_nrmse_leq_0p15")
+    if pc1 is False:
+        reasons.append("PC-1 failed (G0 recovery nRMSE > 0.15)")
+    pending = []
+    if not neg.get("nc1"):
+        pending.append("NC-1")
+    if pc1 is None:
+        pending.append("PC-1")
+    reported = {"PC-2_calendar_rate_monotone_in_T": pos.get("P2_monotone_in_T"), "PC-3_A1_beats_persistence": pos.get("P3_passed")}
+    return dict(tripped=bool(reasons), reasons=reasons, not_evaluated=pending, reported_checks=reported,
+                rule="PREREG_v4 gate G: NC-1 trips or PC-1 fails; PC-2 and PC-3 are reported checks, not gate inputs; NC-2 is not a gate")
+
+
+def gate_g_v3(controls):
+    """V3 gate (OUT OF SCOPE, history): NC-1 trips or a positive control (P1-P3) fails. NC-2 is not a gate. A control that could not be evaluated (value None or absent) is listed under
     `not_evaluated`: the gate is then neither tripped nor cleared, and the freeze checklist must not treat it as passed."""
     neg, pos = controls.get("negative") or {}, controls.get("positive") or {}
     reasons = []
@@ -421,6 +458,8 @@ def run_stats(analysis_dir, runs_by_test, negative_run=None, h7_run=None, stress
     rows computed from the runs' own outputs), controls.json (+ reference.json) and, with `physval_runs` (fold run directories of Test B), physval_11a.json (PREREG 11a).
     `h7_run` (directory of the H7 batch with summary.json) supplies the G2 gate of the H3 'win' and the positive control P1."""
     from . import physval, stats_ext
+    for t_, dirs_ in runs_by_test.items():
+        _refuse_design_r2([_load(os.path.join(d, "config.json")) for d in dirs_], f"run_stats({t_})")
     os.makedirs(analysis_dir, exist_ok=True)
     out = {}
     g2 = None
@@ -459,12 +498,18 @@ def main(argv=None):
     ap.add_argument("--nc1-full", default=None, help="nc1_full.json of the pre-freeze full-pipeline invariance run")
     ap.add_argument("--h7-run", default=None)
     ap.add_argument("--stress-run", default=None, help="Test B run directory holding stress_functions.json (control P2)")
+    ap.add_argument("--design", choices=("r2", "v3_legacy"), default="r2", help="r2 = Design R2 (grid runs, stats_v4); v3_legacy = the PREREG_v3 analysis, history only")
+    ap.add_argument("--item-f-dir", default=None, help="directory of the hashed item (f) dependence file (D018); required for --design r2")
+    ap.add_argument("--sign-rule", default=None, help="JSON of the statistics config, e.g. '{\"graph_w\": 0.78}' (sign_rule, rho_s0, graph_w, alpha, e1_prime_approved)")
     ap.add_argument("--physval", action="store_true", help="also write physval_11a.json (PREREG 11a items 1, 2, 4, 5) from the Test B fold runs")
     a = ap.parse_args(argv)
     runs = {}
     for item in a.runs:
         t, dirs = item.split("=", 1)
         runs[t] = dirs.split(",")
+    if a.design == "r2":
+        run_stats_v4(a.analysis_dir, runs["B"], json.loads(a.sign_rule) if a.sign_rule else None, item_f_dir=a.item_f_dir)
+        return
     run_stats(a.analysis_dir, runs, a.negative_run, a.h7_run, a.stress_run, nc1_full=a.nc1_full, physval_runs=(runs.get("B") if a.physval else None))
 
 

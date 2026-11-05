@@ -25,7 +25,7 @@ import torch
 
 from . import ROOT as _ROOT
 from . import emit, guard, h7, law, margins, metrics, negcontrol, selectors, semi, stats_step, subsets, synth, tuning
-from .arms import ARMS, H1B_POOL, NEURAL, default_hp, make_arm
+from .arms import ARMS, H1B_POOL, NEURAL, OUT_OF_SCOPE_ARMS, default_hp, make_arm
 from .data import WindowRule, apply_subset, grid_ks, load_split, prepare_many, sha256_file
 from .law import TAU
 from .specs import SPECS
@@ -39,7 +39,7 @@ DEFAULTS = {"mode": "inner", "test": "B", "fold": 0, "arms": ["A1", "A2", "A9", 
             # cells 04-06 as two-point records (i); min_fc_points: scored cells need this many forecast points (i, "cells with >= 3 forecast points" -> 3);
             # law_overrides: {Y0, gamma, tau} for the A2-only tournament row (m), {delta_scope: "total"} for row (l); throughput_fallback: "analytic" lets a
             # cycling cell without ZYK entries use the designed throughput under throughput="zyk" (otherwise ZykDataMissing)
-            "include_at": False, "include_storage_0406": False, "min_fc_points": 1, "m": None, "subset": "maxmin", "subset_draw": 0, "k": None, "law_overrides": {}, "throughput_fallback": "none", "forecast_failure": False, "lab_indicator": False}
+            "include_at": False, "include_storage_0406": False, "min_fc_points": 1, "m": None, "subset": "maxmin", "subset_draw": 0, "k": None, "design": "R2", "law_overrides": {}, "throughput_fallback": "none", "forecast_failure": False, "lab_indicator": False}
 TARGET_BY_TEST = {"B": "cycling", "C": "cycling", "A": "cycling", "S2": "storage", "S3": "storage"}   # the tuned task is the scored task (review M3)
 
 
@@ -184,6 +184,16 @@ def _run(cfg_in, root=None, runs_dir=None):
         raise ConfigError("permute_stress (NC-2) is defined on Test B only, not on Test C (NEGCONTROL_RULING section 3)")
     if cfg["mc_seed_root"] != negcontrol.MC_SEED_ROOT:
         raise ConfigError("mc_seed_root is fixed by the NEGCONTROL ruling (20261105)")
+    if cfg["design"] not in ("R2", "V3_legacy"):
+        raise ConfigError("design must be 'R2' (PREREG_v4) or 'V3_legacy' (history only)")
+    if cfg["design"] == "R2" and (cfg["mode"] in ("confirmatory", "nc1_full", "h7") or cfg["m"] is not None or cfg["k"] is not None):
+        bad = sorted(set(cfg["arms"]) & set(OUT_OF_SCOPE_ARMS)) if cfg["mode"] != "h7" else []
+        if bad:
+            raise ConfigError(f"arms {bad} are out of scope for Design R2 (A3, A7 off the grid; A6, A8, A14 not on the list; PREREG_v4 7.1): use design 'V3_legacy' for history runs")
+        if cfg["mode"] == "h7":
+            gens = list((cfg.get("h7") or {}).get("gens") or ("G0", "G1", "G2"))
+            if gens != ["G0"]:
+                raise ConfigError("under Design R2 the synthetic driver runs the well-specified generator G0 only (PC-1); G1, G2, H3 and the 'KAN win' are struck (PREREG_v4 13). Set h7.gens = ['G0']")
     tk = TARGET_BY_TEST.get(cfg["test"], "cycling")
     if cfg.get("target_kind") not in (None, tk):
         raise ConfigError(f"target_kind {cfg['target_kind']!r} contradicts test {cfg['test']!r} (scored kind is {tk!r})")
@@ -240,6 +250,8 @@ def _run(cfg_in, root=None, runs_dir=None):
         mode = "timing"        # retention blinding before the freeze: no retention-derived number is written under runs/
         # (a confirmatory request is NOT downgraded: it goes to the guard, which refuses it)
     rec = Recorder(run_dir, run_id)
+    if cfg["design"] == "V3_legacy":
+        open(os.path.join(run_dir, "OUT_OF_SCOPE_V3_LEGACY"), "w").write("run of the PREREG_v3 design kept for history: not a Design R2 result and not read by stats_v4\n")
     if ds == "synthetic":
         open(os.path.join(run_dir, "SYNTHETIC"), "w").write("synthetic data: invented ageing laws, not results\n")
     guard.GUARD_LOG.clear()

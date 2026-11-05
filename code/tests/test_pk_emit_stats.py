@@ -145,7 +145,7 @@ def test_reference_values_zero_for_identical_replicates_and_positive_otherwise()
 
 
 # ------------------------------------------------------------------------------------------------ end-to-end on synthetic runs
-CFG = {"dataset": "synthetic", "mode": "confirmatory", "n_trials": 1, "inner_k": 2, "steps_scale": 0.04, "seeds": [0, 1], "backbone": "self_limiting",
+CFG = {"design": "V3_legacy", "dataset": "synthetic", "mode": "confirmatory", "n_trials": 1, "inner_k": 2, "steps_scale": 0.04, "seeds": [0, 1], "backbone": "self_limiting",
        "arms": ["A1", "A2", "A4", "A9", "A10", "R1", "R2"], "synthetic": {"kind": "G2", "n_cyc_cond": 16, "n_sto_cond": 8, "reps": 2, "seed": 7}}
 
 
@@ -207,7 +207,7 @@ def test_stats_step_end_to_end_with_controls(runs_dir, tmp_path):
 def test_stats_step_on_real_training_folds_uses_inner_cv_only(tmp_path):
     """ISU training fold 0, mode inner: no outer cell is built, the contrast is computed from out-of-fold inner-CV scores and labelled so"""
     assert not guard.is_frozen()
-    cfg = {"run_id": "isu0", "dataset": "isu", "test": "B", "fold": 0, "mode": "inner", "arms": ["A1", "A2", "A4", "A5", "A7", "A9", "A10", "A12", "R1", "R2"], "n_trials": 1,
+    cfg = {"design": "V3_legacy", "run_id": "isu0", "dataset": "isu", "test": "B", "fold": 0, "mode": "inner", "arms": ["A1", "A2", "A4", "A5", "A7", "A9", "A10", "A12", "R1", "R2"], "n_trials": 1,
            "inner_k": 2, "steps_scale": 0.03, "backbone": "self_limiting"}
     d = run.run(cfg, runs_dir=str(tmp_path))
     assert (tmp_path / "isu0" / "window.csv").exists() and not (tmp_path / "isu0" / "condition_scores.json").exists()
@@ -222,7 +222,7 @@ def test_stats_step_on_real_training_folds_uses_inner_cv_only(tmp_path):
 
 
 def test_stats_step_on_snl_training_fold(tmp_path):
-    cfg = {"run_id": "snl0", "dataset": "snl", "test": "B", "fold": 0, "mode": "inner", "arms": ["A1", "A4", "A5", "A9", "A10", "R1"], "n_trials": 1, "inner_k": 2,
+    cfg = {"design": "V3_legacy", "run_id": "snl0", "dataset": "snl", "test": "B", "fold": 0, "mode": "inner", "arms": ["A1", "A4", "A5", "A9", "A10", "R1"], "n_trials": 1, "inner_k": 2,
            "steps_scale": 0.03, "backbone": "self_limiting"}
     d = run.run(cfg, runs_dir=str(tmp_path))
     st.run_stats(str(tmp_path / "an"), {"SNL": [d]})
@@ -233,7 +233,7 @@ def test_stats_step_on_snl_training_fold(tmp_path):
 
 # ------------------------------------------------------------------------------------------------ H7 driver
 def test_h7_driver_summary_and_surfaces(tmp_path):
-    d = run.run({"run_id": "h7", "dataset": "synthetic", "mode": "h7", "backbone": "self_limiting",
+    d = run.run({"design": "V3_legacy", "run_id": "h7", "dataset": "synthetic", "mode": "h7", "backbone": "self_limiting",
                  "h7": {"gens": ["G0", "G2"], "n_draws": 2, "arms": ["A2", "A4"], "n_trials": 1, "inner_k": 2, "steps_scale": 0.05, "design": {"n_cyc_cond": 14, "n_sto_cond": 6, "reps": 2}}},
                 runs_dir=str(tmp_path))
     S = json.load(open(os.path.join(d, "summary.json")))

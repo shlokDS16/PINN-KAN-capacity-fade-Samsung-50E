@@ -38,6 +38,7 @@ class ArmDef:
     fixed: dict = field(default_factory=dict)
     map_kind: str = ""
     tuned: bool = True
+    scope: str = "grid"        # "grid" | "m32_only" | "out_of_scope": struck from the confirmatory path of Design R2 (PREREG_v4 2, 7.1; D016 1.3); the code stays (history)
 
     @property
     def dims(self):
@@ -79,6 +80,12 @@ ARMS = {
     "R1": ArmDef("R1", "persistence", "ref", tuned=False),
     "R2": ArmDef("R2", "window-linear extrapolation", "ref", tuned=False),
 }
+# Design R2 scope (PREREG_v4 2 and 7.1): A3 and A7 are cut from the grid (A3's abscissae now serve as D* features), A14 and A6 are not on the list, A8 (free G) is synthetic-only
+# and belongs to the struck identifiability protocol; A5 runs at m = 32 only (inside AG). The classes stay for history and the V3 analysis (design V3_legacy).
+for _a in ("A3", "A6", "A7", "A8", "A14"):
+    ARMS[_a].scope = "out_of_scope"
+ARMS["A5"].scope = "m32_only"
+OUT_OF_SCOPE_ARMS = tuple(a for a, d in ARMS.items() if d.scope == "out_of_scope")
 NEURAL = ("A1", "A2", "A3", "A4", "A5", "A7", "A9", "A13", "A14", "A15", "G15")
 H1B_POOL = ("A3", "A4", "A5", "A7")
 

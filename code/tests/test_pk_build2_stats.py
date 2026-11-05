@@ -287,7 +287,7 @@ def test_storage_lab_composition_from_design_metadata(tmp_path):
 
 
 # ------------------------------------------------------------------------------------------------ run-level outputs and options
-CFG = {"dataset": "synthetic", "mode": "confirmatory", "test": "B", "n_trials": 1, "inner_k": 2, "steps_scale": 0.04, "seeds": [0, 1], "backbone": "self_limiting",
+CFG = {"design": "V3_legacy", "dataset": "synthetic", "mode": "confirmatory", "test": "B", "n_trials": 1, "inner_k": 2, "steps_scale": 0.04, "seeds": [0, 1], "backbone": "self_limiting",
        "arms": ["A1", "A2", "A4", "A9", "A10", "R1", "R2"], "synthetic": {"kind": "G0", "n_cyc_cond": 12, "n_sto_cond": 4, "reps": 2, "seed": 4}}
 
 
@@ -361,15 +361,25 @@ def test_synthetic_design_of_the_h7_batch_has_unique_conditions_for_all_60_draws
     assert len({c.cond for c in S.cells}) == 59
 
 
+def test_gate_g_v4_is_nc1_and_pc1_only_and_pc2_pc3_are_reported():
+    ok = {"negative": {"nc1": {"passed": True}}, "positive": {"P1_G0_nrmse_leq_0p15": True, "P2_monotone_in_T": False, "P3_passed": False}}
+    g = st.gate_g(ok)
+    assert g["tripped"] is False and g["reasons"] == [] and g["not_evaluated"] == [] and g["reported_checks"]["PC-2_calendar_rate_monotone_in_T"] is False        # PC-2 / PC-3 failing is not a gate input
+    assert st.gate_g({"negative": {"nc1": {"passed": True}}, "positive": {"P1_G0_nrmse_leq_0p15": False}})["reasons"] == ["PC-1 failed (G0 recovery nRMSE > 0.15)"]
+    assert st.gate_g({"negative": {"nc1": {"passed": False}}, "positive": {"P1_G0_nrmse_leq_0p15": True}})["reasons"] == ["NC-1 tripped"]
+    g2 = st.gate_g({"negative": {"nc1": {"passed": True}}, "positive": {}})
+    assert not g2["tripped"] and g2["not_evaluated"] == ["PC-1"]
+
+
 def test_gate_g_collects_nc1_and_the_positive_controls():
     ok = {"negative": {"nc1": {"passed": True}}, "positive": {"P1_passed": True, "P2_monotone_in_T": True, "P3_passed": True}}
-    assert st.gate_g(ok)["tripped"] is False and st.gate_g(ok)["not_evaluated"] == [] and st.gate_g(ok)["reasons"] == []
+    assert st.gate_g_v3(ok)["tripped"] is False and st.gate_g_v3(ok)["not_evaluated"] == [] and st.gate_g_v3(ok)["reasons"] == []
     bad = {"negative": {"nc1": {"passed": True}}, "positive": {"P1_passed": False, "P2_monotone_in_T": True, "P3_passed": True}}
-    assert st.gate_g(bad)["tripped"] and st.gate_g(bad)["reasons"] == ["positive control P1 failed"]
+    assert st.gate_g_v3(bad)["tripped"] and st.gate_g_v3(bad)["reasons"] == ["positive control P1 failed"]
     trip = {"negative": {"nc1": {"passed": False}}, "positive": {"P1_passed": True, "P2_monotone_in_T": True, "P3_passed": True}}
-    assert st.gate_g(trip)["tripped"] and "NC-1 tripped" in st.gate_g(trip)["reasons"]
+    assert st.gate_g_v3(trip)["tripped"] and "NC-1 tripped" in st.gate_g_v3(trip)["reasons"]
     pend = {"negative": {"nc1": {"passed": True}}, "positive": {"P1_passed": None, "P2_monotone_in_T": True}}
-    g = st.gate_g(pend)
+    g = st.gate_g_v3(pend)
     assert g["tripped"] is False and g["not_evaluated"] == ["P1", "P3"]                                       # unevaluated is neither tripped nor cleared
 
 
@@ -377,8 +387,8 @@ def test_p3_and_gate_are_written_to_controls_json(build2_runs, tmp_path):
     out = tmp_path / "an2"
     st.run_stats(str(out), {"B": [str(build2_runs / "base")]})
     ctl = json.load(open(out / "controls.json"))
-    assert isinstance(ctl["positive"]["P3_passed"], bool) and ctl["gate_G"]["not_evaluated"] == ["P1"] + (["P2"] if "P2_monotone_in_T" not in ctl["positive"] else [])
-    assert ctl["gate_G"]["rule"].startswith("PREREG 11 row G")
+    assert isinstance(ctl["positive"]["P3_passed"], bool) and ctl["gate_G"]["not_evaluated"] == ["PC-1"]
+    assert ctl["gate_G"]["rule"].startswith("PREREG_v4 gate G")
 
 
 # build_v2 item 6: the lab-and-stage-indicator row is built (it was a hard error here); tests in test_pk_v2_rows.py

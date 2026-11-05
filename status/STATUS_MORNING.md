@@ -3,7 +3,30 @@
 Folder: `C:\Users\Shlok\Downloads\PINN KAN battery paper` (own git repo). Budget: weekly usage 5% at
 start, 6% at 22:00 (see the end of this file for the latest); Fable 0%. CPU only, no GPU used.
 
-## 0000. LATEST (10:00, 5 Nov): statistics fix ruled (D018); one approval needed from you
+## 00000. LATEST (night 5-6 Nov, from 22:00): freeze preparation; three items need you
+- **Found and fixed: item (f) could not exist before the freeze.** The dependence estimate (item f) needs Samsung training-side
+  scores, but before the freeze the code (rightly) blocks every Samsung run except timing. Debate D026 (lead proposal, Codex
+  opponent, Opus judge): item (f) now comes from five separate training-side runs at the headline cell **after** the freeze and
+  **before** any test fold is opened, enforced by a ledger check in code (f7edd5b; review fixes 835d1aa). PREREG rev. 11 (986a4f2).
+- **Window cap D025 is now in code** (835d1aa): the two short cells (TP_z20_02, TP_z23_01) are kept with a capped window instead
+  of being dropped. 652 tests pass.
+- **Shake-down of the freeze runs at today's code** (runs/freeze_shakedown/RESULT.md; does not count for the freeze): synthetic
+  NC-1 invariance passed at m = 8 and 32 (no prediction changed); smoke runs pass; Samsung timing (blinded) gives PINN fit 26 s,
+  hard ODE 4.6 s, so the full plan N = 20 trials applies (not the reduced plan).
+- **FB-1 closed on reading:** Zhang JES 182 is an equivalent-circuit PINN for SOH (no ageing law, forecast, KAN or learning curve);
+  our design does not re-open (notes/papers/zhang2026_JES182_125097.md).
+- **Full checklist to the freeze:** runs/prereg/PREFREEZE_STATUS.md (gate auditor; 14 met, 14 partly, 10 open before tonight's fixes).
+- **Running overnight (CPU only):** pilot P6 on ISU training sides (C6; rule committed before the first fit); red-team re-check of the
+  KAN fallback (C26); CALCE PL download (2 of 8 files; the server keeps dropping connections).
+- **Needs you:**
+  1. **Hallinger et al., SSRN 7417281** (part of FB-2): SSRN blocks automated download (403). Please download it in a browser
+     and save as `refs/pdf/hallinger_ssrn7417281.pdf`, or waive that part.
+  2. **Lucu et al. JES 30 101409/101410 and Jia et al. IEEE TTE 2024** (C4, novelty wording): links in `refs/PAYWALLED_FOR_SHLOK.md`.
+  3. **Pilot P6 reading** will be reported to you (stop rule 10); if data-only learners lead on most ISU sides you may stop or go on.
+- **Budget:** weekly 26% at 23:45 (cap 30% for today); Fable 6% (this session used no Fable; it rose from 3% earlier in the day
+  through other sessions).
+
+## 0000. (10:00, 5 Nov): statistics fix ruled (D018); one approval needed from you
 - **What changed:** the planned significance test was too lenient if results within a fold or lab are correlated
   (runs/prereg/stats_sim_v4/RESULT.md). After debate (statistician proposal, Codex opponent, Opus judge:
   debates/D018_test_rule/01_judge.md) the confirmatory test now needs 31 of 40 held-out conditions at the headline

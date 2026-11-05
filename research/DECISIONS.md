@@ -383,3 +383,56 @@ Row format:
 - **Proposer / opponent / judge:** ml-expert / Codex panel turn 6 (REVISE) / D020 judge. No outer-test data or score was read.
 - **Re-open if:** a Samsung outer score exists before FROZEN; the ensemble cannot be applied seed-wise or breaks NC-1; the P6b
   script or decision.json is altered after the first fit; Shlok asks for a change not applied to every comparator.
+
+### D022 NASA/CALCE descriptive addendum; KAN contribution = identifiability-audited extraction; cap 2 confirmed (2026-11-05, status: revised)
+- **Decision:** debates/D022_datasets_kan/03_judge.md, verdict REVISE (both parts adopted with modifications).
+  - Datasets: one descriptive, ungated section on CALCE PL pouch (EXT-PL) and NASA set 5 (EXT-NA), each analysed only
+    inside its own campaign (no pooling, no transfer, no cross-campaign comparison or win count). The addendum card
+    `runs/prereg_ext/PREREG_EXT_v1.md` is frozen after the Samsung FROZEN and before any model sees these data. Samsung
+    confirmatory runs execute from the FROZEN commit. Direction labels are dropped; one symmetric count template is used.
+    No coverage figure or p-value appears in the paper. No abstract, title or Highlights mention. NASA is labelled
+    "previously analysed data" in Methods and in every caption. CS2/CX2 are "considered, not analysed" (two discharge
+    rates, previously analysed); the professor is told by the 1.7 message. Go/no-go: PL completeness (6 of 8), S-gate,
+    F-gate, NC-1/PC-1 per campaign, A10c separability.
+  - KAN contribution: the identifiability-audited extraction protocol is adopted as the paper's KAN-side
+    methodological contribution, framed as an audit, not a new KAN. It is applied identically to A15 and G15. It has a
+    design-matched calibration on the Samsung training stress vectors and the label rule of judge 2.2 ("identified"
+    needs L_e >= 3, at least 80 % fold-by-seed stability, a calibrated wrong-family rate <= 0.10 and additivity in the
+    input; otherwise abstention). It goes into PREREG_v4 7.3 item 6, 11a item 10 and C26; it is built before the freeze
+    or struck by rule. It changes edge-level wording only, never a state, title or abstract sentence.
+  - Monotone KAN (M): deferred. No pre-freeze round and no Samsung M run in this submission. An optional synthetic
+    second round may run after FROZEN under a rule file committed first. The paper never says M was rejected. L is not
+    adopted (L1 failed).
+  - Cap: `max_coeffs_per_edge` = 2 confirmed (D021 has no ledger row; it is recorded here). Banned: recovered,
+    discovered or identified Arrhenius, power-law, exponential, quadratic or hinge forms; non-monotone SOC from the
+    extracted law; any cycling activation energy. D016 3.5 is struck for the extracted law; the SOC question moves to
+    A1's calendar KAN (11a item 2), descriptive only.
+  - Titles: "readable Kolmogorov-Arnold stress laws" and "Kolmogorov-Arnold stress functions" are still true; no change
+    is needed. The D017/D019 table is untouched.
+- **Alternatives and why they lost:**
+  - Decline the datasets: the professor asked, and the cost is modest.
+  - Confirmatory parity: n = 8 and 5 cannot pass; it would change the Holm levels; NASA is not blind.
+  - Pooling or transfer: the retired topic.
+  - CS2/CX2: one input with two levels, previously analysed.
+  - Direction labels: a sign rule without error control.
+  - M before the freeze: TAKEN method; the post hoc gain is best-of-4 inits on 2 seeds; it changes the primary arm;
+    unfair to the GP.
+  - L: failed L1 (79 % against 25 %).
+  - Typed bases: TAKEN, no numerical effect.
+  - Cap 3 or a calendar-only cap 3: false structure (37 of 40 at cap 3), new hash and study.
+  - A title change: not needed.
+- **Evidence:** debates/D022_datasets_kan/{01_proposal_datasets,01_proposal_kan,kan_study_rule,02_novelty_kan,03_judge}.md;
+  debates/codex_panel/turn07_response.md; debates/D021_cap/01_architect.md; notes/data/NASA_CALCE_feasibility.md;
+  runs/D022_kan_synth/{decision.json,posthoc_mono_init.txt} (rule 6686344 committed before results 3e65aed);
+  runs/D021_cap_synth/decision.json; runs/prereg/PREREG_v4.md (1, 7, 9, 10, 11, 11a, 12, 17).
+- **Proposer / opponent / judge:** data proposer and method-architect / Codex panel turn 7 (REVISE both) and the
+  novelty auditor / D022 judge (independent). No Samsung, NASA or CALCE capacity value was read.
+- **Re-open if:**
+  - the professor insists on CS2/CX2 or a NASA confirmatory role;
+  - Saxena et al. contradict the PL design;
+  - Samsung runs cannot execute from the FROZEN commit while extras commits exist (the extras then wait);
+  - the novelty repeat finds a calibrated per-edge identifiability protocol for KAN or symbolic extraction;
+  - no input can reach "identified" at g4 (reported as a negative audit finding);
+  - the audit is not built by the freeze;
+  - a Samsung outer score exists before FROZEN;
+  - Shlok changes the table or asks for the closed-form SOC readout.

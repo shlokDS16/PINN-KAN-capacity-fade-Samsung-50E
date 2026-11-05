@@ -70,11 +70,12 @@ def row_tiers(out, store, rule, cells="g1g4"):
         common = sorted(set(c1) & set(c4))
         D = np.array([L1[c1.index(c)] - L4[c4.index(c)] for c in common])
         t["P3"] = _positives_reach(rule, D, 0.0, lv["P3"])
-    if "K1" in lv and has("A15", G4) and has("A1", G4):
-        _, L, _ = store.L("A15", "A1", G4)
+    kv = store.seed_view()                                                     # K chain: per-seed scores (D020 C1 item 4)
+    if "K1" in lv and kv.has("A15", *G4) and kv.has("A1", *G4):
+        _, L, _ = kv.L("A15", "A1", G4)
         t["K1"] = _positives_reach(rule, L, v4.LOG_N, lv["K1"])
-    if "K2N" in lv and has("A15", G4) and has("G15", G4):
-        _, L, _ = store.L("A15", "G15", G4)
+    if "K2N" in lv and kv.has("A15", *G4) and kv.has("G15", *G4):
+        _, L, _ = kv.L("A15", "G15", G4)
         t["K2"] = _tier3(rule, L, lv["K2N"], lv["K2S"], rev)
     for name, arm, cell in v4.SECONDARY:
         forms = [f for f in (v4.A10_FORMS if arm == "A10" else (arm,)) if has(f, cell) and has("A1", cell)]
@@ -100,7 +101,10 @@ def average_stores(stores):
             conds = set.intersection(*[set(s.tables[cell][a]) for s in stores])
             tables[cell][a] = {c: float(np.mean([s.tables[cell][a][c] for s in stores])) for c in conds}
     first = stores[0]
-    return v4.Store(tables, first.lab, first.fold, first.k_full)
+    seed = None
+    if all(x.seed_tables is not None for x in stores):
+        seed = average_stores([v4.Store(x.seed_tables, x.lab, x.fold, x.k_full) for x in stores]).tables
+    return v4.Store(tables, first.lab, first.fold, first.k_full, None, seed)
 
 
 # ------------------------------------------------------------------------------------------------ row (i): lab-stratified
@@ -167,11 +171,12 @@ def lab_stratified_tiers(out, store, B=B_BOOT):
         common = sorted(set(c1) & set(c4))
         D = np.array([L1[c1.index(c)] - L4[c4.index(c)] for c in common])
         t["P3"] = binary("P3", D, common, lv["P3"], 0.0)
-    if "K1" in lv and has("A15", G4) and has("A1", G4):
-        c, L, _ = store.L("A15", "A1", G4)
+    kv = store.seed_view()                                                     # K chain: per-seed scores
+    if "K1" in lv and kv.has("A15", *G4) and kv.has("A1", *G4):
+        c, L, _ = kv.L("A15", "A1", G4)
         t["K1"] = binary("K1", L, c, lv["K1"], v4.LOG_N)
-    if "K2N" in lv and has("A15", G4) and has("G15", G4):
-        c, L, _ = store.L("A15", "G15", G4)
+    if "K2N" in lv and kv.has("A15", *G4) and kv.has("G15", *G4):
+        c, L, _ = kv.L("A15", "G15", G4)
         t["K2"] = forward("K2", L, c, lv["K2N"], lv["K2S"])
     for name, arm, cell in v4.SECONDARY:
         forms = [f for f in (v4.A10_FORMS if arm == "A10" else (arm,)) if has(f, cell) and has("A1", cell)]

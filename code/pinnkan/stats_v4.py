@@ -92,9 +92,17 @@ def resolve_config(cfg=None):
 class Store:
     """tables {(m, k): {arm: {cond: score_pp}}}; lab {cond: lab}; fold {cond: outer fold}; k_full (2 merges the k = 2 and k = full cells)"""
 
-    def __init__(self, tables, lab=None, fold=None, k_full=4, notes=None):
+    def __init__(self, tables, lab=None, fold=None, k_full=4, notes=None, seed_tables=None):
         self.tables = {(int(m), str(k)): {a: dict(v) for a, v in t.items()} for (m, k), t in tables.items()}
         self.lab, self.fold, self.k_full, self.notes = dict(lab or {}), dict(fold or {}), k_full, notes or {}
+        self.seed_tables = None if seed_tables is None else {(int(m), str(k)): {a: dict(v) for a, v in t.items()} for (m, k), t in seed_tables.items()}
+
+    def seed_view(self):
+        """the per-seed score tables (mean over seeds of the per-seed condition RMSE): K1 and K2 read them for A1, A15 and G15 alike (D020 C1 item 4); self when the store holds one
+        kind of score only"""
+        if self.seed_tables is None:
+            return self
+        return Store(self.seed_tables, self.lab, self.fold, self.k_full, self.notes)
 
     def key(self, m, k):
         k = str(k)
@@ -128,6 +136,7 @@ class Store:
     def from_runs(cls, run_dirs):
         """grid runs (config.m, one outer fold each, scored at every k; D* and AG resolved per fold from comparators.json)"""
         tables, lab, fold, k_full, notes = {}, {}, {}, None, {"runs": []}
+        seed_tables, have_seed = {}, False
         for d in run_dirs:
             cfg = json.load(open(os.path.join(d, "config.json"), encoding="utf8"))
             met = json.load(open(os.path.join(d, "metrics.json"), encoding="utf8"))
@@ -146,6 +155,15 @@ class Store:
                 for alias in ("D*", "AG"):
                     if alias in comp and comp[alias]["arm"] in cs:
                         t.setdefault(alias, {}).update(cs[comp[alias]["arm"]])
+                sp = os.path.join(d, f"condition_scores_seed{suf}.json")
+                ss_ = json.load(open(sp, encoding="utf8")) if os.path.exists(sp) else cs
+                have_seed = have_seed or os.path.exists(sp)
+                ts = seed_tables.setdefault((m, str(kl)), {})
+                for a, v in ss_.items():
+                    ts.setdefault(a, {}).update(v)
+                for alias in ("D*", "AG"):
+                    if alias in comp and comp[alias]["arm"] in ss_:
+                        ts.setdefault(alias, {}).update(ss_[comp[alias]["arm"]])
                 mp = os.path.join(d, f"condition_meta{suf}.json")
                 if os.path.exists(mp):
                     for c, e in json.load(open(mp, encoding="utf8")).items():
@@ -153,7 +171,7 @@ class Store:
                 for c in cs.get(next(iter(cs)), {}):
                     fold[c] = int(cfg["fold"])
             notes["runs"].append({"dir": d, "m": m, "fold": cfg["fold"], "k_labels": labels, "comparators": {k: v["arm"] for k, v in comp.items() if isinstance(v, dict) and "arm" in v}})
-        return cls(tables, lab, fold, k_full or 4, notes)
+        return cls(tables, lab, fold, k_full or 4, notes, seed_tables if have_seed else None)
 
 
 # ------------------------------------------------------------------------------------------------ helpers
@@ -216,6 +234,8 @@ def primary_nodes(store, rule):
     """-> (nodes dict keyed P1N..K2S plus the reverse tests, L arrays); a node whose arms are absent is None (p = 1: never rejected)"""
     out, Ls = {}, {}
     have = lambda *a: all(store.has(x, *c) for x, c in a)
+    kv = store.seed_view()                                       # K1 / K2: per-seed scores for A1, A15 and G15 (D020 C1 item 4)
+    have_k = lambda *a: all(kv.has(x, *c) for x, c in a)
     if have(("A1", G1), ("D*", G1)):
         _, L1, _ = store.L("A1", "D*", G1)
         Ls["P1"] = L1
@@ -232,13 +252,13 @@ def primary_nodes(store, rule):
         D = np.array([L1[c1.index(c)] - L4[c4.index(c)] for c in common])
         Ls["P3"] = D
         out["P3"] = node(rule, D, 0.0, "P3")
-    if have(("A15", G4), ("A1", G4)):
-        _, LK1, _ = store.L("A15", "A1", G4)
+    if have_k(("A15", G4), ("A1", G4)):
+        _, LK1, _ = kv.L("A15", "A1", G4)
         Ls["K1"] = LK1
         out["K1"] = node(rule, LK1, LOG_N, "K1")
         out["K1_S_unadjusted"] = node(rule, LK1, LOG_S, "K1 tier S (unadjusted)")
-    if have(("A15", G4), ("G15", G4)):
-        _, LK2, _ = store.L("A15", "G15", G4)
+    if have_k(("A15", G4), ("G15", G4)):
+        _, LK2, _ = kv.L("A15", "G15", G4)
         Ls["K2"] = LK2
         out["K2N"], out["K2S"] = node(rule, LK2, LOG_N, "K2N"), node(rule, LK2, LOG_S, "K2S")
         out["K2rev"] = node(rule, -LK2, LOG_S, "K2-rev")
@@ -694,8 +714,9 @@ def primary_numbers(store, rule, tiers):
     if store.has("A9", *G1):
         _, L, _ = store.L("A1", "A9", G1)
         num["Y"] = pct_excess(float(np.median(L)))
-    if store.has("A15", *G4) and store.has("G15", *G4):
-        _, L, _ = store.L("A15", "G15", G4)
+    kv = store.seed_view()
+    if kv.has("A15", *G4) and kv.has("G15", *G4):
+        _, L, _ = kv.L("A15", "G15", G4)
         L = -L if tiers.get("K2") == "reverse S" else L
         lo, hi, _, _ = rule.interval(L, 0.05)
         num["Z"] = pct_reduction(float(np.median(L)))
@@ -725,6 +746,29 @@ def _qual_form(store, t, kind):
     return min(forms, key=lambda f: med[f])
 
 
+ENDPOINT_NOTE = ("P-chain, secondary family, ladder, downgrade rows, Test C, S2 and NC-2 score the five-seed prediction ensemble; K1 and K2 score the per-seed rule for A1, A15 and G15 alike "
+                 "(an average of five laws is not one law). A1 therefore has an ensemble score in the P chain and a per-seed score in the K chain; both are printed (D020 C1).")
+
+
+def per_seed_descriptive(store):
+    """per-seed P1 and P2 counts with the plain rule, labelled descriptive (not a downgrade row), and A1's two scores side by side"""
+    sv = store.seed_view()
+    out = {"label": "descriptive: per-seed condition scores, plain exact rule, not a downgrade row (D020 C1 item 5)", "available": sv is not store}
+    for name, comp in (("P1", "D*"), ("P2", "A9")):
+        if sv.has("A1", *G1) and sv.has(comp, *G1):
+            _, L, _ = sv.L("A1", comp, G1)
+            margins = (LOG_N, LOG_S) if name == "P1" else (LOG_S,)
+            out[name] = {"n": int(L.size), "median_L": float(np.median(L)), "positives": {("N" if m_ == LOG_N else "S"): int((L > m_).sum()) for m_ in margins},
+                         "p_plain": {("N" if m_ == LOG_N else "S"): float(gt.betabin_p(int((L > m_).sum()), int(L.size), 0.0)) for m_ in margins}}
+    a1 = {}
+    for cell, key in ((G1, "g1"), (G4, "g4")):
+        if store.has("A1", *cell):
+            a1[key] = {"ensemble_mean_pp": float(np.mean(list(store.scores("A1", *cell).values()))),
+                       "per_seed_mean_pp": float(np.mean(list(sv.scores("A1", *cell).values()))) if sv.has("A1", *cell) else None}
+    out["A1_scores_both_chains"] = a1
+    return out
+
+
 def run_v4(store, cfg=None, gate=None, row_tiers=None):
     """the whole confirmatory statistics of Design R2 from a Store. row_tiers (item 6): {contrast: lowest tier of the downgrade rows}; effective tier = min(primary, rows)."""
     rule, c = resolve_config(cfg)
@@ -746,6 +790,7 @@ def run_v4(store, cfg=None, gate=None, row_tiers=None):
         "rule": rule.describe(), "config": {k: c[k] for k in ("sign_rule", "rho_s0", "graph_w", "alpha", "e1_prime_approved", "k_chain_struck")}, "seed_root": MC_SEED_ROOT,
         "primary": prim, "secondary": sec, "plain_descriptive": plain_rows(store, c), "most_test": most, "dependence_sensitivity": dependence_sensitivity(store, rule, c),
         "estimated": estimated_tables(store, rule), "lab_rows": lab_rows(store, rule, CONTRASTS_FOR_LABS), "effective_tiers": tiers,
+        "per_seed_descriptive": per_seed_descriptive(store), "endpoint_note": ENDPOINT_NOTE,
     }
     if "P1" in tiers:
         out["outcome"] = assemble_outcome(tiers, primary_numbers(store, rule, tiers), c, gate, None if most is None else most["most"])

@@ -30,11 +30,12 @@ def choose_budget(median_fit_secs):
     return {"n_trials": 20, "inner_k": 3, "rule": "N = 20 default"}
 
 
-def inner_k_for_m(m, partial=False):
-    """PREREG_v4 4.1: inner folds 2 for m in {8, 16}, 3 for m = 32 (the Partial plan lowers m = 32 to 2); None (no grid) keeps the V3 value 3 (2 under the Partial plan)"""
+def inner_k_for_m(m, partial=False, thin_folds=2):
+    """PREREG_v4 4.1 with D020 C2: inner folds `thin_folds` (default 2; 4 only if the P6b decision file says adopt) for m in {8, 16}, 3 for m = 32; the Partial plan returns every cell
+    to 2. None (no grid) keeps the V3 value 3 (2 under the Partial plan). The backbone tournament of the cell uses the same value."""
     if partial:
         return 2
-    return 3 if (m is None or m >= 32) else 2
+    return 3 if (m is None or m >= 32) else int(thin_folds)
 
 
 def inner_folds(cells, k, seed, spec, target_kind="cycling"):

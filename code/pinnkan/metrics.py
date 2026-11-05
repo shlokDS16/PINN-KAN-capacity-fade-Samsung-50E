@@ -25,6 +25,38 @@ def score_prepared(preds, prepared):
     return rows
 
 
+def ensemble_rows(per_seed_preds, prepared):
+    """D020 C1: rows of the five-seed prediction ensemble. Per cell and check-up the forecast is the mean over the seeds of the seed's forecast in retention space; a non-finite
+    forecast of a seed is replaced by the persistence forecast BEFORE averaging (the per-seed rule of `clean_forecast`, applied seed-wise) and counted per seed.
+    `per_seed_preds`: list over seeds of {cell_id: forecast}. One seed, or seeds that agree, give exactly the per-seed rows."""
+    mean = {}
+    by_seed = {}
+    for p in prepared:
+        cid = p.cell.cell_id
+        cleaned = []
+        for preds in per_seed_preds:
+            pr, nb = clean_forecast(preds[cid], p.win.y_last)
+            cleaned.append(pr)
+            by_seed.setdefault(cid, []).append(nb)
+        mean[cid] = cleaned[0] if all(np.array_equal(cleaned[0], x) for x in cleaned[1:]) else np.mean(np.stack(cleaned), axis=0)      # agreeing seeds (one fit, a deterministic arm): exactly that forecast
+    rows = score_prepared(mean, prepared)
+    for r in rows:
+        r["n_nonfinite_by_seed"] = by_seed[r["cell"]]
+        r["n_nonfinite"] = int(sum(by_seed[r["cell"]]))
+    return rows
+
+
+def ensemble_condition_scores(per_seed_preds, prepared):
+    """-> (condition -> mean over its scored cells of the cell RMSE of the ensemble forecast (pp), rows)"""
+    rows = ensemble_rows(per_seed_preds, prepared)
+    return condition_scores(rows), rows
+
+
+def cell_scores_from_rows(rows):
+    """cell -> {cond, rmse_pp, n_fc} for one set of rows (the ensemble's cell-level scores behind its condition scores)"""
+    return {r["cell"]: dict(cond=r["cond"], rmse_pp=float(r["rmse_pp"]), n_fc=int(r["n_fc"])) for r in rows}
+
+
 def condition_scores(rows):
     """condition -> mean over its scored cells of the cell RMSE (pp)"""
     by = {}

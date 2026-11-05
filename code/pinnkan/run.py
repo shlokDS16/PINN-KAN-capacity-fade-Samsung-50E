@@ -39,7 +39,7 @@ DEFAULTS = {"mode": "inner", "test": "B", "fold": 0, "arms": ["A1", "A2", "A9", 
             # cells 04-06 as two-point records (i); min_fc_points: scored cells need this many forecast points (i, "cells with >= 3 forecast points" -> 3);
             # law_overrides: {Y0, gamma, tau} for the A2-only tournament row (m), {delta_scope: "total"} for row (l); throughput_fallback: "analytic" lets a
             # cycling cell without ZYK entries use the designed throughput under throughput="zyk" (otherwise ZykDataMissing)
-            "include_at": False, "include_storage_0406": False, "min_fc_points": 1, "m": None, "subset": "maxmin", "subset_draw": 0, "k": None, "design": "R2", "law_overrides": {}, "throughput_fallback": "none", "forecast_failure": False, "lab_indicator": False}
+            "include_at": False, "include_storage_0406": False, "min_fc_points": 1, "m": None, "subset": "maxmin", "subset_draw": 0, "k": None, "design": "R2", "endpoint": "ensemble", "inner_k_thin": 2, "p6b_decision": None, "law_overrides": {}, "throughput_fallback": "none", "forecast_failure": False, "lab_indicator": False}
 TARGET_BY_TEST = {"B": "cycling", "C": "cycling", "A": "cycling", "S2": "storage", "S3": "storage"}   # the tuned task is the scored task (review M3)
 
 
@@ -184,6 +184,8 @@ def _run(cfg_in, root=None, runs_dir=None):
         raise ConfigError("permute_stress (NC-2) is defined on Test B only, not on Test C (NEGCONTROL_RULING section 3)")
     if cfg["mc_seed_root"] != negcontrol.MC_SEED_ROOT:
         raise ConfigError("mc_seed_root is fixed by the NEGCONTROL ruling (20261105)")
+    if cfg["endpoint"] not in ("ensemble", "per_seed"):
+        raise ConfigError("endpoint must be 'ensemble' (D020 C1, Design R2) or 'per_seed' (the V3 rule)")
     if cfg["design"] not in ("R2", "V3_legacy"):
         raise ConfigError("design must be 'R2' (PREREG_v4) or 'V3_legacy' (history only)")
     if cfg["design"] == "R2" and (cfg["mode"] in ("confirmatory", "nc1_full", "h7") or cfg["m"] is not None or cfg["k"] is not None):
@@ -207,8 +209,16 @@ def _run(cfg_in, root=None, runs_dir=None):
             raise ConfigError("the training-subset grid (m) is defined for Test B (and the Test C variant), not for tests A, S2, S3")
         if "A5" in cfg["arms"] and int(cfg["m"]) < 32:
             raise ConfigError("A5 (interaction GAM) runs at m = 32 only: its tensor terms cannot be supported by fewer conditions (PREREG_v4 7.1); at m < 32 AG = A4")
+        thin = int(cfg["inner_k_thin"])
+        if thin not in (2, 4):
+            raise ConfigError("inner_k_thin must be 2 (default) or 4 (only if runs/pilot_P6b/decision.json says adopt; D020 C2)")
+        if thin == 4:
+            dec = cfg["p6b_decision"]
+            if not dec or not os.path.isfile(dec) or json.load(open(dec, encoding="utf8")).get("adopt") is not True:
+                raise ConfigError("inner_k_thin = 4 needs p6b_decision pointing at a decision.json with adopt = true (D020 C2: the default is 2)")
+            cfg["p6b_decision_sha256"] = sha256_file(dec)
         if "inner_k" not in cfg_in:
-            cfg["inner_k"] = tuning.inner_k_for_m(int(cfg["m"]))       # 2 for m in {8, 16}, 3 for m = 32 (PREREG_v4 4.1)
+            cfg["inner_k"] = tuning.inner_k_for_m(int(cfg["m"]), thin_folds=thin)       # 2 for m in {8, 16}, 3 for m = 32 (PREREG_v4 4.1)
     chash = None
     if mode == "confirmatory" and ds != "synthetic":      # checks before anything is created or read (review M2)
         if cfg["steps_scale"] != 1.0:
@@ -321,7 +331,7 @@ def _run(cfg_in, root=None, runs_dir=None):
                 make_arm(a, spec, default_hp(a) if ARMS[a].tuned else {}, 1000 + cfg["fold"], ctx).fit(train)
                 med[a] = time.time() - t0
         bud = tuning.choose_budget(med)
-        cfg["n_trials"], cfg["inner_k"] = bud["n_trials"], (bud["inner_k"] if cfg["m"] is None else tuning.inner_k_for_m(int(cfg["m"]), partial=bud["inner_k"] == 2))
+        cfg["n_trials"], cfg["inner_k"] = bud["n_trials"], (bud["inner_k"] if cfg["m"] is None else tuning.inner_k_for_m(int(cfg["m"]), partial=bud["inner_k"] == 2, thin_folds=int(cfg["inner_k_thin"])))
         _json(os.path.join(run_dir, "budget_rule.json"), {**bud, "median_fit_seconds": med})
         rec.log(f"budget fixed before tuning: {bud}")
     if cfg["backbone"] == "tournament":
@@ -391,6 +401,7 @@ def _run(cfg_in, root=None, runs_dir=None):
     if bad:
         raise ConfigError(f"test cells of kind {sorted(bad)} but the tuned and scored kind is {tk}")
     cond_scores_out, per_arm, cell_scores_out = {kl: {} for kl in KC}, {kl: {} for kl in KC}, {kl: {} for kl in KC}
+    seed_scores_out = {kl: {} for kl in KC}            # per-seed condition scores (mean over seeds of the per-seed condition RMSE): K1 / K2 and the descriptive row
     fitted, inv_records = {}, {}
     for a in arms:
         ks_a = [kl for kl in KC if not (kl == "0" and a in ("R1", "R2"))]            # R1 and R2 need a window check-up (k >= 1): k = 0 is its own reference
@@ -414,13 +425,25 @@ def _run(cfg_in, root=None, runs_dir=None):
         for kl in ks_a:
             per_seed_rows, per_seed_preds = per_seed[kl]
             cs, sd = metrics.seed_condition_scores(per_seed_rows)
-            cond_scores_out[kl][a] = cs
-            cell_scores_out[kl][a] = metrics.seed_cell_scores(per_seed_rows)
-            per_arm[kl][a] = {"primary_pp": float(np.mean(list(cs.values()))), "seed_sd_of_mean": sd, "n_conditions": len(cs),
+            ens_rows = metrics.ensemble_rows(per_seed_preds, KC[kl]["prep"])
+            ens_cs = metrics.condition_scores(ens_rows)
+            rec.add_preds("outer_test" if kl is None else f"outer_test_k{kl}", a, "ens", ens_rows)       # predictions.csv carries the per-seed rows and the ensemble ('ens')
+            seed_scores_out[kl][a] = cs
+            if cfg["endpoint"] == "ensemble":
+                cond_scores_out[kl][a] = ens_cs
+                cell_scores_out[kl][a] = metrics.cell_scores_from_rows(ens_rows)
+            else:
+                cond_scores_out[kl][a] = cs
+                cell_scores_out[kl][a] = metrics.seed_cell_scores(per_seed_rows)
+            cs_main = cond_scores_out[kl][a]
+            per_arm[kl][a] = {"primary_pp": float(np.mean(list(cs_main.values()))), "primary_pp_ensemble": float(np.mean(list(ens_cs.values()))), "primary_pp_per_seed": float(np.mean(list(cs.values()))),
+                              "n_nonfinite_by_seed": [int(sum(r["n_nonfinite"] for r in rows)) for rows in per_seed_rows],
+                              "fit_seconds_one_fit": float(np.mean([timings[a][f"refit_seed{s_}_seconds"] for s_ in cfg["seeds"]])), "fit_seconds_ensemble": float(sum(timings[a][f"refit_seed{s_}_seconds"] for s_ in cfg["seeds"])),
+                              "seed_sd_of_mean": sd, "n_conditions": len(cs_main),
                               "mae_pp_mean": float(np.mean([r["mae_pp"] for rows in per_seed_rows for r in rows])),
                               "n_nonfinite": int(sum(r["n_nonfinite"] for rows in per_seed_rows for r in rows)), "n_params": int(arm.n_params),
                               "n_train_used": arm.n_train_used, **outer_extras(KC[kl]["prep"], per_seed_preds, per_seed_rows)}
-            rec.log(f"outer test {a} k={kl}: {per_arm[kl][a]['primary_pp']:.3f} pp (seed SD {sd:.3f}) over {len(cs)} conditions")
+            rec.log(f"outer test {a} k={kl}: {per_arm[kl][a]['primary_pp']:.3f} pp ({cfg['endpoint']}; per-seed {per_arm[kl][a]['primary_pp_per_seed']:.3f}, seed SD {sd:.3f}) over {len(cs)} conditions")
     metrics_out["outer_test"] = per_arm[primary]
     if None not in KC:
         metrics_out["outer_test_by_k"] = {kl: per_arm[kl] for kl in KC}
@@ -442,6 +465,7 @@ def _run(cfg_in, root=None, runs_dir=None):
         suf = "" if kl == primary else f"_k{kl}"                                     # the primary cell keeps the file names the statistics step reads
         _json(os.path.join(run_dir, f"cell_scores{suf}.json"), cell_scores_out[kl])        # per scored cell: mean over seeds of the cell RMSE (two-stage bootstrap, sensitivity row (d))
         _json(os.path.join(run_dir, f"condition_meta{suf}.json"), metrics.condition_meta(KC[kl]["prep"]))     # identifiers only: scored cells, laboratory and stage per condition
+        _json(os.path.join(run_dir, f"condition_scores_seed{suf}.json"), seed_scores_out[kl])      # per-seed endpoint: K1 / K2 and the descriptive row (D020 C1 item 4, 5)
         if kl != primary:
             _json(os.path.join(run_dir, f"condition_scores{suf}.json"), cond_scores_out[kl])
     _json(os.path.join(run_dir, "condition_scores.json"), cond_scores_out[primary])     # written last: its presence marks a scored run

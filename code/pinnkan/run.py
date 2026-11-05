@@ -26,7 +26,7 @@ import torch
 from . import ROOT as _ROOT
 from . import emit, guard, h7, inversion, inversion_diag, law, margins, metrics, negcontrol, selectors, semi, stats_step, subsets, synth, tuning
 from .arms import ARMS, H1B_POOL, NEURAL, OUT_OF_SCOPE_ARMS, default_hp, make_arm
-from .data import WindowRule, apply_subset, grid_ks, load_split, prepare_many, sha256_file
+from .data import WindowRule, apply_subset, grid_ks, load_split, prepare_many, sha256_file, window_capped_cells
 from .law import TAU
 from .specs import SPECS
 
@@ -126,7 +126,7 @@ class Recorder:
             w.writerows(self.pred_rows)
 
 
-def build_data(cfg, root, role):
+def build_data(cfg, root, role, runs_dir=None):
     """-> dict(spec, train, test, split_info, manifest). role 'train' never builds an outer-test cell."""
     ds = cfg["dataset"]
     if ds == "synthetic":
@@ -137,7 +137,7 @@ def build_data(cfg, root, role):
         return {"spec": SPECS["synthetic"], "train": tr, "test": te if role != "train" else None, "synth": S, "subset": sub,
                 "split": {"file": "synthetic (generated)", "note": "no outer test fold of real data exists", "subset": sub}, "manifest": []}
     sv = load_split(ds, cfg["test"], cfg["fold"], role=role, root=root, retain_all=cfg["retain_all"], throughput=cfg["throughput"], include_at=cfg["include_at"],
-                    throughput_fallback=cfg["throughput_fallback"], include_storage_0406=cfg["include_storage_0406"], m=cfg["m"], subset=cfg["subset"], subset_draw=cfg["subset_draw"])
+                    throughput_fallback=cfg["throughput_fallback"], include_storage_0406=cfg["include_storage_0406"], m=cfg["m"], subset=cfg["subset"], subset_draw=cfg["subset_draw"], runs_dir=runs_dir)
     return {"spec": sv.spec, "train": sv.train, "test": sv.test_cells, "sv": sv, "subset": sv.subset_info,
             "split": {"file": os.path.relpath(sv.split_file, root).replace("\\", "/"), "sha256_file": sv.split_sha256, "fold_hash_stored": sv.fold_hash_stored,
                       "fold_hash_recomputed": sv.fold_hash_recomputed, "fold_hash_ok": sv.hash_ok, "pinned_at_freeze": sv.pinned, "missing_train_conditions": sv.missing_train_conditions, "test_conditions": sv.test_conditions,
@@ -304,6 +304,8 @@ def _run(cfg_in, root=None, runs_dir=None):
     if ds == "synthetic":
         open(os.path.join(run_dir, "SYNTHETIC"), "w").write("synthetic data: invented ageing laws, not results\n")
     guard.GUARD_LOG.clear()
+    if item_f_sha:                          # D026 review m3: the verified item (f) record stays in guard.json
+        guard.GUARD_LOG.append({"what": "item (f) record", "verified": True, "item_f_sha256": item_f_sha})
     t_start = time.time()
     _json(os.path.join(run_dir, "config.json"), {**cfg, "mode_effective": mode, "blinded_samsung_pre_freeze": blinded,
                                                  "config_sha256": guard.canonical_config_hash({**DEFAULTS, **cfg_in}), "config_input": cfg_in})      # D026: the hash as pinned (DEFAULTS + the file's keys) and the input it was computed from (stats_v4.build_item_f recomputes it)
@@ -313,7 +315,7 @@ def _run(cfg_in, root=None, runs_dir=None):
                                                 "mc_seed_root": cfg["mc_seed_root"], "mc_seed_rule": "np.random.default_rng(SeedSequence([root, zlib.crc32(label)])) for every Monte Carlo step; labels such as 'B|H1a|BCa_mean_pp' are listed in the contrasts files",
                                                 "permute_stress_stream": "[20261107, 31, fold] (train), fold + 1000 (test)", "nc1_scramble_stream": "mc_rng('NC1|' + cell_id)"})
     role = "test" if mode == "confirmatory" else "train"
-    D = build_data(cfg, root, role)          # the test-fold guard is inside load_split (role != 'train')
+    D = build_data(cfg, root, role, runs_dir=runs_dir)          # the test-fold guard is inside load_split (role != 'train')
     spec, train = D["spec"], D["train"]
     if mode == "confirmatory" and D.get("sv") is not None and D["sv"].missing_train_conditions:
         raise ConfigError(f"incomplete training set, missing conditions {D['sv'].missing_train_conditions[:3]} (complete download required)")
@@ -340,6 +342,9 @@ def _run(cfg_in, root=None, runs_dir=None):
     if ds != "synthetic" and (cfg["m"] is not None or cfg["k"] is not None) and SPECS[ds].window[0] == "count" and (wk.get("k_cycling") is None or wk.get("k_storage") is None):
         raise ConfigError("a Design R2 grid run on real data needs window.k_cycling (= k_full) and window.k_storage from the counted listings [FB-6]; the placeholder defaults 4 and 2 are not used (review M3)")
     rule = WindowRule.for_spec(spec, k_cycling=wk.get("k_cycling"), k_storage=wk.get("k_storage"), W=wk.get("W"), shift=wk.get("shift", 0))
+    _capped = window_capped_cells(list(train) + list(D.get("test") or []), rule)      # D025: capped cells are kept and listed (identifiers only)
+    _json(os.path.join(run_dir, "window_capped.json"), {"rule": "D025: window = min(k, n - 1) intermediate check-ups", "cells": _capped})
+    rec.log(f"D025 window cap binds for {len(_capped)} cell(s): {_capped[:10]}")
     rule_test = dataclasses.replace(rule, min_fc_points=int(cfg["min_fc_points"]))      # scored cells only (sensitivity row "cells with >= 3 forecast points"); training windows keep `rule`
     if cfg["nc1_scramble_test"]:
         if ds != "synthetic" or D["test"] is None:

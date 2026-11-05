@@ -22,6 +22,7 @@ def _pin_root(tmp_path, monkeypatch):
     shutil.copy(os.path.join(ROOT, "runs", "prereg", "subsets.json"), tmp_path / "runs" / "prereg" / "subsets.json")
     (tmp_path / "code" / "pinnkan" / "symbolic_library.json").write_text(json.dumps({"max_coeffs_per_edge": 3}))
     payload["pins"] = {}
+    payload["item_f_config_sha256s"] = [f"{i}" * 64 for i in range(5)]      # D026 review m4: a pinned freeze lists five item (f) configs
     for name, rel in guard.PIN_FILES.items():
         payload["pins"][name] = {"file": rel, "sha256": guard.sha256_file(os.path.join(root, rel))}
     json.dump(payload, open(tmp_path / "runs" / "prereg" / "FROZEN", "w"))

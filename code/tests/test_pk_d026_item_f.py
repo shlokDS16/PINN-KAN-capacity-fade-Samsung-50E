@@ -207,7 +207,9 @@ def test_a2_refuses_when_the_ledger_holds_a_samsung_row(tmp_path, monkeypatch):
 def test_a2_refuses_when_a_row_of_unknown_dataset_is_in_the_ledger(tmp_path, monkeypatch):
     root, _ = freeze_root(tmp_path, monkeypatch)
     dirs = five_runs(tmp_path)
-    guard.record_scoring("c" * 64, "x", FAKE_COMMIT, root)                               # a legacy row: dataset not stated
+    p = os.path.join(root, guard.SCORED_REL)                                              # a legacy row: dataset not stated (record_scoring now refuses to write one, review m2)
+    os.makedirs(os.path.dirname(p), exist_ok=True)
+    open(p, "a", encoding="utf8").write(json.dumps({"config_sha256": "c" * 64, "run_id": "x", "commit": FAKE_COMMIT}) + chr(10))
     with pytest.raises(v4.ItemFError, match="Samsung row"):
         v4.build_item_f(root, dirs)
 
@@ -233,7 +235,7 @@ def test_a2_refuses_when_a_samsung_condition_scores_file_exists_anywhere_under_r
     with pytest.raises(v4.ItemFError, match="Samsung condition_scores"):
         v4.build_item_f(root, dirs)
     shutil.rmtree(nocfg)
-    syn = tmp_path / "runs" / "figdemo"                                                  # a synthetic or demo run (SYNTHETIC marker) is not a Samsung score
+    syn = tmp_path / "runs" / "figdemo_SYNTHETIC"                                                  # a synthetic or demo run (SYNTHETIC marker) is not a Samsung score
     _jd(str(syn / "config.json"), {"dataset": "samsung", "synthetic": True})
     _jd(str(syn / "condition_scores.json"), {})
     open(syn / "SYNTHETIC", "w").write("synthetic")
@@ -388,7 +390,7 @@ def test_a4_run_py_hands_the_verified_hash_to_the_ledger():
     src = open(os.path.join(ROOT, "code", "pinnkan", "run.py"), encoding="utf8").read()
     assert "item_f_sha = guard.require_item_f_record(root, runs_dir)" in src
     assert "guard.record_scoring(chash, run_id, git_info(root)[\"commit\"], root, dataset=ds, item_f_sha256=item_f_sha)" in src
-    assert src.index("require_item_f_record(root, runs_dir)") < src.index("D = build_data(cfg, root, role)")
+    assert src.index("require_item_f_record(root, runs_dir)") < src.index("D = build_data(cfg, root, role, runs_dir=runs_dir)")
 
 
 def _ledger_state(tmp_path, monkeypatch, rows):

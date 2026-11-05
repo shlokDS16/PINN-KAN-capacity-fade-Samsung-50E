@@ -171,7 +171,9 @@ def test_forecast_set_excludes_non_checkups_and_truncates_at_life():
 
 def test_cells_that_cannot_be_scored_are_dropped():
     rule = WindowRule.for_spec(SPECS["samsung"], k_cycling=4)
-    assert prepare(_cell(5), rule) is None                              # no forecast point
+    p = prepare(_cell(5), rule)                                         # D025: n <= k check-ups -> window capped at n - 1, cell kept with one forecast point
+    assert p is not None and p.w_idx == 3 and len(p.fc_true) == 1
+    assert prepare(_cell(3), rule) is None                              # capped window of 2 points < min_window_points 3: still dropped
     assert prepare(_cell(12), WindowRule(k_cycling=1, k_storage=1)) is None   # window of 2 points < min_window_points 3
 
 

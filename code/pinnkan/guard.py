@@ -85,6 +85,8 @@ def verify_freeze(root=None, check_git=True, untracked_under=()):
         raise TestFoldAccessError("prereg file hash differs from the value pinned in FROZEN")
     if d.get("pins_missing"):
         raise TestFoldAccessError(f"FROZEN was built without the pins {d['pins_missing']}: a freeze needs subsets.json, the symbolic library (cap set) and the five item (f) run configs pinned")
+    if d.get("pins") is not None and len(set(d.get("item_f_config_sha256s") or [])) != 5:      # D026 review m4: found at verify time, not at build_item_f
+        raise TestFoldAccessError("a Design R2 FROZEN (with pins) must list five distinct item_f_config_sha256s (D026)")
     for name, ent in (d.get("pins") or {}).items():                # Design R2: files pinned by hash in FROZEN; any difference or absence refuses (a FROZEN without "pins" keeps the older behaviour)
         fp = os.path.join(root, ent["file"])
         if not os.path.isfile(fp):
@@ -168,6 +170,8 @@ def scored_before(config_hash, root=None):
 def record_scoring(config_hash, run_id, commit, root=None, dataset=None, item_f_sha256=None):
     """append-only ledger of scored outer-test configurations: a second scoring of the same config is refused (stop rule 6).
     D026: a Samsung row carries `item_f_sha256` (sha256 of the item (f) dependence file that `require_item_f_record` verified before the test fold was loaded); a Samsung row without it is refused."""
+    if dataset is None:
+        raise TestFoldAccessError("a scoring row must name its dataset (D026 review m2)")
     if dataset == "samsung" and not item_f_sha256:
         raise TestFoldAccessError("a Samsung scoring row must carry item_f_sha256 (D026)")
     if scored_before(config_hash, root):

@@ -151,7 +151,14 @@ class WindowRule:
         if self.W is not None:
             return int(np.sum(cell.t <= self.W + 1e-9) - 1)
         k = self.k_cycling if cell.kind == "cycling" else self.k_storage
-        return int(k)  # reference + k check-ups
+        return int(min(int(k), cell.n - 2))  # reference + k check-ups; D025 cap: a cell with n <= k intermediate check-ups gets the window n - 1 (one check-up left to forecast)
+
+    def capped(self, cell: Cell):
+        """True when the D025 cap binds for this cell (count windows only; identifiers and point counts only, no label)"""
+        if self.W is not None:
+            return False
+        k = self.k_cycling if cell.kind == "cycling" else self.k_storage
+        return int(k) > cell.n - 2
 
 
 LABS = ("HM", "INT", "SIE")          # Samsung laboratories (PREREG_v4 3.3(7)); reference level = HM
@@ -183,6 +190,11 @@ def window_rule_from_counts(counts_cycling, counts_storage=None):
     kc = int(round(float(np.median(counts_cycling)) / 3.0))
     ks = int(round(float(np.median(counts_storage)) / 3.0)) if counts_storage is not None and len(counts_storage) else None
     return kc, ks
+
+
+def window_capped_cells(cells, rule: WindowRule):
+    """D025: the cells whose window is capped at n - 1 under `rule` (listed in every run; PREREG_v4 section 5)"""
+    return sorted(c.cell_id for c in cells if rule.capped(c))
 
 
 def prepare(cell: Cell, rule: WindowRule, oracle=False):
@@ -478,7 +490,7 @@ def apply_subset(train, dataset, test, fdef, fold, m, subset="maxmin", draw=0, r
 
 
 def load_split(dataset, test, fold, role="train", root=None, retain_all=False, throughput="analytic", include_at=False, throughput_fallback="none", include_storage_0406=False,
-               m=None, subset="maxmin", subset_draw=0):
+               m=None, subset="maxmin", subset_draw=0, runs_dir=None):
     """Cells of one outer split. role 'train' never contains a test cell or a test condition. role 'test' also returns the test cells
     and requires the FROZEN flag file; without it the guard raises before any test cell is built."""
     root = root or _ROOT
@@ -534,6 +546,8 @@ def load_split(dataset, test, fold, role="train", root=None, retain_all=False, t
     test_cells = None
     if role != "train":
         guard.require_frozen(f"release of test cells ({dataset} test {test} fold {fold})", root)
+        if dataset == "samsung":                    # D026 review I1: the item (f) gate also guards every direct caller, not only run.py
+            guard.require_item_f_record(root, runs_dir)
         test_cells = build(keep_test)
     return SplitView(dataset, test, int(fold), spec, train, test_cells, sorted({c.cond for c in train}), sorted(tc), sorted(tids), path,
                      file_sha, stored, recomputed, _input_manifest(root, dataset), missing, pin is not None, sub_info)

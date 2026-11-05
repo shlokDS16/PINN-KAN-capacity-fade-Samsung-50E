@@ -1,5 +1,16 @@
 # Papers to save by hand through the VIT e-gateway (2026-11-04)
 
+## FREEZE BLOCKER FB-2 (2026-11-05 22:45): Hallinger et al., SSRN 7417281
+- https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7417281 (SSRN refuses automated fetches with 403; free in a normal
+  browser, "Download This Paper"). Save as `refs/pdf/hallinger_ssrn7417281.pdf`. Only its model and data sections are needed.
+- Saxena 2016 (below) is already saved and verified.
+
+## FREEZE CONDITION C4 (novelty framing; 2026-11-05 23:30)
+- Lucu et al., J. Energy Storage 30 (2020) 101409 (Part A) and 101410 (Part B): https://doi.org/10.1016/j.est.2020.101409 and
+  https://doi.org/10.1016/j.est.2020.101410 (ScienceDirect, e-gateway). Save as `refs/pdf/lucu2020_A.pdf`, `refs/pdf/lucu2020_B.pdf`.
+- Jia et al., IEEE Trans. Transp. Electrif. 10(1) (2024) 1056: https://doi.org/10.1109/TTE.2023.3266386 (IEEE Xplore,
+  e-gateway). Save as `refs/pdf/jia2024_tte.pdf`.
+
 ## URGENT (2026-11-05 afternoon): needed for the CALCE section (D022)
 - **Saxena et al., J. Power Sources 2016** (CALCE PL pouch design paper): https://doi.org/10.1016/j.jpowsour.2016.07.057
   (ScienceDirect PII S0378775316309247). Save as `refs/pdf/saxena2016_jps_calce_pl.pdf`. Needed for: test temperature,

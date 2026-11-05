@@ -573,12 +573,13 @@ def _samsung_scores_under(runs_dir):
     for dp, _dn, fn in os.walk(runs_dir):
         if not any(f.startswith("condition_scores") and f.endswith(".json") for f in fn):
             continue
-        if "SYNTHETIC" in fn:
-            continue
         try:
             ds = json.load(open(os.path.join(dp, "config.json"), encoding="utf8")).get("dataset")
         except Exception:  # noqa: BLE001
             ds = "samsung"
+        rel = os.path.relpath(dp, runs_dir).replace("\\", "/")
+        if "SYNTHETIC" in fn and (ds == "synthetic" or rel.split("/")[0] == "figdemo_SYNTHETIC"):      # D026 review m1: the marker alone is not enough
+            continue
         if ds in ("samsung", None):
             bad.append(dp)
     return bad
@@ -709,7 +710,7 @@ def require_item_f(directory, run_dirs, pinned_sha256=None, ledger_root=None):
     if pinned_sha256 is not None and _sha(p) != pinned_sha256:           # review M5: the file hash pinned outside the file system (git / FROZEN), so file times are not the only evidence
         raise ItemFError("item (f) dependence file differs from the pinned hash (item_f_sha256)")
     if ledger_root is not None:
-        sam = [r for r in guard.read_ledger(ledger_root) if r.get("dataset") == "samsung"]
+        sam = [r for r in guard.read_ledger(ledger_root) if r.get("dataset") in ("samsung", None)]      # D026 review m2: fail closed, as the writer
         if not sam:
             raise ItemFError("the scoring ledger holds no Samsung row: item (f) cannot be tied to the scores")
         vals = {r.get("item_f_sha256") for r in sam}

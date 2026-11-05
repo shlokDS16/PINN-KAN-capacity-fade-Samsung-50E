@@ -144,10 +144,17 @@ class PINNModel(nn.Module):
         return tot, data, res
 
 
-def fit_pinn(b: Batch, spec, hp, backbone, seed, steps=2000, lr=5e-3, extra_twin_raw=None, warmup=WARMUP, clip=GRAD_CLIP):
+def fit_pinn(b: Batch, spec, hp, backbone, seed, steps=2000, lr=5e-3, extra_twin_raw=None, warmup=WARMUP, clip=GRAD_CLIP, law=None, init_from=None):
+    """law / init_from: the end-to-end refit of A15 / G15 (symbolic.py): a prebuilt law (symbolic stress map) and a fitted PINNModel whose solution network, latents and offsets
+    are the warm start; the loss, recipe and collocation are those of every other PINN arm"""
     torch.manual_seed(seed)
-    law = make_law(spec, b, hp, backbone)
+    law = make_law(spec, b, hp, backbone) if law is None else law
     m = PINNModel(spec, law, b.C, backbone, width=32, depth=3, zdim=2)
+    if init_from is not None:
+        m.net.load_state_dict(init_from.net.state_dict())
+        with torch.no_grad():
+            m.z.copy_(init_from.z)
+            m.delta.copy_(init_from.delta)
     col = make_collocation(spec, b, seed, placement=hp.get("placement", "record_end"), extra_twin_raw=extra_twin_raw)
     m.col_t_max = col.t_max
     m.pts_per_cell = b.obs_t.numel() / b.C

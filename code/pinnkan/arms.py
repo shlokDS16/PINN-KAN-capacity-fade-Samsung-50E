@@ -8,7 +8,10 @@ from dataclasses import dataclass, field
 import numpy as np
 import torch
 
+import copy
+
 from . import baselines, semi
+from . import symbolic
 from .data import prepare_many
 from . import free
 from .hard import fit_hard, predict_hard
@@ -59,10 +62,15 @@ ARMS = {
     "A13": ArmDef("A13", "PINN-KAN, cycling cells only", "pinn", {"h": ("cat", [2, 3, 4, 6, 8]), "grid": ("cat", [2, 3, 5, 8, 12]), "l2": ("cat", DECADES),
                                                               "sparsity": ("cat", [0.0, 1e-4, 1e-3, 1e-2]), "lam_res": ("cat", LAM), "placement": ("cat", PLACE)}, map_kind="kan"),
     "A14": ArmDef("A14", "PINN-KAN, storage cells only (exploratory)", "pinn", {"grid_cal": ("cat", [2, 3, 5, 8, 12]), "l2": ("cat", DECADES), "lam_res": ("cat", LAM), "placement": ("cat", PLACE)}, map_kind="kan"),
+    # A15 / G15 (PREREG_v4 7.1, 7.3): closed-form law extracted from a KAN with h in {1, 2} (A15, dims = A1's six with h restricted) / from A4's additive terms (G15, dims = A4's four)
+    "A15": ArmDef("A15", "KAN law (closed form extracted from a KAN)", "sym", {"h": ("cat", [1, 2]), "grid": ("cat", [2, 3, 5, 8, 12]), "l2": ("cat", DECADES),
+                                                                             "sparsity": ("cat", [0.0, 1e-4, 1e-3, 1e-2]), "lam_res": ("cat", LAM), "placement": ("cat", PLACE)}, map_kind="kan"),
+    "G15": ArmDef("G15", "matched GAM law (same extraction on A4's additive terms)", "sym", {"grid": ("cat", [3, 5, 10, 20, 30]), "l2": ("cat", [1e-5, 1e-4, 1e-3, 1e-2, 1e-1]),
+                                                                                           "lam_res": ("cat", LAM), "placement": ("cat", PLACE)}, map_kind="gam"),
     "R1": ArmDef("R1", "persistence", "ref", tuned=False),
     "R2": ArmDef("R2", "window-linear extrapolation", "ref", tuned=False),
 }
-NEURAL = ("A1", "A2", "A3", "A4", "A5", "A7", "A9", "A13", "A14")
+NEURAL = ("A1", "A2", "A3", "A4", "A5", "A7", "A9", "A13", "A14", "A15", "G15")
 H1B_POOL = ("A3", "A4", "A5", "A7")
 
 
@@ -127,6 +135,53 @@ class PINNArm(DiagMixin, Arm):
         self.n_train_used = len(cells)
         self.model = fit_pinn(b, self.spec, hp, self.ctx["backbone"], self.seed, steps=self.steps("pinn"), extra_twin_raw=self.ctx.get("extra_twin_raw"), **pk)
         self.n_params = sum(p.numel() for p in self.model.parameters()) - self.model.z.numel() - self.model.delta.numel()
+        return self
+
+    def predict(self, wcells):
+        preds, _ = predict_pinn(self.model, self.spec, wcells, float(self.hp.get("lam_res", 1.0)), self.seed)
+        return preds
+
+
+def swap_law(parent_model, sym_cyc, sym_cal):
+    """copy of a fitted PINNModel whose cyclic stress map (and calendar KAN, if given) are replaced; solution network, latents, offsets and law levels are shared by value"""
+    m = copy.deepcopy(parent_model)
+    m.law.cyc = sym_cyc
+    if sym_cal is not None:
+        m.law.cal = sym_cal
+    return m
+
+
+class SymbolicArm(DiagMixin, Arm):
+    """A15 / G15. ONE class for both: (1) fit the parent PINN (A15: KAN [d,h,1], h in {1,2}; G15: the additive GAM of A4) with the tuned settings, (2) extract its stress map and
+    calendar KAN into the frozen library (symbolic.py; the per-edge cap must be set: ctx['symbolic']['cap']), (3) refit the coefficients end to end under the same PINN loss,
+    warm-started from the parent (ctx['symbolic']['refit_frac'] of the steps, default 0.5)."""
+
+    def fit(self, train_cells):
+        a = ARMS[self.arm_id]
+        sc = self.ctx.get("symbolic") or {}
+        cap = symbolic.resolve_cap(sc.get("cap"))                      # raises CapNotSetError before any work
+        cells = train_cells
+        hp = dict(self.hp, map=a.map_kind)
+        b = batch_from_cells(self.spec, cells)
+        pk = {k: v for k, v in (self.ctx.get("pinn") or {}).items() if k in ("clip", "warmup", "lr")}
+        self.n_train_used = len(cells)
+        steps = self.steps("pinn")
+        parent = fit_pinn(b, self.spec, hp, self.ctx["backbone"], self.seed, steps=steps, extra_twin_raw=self.ctx.get("extra_twin_raw"), **pk)
+        cyc = (b.is_cyc > 0.5).numpy()
+        s_cyc = np.unique(b.s.numpy()[cyc], axis=0)
+        s_cal = b.s.numpy()[:, self.spec.soc_index]
+        sym_cyc, sym_cal, self.report = symbolic.extract_law(parent.law, self.spec, s_cyc, s_cal, cap)
+        law_s = copy.deepcopy(parent.law)
+        law_s.cyc = sym_cyc
+        if sym_cal is not None:
+            law_s.cal = sym_cal
+        self.parent_train_data_mse = float(parent.train_data_mse)
+        refit = max(int(steps * float(sc.get("refit_frac", 0.5))), 5)
+        self.model = fit_pinn(b, self.spec, hp, self.ctx["backbone"], self.seed, steps=refit, extra_twin_raw=self.ctx.get("extra_twin_raw"), law=law_s, init_from=parent, **pk)
+        self.n_coefs = int(self.report["n_coefs"])                    # free coefficients of the extracted laws (cyclic + calendar); the two log levels are counted in n_params
+        self.n_params = sum(p.numel() for p in self.model.parameters()) - self.model.z.numel() - self.model.delta.numel()
+        n_obs = int(b.obs_t.numel())
+        self.train_bic = float(n_obs * np.log(max(self.model.train_data_mse, 1e-12)) + (self.n_coefs + 2) * np.log(n_obs))     # training-side BIC of the law (printed beside K2)
         return self
 
     def predict(self, wcells):
@@ -201,7 +256,7 @@ class RefArm(Arm):
         return baselines.persistence(wcells) if self.arm_id == "R1" else baselines.window_linear(wcells)
 
 
-_CLS = {"free": FreeArm, "pinn": PINNArm, "hard": HardArm, "data": DataOnlyArm, "semi": SemiArm, "p3": P3Arm, "ref": RefArm}
+_CLS = {"sym": SymbolicArm, "free": FreeArm, "pinn": PINNArm, "hard": HardArm, "data": DataOnlyArm, "semi": SemiArm, "p3": P3Arm, "ref": RefArm}
 
 
 def make_arm(arm_id, spec, hp, seed, ctx):

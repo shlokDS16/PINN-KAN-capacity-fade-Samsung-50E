@@ -263,3 +263,108 @@ def test_I7_mean_against_median_rule_adds_mean_bca_and_worst_condition_when_the_
     assert out["outcome"]["abstract_additions"] == mm["abstract_additions"]
     clean = v4.run_v4(make_store())["mean_vs_median"]
     assert clean["triggered"] == [] and clean["abstract_additions"] == [] and {"P1", "P2", "K1", "K2", "QH_g1", "QT_g1", "QA10_g1:A10", "QA10_g1:A10P"} <= set(clean["contrasts"])
+
+
+# ------------------------------------------------------------------------------------------------ minors
+CFGM = {"dataset": "synthetic", "arms": ["A2", "A9", "R2"], "n_trials": 1, "inner_k": 2, "steps_scale": 0.04, "seeds": [0, 1], "mode": "confirmatory", "diagnostics": False,
+        "synthetic": {"kind": "G0", "n_cyc_cond": 16, "n_sto_cond": 6, "reps": 2, "seed": 3}}
+
+
+def test_M1_reported_fit_time_is_the_fit_alone(tmp_path):
+    from pinnkan import run
+    d = run.run({**CFGM, "run_id": "m1", "k": "grid", "window": {"k_cycling": 4}}, runs_dir=str(tmp_path))
+    t = json.load(open(os.path.join(d, "timings.json")))["A9"]
+    assert 0 < t["refit_seed0_seconds"] < t["refit_seed0_total_seconds"]            # the total includes predict at three k and the NC-1 re-predicts
+    m = json.load(open(os.path.join(d, "metrics.json")))["outer_test"]["A9"]
+    assert m["fit_seconds_one_fit"] == pytest.approx(np.mean([t["refit_seed0_seconds"], t["refit_seed1_seconds"]]))
+
+
+def test_M3_a_real_data_grid_run_needs_the_counted_window(tmp_path):
+    from pinnkan import run
+    with pytest.raises(run.ConfigError, match="k_cycling"):
+        run.run({"run_id": "m3", "dataset": "samsung", "test": "B", "fold": 0, "mode": "inner", "arms": ["R2"], "m": 8}, runs_dir=str(tmp_path))
+    with pytest.raises(run.ConfigError, match="k_cycling"):
+        run.run({"run_id": "m3b", "dataset": "samsung", "test": "B", "fold": 0, "mode": "inner", "arms": ["R2"], "k": "grid", "window": {"k_cycling": 4}}, runs_dir=str(tmp_path))
+
+
+def test_M4_auto_budget_is_refused_in_a_real_data_confirmatory_run_and_sym_arms_count_for_the_partial_plan(tmp_path):
+    from pinnkan import run, tuning
+    with pytest.raises(run.ConfigError, match="auto_budget"):
+        run.run({"run_id": "m4", "dataset": "isu", "test": "B", "fold": 0, "mode": "confirmatory", "arms": ["R1"], "auto_budget": True}, runs_dir=str(tmp_path))
+    assert tuning.choose_budget({"A15": 95.0, "A2": 5.0})["inner_k"] == 2 and tuning.choose_budget({"A15": 50.0, "A2": 5.0})["n_trials"] == 20
+
+
+def test_M2_p6b_decision_hash_must_be_in_the_hashed_config_and_the_pinned_subsets_file_is_checked(tmp_path, monkeypatch):
+    from pinnkan import run
+    import hashlib
+    yes = tmp_path / "yes.json"
+    yes.write_text(json.dumps({"adopt": True}))
+    base = {"dataset": "synthetic", "arms": ["R2"], "n_trials": 1, "steps_scale": 0.04, "seeds": [0], "mode": "inner", "diagnostics": False, "m": 8,
+            "synthetic": {"kind": "G0", "n_cyc_cond": 20, "n_sto_cond": 6, "reps": 2, "seed": 3}}
+    with pytest.raises(run.ConfigError, match="p6b_decision_sha256"):
+        run.run({**base, "run_id": "a", "inner_k_thin": 4, "p6b_decision": str(yes)}, runs_dir=str(tmp_path))
+    with pytest.raises(run.ConfigError, match="p6b_decision_sha256"):
+        run.run({**base, "run_id": "b", "inner_k_thin": 4, "p6b_decision": str(yes), "p6b_decision_sha256": "0" * 64}, runs_dir=str(tmp_path))
+    run.run({**base, "run_id": "c", "inner_k_thin": 4, "p6b_decision": str(yes), "p6b_decision_sha256": hashlib.sha256(yes.read_bytes()).hexdigest()}, runs_dir=str(tmp_path))
+    # the pinned subsets file of the repository agrees with the selector for the real split ids (identifiers only)
+    from pinnkan import subsets
+    pin = json.load(open(os.path.join(ROOT, "runs", "prereg", "subsets.json")))
+    sp = json.load(open(os.path.join(ROOT, "runs", "prereg", "samsung_splits_v2.json")))["B"]["folds"]
+    for f in ("0", "3"):
+        order = subsets.order_for_ids(sp[f]["train_cycling_conditions"])
+        assert pin["folds"][f]["subsets"]["8"] == order[:8]
+
+
+def test_M6_nc1_full_scrambles_after_each_k_window(tmp_path):
+    from pinnkan import negcontrol, run
+    cfg = {**CFGM, "arms": ["A2", "R2"], "run_id": "m6", "mode": "nc1_full", "k": "grid", "window": {"k_cycling": 3}}
+    d = run.run(cfg, runs_dir=str(tmp_path))
+    r = json.load(open(os.path.join(d, "nc1_full.json")))
+    assert r["passed"] and set(r["per_k"]) == {"0", "2", "full"} and all(p["n_outer_rows"] > 0 for p in r["per_k"].values())
+    assert set(r["scrambled_runs"]) == {"0", "2", "full"}
+    # the k = 0 scramble touches labels the k_full scramble leaves alone
+    from pinnkan import data as D, synth
+    from pinnkan.specs import SPECS
+    SPEC = SPECS["synthetic"]
+    S = synth.make_synthetic("G0", n_cyc_cond=6, n_sto_cond=2, reps=1, seed=1)
+    cell = next(c for c in S.cells if c.kind == "cycling")
+    base = D.WindowRule.for_spec(SPEC, k_cycling=3, k_storage=2)
+    s0 = negcontrol.scramble_cells([cell], D.WindowRule.for_grid(SPEC, 0, base), SPEC)[0]
+    sf = negcontrol.scramble_cells([cell], base, SPEC)[0]
+    assert not np.array_equal(s0.ret[1:4], cell.ret[1:4]) and np.array_equal(sf.ret[1:4], cell.ret[1:4])
+
+
+def test_M7_a9_latent_is_forced_to_the_prior_mean_at_k0(g0_cells=None):
+    import torch
+    from pinnkan import arms as A, data as D, synth
+    from pinnkan.pinn import predict_data_only
+    from pinnkan.specs import SPECS
+    SPEC = SPECS["synthetic"]
+    S = synth.make_synthetic("G0", n_cyc_cond=10, n_sto_cond=4, reps=2, seed=4)
+    tr, te = synth.split_conditions(S.cells, 0.25, 4)
+    base = D.WindowRule.for_spec(SPEC, k_cycling=3, k_storage=2)
+    arm = A.make_arm("A9", SPEC, A.default_hp("A9"), 0, {"rule": base, "steps_scale": 0.05, "backbone": "self_limiting"}).fit(tr)
+    pw0 = [p.win for p in D.prepare_many([c for c in te if c.kind == "cycling"], D.WindowRule.for_grid(SPEC, 0, base))]
+    seen = {}
+    orig = torch.optim.Adam
+
+    class Spy(orig):
+        def __init__(self, params, *a, **k):
+            params = list(params)
+            seen["z"] = params[0]
+            super().__init__(params, *a, **k)
+    torch.optim.Adam = Spy
+    try:
+        out = predict_data_only(arm.model, SPEC, pw0)
+    finally:
+        torch.optim.Adam = orig
+    zero = predict_data_only(arm.model, SPEC, pw0)
+    assert all(np.array_equal(out[k], zero[k]) for k in out)
+    # explicit: forecasts at k = 0 equal the network evaluated at z = 0
+    from pinnkan.law import batch_forecast_query, retention_from_y
+    bq = batch_forecast_query(SPEC, pw0)
+    with torch.no_grad():
+        F = arm.model.model.F(bq.obs_t, bq.s[bq.obs_cell], torch.zeros(bq.C, arm.model.model.zdim)[bq.obs_cell]) if hasattr(arm.model, "model") else arm.model.F(bq.obs_t, bq.s[bq.obs_cell], torch.zeros(bq.C, arm.model.zdim)[bq.obs_cell])
+    ref = retention_from_y(SPEC, F.numpy())
+    got = np.concatenate([out[w.cell_id] for w in pw0])
+    assert np.allclose(got, ref, atol=1e-6)

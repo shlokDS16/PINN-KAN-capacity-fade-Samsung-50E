@@ -22,7 +22,7 @@ def choose_budget(median_fit_secs):
     """median_fit_secs: {arm_id: median seconds of a fit on a training fold}. -> dict(n_trials, inner_k, rule)"""
     neural = {a: s for a, s in median_fit_secs.items() if a in NEURAL}
     hard = median_fit_secs.get("A2")
-    pinn = [s for a, s in neural.items() if ARMS[a].family == "pinn"]
+    pinn = [s for a, s in neural.items() if ARMS[a].family in ("pinn", "sym")]      # A15 / G15 are PINN fits plus a refit: same trigger (review M4)
     if (hard is not None and hard > 30.0) or (pinn and max(pinn) > 90.0):
         return {"n_trials": 10, "inner_k": 2, "rule": "Partial plan (equal for every arm): hard > 30 s or PINN > 90 s"}
     if neural and all(s < 20.0 for s in neural.values()):

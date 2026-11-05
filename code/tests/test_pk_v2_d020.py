@@ -199,11 +199,11 @@ def test_four_inner_folds_need_an_adopt_decision(tmp_path):
         run.run({**CFGI, "run_id": "x", "m": 8, "inner_k_thin": 4, "p6b_decision": str(no)}, runs_dir=str(tmp_path))
     yes = tmp_path / "yes.json"
     yes.write_text(json.dumps({"adopt": True}))
-    d = run.run({**CFGI, "run_id": "four", "m": 8, "inner_k_thin": 4, "p6b_decision": str(yes)}, runs_dir=str(tmp_path))
+    d = run.run({**CFGI, "run_id": "four", "m": 8, "inner_k_thin": 4, "p6b_decision": str(yes), "p6b_decision_sha256": hashlib.sha256(yes.read_bytes()).hexdigest()}, runs_dir=str(tmp_path))
     c = json.load(open(os.path.join(d, "config.json")))
     assert c["inner_k"] == 4 and c["p6b_decision_sha256"] == hashlib.sha256(yes.read_bytes()).hexdigest()
     assert json.load(open(os.path.join(d, "tuning_R2.json")))["inner_k"] == 4
-    d32 = run.run({**CFGI, "run_id": "m32", "m": 32, "inner_k_thin": 4, "p6b_decision": str(yes)}, runs_dir=str(tmp_path))
+    d32 = run.run({**CFGI, "run_id": "m32", "m": 32, "inner_k_thin": 4, "p6b_decision": str(yes), "p6b_decision_sha256": hashlib.sha256(yes.read_bytes()).hexdigest()}, runs_dir=str(tmp_path))
     assert json.load(open(os.path.join(d32, "config.json")))["inner_k"] == 3                     # m = 32 keeps 3
     d2 = run.run({**CFGI, "run_id": "default", "m": 8}, runs_dir=str(tmp_path))
     assert json.load(open(os.path.join(d2, "config.json")))["inner_k"] == 2
@@ -213,7 +213,7 @@ def test_partial_plan_returns_the_thin_cells_to_two_folds(tmp_path, monkeypatch)
     yes = tmp_path / "yes.json"
     yes.write_text(json.dumps({"adopt": True}))
     monkeypatch.setattr(tuning, "choose_budget", lambda med: {"n_trials": 1, "inner_k": 2, "rule": "Partial plan (test)"})
-    d = run.run({**CFGI, "run_id": "partial", "arms": ["A2", "R2"], "m": 8, "inner_k_thin": 4, "p6b_decision": str(yes), "auto_budget": True}, runs_dir=str(tmp_path))
+    d = run.run({**CFGI, "run_id": "partial", "arms": ["A2", "R2"], "m": 8, "inner_k_thin": 4, "p6b_decision": str(yes), "p6b_decision_sha256": hashlib.sha256(yes.read_bytes()).hexdigest(), "auto_budget": True}, runs_dir=str(tmp_path))
     assert json.load(open(os.path.join(d, "tuning_A2.json")))["inner_k"] == 2 and json.load(open(os.path.join(d, "budget_rule.json")))["inner_k"] == 2          # the tuned folds, not the requested config
 
 
@@ -228,7 +228,7 @@ def test_tournament_runs_per_fold_and_m_on_the_thinned_side_with_the_cells_inner
     yes = tmp_path / "yes.json"
     yes.write_text(json.dumps({"adopt": True}))
     cfg = {**CFGI, "arms": ["A2"], "backbone": "tournament", "synthetic": {"kind": "G0", "n_cyc_cond": 28, "n_sto_cond": 6, "reps": 2, "seed": 3}}
-    run.run({**cfg, "run_id": "t8", "m": 8, "inner_k_thin": 4, "p6b_decision": str(yes)}, runs_dir=str(tmp_path))
+    run.run({**cfg, "run_id": "t8", "m": 8, "inner_k_thin": 4, "p6b_decision": str(yes), "p6b_decision_sha256": hashlib.sha256(yes.read_bytes()).hexdigest()}, runs_dir=str(tmp_path))
     run.run({**cfg, "run_id": "t16", "m": 16}, runs_dir=str(tmp_path))
     run.run({**cfg, "run_id": "t32", "m": 32}, runs_dir=str(tmp_path))
     assert seen == [(8, 4), (16, 2), (21, 3)]                                    # synthetic training side has 21 cycling conditions: m = 32 is the unthinned side

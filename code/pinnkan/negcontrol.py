@@ -86,13 +86,16 @@ def summarise(records):
                 per_arm_seed=records, scramble="post-window retention replaced by garbage (NEGCONTROL_RULING section 3), same fitted arms and seeds, predict stage")
 
 
-def compare_runs(dir_a, dir_b):
+def compare_runs(dir_a, dir_b, outer_phase=None):
     """full-pipeline NC-1 on two run directories (clean vs scrambled test labels): prediction columns, tuning_done.json, margins_inputs.json must be identical"""
     import pandas as pd
     pa, pb = pd.read_csv(os.path.join(dir_a, "predictions.csv")), pd.read_csv(os.path.join(dir_b, "predictions.csv"))
     keys = ["phase", "arm", "seed", "cell_id", "cond", "t"]
     same_keys = len(pa) == len(pb) and bool((pa[keys].astype(str).values == pb[keys].astype(str).values).all())
-    oa, ob = pa.phase.astype(str).str.startswith("outer_test"), pb.phase.astype(str).str.startswith("outer_test")      # grid runs: outer_test_k0, outer_test_k2, outer_test_kfull
+    if outer_phase is None:
+        oa, ob = pa.phase.astype(str).str.startswith("outer_test"), pb.phase.astype(str).str.startswith("outer_test")
+    else:                                                  # one grid cell: scrambled after the window of that k, so only that k's outer rows must agree
+        oa, ob = pa.phase.astype(str) == f"outer_test_k{outer_phase}", pb.phase.astype(str) == f"outer_test_k{outer_phase}"      # grid runs: outer_test_k0, outer_test_k2, outer_test_kfull
     mx = float(np.max(np.abs(pa[oa].pred_retention.values - pb[ob].pred_retention.values))) if same_keys else float("nan")
     # the inner OOF predictions use only training labels: also identical
     mi = float(np.max(np.abs(pa[pa.phase == "inner_oof"].pred_retention.values - pb[pb.phase == "inner_oof"].pred_retention.values))) if same_keys else float("nan")

@@ -284,7 +284,8 @@ def predict_data_only(m: DataOnlyF, spec, wcells, steps=150, lr=0.05):
         opt.step()
     for p, f in zip(m.parameters(), flags):
         p.requires_grad_(f)
-    z = z.detach()
+    z = z.detach().clone()
+    z[torch.bincount(bw.obs_cell, minlength=bw.C) <= 1] = zmu[torch.bincount(bw.obs_cell, minlength=bw.C) <= 1]      # k = 0 (no window check-up): the prior mean, forced rather than left to the architecture (review M7)
     bq = batch_forecast_query(spec, wcells)
     with torch.no_grad():
         F = m.F(bq.obs_t, bq.s[bq.obs_cell], z[bq.obs_cell])

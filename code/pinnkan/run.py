@@ -39,7 +39,7 @@ DEFAULTS = {"mode": "inner", "test": "B", "fold": 0, "arms": ["A1", "A2", "A9", 
             # cells 04-06 as two-point records (i); min_fc_points: scored cells need this many forecast points (i, "cells with >= 3 forecast points" -> 3);
             # law_overrides: {Y0, gamma, tau} for the A2-only tournament row (m), {delta_scope: "total"} for row (l); throughput_fallback: "analytic" lets a
             # cycling cell without ZYK entries use the designed throughput under throughput="zyk" (otherwise ZykDataMissing)
-            "include_at": False, "include_storage_0406": False, "min_fc_points": 1, "m": None, "subset": "maxmin", "subset_draw": 0, "k": None, "design": "R2", "symbolic": {}, "endpoint": "ensemble", "inner_k_thin": 2, "p6b_decision": None, "law_overrides": {}, "throughput_fallback": "none", "forecast_failure": False, "lab_indicator": False}
+            "include_at": False, "include_storage_0406": False, "min_fc_points": 1, "m": None, "subset": "maxmin", "subset_draw": 0, "k": None, "design": "R2", "nc1_scramble_k": None, "symbolic": {}, "endpoint": "ensemble", "inner_k_thin": 2, "p6b_decision": None, "law_overrides": {}, "throughput_fallback": "none", "forecast_failure": False, "lab_indicator": False}
 TARGET_BY_TEST = {"B": "cycling", "C": "cycling", "A": "cycling", "S2": "storage", "S3": "storage"}   # the tuned task is the scored task (review M3)
 
 
@@ -224,6 +224,8 @@ def _run(cfg_in, root=None, runs_dir=None):
             dec = cfg["p6b_decision"]
             if not dec or not os.path.isfile(dec) or json.load(open(dec, encoding="utf8")).get("adopt") is not True:
                 raise ConfigError("inner_k_thin = 4 needs p6b_decision pointing at a decision.json with adopt = true (D020 C2: the default is 2)")
+            if cfg_in.get("p6b_decision_sha256") != sha256_file(dec):
+                raise ConfigError("inner_k_thin = 4: the config must carry p6b_decision_sha256 equal to the sha256 of the decision file, so that the decision is part of the hashed config (review M2)")
             cfg["p6b_decision_sha256"] = sha256_file(dec)
         if "inner_k" not in cfg_in:
             cfg["inner_k"] = tuning.inner_k_for_m(int(cfg["m"]), thin_folds=thin)       # 2 for m in {8, 16}, 3 for m = 32 (PREREG_v4 4.1)
@@ -233,6 +235,8 @@ def _run(cfg_in, root=None, runs_dir=None):
             raise ConfigError("steps_scale != 1 is not allowed in a confirmatory run on real data")
         if cfg["overwrite"]:
             raise ConfigError("overwrite is not allowed in a confirmatory run on real data (stop rule 4)")
+        if cfg["auto_budget"]:
+            raise ConfigError("auto_budget is wall-clock dependent and unhashed: a confirmatory run on real data takes N and inner_k from the config, fixed from the FB-8 timing run's budget_rule.json (review M4)")
         guard.require_frozen("confirmatory run", root)
         chash = guard.check_config_frozen({**DEFAULTS, **cfg_in}, root)     # hash of the config as written (DEFAULTS + file keys)
     if os.path.exists(run_dir):
@@ -247,10 +251,20 @@ def _run(cfg_in, root=None, runs_dir=None):
             raise ConfigError("mode nc1_full is synthetic only")
         base = {k: v for k, v in cfg.items() if k not in ("run_id", "mode", "overwrite")}
         dA = run({**base, "run_id": run_id + "_clean", "mode": "confirmatory", "nc1_scramble_test": False}, root=root, runs_dir=runs_dir)
-        dB = run({**base, "run_id": run_id + "_scrambled", "mode": "confirmatory", "nc1_scramble_test": True}, root=root, runs_dir=runs_dir)
-        res = negcontrol.compare_runs(dA, dB)
+        labels = json.load(open(os.path.join(dA, "metrics.json"), encoding="utf8")).get("k_labels")
+        if not labels:                                                     # single legacy window: scramble after it
+            dB = run({**base, "run_id": run_id + "_scrambled", "mode": "confirmatory", "nc1_scramble_test": True}, root=root, runs_dir=runs_dir)
+            res = negcontrol.compare_runs(dA, dB)
+            dBs = {None: dB}
+        else:                                                              # grid: one scrambled pipeline per k, labels scrambled after THAT window (k = 0 sees no post-reference label) (review M6)
+            dBs, parts = {}, {}
+            for kl in labels:
+                dBs[kl] = run({**base, "run_id": run_id + f"_scrambled_k{kl}", "mode": "confirmatory", "nc1_scramble_test": True, "nc1_scramble_k": kl}, root=root, runs_dir=runs_dir)
+                parts[kl] = negcontrol.compare_runs(dA, dBs[kl], outer_phase=kl)
+            res = {"passed": bool(all(p["passed"] for p in parts.values())), "per_k": parts, "n_outer_rows": int(sum(p["n_outer_rows"] for p in parts.values())),
+                   "max_abs_diff_outer": float(max(p["max_abs_diff_outer"] for p in parts.values()))}
         _json(os.path.join(run_dir, "config.json"), cfg)
-        _json(os.path.join(run_dir, "nc1_full.json"), {**res, "clean_run": dA, "scrambled_run": dB})
+        _json(os.path.join(run_dir, "nc1_full.json"), {**res, "clean_run": dA, "scrambled_runs": dBs})
         if not res["passed"]:
             raise negcontrol.InvarianceError(f"NC-1 full pipeline: {res}")
         return run_dir
@@ -292,18 +306,28 @@ def _run(cfg_in, root=None, runs_dir=None):
     _json(os.path.join(run_dir, "split.json"), D["split"])
     _json(os.path.join(run_dir, "manifest.json"), D["manifest"])
     if D.get("subset"):
-        _json(os.path.join(run_dir, "subsets.json"), D["subset"])      # nested training subset of this (fold, m): ids, order, hash (identifiers only)
+        _json(os.path.join(run_dir, "subsets.json"), D["subset"])
+        sf = os.path.join(root, "runs", "prereg", "subsets.json")
+        if ds == "samsung" and cfg["m"] is not None and cfg["subset"] == "maxmin" and os.path.isfile(sf):      # review M2: the pinned subsets file and this run's subset must agree
+            pin = json.load(open(sf, encoding="utf8"))["folds"][str(cfg["fold"])]["subsets"][str(int(cfg["m"]))]
+            if list(pin) != list(D["subset"]["kept"]) and D["subset"]["thinned"]:
+                raise ConfigError(f"the max-min subset of this run differs from runs/prereg/subsets.json (fold {cfg['fold']}, m {cfg['m']})")
+            D["split"]["subsets_file_sha256"] = sha256_file(sf)
+            _json(os.path.join(run_dir, "split.json"), D["split"])      # nested training subset of this (fold, m): ids, order, hash (identifiers only)
     rec.log(f"run {run_id}: dataset {ds} test {cfg['test']} fold {cfg['fold']} mode {mode} (requested {cfg['mode']}) blinded={blinded}")
     rec.log(f"train cells {len(train)}: {sum(c.kind == 'cycling' for c in train)} cycling, {sum(c.kind == 'storage' for c in train)} storage; conditions {len({c.cond for c in train})}")
     if D["split"].get("missing_train_conditions"):
         rec.log(f"NOTE: {len(D['split']['missing_train_conditions'])} training conditions of the split have no cells on disk (partial download)")
     wk = cfg["window"]
+    if ds != "synthetic" and (cfg["m"] is not None or cfg["k"] is not None) and SPECS[ds].window[0] == "count" and (wk.get("k_cycling") is None or wk.get("k_storage") is None):
+        raise ConfigError("a Design R2 grid run on real data needs window.k_cycling (= k_full) and window.k_storage from the counted listings [FB-6]; the placeholder defaults 4 and 2 are not used (review M3)")
     rule = WindowRule.for_spec(spec, k_cycling=wk.get("k_cycling"), k_storage=wk.get("k_storage"), W=wk.get("W"), shift=wk.get("shift", 0))
     rule_test = dataclasses.replace(rule, min_fc_points=int(cfg["min_fc_points"]))      # scored cells only (sensitivity row "cells with >= 3 forecast points"); training windows keep `rule`
     if cfg["nc1_scramble_test"]:
         if ds != "synthetic" or D["test"] is None:
             raise ConfigError("nc1_scramble_test is for synthetic confirmatory runs only")
-        D["test"] = negcontrol.scramble_cells(D["test"], rule_test, spec)
+        rule_scr = rule_test if cfg["nc1_scramble_k"] is None else WindowRule.for_grid(spec, "full" if cfg["nc1_scramble_k"] == "full" else int(cfg["nc1_scramble_k"]), rule_test)
+        D["test"] = negcontrol.scramble_cells(D["test"], rule_scr, spec)
     extra = None
     if (cfg["twins"] == "c35") or (cfg["twins"] == "auto" and cfg["test"] == "C" and ds == "samsung"):
         extra = twins_from_conditions(D["split"].get("test_conditions", []))
@@ -416,11 +440,13 @@ def _run(cfg_in, root=None, runs_dir=None):
         ks_a = [kl for kl in KC if not (kl == "0" and a in ("R1", "R2"))]            # R1 and R2 need a window check-up (k >= 1): k = 0 is its own reference
         per_seed = {kl: ([], []) for kl in ks_a}
         for sd_ in cfg["seeds"]:
-            t0 = time.time()
+            t0, fit_s = time.time(), 0.0
             arm = None
             for kl in ks_a:
                 if arm is None or ARMS[a].family == "p3":                           # A11 / A12 retrain per k (window features differ); every other arm is fitted once
+                    tf0 = time.time()
                     arm = make_arm(a, spec, tuned[a]["best_hp"], sd_, dict(ctx, rule=KC[kl]["rule"])).fit(train)
+                    fit_s += time.time() - tf0                                      # the fit alone: predict and the NC-1 re-predict are not part of the reported wall clock (review M1)
                 preds = arm.predict(KC[kl]["wc"])
                 rows = metrics.score_prepared(preds, KC[kl]["prep"])
                 per_seed[kl][0].append(rows)
@@ -430,7 +456,8 @@ def _run(cfg_in, root=None, runs_dir=None):
                 if kl == primary and a in ("A1", "A2", "A4", "A10"):
                     fitted.setdefault(a, []).append(arm)
                 rec.add_preds("outer_test" if kl is None else f"outer_test_k{kl}", a, sd_, rows)
-            timings[a][f"refit_seed{sd_}_seconds"] = time.time() - t0
+            timings[a][f"refit_seed{sd_}_seconds"] = fit_s
+            timings[a][f"refit_seed{sd_}_total_seconds"] = time.time() - t0     # fit + predict + invariance re-predict, for the record
         for kl in ks_a:
             per_seed_rows, per_seed_preds = per_seed[kl]
             cs, sd = metrics.seed_condition_scores(per_seed_rows)

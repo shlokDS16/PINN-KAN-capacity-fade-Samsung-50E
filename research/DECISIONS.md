@@ -547,3 +547,15 @@ Row format:
 - **Evidence:** `debates/D024_data_rules/01_judge.md`; `runs/samsung_pipeline_full/RESULT.md`, `zyk_files.csv`, `zyk_per_cell.csv`; `refs/samsung50e_paper/paper.txt` lines 94-125; `runs/prereg/PREREG_v4.md` 3.2, 3.3, 5, 9.1, 9.8, 9.9; `code/pinnkan/zyk.py`, `code/pinnkan/data.py` 223-312, `code/prereg/extraction_calibration.py` majority_labs. No capacity or retention value was read.
 - **Proposer / opponent / judge:** data steward (RESULT.md 10) / none (judge ruled on the steward's concerns directly) / gate-auditor judge.
 - **Re-open if:** the FB-5 validation fails for a reason traceable to the gap rule; the identity check finds a cycling cell whose logged current contradicts its zip-name condition; aggregate flag counts show ET or exCU rows drive many outlier flags or the first CU after ET is flagged as a rise for more than 10 % of cells; Shlok prefers the wider TP_z17 cell scope or the first-CU anchor.
+
+### D025 Window cap for cells with too few check-ups (2026-11-05, status: accepted; gate auditor checks at the freeze)
+- **Decision:** for any cell whose number of intermediate check-ups n is not greater than the window k (k = 2 or k_full = 4),
+  the window is capped at n - 1, so at least one post-window check-up is forecast. The cap is applied identically to every arm
+  and every grid cell; the cell is kept and listed (currently TP_z20_02, TP_z23_01 at k_full = 4; counts from
+  runs/samsung_pipeline_full/RESULT.md section 5). This mirrors the existing min(k, k_sto) storage rule of PREREG_v4.
+- **Alternatives and why they lost:** excluding the cells (changes n of their conditions on the k axis only and reads as
+  convenience); excluding them from k_full only (makes the k_full and k = 2 sets differ); padding the window (impossible).
+- **Evidence:** PREREG_v4 rev. 9 section 5 flag; counts only, no capacity value read.
+- **Proposer / opponent / judge:** lead (rule from the existing min() convention) / none convened (mechanical) / gate auditor
+  at the freeze.
+- **Re-open if:** the gate auditor finds the rule changes any condition-level n or interacts with the NC-1 window scramble.

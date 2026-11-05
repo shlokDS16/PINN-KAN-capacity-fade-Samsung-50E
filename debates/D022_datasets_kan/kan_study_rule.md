@@ -1,0 +1,24 @@
+# D022 (KAN part): decision rule of the synthetic check (written and committed BEFORE the check is run)
+
+Author: method-architect (proposer), 2026-11-05. Purpose: decide between candidate (a) shape-constrained KAN edges (M), candidate (c) library-aware training (L), their combination (ML) and the unchanged KAN (B), on synthetic data only (`synth.make_synthetic`, no Samsung or ISU label). CPU, <= 1 h, <= 2 processes. Production code is not edited: the variants live in `code/prereg/d022_kan_study.py`.
+
+## Variants (parent maps of A15-type KAN h = 1 and G15-type additive GAM; both get the same variant)
+- **B**: the project's `law.KANMap` unchanged, hyperparameters `arms.default_hp` (h = 1, grid 5 for the KAN; grid 10 for the GAM; l2 1e-3; lam_res 1.0; whole_axis), sparsity set to 0 for every variant (so that only the variant differs).
+- **M**: monotone spline edges by construction. Inputs with a physics sign: T (+), DoD (+), C_ch (+); SOC_mid and C_dch free. First-layer edge of a signed input: B-spline coefficients = sign x cumulative sum of softplus increments, silu base weight = sign x softplus; every outer edge increasing. Then the map is monotone in each signed input for any h (nonnegative increments, increasing outer edges). Unsigned edges as in B.
+- **L**: B plus the extraction-aware penalty lambda_lib x sum over edges of min over {linear, log} of the mean squared residual of the edge (on 101 grid points over the training hull, as the extraction sees it) from its least-squares projection onto that family. lambda_lib = 100 (fixed a priori: at the 1 % resolution of the library, tol = 0.01 x range ~ 0.01-0.02 of log-rate, the penalty 100 x 0.015^2 = 0.02 is of the order of the data-loss change from moving the edge by the same amount; not tuned). Implemented through `spline_l2()` (Law.reg multiplies by l2).
+- **ML**: M and L together.
+
+## Kinds (truth known)
+G0 (project generator: linear in T, DoD, C_ch, C_dch; mild sin in SOC), G2 (project generator: hinge in C_ch with a temperature-shifted threshold, DoD x SOC product), **G3** (written in the study script, not in `synth.py`): G0 with the C_ch effect replaced by a U shape, 0.8 s_cch^2 instead of 0.4 s_cch. G3 violates the sign prior of M on C_ch and needs a curved (3-coefficient) edge, so it tests harm of M and reach of L.
+
+## Cells and metrics
+Design as D021: 40 cycling conditions, 8 held out; m = 32 (all 32) and m = 8 (max-min selector); seeds 0, 1, ... in seed-major order, complete seed groups only, <= 45 min wall. Per (variant, arm in {KAN h = 1, GAM}) one parent fit (2000 steps, `fit_pinn`) and, with no refit, extraction of the parent at cap 2 and at cap 3 (`symbolic.extract_law`). Metrics: E_par (centred RMS error of the parent's cyclic log-rate against the truth on 300 probe points, as a fraction of the truth range), E_ext2 and E_ext3 (the same for the extracted law), held-out forecast RMSE of the parent (pp), and on G0 the false-structure rate at cap 3 (a 3-coefficient form on a linear-truth input T, DoD, C_ch, C_dch).
+
+## Decision rule (applied by `d022_kan_decide.py`; nobody chooses afterwards)
+Paired differences over seeds (mean over the two arms and over the kinds named); one-sided 95 % percentile-bootstrap bounds, 10,000 draws, rng `SeedSequence([20261105, crc32(label)])`.
+- **Adopt M** iff (M1) on G0 and G2 at m = 8 the upper bound of mean(E_par(M) - E_par(B)) is < 0 (M helps at g1 on monotone truth), AND (M2) on G3 the upper bound of mean(E_par(M) - E_par(B)) is <= +0.02 at both m (a violated sign prior does not harm by more than twice the library resolution).
+- **Adopt L** iff (L1) on G0 at cap 3 the false-structure rate of L is <= 25 % (B is about 90 % in D021), AND (L2) on G0 and G3 at m = 32 the upper bound of mean(E_ext3(L) - E_ext2(B)) is <= +0.01 (a soft cap loses nothing against the hard cap of D021), AND (L3) on G3 mean(E_ext3(L) - E_ext2(B)) <= -0.005 at m = 32 (reach: it gains where a curved edge is true), AND (L4) the upper bound of mean(E_par(L) - E_par(B)) <= +0.01 on G0, G2, G3 at m = 32.
+- **Adopt ML** iff M and L are both adopted and, against the better of M and L alone, the upper bounds of mean(E_par(ML) - E_par(best)) and of mean(E_ext3(ML) - E_ext3(best)) are <= +0.01 at m = 32 and m = 8 (the combination is not worse than the better single).
+- Output: the set of adopted variants. Recommendation rule: ML if adopted, else the adopted single, else none (keep D021 as it is and move the novelty elsewhere).
+- Reported with the verdict, no consequence: forecast RMSE differences; M's monotonicity violations (fraction of probe pairs); E_ext2 of every variant; number of non-finite fits.
+Limitations fixed now: no refit (the extraction fidelity is read before the end-to-end refit); one hyperparameter setting; synthetic truths; a single lambda_lib.

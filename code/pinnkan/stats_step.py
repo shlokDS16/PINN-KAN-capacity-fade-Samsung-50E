@@ -527,7 +527,7 @@ def main(argv=None):
 
 
 # --------------------------------------------------------------------------------------------------- Design R2 (PREREG_v4): see stats_v4.py
-def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, row_runs=None, h7_run=None, item_f_sha256=None, strict=True, n_expected=40, folds=range(5), audit_dir=None, audit_thresholds_pin=None, calibration_sha256=None, frozen_commit=None):
+def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, row_runs=None, h7_run=None, item_f_sha256=None, strict=True, n_expected=40, folds=range(5), audit_dir=None, audit_thresholds_pin=None, calibration_sha256=None, frozen_commit=None, licences=False):
     """Design R2 statistics from grid runs, through the downgrade rows (stats_rows.run_v4_full). The item (f) dependence file must exist, match its hash (and `item_f_sha256` if given) and
     pre-date every outer score file (D018 2.3 (ii)); otherwise ItemFError. strict (default): every run must say design R2 and the grid must be complete (folds, cells, n, arms, selectors,
     both A10 forms; Store.check_complete). `row_runs`: {'lab_indicator': [dirs], 'retain_all': [dirs], 'random_subset': [[dirs of draw 0], [draw 1], [draw 2]]} (the re-runs of the
@@ -554,11 +554,16 @@ def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, r
     if "outcome" in out:
         out["outcome"]["provisional"] = prov["provisional"]
     out["item_f"] = item_f
-    if audit_dir is None:                                                  # conservative default: the law is printed, no edge family is named (D022 2.2a item 5)
+    if audit_dir is None:                                                  # D022b: the law is printed in closed form, no edge family is named; the descriptive stability table is added when the runs hold extracted laws
         out["edge_wording"] = {"printed": False, "reason": "no calibration table supplied: the extracted laws are printed in closed form without named edge families"}
+        if any(os.path.exists(os.path.join(d, "extracted_laws.json")) for d in run_dirs):
+            out["edge_wording"]["stability"] = stats_v4.edge_level_wording(run_dirs)
+    elif not licences:
+        from .extraction_audit import AuditGuardError
+        raise AuditGuardError("D022b: the extraction audit is struck as a contribution; edge-level licences are refused (descriptive stability table only: pass no audit_dir)")
     else:
         fc = frozen_commit if frozen_commit is not None else (guard.read_freeze() or {}).get("commit")
-        out["edge_wording"] = stats_v4.edge_level_wording(run_dirs, audit_dir, audit_thresholds_pin, calibration_sha256, fc)         # raises AuditGuardError without the pins, a valid record from the FROZEN commit
+        out["edge_wording"] = stats_v4.edge_level_wording(run_dirs, audit_dir, audit_thresholds_pin, calibration_sha256, fc, licences=True)         # raises AuditGuardError without the pins, a valid record from the FROZEN commit
     out["gate_G"] = gate_
     os.makedirs(analysis_dir, exist_ok=True)
     write_json(os.path.join(analysis_dir, "controls.json"), controls)

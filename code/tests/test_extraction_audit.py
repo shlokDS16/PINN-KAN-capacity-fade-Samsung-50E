@@ -28,6 +28,18 @@ INPUTS = THR["inputs"]
 SPEC = SPECS["synthetic"]
 
 
+def _LL(laws, thr=None, calibrated=X.CALIBRATION_RUN, n_expected=None):
+    return X.label_law(laws, thr, calibrated, n_expected)
+
+
+def _LI(name, laws, thr=None, calibrated=X.CALIBRATION_RUN, n_expected=None):
+    return X.label_input(name, laws, thr, calibrated, n_expected)
+
+
+def _AA(laws, arm, calibrated=X.CALIBRATION_RUN, thr=None, n_expected=None):
+    return X.audit_arm(laws, arm, calibrated, thr, n_expected)
+
+
 def _inp(form="linear", sign=1, retained=True, additive=True, family=None, approx=False):
     return {"retained": retained, "range": 0.3 if retained else 0.0, "family": family or (form if form in ("linear", "log") else "composed"), "edge_families": [form], "bic_margin": 4.0,
             "r_lin": 0.0 if form == "linear" else 0.1, "r_log": 0.0 if form == "log" else 0.1, "form": form if retained else "none", "sign": sign if retained else 0, "sign_raw": sign if retained else 0,
@@ -71,23 +83,23 @@ def test_unknown_arm_or_missing_h_is_an_error_and_never_a_silent_default():
 
 
 def test_exactly_25_distinct_laws_per_arm_are_required():
-    X.label_law(_laws())                                                        # 25: fine
+    _LL(_laws())                                                        # 25: fine
     for n in (0, 24, 26):
         with pytest.raises(X.AuditError, match="expected exactly 25"):
-            X.label_law(_laws(n))
+            _LL(_laws(n))
     dup = _laws()
     dup[7]["fold"], dup[7]["seed"] = dup[6]["fold"], dup[6]["seed"]
     with pytest.raises(X.AuditError, match="duplicate"):
-        X.label_law(dup)
+        _LL(dup)
     with pytest.raises(X.AuditError, match="unknown or mixed"):
-        X.label_law(_laws(arm="A1"))
+        _LL(_laws(arm="A1"))
     mixed = _laws()
     mixed[3]["arm"] = "G15"
     with pytest.raises(X.AuditError, match="unknown or mixed"):
-        X.label_law(mixed)
-    X.label_law(_laws(make=None, arm="A15h2")[:12] + [dict(l, arm="A15h1") for l in _laws()[12:]])        # a KAN arm may mix h = 1 and h = 2 across folds
+        _LL(mixed)
+    _LL(_laws(make=None, arm="A15h2")[:12] + [dict(l, arm="A15h1") for l in _laws()[12:]])        # a KAN arm may mix h = 1 and h = 2 across folds
     with pytest.raises(X.AuditError):
-        X.audit_arm(_laws()[:24], "A15", True)
+        _AA(_laws()[:24], "A15")
     with pytest.raises(X.AuditError):
         X.baseline_labels(_laws()[:24])
 
@@ -95,81 +107,81 @@ def test_exactly_25_distinct_laws_per_arm_are_required():
 # ------------------------------------------------------------------------------------------------ the label rule
 def test_not_retained_needs_20_of_25_and_is_not_a_claim_about_the_truth():
     mk = lambda k: (lambda i: {"dod": _inp(retained=(i >= k))})
-    assert X.label_law(_laws(make=mk(20)))["dod"]["label"] == "not_retained"          # 20 of 25 not retained
-    assert X.label_law(_laws(make=mk(19)))["dod"]["label"] != "not_retained"          # 19
-    assert X.label_text(X.label_law(_laws(make=mk(20)))["dod"]) == "not retained (below the extraction tolerance)"
+    assert _LL(_laws(make=mk(20)))["dod"]["label"] == "not_retained"          # 20 of 25 not retained
+    assert _LL(_laws(make=mk(19)))["dod"]["label"] != "not_retained"          # 19
+    assert X.label_text(_LL(_laws(make=mk(20)))["dod"]) == "not retained (below the extraction tolerance)"
 
 
 def test_composed_when_additivity_fails_in_more_than_5_laws():
     mk = lambda k: (lambda i: {"dod": _inp(additive=(i >= k))})
-    assert X.label_law(_laws(make=mk(6)))["dod"]["label"] == "composed"               # 6 of 25 fail
-    assert X.label_law(_laws(make=mk(5)))["dod"]["label"] == "form"                   # 5 of 25 fail: still additive in 20
-    assert X.label_text(X.label_law(_laws(make=mk(6)))["dod"]) == "composed: no single form"
+    assert _LL(_laws(make=mk(6)))["dod"]["label"] == "composed"               # 6 of 25 fail
+    assert _LL(_laws(make=mk(5)))["dod"]["label"] == "form"                   # 5 of 25 fail: still additive in 20
+    assert X.label_text(_LL(_laws(make=mk(6)))["dod"]) == "composed: no single form"
 
 
 def test_a_tie_gives_no_family_and_a_strict_win_needs_20_of_25():
-    mk = lambda k: (lambda i: {"T_C": _inp("linear" if i < k else "tie", sign=1)})
-    lab = X.label_law(_laws(make=mk(20)))["T_C"]
+    mk = lambda k: (lambda i: {"soc_mid": _inp("linear" if i < k else "tie", sign=1)})
+    lab = _LL(_laws(make=mk(20)))["soc_mid"]
     assert lab["label"] == "form" and lab["form"] == "linear" and lab["sign"] == 1 and lab["tie_share"] == pytest.approx(5 / 25) and X.label_text(lab) == "form: linear"
-    lab = X.label_law(_laws(make=mk(19)))["T_C"]                                      # 19 strict wins + 6 ties: no family; the sign (same in 25 laws) is still licensed
+    lab = _LL(_laws(make=mk(19)))["soc_mid"]                                      # 19 strict wins + 6 ties: no family; the sign (same in 25 laws) is still licensed
     assert lab["label"] == "sign" and lab["form"] is None and lab["sign"] == 1 and X.label_text(lab) == "sign: +"
-    all_tie = X.label_law(_laws(make=lambda i: {"T_C": _inp("tie", sign=-1)}))["T_C"]    # T on the Samsung hull: linear and log tie in every law
+    all_tie = _LL(_laws(make=lambda i: {"soc_mid": _inp("tie", sign=-1)}))["soc_mid"]    # T on the Samsung hull: linear and log tie in every law
     assert all_tie["label"] == "sign" and all_tie["form"] is None and all_tie["sign"] == -1 and all_tie["tie_share"] == 1.0
-    mixed = X.label_law(_laws(make=lambda i: {"c_ch": _inp("linear" if i < 12 else "log")}))["c_ch"]       # 12 linear, 13 log: neither family reaches 20
+    mixed = _LL(_laws(make=lambda i: {"c_ch": _inp("linear" if i < 12 else "log")}))["c_ch"]       # 12 linear, 13 log: neither family reaches 20
     assert mixed["form"] is None and mixed["wins"] == {"linear": 12, "log": 13}
 
 
 def test_sign_rule_requires_20_votes_and_no_plus_minus_tie():
     mk = lambda k: (lambda i: {"c_dch": _inp("none", sign=1 if i < k else -1)})
-    assert X.label_law(_laws(make=mk(20)))["c_dch"]["label"] == "sign" and X.label_law(_laws(make=mk(20)))["c_dch"]["sign"] == 1
-    assert X.label_law(_laws(make=mk(19)))["c_dch"]["label"] == "not_identified"
-    assert X.label_law(_laws(make=mk(5)))["c_dch"]["sign"] == -1
+    assert _LL(_laws(make=mk(20)))["c_dch"]["label"] == "sign" and _LL(_laws(make=mk(20)))["c_dch"]["sign"] == 1
+    assert _LL(_laws(make=mk(19)))["c_dch"]["label"] == "not_identified"
+    assert _LL(_laws(make=mk(5)))["c_dch"]["sign"] == -1
     # a + / - tie cannot reach the 80 % share; with a looser share the tie rule itself must give no sign
     thr = copy.deepcopy(THR)
     thr["min_agree_share"] = 0.4
-    lab = X.label_input("c_dch", _laws(10, make=lambda i: {"c_dch": _inp("none", sign=1 if i < 5 else -1)}), thr, n_expected=10)
+    lab = _LI("c_dch", _laws(10, make=lambda i: {"c_dch": _inp("none", sign=1 if i < 5 else -1)}), thr, n_expected=10)
     assert lab["label"] == "not_identified" and lab["sign"] == 0
     # a sign needs additivity: 6 non-additive laws make the input composed, not signed
-    assert X.label_law(_laws(make=lambda i: {"c_dch": _inp("none", sign=1, additive=i >= 6)}))["c_dch"]["label"] == "composed"
+    assert _LL(_laws(make=lambda i: {"c_dch": _inp("none", sign=1, additive=i >= 6)}))["c_dch"]["label"] == "composed"
     # magnitude: a sign of 0 (change below 1 % of the range) is not a vote
-    assert X.label_law(_laws(make=lambda i: {"soc_mid": _inp("none", sign=0)}))["soc_mid"]["label"] == "not_identified"
+    assert _LL(_laws(make=lambda i: {"soc_mid": _inp("none", sign=0)}))["soc_mid"]["label"] == "not_identified"
 
 
 def test_no_label_is_printed_for_an_arm_that_failed_c1():
-    lab = X.label_law(_laws(), calibrated=False)
-    assert all(v["label"] == "not_identified" and v["form"] is None and v["sign"] == 0 for v in lab.values()) and "C1" in lab["dod"]["reasons"][0]
-    out = X.audit_arm(_laws(), "A15", False)
+    lab = _LL(_laws(), calibrated=False)
+    assert all(v["label"] == "not_identified" and v["form"] is None and v["sign"] == 0 for v in lab.values()) and "no verified calibration" in lab["dod"]["reasons"][0]
+    out = _AA(_laws(), "A15", False)
     assert out["labels_printed"] is False and "labels" not in out and len(out["stability_table"]) == 5 and "fixed by the frozen commit" in out["scope_sentence"]
     assert {"input", "extracted_edge_family_counts", "sign_votes", "tie_share", "not_retained_share"} <= set(out["stability_table"][0])
 
 
 def test_fixed_results_sentence_counts_and_the_table_columns():
-    mk = lambda i: {"T_C": _inp("tie", sign=-1), "soc_mid": _inp("none", sign=0), "dod": _inp("linear"), "c_ch": _inp("log"), "c_dch": _inp(retained=False)}
-    out = X.audit_arm(_laws(make=mk), "A15", True)
+    mk = lambda i: {"soc_mid": _inp("tie", sign=-1), "T_C": _inp("none", sign=0), "dod": _inp("linear"), "c_ch": _inp("log"), "c_dch": _inp(retained=False)}
+    out = _AA(_laws(make=mk), "A15")
     s = out["sentences"]
     assert s["counts"] == {"n": 5, "form": 2, "sign": 1, "not_identified": 1, "not_retained": 1}              # dod, c_ch form; T sign only; soc_mid not identified; c_dch not retained
     assert s["results"] == "Of the 5 inputs of the extracted KAN law, the audit licensed the form of 2 and the sign of 1; 1 were not identified and 1 were not retained by the extraction."
-    assert X.audit_arm(_laws(arm="G15", make=mk), "G15", True)["sentences"]["results"].startswith("Of the 5 inputs of the extracted additive law,")
+    assert _AA(_laws(arm="G15", make=mk), "G15")["sentences"]["results"].startswith("Of the 5 inputs of the extracted additive law,")
     t = {r["input"]: r for r in out["table"]}
-    assert t["T_C"]["label"] == "sign: -" and t["dod"]["label"] == "form: linear" and t["c_dch"]["label"].startswith("not retained")
+    assert t["soc_mid"]["label"] == "sign: -" and t["dod"]["label"] == "form: linear" and t["c_dch"]["label"].startswith("not retained")
     assert {"arm", "input", "label", "form_wins", "tie_share", "sign_votes", "n_not_retained", "notes", "appendix"} <= set(t["dod"]) and "identifiable_parameters" not in t["dod"]
     assert t["dod"]["appendix"]["bic_margin_median"] == 4.0 and "KAN's grid" in t["dod"]["appendix"]["bic_caveat"]
-    assert "the audit does not license a form for this effect" in t["soc_mid"]["notes"] and t["dod"]["notes"] == []
-    assert THR["wording"]["discussion_sentence"].endswith("which of its effects the training design identifies.")
+    assert "the audit does not license a form for this effect" in t["T_C"]["notes"] and t["dod"]["notes"] == []
+    assert THR["wording"]["discussion_sentence"].endswith("we name no form or direction for its individual effects.")
 
 
 def test_extraction_loss_flag_uses_the_arms_own_parent():
-    lab = X.label_law(_laws(make=lambda i: {"dod": _inp(approx=(i < 13))}))["dod"]          # 13 of 25 flagged: share 0.52 > 0.5
+    lab = _LL(_laws(make=lambda i: {"dod": _inp(approx=(i < 13))}))["dod"]          # 13 of 25 flagged: share 0.52 > 0.5
     assert lab["extraction_loss"] is True
-    assert X.label_law(_laws(make=lambda i: {"dod": _inp(approx=(i < 12))}))["dod"]["extraction_loss"] is False
+    assert _LL(_laws(make=lambda i: {"dod": _inp(approx=(i < 12))}))["dod"]["extraction_loss"] is False
 
 
 def test_a15_and_g15_laws_are_labelled_by_one_function_with_identical_results():
     mk = lambda i: {"dod": _inp("log", sign=-1), "T_C": _inp("tie", sign=1), "c_ch": _inp("none", sign=1, additive=i > 7)}
-    la, lg = X.label_law(_laws(arm="A15h1", make=mk)), X.label_law(_laws(arm="G15", make=mk))
+    la, lg = _LL(_laws(arm="A15h1", make=mk)), _LL(_laws(arm="G15", make=mk))
     assert la == lg
     assert X.label_law.__module__ == X.audit_arm.__module__ == X.law_record.__module__ == "pinnkan.extraction_audit"
-    assert X.audit_arm(_laws(arm="G15", make=mk), "G15", True)["labels"] == X.audit_arm(_laws(arm="A15h1", make=mk), "A15", True)["labels"]
+    assert _AA(_laws(arm="G15", make=mk), "G15")["labels"] == _AA(_laws(arm="A15h1", make=mk), "A15")["labels"]
 
 
 # ------------------------------------------------------------------------------------------------ the per-law quantities on real functions
@@ -191,7 +203,7 @@ def test_a15_h1_with_a_log_outer_edge_is_non_additive_and_a_linear_one_is_additi
     assert rec_log["h"] == 1 and rec_log["outer_families"] == ["log"]
     assert all(not r["additive"] and r["max_mixed"] > 0.01 * r["range"] for r in rec_log["inputs"].values())          # h = 1 is NOT assumed additive (D022a M6)
     assert all(r["additive"] and r["max_mixed"] < 1e-5 for r in rec_lin["inputs"].values())
-    labs = X.label_law([dict(rec_log, fold=i // 5, seed=i % 5) for i in range(25)])
+    labs = _LL([dict(rec_log, fold=i // 5, seed=i % 5) for i in range(25)])
     assert all(v["label"] == "composed" for v in labs.values())
 
 
@@ -475,3 +487,34 @@ def test_condition_offsets_are_added_to_the_cyclic_log_rate_without_changing_the
     assert all(abs((db[k] - da[k]) - (0.3 if a.cond_of[k] == "C00" else -0.2)) < 1e-12 for k in ch)
     c0 = synth.make_synthetic("GA", reps=2, seed=4, design=design, truth=T, cond_offsets={})
     assert all(np.array_equal(x.ret, y.ret) for x, y in zip(a.cells, c0.cells))                      # no offsets: identical data
+
+
+# ------------------------------------------------------------------------------------------------ D022b: the fallback (audit struck; descriptive reporting only)
+def test_label_functions_default_to_no_licence_and_refuse_a_bare_true():
+    lab = X.label_law(_laws())                                                  # default calibrated=False
+    assert all(v["label"] == "not_identified" and v["form"] is None and v["sign"] == 0 for v in lab.values())
+    assert X.label_input("dod", _laws())["label"] == "not_identified" and X.audit_arm(_laws(), "A15")["labels_printed"] is False
+    for call in (lambda: X.label_law(_laws(), calibrated=True), lambda: X.label_input("dod", _laws(), calibrated=True), lambda: X.audit_arm(_laws(), "A15", True)):
+        with pytest.raises(X.AuditGuardError, match="verified calibration"):
+            call()
+    assert _LL(_laws())["dod"]["label"] == "form"                               # only the calibration script's sentinel (or a verified record) licenses
+    assert X.label_law(_laws(), calibrated={"verdict": {}})["dod"]["label"] == "form"
+
+
+def test_a_temperature_form_or_sign_is_never_licensed_even_with_a_verified_calibration():
+    lab = _LL(_laws())["T_C"]
+    assert lab["label"] == "not_identified" and lab["form"] is None and lab["sign"] == 0 and lab["never_licensed"] is True
+    assert _LL(_laws(make=lambda i: {"T_C": _inp("none", sign=-1)}))["T_C"]["sign"] == 0
+    assert _LL(_laws())["dod"]["label"] == "form"
+    row = {r["input"]: r for r in X.stability_table(_laws())}["T_C"]
+    assert row["note"] == "temperature and laboratory cannot be separated" and {r["input"]: r for r in X.stability_table(_laws())}["dod"]["note"] is None
+    assert {"additive_share", "tie_share", "sign_votes", "extracted_edge_family_counts"} <= set(row)
+
+
+def test_banned_phrases_use_word_boundaries_and_cover_the_03_section_4_claims():
+    for w in ("recovered", "discovered", "shows a", "power law", "Arrhenius", "hinge", "threshold", "no effect"):
+        assert w in X.banned_phrases_in(f"the law {w} here"), w
+    assert X.banned_phrases_in("an unenforced rule, unthresholded") == [] and X.banned_phrases_in("rules are enforced") == ["enforced"]
+    assert X.banned_phrases_in("The KAN DISCOVERED a hinge") == ["discovered", "hinge"]
+    assert THR["wording"]["discussion_sentence"].endswith("we name no form or direction for its individual effects.")
+    assert THR["wording"]["stability_table_caption"] == "descriptive; not evidence that the training design identifies these forms"

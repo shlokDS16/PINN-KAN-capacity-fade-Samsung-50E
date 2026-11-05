@@ -1,4 +1,7 @@
-"""D022a: calibration of the extraction audit on whole synthetic datasets. Rule: debates/D022_datasets_kan/calibration_rule_v2.md (committed before this script).
+"""INERT (D022b, debates/D022_datasets_kan/07_judge_recheck.md): the extraction audit is struck as a contribution, this calibration is NOT run and is not in the run list; the script stays in the tree
+for a future version (history kept). A real run needs --future-version. T is never licensed (D022b N1(a)).
+
+D022a: calibration of the extraction audit on whole synthetic datasets. Rule: debates/D022_datasets_kan/calibration_rule_v2.md (committed before this script).
 
     .venv/Scripts/python.exe -P code/prereg/extraction_calibration.py --plan
     .venv/Scripts/python.exe -P code/prereg/extraction_calibration.py --proc 0 --nproc 3 --thresholds-pin <sha256> --rule-pin <sha256>      # from the FROZEN commit only
@@ -252,7 +255,7 @@ def score_all(recs, ds, hull=None):
         info = dataset_truth(j, hull)["info"]
         for arm_id in ARM_IDS:
             laws = [recs[(j, arm_id, f, s)]["law"] for f in FOLDS for s in SEEDS]
-            lab = X.label_law(laws, THR, calibrated=True)
+            lab = X.label_law(laws, THR, calibrated=X.CALIBRATION_RUN)
             base = X.baseline_labels(laws, THR)
             sc, scb = X.score_dataset(lab, info), X.score_dataset(base, info)
             out.append({"d": j, "arm": arm_id, "E": sc["E"], "false": sc["false"], "E_baseline": scb["E"], "false_baseline": scb["false"], "events": X.recall_events(lab, info, THR),
@@ -372,6 +375,7 @@ def main(argv=None):
     ap.add_argument("--rule-pin", default=None)
     ap.add_argument("--smoke", default=None, help="directory: tiny run of one (dataset, fold) for tests; marked SMOKE, never a calibration")
     ap.add_argument("--limit", type=int, default=None)
+    ap.add_argument("--future-version", action="store_true", help="D022b: required for any real run; the audit is struck in this submission")
     a = ap.parse_args(argv)
     if a.plan:
         print(json.dumps(plan_counts()))
@@ -381,6 +385,8 @@ def main(argv=None):
         open(os.path.join(a.smoke, "SMOKE"), "w").write("smoke run: not a calibration\n")
         run_cells(a.proc, a.nproc, a.smoke, steps_scale=0.05, limit=a.limit or 1, seeds=(0,))
         return
+    if not a.future_version:
+        raise CalibrationGuardError("D022b: the extraction audit is struck as a contribution and the calibration is not run in this submission (pass --future-version for a future version)")
     d = require_run_conditions(ROOT, a.thresholds_pin, a.rule_pin)
     if a.finalize:
         rec, _ = finalize(OUT_DIR, d["commit"])

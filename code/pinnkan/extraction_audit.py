@@ -17,6 +17,7 @@ import hashlib
 import json
 import math
 import os
+import re
 
 import numpy as np
 import torch
@@ -31,6 +32,25 @@ ARM_KEYS = ("A15h1", "A15h2", "G15")
 
 class AuditGuardError(RuntimeError):
     """edge-level wording was requested without a valid, pinned calibration (missing pins, altered file, another commit or thresholds, void or failed calibration) or for the calendar law"""
+
+
+class _CalibrationRun:
+    """sentinel passed only by the (inert) calibration script, which scores the licences a rule WOULD give; never by the statistics step"""
+    def __repr__(self):
+        return "CALIBRATION_RUN"
+
+
+CALIBRATION_RUN = _CalibrationRun()
+
+
+def _licensed(calibrated):
+    """D022b N3: a licence word needs a VERIFIED calibration: the dict returned by `require_calibration` (given only for an arm that passed C1) or the calibration script's sentinel.
+    The default is no licence; a bare True is refused so that no script can print a licence by accident."""
+    if calibrated is None or calibrated is False:
+        return False
+    if calibrated is CALIBRATION_RUN or isinstance(calibrated, dict):
+        return True
+    raise AuditGuardError("a licence word needs a verified calibration (the dict returned by require_calibration); a bare True is refused (D022b N3)")
 
 
 class AuditError(ValueError):
@@ -65,8 +85,7 @@ def rule_sha256():
 def banned_phrases_in(text, thr=None):
     """phrases of the thresholds file that must not appear in the manuscript (gate auditor grep before submission)"""
     thr = thr or load_thresholds()
-    low = text.lower()
-    return [p for p in thr["banned_phrases"] if p in low]
+    return [p for p in thr["banned_phrases"] if re.search(r"(?<!\w)" + re.escape(p) + r"(?!\w)", text, flags=re.IGNORECASE)]       # word-boundary match: "unenforced" is not "enforced"
 
 
 # ------------------------------------------------------------------------------------------------ arms
@@ -215,7 +234,7 @@ def check_laws(laws, thr=None, n_expected=None):
     return n
 
 
-def label_input(name, laws, thr=None, calibrated=True, n_expected=None):
+def label_input(name, laws, thr=None, calibrated=False, n_expected=None):
     """label of one input from the 25 laws of one arm -> dict(label, form, sign, counts, reasons). `calibrated` = the arm passed C1; without it nothing is licensed."""
     thr = thr or load_thresholds()
     N = check_laws(laws, thr, n_expected)
@@ -234,9 +253,12 @@ def label_input(name, laws, thr=None, calibrated=True, n_expected=None):
     why = out["reasons"]
     form_ok = (N - n_nonadd) >= need and wins[F] >= need                      # (a) additive in >= 20, (b)+(c) one family strictly wins in >= 20 (two families cannot both reach 20 of 25)
     sign_ok = (N - n_nonadd) >= need and max(votes.values()) >= need and votes[1] != votes[-1]
-    if not calibrated:
+    if name in thr.get("never_licensed_inputs", ()):                           # D022b N1(a), permanent: no temperature statement from the cycling law (laboratory is aliased with temperature)
+        form_ok = sign_ok = False
+        out["never_licensed"] = True
+    if not _licensed(calibrated):
         out["label"] = "not_identified"
-        why.append("the arm did not pass the calibration condition C1: no label is printed")
+        why.append("no verified calibration: no label is printed (D022b: the audit is struck; descriptive reporting only)")
         return out
     if n_not_ret >= need:
         out["label"] = "not_retained"
@@ -257,7 +279,7 @@ def label_input(name, laws, thr=None, calibrated=True, n_expected=None):
     return out
 
 
-def label_law(laws, thr=None, calibrated=True, n_expected=None):
+def label_law(laws, thr=None, calibrated=False, n_expected=None):
     thr = thr or load_thresholds()
     return {name: label_input(name, laws, thr, calibrated, n_expected) for name in thr["inputs"]}
 
@@ -295,17 +317,18 @@ def stability_table(laws, thr=None, n_expected=None):
         for r in recs:
             fams[r["family"]] = fams.get(r["family"], 0) + 1
         rows.append({"input": name, "extracted_edge_family_counts": fams, "sign_votes": {"+": sum(r["sign_raw"] == 1 for r in recs), "-": sum(r["sign_raw"] == -1 for r in recs)},
-                     "tie_share": sum(r["form"] == "tie" for r in recs) / N, "not_retained_share": sum(not r["retained"] for r in recs) / N})
+                     "tie_share": sum(r["form"] == "tie" for r in recs) / N, "not_retained_share": sum(not r["retained"] for r in recs) / N,
+                     "additive_share": sum(r["additive"] for r in recs) / N, "note": (thr["wording"]["temperature_note"] if name in thr.get("never_licensed_inputs", ()) else None)})
     return rows
 
 
-def audit_arm(laws, arm, calibrated, thr=None, n_expected=None):
+def audit_arm(laws, arm, calibrated=False, thr=None, n_expected=None):
     """full audit of one arm ('A15' or 'G15'): labels, table, sentences. The same function for both arms; without C1 only the descriptive stability table is returned."""
     thr = thr or load_thresholds()
     check_laws(laws, thr, n_expected)
-    if not calibrated:
-        return {"labels_printed": False, "stability_table": stability_table(laws, thr, n_expected), "scope_sentence": thr["wording"]["scope_sentence"]}
-    lab = label_law(laws, thr, True, n_expected)
+    if not _licensed(calibrated):
+        return {"labels_printed": False, "stability_table": stability_table(laws, thr, n_expected), "caption": thr["wording"]["stability_table_caption"], "scope_sentence": thr["wording"]["scope_sentence"]}
+    lab = label_law(laws, thr, calibrated, n_expected)
     table = []
     for name, l in lab.items():
         row = {"arm": arm, "input": name, "label": label_text(l, thr), "form_wins": l["wins"], "tie_share": l["tie_share"], "sign_votes": l["sign_votes"], "n_not_retained": l["n_not_retained"],

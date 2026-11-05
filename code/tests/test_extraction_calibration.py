@@ -412,9 +412,16 @@ def test_the_statistics_step_prints_edge_wording_only_with_pinned_calibration_fr
     thr, C40 = X.thresholds_sha256(), "c" * 40
     out = ss.run_stats_v4(os.path.join(tmp, "an"), dirs, item_f_dir=fdir, item_f_sha256=sha)
     assert out["edge_wording"]["printed"] is False and "without named edge families" in out["edge_wording"]["reason"]            # default: the law only
+    st = out["edge_wording"]["stability"]                                                                  # D022b: descriptive stability table, no licence word, no calibration number
+    assert st["descriptive_only"] and st["contribution"] is False and st["caption"].startswith("descriptive; not evidence") and set(st["arms"]) == {"A15", "G15"}
+    txt = json.dumps(out["edge_wording"])
+    assert all(w not in txt for w in ("identified:", "form: ", "sign: ", "verdict", "upper_limit")) and st["arms"]["A15"]["labels_printed"] is False
+    assert {r["input"]: r for r in st["arms"]["A15"]["stability_table"]}["T_C"]["note"] == "temperature and laboratory cannot be separated"
     cdir = os.path.join(tmp, "cal")
     csha = _calibration(cdir)
-    kw = dict(item_f_dir=fdir, item_f_sha256=sha, audit_dir=cdir, frozen_commit=C40)
+    with pytest.raises(X.AuditGuardError, match="D022b"):                                                  # the confirmatory path refuses every edge-level licence
+        ss.run_stats_v4(os.path.join(tmp, "an0"), dirs, item_f_dir=fdir, item_f_sha256=sha, audit_dir=cdir, frozen_commit=C40, audit_thresholds_pin=thr, calibration_sha256=csha)
+    kw = dict(item_f_dir=fdir, item_f_sha256=sha, audit_dir=cdir, frozen_commit=C40, licences=True)               # the future-version path (kept, not used)
     with pytest.raises(X.AuditGuardError, match="audit_thresholds_pin is mandatory"):
         ss.run_stats_v4(os.path.join(tmp, "an1"), dirs, calibration_sha256=csha, **kw)
     with pytest.raises(X.AuditGuardError, match="calibration_sha256 is mandatory"):
@@ -427,8 +434,8 @@ def test_the_statistics_step_prints_edge_wording_only_with_pinned_calibration_fr
     ew = ok["edge_wording"]
     assert ew["printed"] and ew["contribution"] is True and set(ew["arms"]) == {"A15", "G15"} and ew["discussion_sentence"].startswith("Readable means")
     a = ew["arms"]["A15"]
-    assert a["labels_printed"] and a["sentences"]["results"] == "Of the 5 inputs of the extracted KAN law, the audit licensed the form of 5 and the sign of 0; 0 were not identified and 0 were not retained by the extraction."
-    assert a["labels"]["T_C"]["label"] == "form" and a["labels"]["T_C"]["n_laws"] == 25 and ew["arms"]["G15"]["sentences"]["results"].startswith("Of the 5 inputs of the extracted additive law,")
+    assert a["labels_printed"] and a["sentences"]["results"] == "Of the 5 inputs of the extracted KAN law, the audit licensed the form of 4 and the sign of 0; 1 were not identified and 0 were not retained by the extraction."
+    assert a["labels"]["T_C"]["label"] == "not_identified" and a["labels"]["T_C"]["never_licensed"] and a["labels"]["dod"]["label"] == "form" and a["labels"]["dod"]["n_laws"] == 25 and ew["arms"]["G15"]["sentences"]["results"].startswith("Of the 5 inputs of the extracted additive law,")
     # an arm that failed C1 prints no label: the descriptive stability table only, and the fixed failure sentence
     csha2 = _calibration(os.path.join(tmp, "cal2"), g15_c1=False)
     bad = ss.run_stats_v4(os.path.join(tmp, "an5"), dirs, audit_thresholds_pin=thr, calibration_sha256=csha2, **{**kw, "audit_dir": os.path.join(tmp, "cal2")})["edge_wording"]
@@ -473,3 +480,11 @@ def test_label_sentence_and_audit_functions_are_called_only_from_edge_level_word
                 users.setdefault(f"{fn}:<module>", set()).add("import")
     assert set(users) == {"stats_v4.py:edge_level_wording"}, users
     assert {"audit_arm", "require_calibration", "collect_laws"} <= users["stats_v4.py:edge_level_wording"]
+
+
+def test_the_calibration_script_is_inert_under_the_d022b_fallback():
+    with pytest.raises(C.CalibrationGuardError, match="D022b"):
+        C.main(["--thresholds-pin", X.thresholds_sha256(), "--rule-pin", X.rule_sha256()])
+    with pytest.raises(C.CalibrationGuardError, match="D022b"):
+        C.main(["--finalize"])
+    assert C.__doc__.startswith("INERT (D022b")

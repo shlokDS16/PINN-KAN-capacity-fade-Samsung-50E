@@ -26,13 +26,17 @@
   "rerun_datasets": 3
  },
  "bic_margin_note": "appendix field only: computed on the KAN's grid, not a data statistic; it licenses nothing",
- "banned_phrases": ["no effect", "structurally identifiable", "structural identifiability", "enforced", "more identified", "better identified", "fewer identified"],
+ "banned_phrases": ["no effect", "recovered", "discovered", "shows a", "power law", "Arrhenius", "hinge", "threshold", "structurally identifiable", "structural identifiability", "enforced", "more identified", "better identified", "fewer identified"],
+ "never_licensed_inputs": ["T_C"],
+ "status": "D022b: struck as a contribution; descriptive stability table only; the calibration is not run (07_judge_recheck.md)",
  "wording": {
   "results_sentence": "Of the {n} inputs of the extracted {law} law, the audit licensed the form of {j} and the sign of {s}; {a} were not identified and {p} were not retained by the extraction.",
   "scope_sentence": "The extraction rule, its thresholds and the calibration design are fixed by the frozen commit and verified by re-run.",
   "bic_caveat": "BIC is computed on the KAN's grid, not on the data",
   "approx_input": "the cap-2 form is an approximation of the arm's own parent effect (extraction-loss flag)",
-  "discussion_sentence": "Readable means that the extracted law is a short closed form that can be written out and evaluated; the audit reports separately which of its effects the training design identifies.",
+  "discussion_sentence": "Readable means that the extracted law is a short closed form that can be written out and evaluated; we name no form or direction for its individual effects.",
+  "stability_table_caption": "descriptive; not evidence that the training design identifies these forms",
+  "temperature_note": "temperature and laboratory cannot be separated",
   "not_identified_input": "the audit does not license a form for this effect",
   "failure": {
    "calibration": "The extraction audit did not meet its pre-set calibration condition, so it is reported as a description, not as a method result.",

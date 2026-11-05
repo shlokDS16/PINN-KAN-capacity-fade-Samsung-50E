@@ -443,7 +443,7 @@ def test_store_from_runs_resolves_dstar_and_ag_per_fold_and_run_stats_v4_end_to_
         for f in os.listdir(d):
             if f.startswith("condition_scores"):
                 os.utime(os.path.join(d, f), (time.time() + 5, time.time() + 5))
-    out = ss.run_stats_v4(os.path.join(tmp, "analysis"), dirs, {"k_chain_struck": True}, item_f_dir=fdir)
+    out = ss.run_stats_v4(os.path.join(tmp, "analysis"), dirs, {"k_chain_struck": True}, item_f_dir=fdir, strict=False)
     assert os.path.isfile(os.path.join(tmp, "analysis", "contrasts_v4_B.json"))
     assert out["primary"]["nodes"]["P1S"]["positives"] == 40 and out["outcome"]["P"] == "P+" and out["item_f"] == {"rho_fold": 0.0}
     assert out["primary"]["k_chain_struck"]                                      # no A15 / G15 in these fake runs: chain K absent, P at the full level

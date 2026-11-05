@@ -572,7 +572,7 @@ def outer_score_mtimes(run_dirs):
     return out
 
 
-def require_item_f(directory, run_dirs):
+def require_item_f(directory, run_dirs, pinned_sha256=None):
     """block the statistics step unless the item (f) file exists, matches its recorded hash, and was written before every outer score file of `run_dirs`"""
     p, h = os.path.join(directory, ITEM_F_FILE), os.path.join(directory, ITEM_F_HASH)
     if not (os.path.exists(p) and os.path.exists(h)):
@@ -580,6 +580,8 @@ def require_item_f(directory, run_dirs):
     rec = json.load(open(h, encoding="utf8"))
     if rec["sha256"] != _sha(p):
         raise ItemFError("item (f) dependence file differs from its recorded hash (altered after hashing)")
+    if pinned_sha256 is not None and _sha(p) != pinned_sha256:           # review M5: the file hash pinned outside the file system (git / FROZEN), so file times are not the only evidence
+        raise ItemFError("item (f) dependence file differs from the pinned hash (item_f_sha256)")
     scores = outer_score_mtimes(run_dirs)
     if scores and not (os.path.getmtime(p) < min(scores) and rec["written_unix"] < min(scores)):
         raise ItemFError("item (f) dependence file was written after an outer score file existed: the pre-score rule of D018 2.3 (ii) is broken")
@@ -602,7 +604,8 @@ def item_f_from_runs(run_dirs, contrast=("D*", "A1")):
         conds = sorted(set(sa) & set(sb))
         L = np.array([math.log(sb[c] / sa[c]) for c in conds])
         cells = [SimpleNamespace(kind="cycling", cond=c, raw=np.array([float(c.split("|")[0][1:])])) for c in conds]
-        fo = tuning.inner_folds(cells, int(cfg["inner_k"]), 1000 + int(cfg["fold"]), SimpleNamespace(strat_index=0))
+        ifp = os.path.join(d, "inner_folds.json")           # review M5: the inner folds the run actually used (written after tuning); rebuilt from the conditions only for older runs
+        fo = json.load(open(ifp, encoding="utf8")) if os.path.exists(ifp) else tuning.inner_folds(cells, int(cfg["inner_k"]), 1000 + int(cfg["fold"]), SimpleNamespace(strat_index=0))
         med = float(np.median(L))
         for i, c in enumerate(conds):
             signs.append(1.0 if L[i] > med else 0.0)

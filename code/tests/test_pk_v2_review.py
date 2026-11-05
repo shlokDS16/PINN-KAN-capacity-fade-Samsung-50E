@@ -183,3 +183,68 @@ def test_M9_runs_of_another_design_legacy_markers_and_mixed_score_kinds_are_refu
     v4.Store.from_runs(runs)                                                                       # tolerated when not strict (old fake runs)
     with pytest.raises(v4.IncompleteStoreError):
         v4.Store.from_runs(runs, strict=True)
+
+
+# ------------------------------------------------------------------------------------------------ I5, M5
+def _item_f_before(tmp, dirs):
+    import time
+    fdir = os.path.join(tmp, "prereg")
+    v4.write_item_f(fdir, {"rho_fold": 0.0})
+    old = time.time() - 5000
+    os.utime(os.path.join(fdir, v4.ITEM_F_FILE), (old, old))
+    h = os.path.join(fdir, v4.ITEM_F_HASH)
+    rec = json.load(open(h))
+    rec["written_unix"] = old
+    json.dump(rec, open(h, "w"))
+    for d in dirs:
+        json.dump({"passed": True, "max_abs_diff": 0.0, "n_rows": 5, "per_arm_seed": {}}, open(os.path.join(d, "invariance.json"), "w"))
+    return fdir, rec["sha256"]
+
+
+def test_I5_run_stats_v4_goes_through_the_rows_the_gate_and_marks_the_result_provisional(tmp_path):
+    from pinnkan import stats_step as ss
+    tmp = str(tmp_path)
+    os.makedirs(tmp + "/g")
+    dirs = _grid_runs(tmp + "/g")
+    fdir, sha = _item_f_before(tmp, dirs)
+    out = ss.run_stats_v4(os.path.join(tmp, "an"), dirs, {"k_chain_struck": False}, item_f_dir=fdir, item_f_sha256=sha) if False else None
+    # complete grid but the scores are constant ratios: the K arms exist, so chain K is evaluated
+    out = ss.run_stats_v4(os.path.join(tmp, "an"), dirs, item_f_dir=fdir, item_f_sha256=sha)
+    assert out["status"]["provisional"] and set(out["status"]["rows_not_run"]) == {"lab_indicator", "retain_all", "random_subset"} and out["status"]["gate_not_evaluated"] == ["PC-1"]
+    assert out["downgrade"]["rows_run"] == ["lab_stratified"] and out["outcome"]["provisional"] is True and out["outcome"]["provisional_downgrade_rows_incomplete"] is True
+    assert out["gate_G"]["tripped"] is False and os.path.isfile(os.path.join(tmp, "an", "controls.json"))
+    # all three re-run rows supplied (here: the same runs): rows run; PC-1 still unevaluated, so still provisional for that reason only
+    out2 = ss.run_stats_v4(os.path.join(tmp, "an2"), dirs, item_f_dir=fdir, row_runs={"lab_indicator": dirs, "retain_all": dirs, "random_subset": [dirs, dirs, dirs]})
+    assert out2["status"]["rows_not_run"] == [] and out2["status"]["gate_not_evaluated"] == ["PC-1"] and out2["status"]["provisional"]
+    # NC-1 tripped in one run: gate G, no title, no claim
+    json.dump({"passed": False, "max_abs_diff": 1e-3, "n_rows": 5, "per_arm_seed": {}}, open(os.path.join(dirs[0], "invariance.json"), "w"))
+    out3 = ss.run_stats_v4(os.path.join(tmp, "an3"), dirs, item_f_dir=fdir)
+    assert out3["gate_G"]["tripped"] and out3["outcome"]["gate_G"] and out3["outcome"]["title"] is None
+
+
+def test_I5_cli_routes_design_r2_through_the_same_function(tmp_path):
+    from pinnkan import stats_step as ss
+    tmp = str(tmp_path)
+    os.makedirs(tmp + "/g")
+    dirs = _grid_runs(tmp + "/g")
+    fdir, sha = _item_f_before(tmp, dirs)
+    ss.main(["--analysis-dir", tmp + "/cli", "--runs", "B=" + ",".join(dirs), "--design", "r2", "--item-f-dir", fdir, "--item-f-sha256", sha, "--row", "retain_all=" + ",".join(dirs)])
+    out = json.load(open(tmp + "/cli/contrasts_v4_B.json"))
+    assert out["downgrade"]["rows_run"] == ["lab_stratified", "retain_all"] and out["status"]["provisional"]
+
+
+def test_M5_item_f_hash_can_be_pinned_outside_the_file_system_and_inner_folds_come_from_the_run(tmp_path):
+    tmp = str(tmp_path)
+    os.makedirs(tmp + "/g")
+    dirs = _grid_runs(tmp + "/g")
+    fdir, sha = _item_f_before(tmp, dirs)
+    assert v4.require_item_f(fdir, dirs, sha) == {"rho_fold": 0.0}
+    with pytest.raises(v4.ItemFError, match="pinned"):
+        v4.require_item_f(fdir, dirs, "0" * 64)
+    # inner_folds.json is written by the run and read by item_f_from_runs
+    from pinnkan import run
+    d = run.run({"dataset": "synthetic", "run_id": "if", "arms": ["A9", "R2"], "n_trials": 1, "inner_k": 2, "steps_scale": 0.04, "seeds": [0], "mode": "inner", "diagnostics": False,
+                 "synthetic": {"kind": "G0", "n_cyc_cond": 16, "n_sto_cond": 6, "reps": 2, "seed": 3}}, runs_dir=tmp)
+    fo = json.load(open(os.path.join(d, "inner_folds.json")))
+    td = json.load(open(os.path.join(d, "tuning_done.json")))
+    assert set(fo) == set(td["arms"]["A9"]["cond_scores"]) and set(fo.values()) == {0, 1}

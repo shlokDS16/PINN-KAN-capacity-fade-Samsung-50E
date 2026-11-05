@@ -408,13 +408,15 @@ def gate_g(controls):
     be evaluated is listed under `not_evaluated` (neither tripped nor cleared)."""
     neg, pos = controls.get("negative") or {}, controls.get("positive") or {}
     reasons = []
-    if neg.get("nc1") and not neg["nc1"]["passed"]:
+    nc1 = neg.get("nc1")
+    nc1_seen = bool(nc1) and nc1.get("runs_checked", 1) > 0            # no invariance.json found = not evaluated, neither tripped nor cleared
+    if nc1_seen and not nc1["passed"]:
         reasons.append("NC-1 tripped")
     pc1 = pos.get("P1_G0_nrmse_leq_0p15")
     if pc1 is False:
         reasons.append("PC-1 failed (G0 recovery nRMSE > 0.15)")
     pending = []
-    if not neg.get("nc1"):
+    if not nc1_seen:
         pending.append("NC-1")
     if pc1 is None:
         pending.append("PC-1")
@@ -500,6 +502,9 @@ def main(argv=None):
     ap.add_argument("--stress-run", default=None, help="Test B run directory holding stress_functions.json (control P2)")
     ap.add_argument("--design", choices=("r2", "v3_legacy"), default="r2", help="r2 = Design R2 (grid runs, stats_v4); v3_legacy = the PREREG_v3 analysis, history only")
     ap.add_argument("--item-f-dir", default=None, help="directory of the hashed item (f) dependence file (D018); required for --design r2")
+    ap.add_argument("--row", action="append", default=None, help="NAME=dir1,dir2,... for the downgrade-row re-runs: lab_indicator, retain_all, random_subset (draws separated by ';')")
+    ap.add_argument("--item-f-sha256", default=None, help="the item (f) file hash pinned in git / FROZEN")
+    ap.add_argument("--lenient", action="store_true", help="development only: skip the completeness and design checks of Store.from_runs / check_complete")
     ap.add_argument("--sign-rule", default=None, help="JSON of the statistics config, e.g. '{\"graph_w\": 0.78}' (sign_rule, rho_s0, graph_w, alpha, e1_prime_approved)")
     ap.add_argument("--physval", action="store_true", help="also write physval_11a.json (PREREG 11a items 1, 2, 4, 5) from the Test B fold runs")
     a = ap.parse_args(argv)
@@ -508,21 +513,46 @@ def main(argv=None):
         t, dirs = item.split("=", 1)
         runs[t] = dirs.split(",")
     if a.design == "r2":
-        run_stats_v4(a.analysis_dir, runs["B"], json.loads(a.sign_rule) if a.sign_rule else None, item_f_dir=a.item_f_dir)
+        rr = {}
+        for item in (a.row or []):
+            n_, v_ = item.split("=", 1)
+            rr[n_] = [x.split(",") for x in v_.split(";")] if n_ == "random_subset" else v_.split(",")
+        run_stats_v4(a.analysis_dir, runs["B"], json.loads(a.sign_rule) if a.sign_rule else None, item_f_dir=a.item_f_dir, row_runs=rr, h7_run=a.h7_run,
+                     item_f_sha256=a.item_f_sha256, strict=not a.lenient)
         return
     run_stats(a.analysis_dir, runs, a.negative_run, a.h7_run, a.stress_run, nc1_full=a.nc1_full, physval_runs=(runs.get("B") if a.physval else None))
 
 
 # --------------------------------------------------------------------------------------------------- Design R2 (PREREG_v4): see stats_v4.py
-def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, row_tiers=None):
-    """Design R2 statistics from grid runs. The item (f) dependence file must exist, match its hash and pre-date every outer score file (D018 2.3 (ii)); otherwise ItemFError."""
-    from . import stats_v4
+def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, row_runs=None, h7_run=None, item_f_sha256=None, strict=True, n_expected=40, folds=range(5)):
+    """Design R2 statistics from grid runs, through the downgrade rows (stats_rows.run_v4_full). The item (f) dependence file must exist, match its hash (and `item_f_sha256` if given) and
+    pre-date every outer score file (D018 2.3 (ii)); otherwise ItemFError. strict (default): every run must say design R2 and the grid must be complete (folds, cells, n, arms, selectors,
+    both A10 forms; Store.check_complete). `row_runs`: {'lab_indicator': [dirs], 'retain_all': [dirs], 'random_subset': [[dirs of draw 0], [draw 1], [draw 2]]} (the re-runs of the
+    rows (ii)-(iv)); a row that is not supplied is recorded as not run and the outcome is marked provisional. Gate G: NC-1 from the runs' invariance.json and PC-1 from the G0 run
+    `h7_run`; an unevaluated control is listed and also makes the outcome provisional."""
+    from . import stats_rows, stats_v4
     if item_f_dir is None:
         raise stats_v4.ItemFError("item_f_dir is required: the statistics step is blocked without the hashed item (f) dependence file")
-    item_f = stats_v4.require_item_f(item_f_dir, run_dirs)
-    store = stats_v4.Store.from_runs(run_dirs)
-    out = stats_v4.run_v4(store, cfg, gate, row_tiers)
+    item_f = stats_v4.require_item_f(item_f_dir, run_dirs, item_f_sha256)
+    rule, c = stats_v4.resolve_config(cfg)
+    store = stats_v4.Store.from_runs(run_dirs, strict=strict)
+    if strict:
+        store.check_complete(folds, n_expected, k_chain=not c["k_chain_struck"])
+    row_runs = row_runs or {}
+    mk = lambda dirs: stats_v4.Store.from_runs(dirs, strict=strict)
+    controls = build_controls(real_runs=run_dirs, h7_summary=(os.path.join(h7_run, "summary.json") if h7_run else None))
+    gate_ = gate if gate is not None else controls["gate_G"]
+    out = stats_rows.run_v4_full(store, cfg, lab_indicator=mk(row_runs["lab_indicator"]) if row_runs.get("lab_indicator") else None,
+                                 retain_all=mk(row_runs["retain_all"]) if row_runs.get("retain_all") else None,
+                                 random_subset=[mk(d) for d in row_runs["random_subset"]] if row_runs.get("random_subset") else None, gate=gate_)
+    prov = {"rows_not_run": out["downgrade"]["rows_not_run"], "gate_not_evaluated": list(gate_.get("not_evaluated", [])) if isinstance(gate_, dict) else []}
+    prov["provisional"] = bool(prov["rows_not_run"] or prov["gate_not_evaluated"])
+    out["status"] = prov
+    if "outcome" in out:
+        out["outcome"]["provisional"] = prov["provisional"]
     out["item_f"] = item_f
+    out["gate_G"] = gate_
     os.makedirs(analysis_dir, exist_ok=True)
+    write_json(os.path.join(analysis_dir, "controls.json"), controls)
     write_json(os.path.join(analysis_dir, "contrasts_v4_B.json"), out)
     return out

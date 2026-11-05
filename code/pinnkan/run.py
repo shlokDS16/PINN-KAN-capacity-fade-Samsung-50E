@@ -359,6 +359,7 @@ def _run(cfg_in, root=None, runs_dir=None):
     metrics_out["k_full"] = rule.k_cycling if rule.W is None else None
     _json(os.path.join(run_dir, "train_condition_meta.json"), metrics.train_condition_meta(train))      # identifiers only: laboratory of each training condition (item (f) dependence estimate)
     metrics_out["tuning_window"] = {"k_cycling": rule_tune.k_cycling, "k_storage": rule_tune.k_storage, "W": rule_tune.W, "m": cfg["m"]}
+    _json(os.path.join(run_dir, "inner_folds.json"), tuning.inner_folds(train, cfg["inner_k"], 1000 + int(cfg["fold"]), spec, tk))      # the inner fold of every training condition (item (f), review M5)
     inner = {a: {"inner_cv_pp": tuned[a]["inner_cv_pp"], "cond_scores": tuned[a]["cond_scores"], "best_hp": tuned[a]["best_hp"]} for a in arms}
     _json(os.path.join(run_dir, "tuning_done.json"), {"backbone": ctx["backbone"], "arms": inner, "budget": {"n_trials": cfg["n_trials"], "inner_k": cfg["inner_k"]}})
     metrics_out["inner_cv_pp"] = {a: inner[a]["inner_cv_pp"] for a in arms}

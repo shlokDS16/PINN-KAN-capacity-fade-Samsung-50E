@@ -38,6 +38,10 @@ class ChainKMissingError(RuntimeError):
     """the K-chain arms (A15, G15, A1 at g4) are missing but the config does not say that chain K is struck: P would silently be tested at the full level (review I3)"""
 
 
+class IncompleteStoreError(RuntimeError):
+    """the run directories do not form the complete Design R2 grid (missing folds, cells, arms, comparators, or a condition count different from the expected n) (review I6)"""
+
+
 class ItemFError(RuntimeError):
     """the item (f) dependence file is missing, altered, or was written after an outer score (D018 2.3 (ii)): the statistics step is blocked"""
 
@@ -137,12 +141,15 @@ class Store:
         return conds, np.log(b / a), b - a
 
     @classmethod
-    def from_runs(cls, run_dirs):
-        """grid runs (config.m, one outer fold each, scored at every k; D* and AG resolved per fold from comparators.json)"""
-        tables, lab, fold, k_full, notes = {}, {}, {}, None, {"runs": []}
-        seed_tables, have_seed = {}, False
+    def from_runs(cls, run_dirs, strict=False):
+        """grid runs (config.m, one outer fold each, scored at every k; D* and AG resolved per fold from comparators.json).
+        Always: a run of another design or with the V3-legacy marker, or a mix of runs with and without per-seed files, raises (review I6, M9). strict: the config must say design R2."""
+        tables, lab, fold, k_full, notes = {}, {}, {}, None, {"runs": [], "cell_folds": {}, "comparators_complete": []}
+        seed_tables, have_seed, seed_flags = {}, False, []
         for d in run_dirs:
             cfg = json.load(open(os.path.join(d, "config.json"), encoding="utf8"))
+            if os.path.exists(os.path.join(d, "OUT_OF_SCOPE_V3_LEGACY")) or cfg.get("design", "R2" if not strict else None) != "R2":
+                raise IncompleteStoreError(f"{d}: not a Design R2 run (design {cfg.get('design')!r}, legacy marker {os.path.exists(os.path.join(d, 'OUT_OF_SCOPE_V3_LEGACY'))})")
             met = json.load(open(os.path.join(d, "metrics.json"), encoding="utf8"))
             m = cfg.get("m")
             m = 32 if m is None else int(m)
@@ -161,7 +168,9 @@ class Store:
                         t.setdefault(alias, {}).update(cs[comp[alias]["arm"]])
                 sp = os.path.join(d, f"condition_scores_seed{suf}.json")
                 ss_ = json.load(open(sp, encoding="utf8")) if os.path.exists(sp) else cs
+                seed_flags.append(os.path.exists(sp))
                 have_seed = have_seed or os.path.exists(sp)
+                notes["cell_folds"].setdefault((m, str(kl)), set()).add(int(cfg["fold"]))
                 ts = seed_tables.setdefault((m, str(kl)), {})
                 for a, v in ss_.items():
                     ts.setdefault(a, {}).update(v)
@@ -174,8 +183,55 @@ class Store:
                         lab.setdefault(c, sorted(e["lab"].items(), key=lambda kv: (-kv[1], kv[0]))[0][0])
                 for c in cs.get(next(iter(cs)), {}):
                     fold[c] = int(cfg["fold"])
+            for alias in ("D*", "AG"):
+                if alias in comp:
+                    notes["comparators_complete"].append((d, alias, bool(comp[alias].get("complete", False))))
             notes["runs"].append({"dir": d, "m": m, "fold": cfg["fold"], "k_labels": labels, "comparators": {k: v["arm"] for k, v in comp.items() if isinstance(v, dict) and "arm" in v}})
+        if have_seed and not all(seed_flags):
+            raise IncompleteStoreError("some runs / cells have condition_scores_seed files and others do not: the K chain would mix score kinds (all or none)")
         return cls(tables, lab, fold, k_full or 4, notes, seed_tables if have_seed else None)
+
+    def check_complete(self, folds=range(5), n_expected=40, ms=(8, 16, 32), k_chain=True):
+        """review I6: every cell (m, k) of the grid is present with every outer fold, the expected number of conditions, the arms the contrasts need, complete D* / AG selectors, and
+        both forms of A10 wherever one is present. Raises IncompleteStoreError listing every gap."""
+        issues = []
+        ks = [str(k) for k in grid_ks_labels(self.k_full)]
+        for m in ms:
+            for k in ks:
+                key = (m, k)
+                if key not in self.tables:
+                    issues.append(f"cell {key} missing")
+                    continue
+                fl = self.notes.get("cell_folds", {}).get(key)
+                if fl is not None and set(fl) != set(int(f) for f in folds):
+                    issues.append(f"cell {key}: folds {sorted(fl)} instead of {sorted(folds)}")
+                t = self.tables[key]
+                n1 = len(t.get("A1", {}))
+                if n1 != n_expected:
+                    issues.append(f"cell {key}: A1 has {n1} conditions, expected {n_expected}")
+                need = ["A1", "A9", "D*", "AG", "A2", "A10", "A10P"]
+                if (m, k) == (8, "2") or (m, k) == (8, "full") and self.k_full == 2:
+                    need += ["A13"]
+                if k_chain and m == 32 and k == "full":
+                    need += ["A15", "G15"]
+                for a in need:
+                    if a not in t:
+                        issues.append(f"cell {key}: arm {a} missing")
+                    elif len(t[a]) != n1 and n1:
+                        issues.append(f"cell {key}: arm {a} has {len(t[a])} conditions, A1 has {n1} (the paired intersection would shrink n)")
+                if ("A10" in t) != ("A10P" in t):
+                    issues.append(f"cell {key}: only one form of A10 is present")
+        for d, alias, ok in self.notes.get("comparators_complete", []):
+            if not ok:
+                issues.append(f"{d}: selector {alias} was chosen from an incomplete candidate set")
+        if issues:
+            raise IncompleteStoreError("; ".join(issues))
+        return True
+
+
+def grid_ks_labels(k_full):
+    """labels of the k axis ('0', '2', 'full'; k_full = 2 merges '2' into 'full')"""
+    return ("0", "full") if k_full == 2 else ("0", "2", "full")
 
 
 # ------------------------------------------------------------------------------------------------ helpers

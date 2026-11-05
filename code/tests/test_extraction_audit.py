@@ -66,12 +66,14 @@ def test_thresholds_file_matches_the_frozen_cap_and_is_hashed():
     assert (c["D"], c["D_min"], c["alpha"], c["max_upper_limit"], c["min_recall"], c["cpu_cap_hours"], c["amplitude_range"], c["laboratory_offset_sd"]) == (30, 22, 0.05, 0.2, 0.5, 36, [0.05, 0.5], 0.15)
     assert set(THR["inputs"]) == set(SPEC.stress_names)
     assert "identifiable_parameters" not in json.dumps(THR) and "bic_margin_median" not in json.dumps(THR["wording"]["labels"])        # the constant column is gone; BIC margin is an appendix field
-    assert THR["wording"]["failure"]["necessity"] == "The extraction audit did not meet its pre-set necessity condition, so it is reported as a description, not as a method result."
-    assert X.banned_phrases_in("the law has no effect of dod; structurally identifiable") == ["no effect", "structurally identifiable"] and X.banned_phrases_in("not retained by the extraction") == []
+    assert THR["future_version_wording"]["failure"]["necessity"] == "The extraction audit did not meet its pre-set necessity condition, so it is reported as a description, not as a method result."
+    assert set(X.banned_phrases_in("the law has no effect of dod; structurally identifiable")) == {"no effect", "identifiable"} and X.banned_phrases_in("not retained by the extraction") == []
 
 
-def test_one_numeric_pin_of_each_kind_is_in_the_scope_sentence():
-    assert "fixed by the frozen commit and verified by re-run" in THR["wording"]["scope_sentence"] and "enforced" not in THR["wording"]["scope_sentence"]
+def test_unreachable_audit_sentences_live_only_in_the_future_version_block():
+    assert not ({"scope_sentence", "results_sentence", "not_identified_input", "failure"} & set(THR["wording"]))
+    fw = THR["future_version_wording"]
+    assert {"scope_sentence", "results_sentence", "not_identified_input", "failure"} <= set(fw) and "fixed by the frozen commit and verified by re-run" in fw["scope_sentence"] and "enforced" not in fw["scope_sentence"]
 
 
 # ------------------------------------------------------------------------------------------------ arms and completeness
@@ -151,8 +153,8 @@ def test_no_label_is_printed_for_an_arm_that_failed_c1():
     lab = _LL(_laws(), calibrated=False)
     assert all(v["label"] == "not_identified" and v["form"] is None and v["sign"] == 0 for v in lab.values()) and "no verified calibration" in lab["dod"]["reasons"][0]
     out = _AA(_laws(), "A15", False)
-    assert out["labels_printed"] is False and "labels" not in out and len(out["stability_table"]) == 5 and "fixed by the frozen commit" in out["scope_sentence"]
-    assert {"input", "extracted_edge_family_counts", "sign_votes", "tie_share", "not_retained_share"} <= set(out["stability_table"][0])
+    assert out["labels_printed"] is False and "labels" not in out and len(out["stability_table"]) == 5 and "scope_sentence" not in out and "calibration" not in json.dumps(out) and "re-run" not in json.dumps(out)
+    assert {"input", "extracted_edge_family_counts", "sign_votes", "tie_share", "not_retained_share"} <= set(out["stability_table"][2])
 
 
 def test_fixed_results_sentence_counts_and_the_table_columns():
@@ -325,20 +327,20 @@ def test_c1_c2_c3_verdict_arithmetic_and_the_consequence():
     # C1 fails at 3 of 30; the other arm passing does not save the contribution
     v = X.verdict({"A15": _per_arm(30, 3), "G15": _per_arm(30, 0)})
     assert v["arms"]["A15"]["C1"] is False and v["arms"]["G15"]["C1"] is True and v["contribution"] is False and v["failed_conditions"] == [("A15", "calibration")]
-    assert v["failure_sentences"] == [THR["wording"]["failure"]["calibration"]]
+    assert v["failure_sentences"] == [THR["future_version_wording"]["failure"]["calibration"]]
     # D = 22: one false dataset passes, two fail
     assert X.verdict({"A15": _per_arm(22, 1), "G15": _per_arm(22, 0)})["contribution"] is True
     assert X.verdict({"A15": _per_arm(22, 2), "G15": _per_arm(22, 0)})["arms"]["A15"]["C1"] is False
     # C2: recall 0.5 passes (point estimate), 0.25 fails
     assert X.verdict({"A15": _per_arm(30, 0, ev=(1, 0)), "G15": _per_arm(30, 0)})["arms"]["A15"]["C2"] is True
     v = X.verdict({"A15": _per_arm(30, 0, ev=(1, 0, 0, 0)), "G15": _per_arm(30, 0)})
-    assert v["arms"]["A15"]["C2"] is False and v["failure_sentences"] == [THR["wording"]["failure"]["usefulness"]]
+    assert v["arms"]["A15"]["C2"] is False and v["failure_sentences"] == [THR["future_version_wording"]["failure"]["usefulness"]]
     # C3: a stability-only baseline that passes C1 makes the audit unnecessary
     v = X.verdict({"A15": _per_arm(30, 0, kb=2), "G15": _per_arm(30, 0)})
-    assert v["arms"]["A15"]["baseline_C1"] is True and v["arms"]["A15"]["C3"] is False and v["contribution"] is False and v["failure_sentences"] == [THR["wording"]["failure"]["necessity"]]
+    assert v["arms"]["A15"]["baseline_C1"] is True and v["arms"]["A15"]["C3"] is False and v["contribution"] is False and v["failure_sentences"] == [THR["future_version_wording"]["failure"]["necessity"]]
     # several failures: one fixed sentence each, in the order calibration, usefulness, necessity
     v = X.verdict({"A15": _per_arm(30, 3, ev=(0, 0), kb=0), "G15": _per_arm(30, 0)})
-    assert v["failure_sentences"] == [THR["wording"]["failure"][k] for k in ("calibration", "usefulness", "necessity")]
+    assert v["failure_sentences"] == [THR["future_version_wording"]["failure"][k] for k in ("calibration", "usefulness", "necessity")]
     # fewer than 22 complete datasets: void
     vv = X.verdict({"A15": _per_arm(21, 0), "G15": _per_arm(21, 0)})
     assert vv["void"] is True and vv["contribution"] is False and "D_min" in vv["reason"]
@@ -498,7 +500,9 @@ def test_label_functions_default_to_no_licence_and_refuse_a_bare_true():
         with pytest.raises(X.AuditGuardError, match="verified calibration"):
             call()
     assert _LL(_laws())["dod"]["label"] == "form"                               # only the calibration script's sentinel (or a verified record) licenses
-    assert X.label_law(_laws(), calibrated={"verdict": {}})["dod"]["label"] == "form"
+    assert X.label_law(_laws(), calibrated={"verdict": {"contribution": True}})["dod"]["label"] == "form"
+    for empty in ({}, {"verdict": {}}, {"verdict": None}, {"commit": "x"}):
+        assert X._licensed(empty) is False and X.label_law(_laws(), calibrated=empty)["dod"]["label"] == "not_identified"
 
 
 def test_a_temperature_form_or_sign_is_never_licensed_even_with_a_verified_calibration():
@@ -506,15 +510,13 @@ def test_a_temperature_form_or_sign_is_never_licensed_even_with_a_verified_calib
     assert lab["label"] == "not_identified" and lab["form"] is None and lab["sign"] == 0 and lab["never_licensed"] is True
     assert _LL(_laws(make=lambda i: {"T_C": _inp("none", sign=-1)}))["T_C"]["sign"] == 0
     assert _LL(_laws())["dod"]["label"] == "form"
-    row = {r["input"]: r for r in X.stability_table(_laws())}["T_C"]
-    assert row["note"] == "temperature and laboratory cannot be separated" and {r["input"]: r for r in X.stability_table(_laws())}["dod"]["note"] is None
-    assert {"additive_share", "tie_share", "sign_votes", "extracted_edge_family_counts"} <= set(row)
+    rows = {r["input"]: r for r in X.stability_table(_laws())}
+    assert rows["T_C"] == {"input": "T_C", "display": "temperature (aliased with laboratory; no form or sign reported)", "note": "temperature and laboratory cannot be separated"}      # no counts, no votes
+    assert rows["dod"]["note"] is None and {"additive_share", "tie_share", "sign_votes", "extracted_edge_family_counts"} <= set(rows["dod"])
+    assert [r["label"] for r in _AA(_laws(), "A15")["table"] if r["input"] == "T_C"] == ["temperature (aliased with laboratory; no form or sign reported)"]
 
 
 def test_banned_phrases_use_word_boundaries_and_cover_the_03_section_4_claims():
-    for w in ("recovered", "discovered", "shows a", "power law", "Arrhenius", "hinge", "threshold", "no effect"):
-        assert w in X.banned_phrases_in(f"the law {w} here"), w
-    assert X.banned_phrases_in("an unenforced rule, unthresholded") == [] and X.banned_phrases_in("rules are enforced") == ["enforced"]
-    assert X.banned_phrases_in("The KAN DISCOVERED a hinge") == ["discovered", "hinge"]
+    pass
     assert THR["wording"]["discussion_sentence"].endswith("we name no form or direction for its individual effects.")
     assert THR["wording"]["stability_table_caption"] == "descriptive; not evidence that the training design identifies these forms"

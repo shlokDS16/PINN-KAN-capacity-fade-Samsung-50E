@@ -281,7 +281,7 @@ def test_finalize_a_labeller_that_always_names_a_linear_form_fails_c1_and_withdr
     _, cal = C.finalize(out, "c" * 40, lab_hash="h")
     v = cal["verdict"]
     assert all(v["arms"][a]["C1"] is False and v["arms"][a]["false_datasets"] == 30 for a in C.ARM_IDS) and v["contribution"] is False
-    assert THR["wording"]["failure"]["calibration"] in v["failure_sentences"]
+    assert THR["future_version_wording"]["failure"]["calibration"] in v["failure_sentences"]
 
 
 def test_at_least_22_complete_datasets_are_required(tmp_path):
@@ -393,7 +393,7 @@ def _with_laws(dirs, g15_c1_fail=False, drop=None):
 
 
 def _calibration(cdir, commit="c" * 40, g15_c1=True):
-    v = {"void": False, "contribution": bool(g15_c1), "failure_sentences": [] if g15_c1 else [THR["wording"]["failure"]["calibration"]],
+    v = {"void": False, "contribution": bool(g15_c1), "failure_sentences": [] if g15_c1 else [THR["future_version_wording"]["failure"]["calibration"]],
          "arms": {"A15": {"C1": True, "C2": True, "C3": True}, "G15": {"C1": g15_c1, "C2": True, "C3": True}}}
     os.makedirs(cdir, exist_ok=True)
     cal = {"commit": commit, "thresholds_sha256": X.thresholds_sha256(), "rule_sha256": X.rule_sha256(), "verdict": v}
@@ -430,17 +430,19 @@ def test_the_statistics_step_prints_edge_wording_only_with_pinned_calibration_fr
         ss.run_stats_v4(os.path.join(tmp, "an3"), dirs, audit_thresholds_pin=thr, calibration_sha256=csha, **{**kw, "frozen_commit": "d" * 40})
     with pytest.raises(X.AuditGuardError, match="no FROZEN commit"):
         ss.run_stats_v4(os.path.join(tmp, "an3b"), dirs, audit_thresholds_pin=thr, calibration_sha256=csha, **{**kw, "frozen_commit": None})            # tmp tree has no FROZEN file
-    ok = ss.run_stats_v4(os.path.join(tmp, "an4"), dirs, audit_thresholds_pin=thr, calibration_sha256=csha, **kw)
-    ew = ok["edge_wording"]
+    from pinnkan import stats_v4
+    with pytest.raises(X.BannedWordingError, match="identified"):                                          # the future-version Results sentence contains a banned word: the statistics step cannot print it
+        ss.run_stats_v4(os.path.join(tmp, "an4"), dirs, audit_thresholds_pin=thr, calibration_sha256=csha, **kw)
+    ew = stats_v4.edge_level_wording(dirs, cdir, thr, csha, C40, licences=True)
     assert ew["printed"] and ew["contribution"] is True and set(ew["arms"]) == {"A15", "G15"} and ew["discussion_sentence"].startswith("Readable means")
     a = ew["arms"]["A15"]
     assert a["labels_printed"] and a["sentences"]["results"] == "Of the 5 inputs of the extracted KAN law, the audit licensed the form of 4 and the sign of 0; 1 were not identified and 0 were not retained by the extraction."
     assert a["labels"]["T_C"]["label"] == "not_identified" and a["labels"]["T_C"]["never_licensed"] and a["labels"]["dod"]["label"] == "form" and a["labels"]["dod"]["n_laws"] == 25 and ew["arms"]["G15"]["sentences"]["results"].startswith("Of the 5 inputs of the extracted additive law,")
     # an arm that failed C1 prints no label: the descriptive stability table only, and the fixed failure sentence
     csha2 = _calibration(os.path.join(tmp, "cal2"), g15_c1=False)
-    bad = ss.run_stats_v4(os.path.join(tmp, "an5"), dirs, audit_thresholds_pin=thr, calibration_sha256=csha2, **{**kw, "audit_dir": os.path.join(tmp, "cal2")})["edge_wording"]
+    bad = stats_v4.edge_level_wording(dirs, os.path.join(tmp, "cal2"), thr, csha2, C40, licences=True)
     assert bad["arms"]["A15"]["labels_printed"] is True and bad["arms"]["G15"]["labels_printed"] is False and "labels" not in bad["arms"]["G15"] and bad["contribution"] is False
-    assert bad["failure_sentences"] == [THR["wording"]["failure"]["calibration"]] and len(bad["arms"]["G15"]["stability_table"]) == 5
+    assert bad["failure_sentences"] == [THR["future_version_wording"]["failure"]["calibration"]] and len(bad["arms"]["G15"]["stability_table"]) == 5
 
 
 def test_exactly_25_laws_per_arm_at_g4_are_required_by_the_statistics_step(tmp_path):

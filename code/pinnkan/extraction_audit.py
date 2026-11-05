@@ -48,8 +48,10 @@ def _licensed(calibrated):
     The default is no licence; a bare True is refused so that no script can print a licence by accident."""
     if calibrated is None or calibrated is False:
         return False
-    if calibrated is CALIBRATION_RUN or isinstance(calibrated, dict):
+    if calibrated is CALIBRATION_RUN:
         return True
+    if isinstance(calibrated, dict):                                       # a record returned by require_calibration carries its verdict; an empty or verdict-less dict is no calibration
+        return bool(calibrated.get("verdict"))
     raise AuditGuardError("a licence word needs a verified calibration (the dict returned by require_calibration); a bare True is refused (D022b N3)")
 
 
@@ -61,7 +63,7 @@ class AuditError(ValueError):
 def load_thresholds(path=THRESHOLDS_FILE):
     t = json.load(open(path, encoding="utf8"))
     need = {"cap", "eligible_families", "inputs", "laws_per_arm_g4", "min_agree_share", "tolerance_over_range", "retained_min_range", "pd_grid_points", "additivity_grid",
-            "approx_rms_over_range", "approx_flag_min_share", "calibration", "wording", "banned_phrases"}
+            "approx_rms_over_range", "approx_flag_min_share", "calibration", "wording", "banned_phrases", "future_version_wording"}
     if not need <= set(t):
         raise ValueError(f"extraction_audit.json lacks {sorted(need - set(t))}")
     if tuple(t["eligible_families"]) != ELIGIBLE:
@@ -82,10 +84,61 @@ def rule_sha256():
     return sha256_file(RULE_FILE)
 
 
+class BannedWordingError(RuntimeError):
+    """a generated sentence of the statistics step contains a banned claim (fail closed)"""
+
+
+def _norm(text):
+    return re.sub(r"[\s\-~]+", " ", str(text)).strip()
+
+
 def banned_phrases_in(text, thr=None):
-    """phrases of the thresholds file that must not appear in the manuscript (gate auditor grep before submission)"""
+    """banned claims in `text` (D022 section 4 and PREREG 7.3 item 1; red-team A4) -> list of matched patterns. Stems (recover*, discover*, identified, identifiable, identifiability,
+    no effect, enforced, ...) are banned anywhere; a form word (Arrhenius, power law, exponential, quadratic, hinge, threshold, activation energy, non-monotone) or "shows a/the ... form" is
+    banned in a sentence that names the extracted law unless that sentence is negated. Hyphens, line breaks and case are normalised; word boundaries (also against `_`) so that
+    "unenforced" and "not_identified" do not match. The approved PREREG 11 / 11a sentences must not match (tests)."""
     thr = thr or load_thresholds()
-    return [p for p in thr["banned_phrases"] if re.search(r"(?<!\w)" + re.escape(p) + r"(?!\w)", text, flags=re.IGNORECASE)]       # word-boundary match: "unenforced" is not "enforced"
+    b = thr["banned_phrases"]
+    hits = []
+    norm = _norm(text)
+    wb = lambda pat: r"(?<![A-Za-z_])(?:" + pat + r")(?![A-Za-z_])"
+    for pat in b["stems"]:
+        if re.search(wb(pat), norm, flags=re.IGNORECASE):
+            hits.append(pat)
+    for sent in re.split(r"(?<=[.;:!?]) ", norm):
+        low = sent.lower()
+        if not any(re.search(wb(sw), low) for sw in b["subject_words"]):
+            continue
+        if any(re.search(wb(nw), low) for nw in b["negation_words"]):
+            continue
+        for fw in b["form_words"]:
+            if re.search(wb(fw), low) and fw not in hits:
+                hits.append(fw)
+        if re.search(b["shows_pattern"], low) and "shows" not in hits:
+            hits.append("shows")
+    return hits
+
+
+def check_generated_sentences(obj, where="output", thr=None):
+    """fail closed: raise BannedWordingError if any string value in `obj` (nested dicts / lists; dictionary keys are not sentences) contains a banned claim"""
+    thr = thr or load_thresholds()
+    bad = []
+
+    def walk(o, path):
+        if isinstance(o, str):
+            h = banned_phrases_in(o, thr)
+            if h:
+                bad.append((path, h, o[:80]))
+        elif isinstance(o, dict):
+            for k, v in o.items():
+                walk(v, f"{path}.{k}")
+        elif isinstance(o, (list, tuple)):
+            for i, v in enumerate(o):
+                walk(v, f"{path}[{i}]")
+    walk(obj, where)
+    if bad:
+        raise BannedWordingError(f"banned wording in generated sentences: {bad[:3]}")
+    return True
 
 
 # ------------------------------------------------------------------------------------------------ arms
@@ -303,7 +356,7 @@ def results_sentence(labels, arm, thr=None):
     p = sum(l["label"] == "not_retained" for l in labels.values())
     a = n - j - s - p
     w = thr["wording"]
-    return {"results": w["results_sentence"].format(n=n, law=w["law_names"][arm], j=j, s=s, a=a, p=p), "counts": {"n": n, "form": j, "sign": s, "not_identified": a, "not_retained": p}}
+    return {"results": thr["future_version_wording"]["results_sentence"].format(n=n, law=w["law_names"][arm], j=j, s=s, a=a, p=p), "counts": {"n": n, "form": j, "sign": s, "not_identified": a, "not_retained": p}}
 
 
 def stability_table(laws, thr=None, n_expected=None):
@@ -313,12 +366,15 @@ def stability_table(laws, thr=None, n_expected=None):
     rows = []
     for name in thr["inputs"]:
         recs = [l["inputs"][name] for l in laws]
+        if name in thr.get("never_licensed_inputs", ()):                       # permanent T ban (D022b N1(a), red-team minor): temperature appears only under its fixed label, no counts
+            rows.append({"input": name, "display": thr["wording"]["temperature_label"], "note": thr["wording"]["temperature_note"]})
+            continue
         fams = {}
         for r in recs:
             fams[r["family"]] = fams.get(r["family"], 0) + 1
         rows.append({"input": name, "extracted_edge_family_counts": fams, "sign_votes": {"+": sum(r["sign_raw"] == 1 for r in recs), "-": sum(r["sign_raw"] == -1 for r in recs)},
                      "tie_share": sum(r["form"] == "tie" for r in recs) / N, "not_retained_share": sum(not r["retained"] for r in recs) / N,
-                     "additive_share": sum(r["additive"] for r in recs) / N, "note": (thr["wording"]["temperature_note"] if name in thr.get("never_licensed_inputs", ()) else None)})
+                     "additive_share": sum(r["additive"] for r in recs) / N, "note": None})
     return rows
 
 
@@ -327,15 +383,15 @@ def audit_arm(laws, arm, calibrated=False, thr=None, n_expected=None):
     thr = thr or load_thresholds()
     check_laws(laws, thr, n_expected)
     if not _licensed(calibrated):
-        return {"labels_printed": False, "stability_table": stability_table(laws, thr, n_expected), "caption": thr["wording"]["stability_table_caption"], "scope_sentence": thr["wording"]["scope_sentence"]}
+        return {"labels_printed": False, "stability_table": stability_table(laws, thr, n_expected), "caption": thr["wording"]["stability_table_caption"]}
     lab = label_law(laws, thr, calibrated, n_expected)
     table = []
     for name, l in lab.items():
-        row = {"arm": arm, "input": name, "label": label_text(l, thr), "form_wins": l["wins"], "tie_share": l["tie_share"], "sign_votes": l["sign_votes"], "n_not_retained": l["n_not_retained"],
-               "notes": ([thr["wording"]["not_identified_input"]] if l["label"] in ("composed", "not_identified") else []) + ([thr["wording"]["approx_input"]] if (l["extraction_loss"] and l["label"] != "not_retained") else [])}
+        row = {"arm": arm, "input": name, "label": (thr["wording"]["temperature_label"] if l.get("never_licensed") else label_text(l, thr)), "form_wins": l["wins"], "tie_share": l["tie_share"], "sign_votes": l["sign_votes"], "n_not_retained": l["n_not_retained"],
+               "notes": ([thr["future_version_wording"]["not_identified_input"]] if l["label"] in ("composed", "not_identified") else []) + ([thr["wording"]["approx_input"]] if (l["extraction_loss"] and l["label"] != "not_retained") else [])}
         row["appendix"] = {"bic_margin_median": l["bic_margin_median"], "bic_caveat": thr["wording"]["bic_caveat"]}
         table.append(row)
-    return {"labels_printed": True, "labels": lab, "table": table, "sentences": results_sentence(lab, arm, thr), "scope_sentence": thr["wording"]["scope_sentence"]}
+    return {"labels_printed": True, "labels": lab, "table": table, "sentences": results_sentence(lab, arm, thr), "scope_sentence": thr["future_version_wording"]["scope_sentence"]}
 
 
 def collect_laws(run_dirs, m=32, thr=None):
@@ -443,7 +499,7 @@ def verdict(per_arm, thr=None):
     out["void"] = False
     out["contribution"] = bool(ok_all)
     out["failed_conditions"] = failed
-    out["failure_sentences"] = [thr["wording"]["failure"][n] for n in sorted({n for _, n in failed}, key=("calibration", "usefulness", "necessity").index)]
+    out["failure_sentences"] = [thr["future_version_wording"]["failure"][n] for n in sorted({n for _, n in failed}, key=("calibration", "usefulness", "necessity").index)]
     return out
 
 

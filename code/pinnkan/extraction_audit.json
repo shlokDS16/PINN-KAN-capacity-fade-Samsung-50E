@@ -2,8 +2,18 @@
  "version": "extraction-audit-v2",
  "source": "debates/D022_datasets_kan/05_judge_audit_revision.md sections 2.1-2.8 (decision row D022a); every number is a design choice fixed before any result",
  "cap": 2,
- "eligible_families": ["zero", "linear", "log"],
- "inputs": ["T_C", "soc_mid", "dod", "c_ch", "c_dch"],
+ "eligible_families": [
+  "zero",
+  "linear",
+  "log"
+ ],
+ "inputs": [
+  "T_C",
+  "soc_mid",
+  "dod",
+  "c_ch",
+  "c_dch"
+ ],
  "laws_per_arm_g4": 25,
  "min_agree_share": 0.8,
  "tolerance_over_range": 0.01,
@@ -18,32 +28,100 @@
   "alpha": 0.05,
   "max_upper_limit": 0.2,
   "min_recall": 0.5,
-  "amplitude_range": [0.05, 0.5],
+  "amplitude_range": [
+   0.05,
+   0.5
+  ],
   "laboratory_offset_sd": 0.15,
   "cpu_cap_hours": 36,
   "interaction_every": 3,
-  "recall_inputs": ["soc_mid", "dod", "c_ch", "c_dch"],
+  "recall_inputs": [
+   "soc_mid",
+   "dod",
+   "c_ch",
+   "c_dch"
+  ],
   "rerun_datasets": 3
  },
  "bic_margin_note": "appendix field only: computed on the KAN's grid, not a data statistic; it licenses nothing",
- "banned_phrases": ["no effect", "recovered", "discovered", "shows a", "power law", "Arrhenius", "hinge", "threshold", "structurally identifiable", "structural identifiability", "enforced", "more identified", "better identified", "fewer identified"],
- "never_licensed_inputs": ["T_C"],
+ "banned_phrases": {
+  "note": "D022b/red-team A4. Normalisation before matching: hyphens, line breaks and runs of white space become one space; case-insensitive. Stems are banned anywhere; form words are banned in a sentence that also names the extracted law (subject words) unless the sentence carries a negation word; approved text of PREREG 11 / 11a must not match (tested). The gate auditor still reads the manuscript.",
+  "stems": [
+   "recover\\w*",
+   "discover\\w*",
+   "identified",
+   "identifiable",
+   "identifiability",
+   "no effect",
+   "enforced",
+   "more identified",
+   "better identified",
+   "fewer identified"
+  ],
+  "form_words": [
+   "arrhenius",
+   "power law",
+   "exponential",
+   "quadratic",
+   "hinge",
+   "threshold",
+   "activation energy",
+   "non monoton\\w*"
+  ],
+  "subject_words": [
+   "extracted",
+   "extraction",
+   "closed form",
+   "a15",
+   "g15",
+   "cycling law",
+   "stress law",
+   "kan law"
+  ],
+  "shows_pattern": "\\bshows? (?:an? |the )(?:\\w+ ){0,2}(?:form|law|dependence)\\b",
+  "negation_words": [
+   "not",
+   "cannot",
+   "no",
+   "never",
+   "without",
+   "nor",
+   "neither",
+   "n't"
+  ]
+ },
+ "never_licensed_inputs": [
+  "T_C"
+ ],
  "status": "D022b: struck as a contribution; descriptive stability table only; the calibration is not run (07_judge_recheck.md)",
  "wording": {
-  "results_sentence": "Of the {n} inputs of the extracted {law} law, the audit licensed the form of {j} and the sign of {s}; {a} were not identified and {p} were not retained by the extraction.",
-  "scope_sentence": "The extraction rule, its thresholds and the calibration design are fixed by the frozen commit and verified by re-run.",
   "bic_caveat": "BIC is computed on the KAN's grid, not on the data",
   "approx_input": "the cap-2 form is an approximation of the arm's own parent effect (extraction-loss flag)",
   "discussion_sentence": "Readable means that the extracted law is a short closed form that can be written out and evaluated; we name no form or direction for its individual effects.",
   "stability_table_caption": "descriptive; not evidence that the training design identifies these forms",
   "temperature_note": "temperature and laboratory cannot be separated",
+  "law_names": {
+   "A15": "KAN",
+   "G15": "additive"
+  },
+  "labels": {
+   "not_retained": "not retained (below the extraction tolerance)",
+   "composed": "composed: no single form",
+   "form": "form: {family}",
+   "sign": "sign: {sign}",
+   "not_identified": "not identified by the audit"
+  },
+  "temperature_label": "temperature (aliased with laboratory; no form or sign reported)"
+ },
+ "future_version_wording": {
+  "note": "D022b: wording of a FUTURE version of the audit (calibrated contribution). Not reachable from the statistics step; the paper's writer takes nothing from this block.",
+  "results_sentence": "Of the {n} inputs of the extracted {law} law, the audit licensed the form of {j} and the sign of {s}; {a} were not identified and {p} were not retained by the extraction.",
+  "scope_sentence": "The extraction rule, its thresholds and the calibration design are fixed by the frozen commit and verified by re-run.",
   "not_identified_input": "the audit does not license a form for this effect",
   "failure": {
    "calibration": "The extraction audit did not meet its pre-set calibration condition, so it is reported as a description, not as a method result.",
    "usefulness": "The extraction audit did not meet its pre-set usefulness condition, so it is reported as a description, not as a method result.",
    "necessity": "The extraction audit did not meet its pre-set necessity condition, so it is reported as a description, not as a method result."
-  },
-  "law_names": {"A15": "KAN", "G15": "additive"},
-  "labels": {"not_retained": "not retained (below the extraction tolerance)", "composed": "composed: no single form", "form": "form: {family}", "sign": "sign: {sign}", "not_identified": "not identified by the audit"}
+  }
  }
 }

@@ -150,10 +150,21 @@ def superposition_summary(run_dirs):
 
 
 # ------------------------------------------------------------------------------------------------ item 5
+T_VARS = ("T", "T_C")                                      # the cyclic temperature input: aliased with laboratory in the design; no direction, no A10 verdict for it (D022b N1(a), permanent; red-team A1)
+
+
+def temperature_label():
+    from .extraction_audit import load_thresholds
+    return load_thresholds()["wording"]["temperature_label"]
+
+
 def cyclic_directions(M):
-    """per stress variable and member: direction = sign of PD(x_last) - PD(x_first); monotone = all finite differences of one sign; shares over members"""
+    """per stress variable and member: direction = sign of PD(x_last) - PD(x_first); monotone = all finite differences of one sign; shares over members. Temperature gets the fixed label only."""
     out = {}
     for var, c in M["cyc"].items():
+        if var in T_VARS:
+            out[var] = dict(display=temperature_label())
+            continue
         m = c["members"]
         sgn = np.sign(m[:, -1] - m[:, 0])
         d = np.diff(m, axis=1)
@@ -168,12 +179,15 @@ def compare_with_a10_signs(M):
     semi.require_verified()
     rows = {}
     for var, c in M["cyc"].items():
+        if var in T_VARS:
+            rows[var] = dict(display=temperature_label())            # no sign, no share, no "consistent / not consistent" for temperature
+            continue
         if c["a10"] is None:
             continue
         s10 = float(np.sign(c["a10"][-1] - c["a10"][0]))
         share = float(np.mean(np.sign(c["members"][:, -1] - c["members"][:, 0]) == s10))
         rows[var] = dict(sign_A10=s10, share_members_same_sign=share, verdict="consistent" if share > 0.5 else "not consistent")
-    return rows or dict(status="A10 did not run in these runs")
+    return rows if any("verdict" in r for r in rows.values()) else dict(rows, status="A10 did not run in these runs")
 
 
 # ------------------------------------------------------------------------------------------------ driver

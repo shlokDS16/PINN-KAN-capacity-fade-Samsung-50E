@@ -71,6 +71,10 @@ def main():
             ("c_dch", ps.LBL["cdch"])]
     for k, (name, xl) in enumerate(spec):
         P = ax[3 + k]
+        if name == "T":                                          # temperature is aliased with laboratory: no curve, no direction line (D022b N1(a), permanent)
+            P.axis("off")
+            P.text(0.5, 0.5, "temperature (aliased with\nlaboratory; no form or\nsign reported)", transform=P.transAxes, ha="center", va="center", fontsize=8, color="#444444")
+            continue
         d = cyc[name]
         x = np.array(d["x"])
         band(P, x, d["A1"], ps.BLUE)

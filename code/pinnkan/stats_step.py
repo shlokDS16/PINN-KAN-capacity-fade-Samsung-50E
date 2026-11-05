@@ -557,7 +557,11 @@ def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, r
     if audit_dir is None:                                                  # D022b: the law is printed in closed form, no edge family is named; the descriptive stability table is added when the runs hold extracted laws
         out["edge_wording"] = {"printed": False, "reason": "no calibration table supplied: the extracted laws are printed in closed form without named edge families"}
         if any(os.path.exists(os.path.join(d, "extracted_laws.json")) for d in run_dirs):
-            out["edge_wording"]["stability"] = stats_v4.edge_level_wording(run_dirs)
+            from .extraction_audit import AuditError
+            try:
+                out["edge_wording"]["stability"] = stats_v4.edge_level_wording(run_dirs)
+            except AuditError as e:                                            # a lenient or partial-grid run must not abort: the descriptive table is recorded as unavailable
+                out["edge_wording"]["stability"] = {"status": f"not available: {e}"}
     elif not licences:
         from .extraction_audit import AuditGuardError
         raise AuditGuardError("D022b: the extraction audit is struck as a contribution; edge-level licences are refused (descriptive stability table only: pass no audit_dir)")
@@ -565,6 +569,8 @@ def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, r
         fc = frozen_commit if frozen_commit is not None else (guard.read_freeze() or {}).get("commit")
         out["edge_wording"] = stats_v4.edge_level_wording(run_dirs, audit_dir, audit_thresholds_pin, calibration_sha256, fc, licences=True)         # raises AuditGuardError without the pins, a valid record from the FROZEN commit
     out["gate_G"] = gate_
+    from .extraction_audit import check_generated_sentences
+    check_generated_sentences(out, "contrasts_v4_B")                          # fail closed: no banned claim in any generated sentence (red-team A4)
     os.makedirs(analysis_dir, exist_ok=True)
     write_json(os.path.join(analysis_dir, "controls.json"), controls)
     write_json(os.path.join(analysis_dir, "contrasts_v4_B.json"), out)

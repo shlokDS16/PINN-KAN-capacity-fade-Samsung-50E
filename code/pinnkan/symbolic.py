@@ -442,8 +442,11 @@ def extract_law(law, spec, s_cyc_train, s_cal_train, cap=None, untruncated=False
     return SymbolicMap(cyc), cal, report
 
 
-def describe(report):
-    """one line per edge (the closed form as text), for the appendix"""
+def describe(report, t_index=0):
+    """one line per edge (the closed form as text), for the appendix. The cyclic temperature input (first layer, index t_index) is printed only as the fixed label: temperature is aliased
+    with laboratory in the design and no form or sign is reported for it (D022b N1(a), permanent)."""
+    from .extraction_audit import load_thresholds
+    tlabel = load_thresholds()["wording"]["temperature_label"]
     out = []
     for part in ("cyclic", "calendar"):
         r = report.get(part)
@@ -452,6 +455,9 @@ def describe(report):
         for L in r["layers"]:
             for j, row in enumerate(L["edges"]):
                 for i, e in enumerate(row):
+                    if part == "cyclic" and L["layer"] == 0 and i == t_index:
+                        out.append(f"{part} layer {L['layer']} edge {j}<-{i}: {tlabel}")
+                        continue
                     out.append(f"{part} layer {L['layer']} edge {j}<-{i}: {e['family']} {np.round(e.get('theta', []), 4).tolist()}")
     return out
 

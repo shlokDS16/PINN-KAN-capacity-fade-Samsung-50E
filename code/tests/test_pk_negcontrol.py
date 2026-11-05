@@ -156,14 +156,20 @@ def test_nc2_exact_one_sided_sign_test_paired_by_condition(tmp_path):
     real = {"A1": {c: 2.0 for c in conds}, "A9": {c: 2.4 for c in conds}}
     perm = {"A1": {c: 2.0 * (1.5 if i < 27 else 0.8) for i, c in enumerate(conds)}, "A9": {c: 2.5 for c in conds}, "R1": {c: 9.0 for c in conds}}
     r, p = _pair(tmp_path, "t", real, perm)
-    n = st.nc2([r], [p])
-    assert n["n"] == 40 and n["k_positive"] == 27 and n["passed"] and n["gating"] is False                  # 27 of 40 is the threshold of the ruling
+    from pinnkan import stats_v4
+    n = st.nc2([r], [p], sign_rule=stats_v4.PLAIN)                                                       # the plain exact rule (rho_s0 = 0): the limiting case
+    assert n["n"] == 40 and n["k_positive"] == 27 and n["passed"] and n["gating"] is False                  # 27 of 40 is the plain threshold
+    d = st.nc2([r], [p])                                                                                   # D018 default: Beta-binomial design effect, rho_s0 = 0.03 -> 30 of 40
+    assert d["crit_positives"] == 30 and not d["passed"] and d["k_positive"] == 27
     assert np.isclose(n["p_one_sided_exact"], stats.binom.sf(26, 40, 0.5)) and n["p_one_sided_exact"] <= 0.025
     assert np.isclose(n["median_L"], np.log(1.5)) and np.isclose(n["rel_increase_median"], 0.5)
     assert n["descriptive"]["mean_L_A9_over_A1_real"] > 0 and "R1" in n["descriptive"]["scores_under_permutation_mean_pp"]
     perm26 = {"A1": {c: 2.0 * (1.5 if i < 26 else 0.8) for i, c in enumerate(conds)}}
     r2, p2 = _pair(tmp_path, "u", real, perm26)
-    assert not st.nc2([r2], [p2])["passed"]
+    assert not st.nc2([r2], [p2], sign_rule=stats_v4.PLAIN)["passed"]
+    perm30 = {"A1": {c: 2.0 * (1.5 if i < 30 else 0.8) for i, c in enumerate(conds)}}
+    r3, p3 = _pair(tmp_path, "v", real, perm30)
+    assert st.nc2([r3], [p3])["passed"]
     assert np.isclose(st.exact_two_sided_p(27, 40), min(1.0, 2 * stats.binom.sf(26, 40, 0.5))) and st.exact_two_sided_p(20, 40) == 1.0
 
 

@@ -302,9 +302,10 @@ def exact_two_sided_p(k, n):
     return float(min(1.0, 2.0 * min(stats.binom.sf(k - 1, n, 0.5), stats.binom.cdf(k, n, 0.5))))
 
 
-def nc2(real_runs, permuted_runs, alpha=ALPHA):
+def nc2(real_runs, permuted_runs, alpha=ALPHA, sign_rule=None):
     """NC-2 (interpretive, not gating; Test B only): L_c = ln(S_A1,permuted,c / S_A1,real,c) paired by condition on the same held-out conditions;
-    exact one-sided sign test of median(L) > 0 at 0.025; plus descriptive rows. NEGCONTROL_RULING section 3."""
+    one-sided sign test of median(L) > 0 at 0.025 under the confirmatory rule (D018: Beta-binomial design effect, rho_s0 = 0.03, 30 of 40; `sign_rule=stats_v4.PLAIN` gives the
+    plain exact 27 of 40 of the withdrawn D014 text); plus descriptive rows. NEGCONTROL_RULING section 3."""
     def merged(dirs):
         out = {}
         for d in dirs:
@@ -321,14 +322,17 @@ def nc2(real_runs, permuted_runs, alpha=ALPHA):
     L = np.array([np.log(P["A1"][c] / R["A1"][c]) for c in conds])
     k = int((L > 0).sum())
     lo, hi, _ = median_order_ci(L)
-    p = sign_p(L, 0.0)
+    from . import stats_v4                                     # lazy: stats_v4 imports this module
+    rule = sign_rule if sign_rule is not None else stats_v4.resolve_config()[0]
+    _, _, p = rule.test(L, 0.0)
     desc = {"scores_under_permutation_mean_pp": {a: float(np.mean(list(P[a].values()))) for a in sorted(P)},
             "scores_real_mean_pp": {a: float(np.mean(list(R[a].values()))) for a in sorted(R)}}
     if "A9" in R and "A9" in P:
         desc["mean_L_A9_over_A1_real"] = float(np.mean([np.log(R["A9"][c] / R["A1"][c]) for c in conds]))
         desc["mean_L_A9_over_A1_permuted"] = float(np.mean([np.log(P["A9"][c] / P["A1"][c]) for c in conds]))
     return dict(test="B", n=len(conds), k_positive=k, median_L=float(np.median(L)), rel_increase_median=float(np.exp(np.median(L)) - 1.0), median_ci95=[lo, hi],
-                p_one_sided_exact=p, p_two_sided_exact=exact_two_sided_p(k, len(L)), alpha=alpha, passed=bool(p <= alpha),
+                p_one_sided_exact=sign_p(L, 0.0), p_one_sided=p, sign_rule=rule.describe(), crit_positives=rule.crit(len(L), alpha), p_two_sided_exact=exact_two_sided_p(k, len(L)), alpha=alpha,
+                passed=bool(p <= alpha * (1 + 1e-9)),
                 wording=("pass licenses: 'the accuracy of the learned law depends on the stress dependence it learns'; fail removes it (competing explanation E1)"),
                 L_by_cond={c: float(v) for c, v in zip(conds, L)}, descriptive=desc, gating=False)
 
@@ -462,3 +466,18 @@ def main(argv=None):
         t, dirs = item.split("=", 1)
         runs[t] = dirs.split(",")
     run_stats(a.analysis_dir, runs, a.negative_run, a.h7_run, a.stress_run, nc1_full=a.nc1_full, physval_runs=(runs.get("B") if a.physval else None))
+
+
+# --------------------------------------------------------------------------------------------------- Design R2 (PREREG_v4): see stats_v4.py
+def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, row_tiers=None):
+    """Design R2 statistics from grid runs. The item (f) dependence file must exist, match its hash and pre-date every outer score file (D018 2.3 (ii)); otherwise ItemFError."""
+    from . import stats_v4
+    if item_f_dir is None:
+        raise stats_v4.ItemFError("item_f_dir is required: the statistics step is blocked without the hashed item (f) dependence file")
+    item_f = stats_v4.require_item_f(item_f_dir, run_dirs)
+    store = stats_v4.Store.from_runs(run_dirs)
+    out = stats_v4.run_v4(store, cfg, gate, row_tiers)
+    out["item_f"] = item_f
+    os.makedirs(analysis_dir, exist_ok=True)
+    write_json(os.path.join(analysis_dir, "contrasts_v4_B.json"), out)
+    return out

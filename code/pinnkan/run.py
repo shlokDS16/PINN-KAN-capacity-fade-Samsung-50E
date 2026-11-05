@@ -285,7 +285,7 @@ def _run(cfg_in, root=None, runs_dir=None):
     ctx = {"backbone": cfg["backbone"] if cfg["backbone"] != "tournament" else "self_limiting", "steps_scale": cfg["steps_scale"], "rule": rule_tune, "extra_twin_raw": extra,
            "oracle": cfg["oracle_throughput"], "per_cell_factor": cfg["per_cell_factor"], "a10_starts": cfg.get("a10_starts", 8), "pinn": cfg["pinn"]}
     arms = list(cfg["arms"])
-    if mode == "confirmatory" and ds != "synthetic" and "A10" in arms:
+    if mode == "confirmatory" and ds != "synthetic" and ({"A10", "A10P"} & set(arms)):
         semi.require_verified()
     timings, metrics_out = {}, {"blinded": blinded, "mode": mode}
     if mode != "timing":
@@ -330,6 +330,8 @@ def _run(cfg_in, root=None, runs_dir=None):
         rec.add_preds("inner_oof", a, 1000 + cfg["fold"], r["rows"])
         _json(os.path.join(run_dir, f"tuning_{a}.json"), {k: (strip_rows(v) if k == "rows" else v) for k, v in r.items()})
         rec.log(f"tuned {a}: inner-CV {r['inner_cv_pp']:.3f} pp, best {r['best_hp']}, median fit {r['median_fit_seconds']:.1f} s, failed {r['n_failed']}")
+    metrics_out["k_full"] = rule.k_cycling if rule.W is None else None
+    _json(os.path.join(run_dir, "train_condition_meta.json"), metrics.train_condition_meta(train))      # identifiers only: laboratory of each training condition (item (f) dependence estimate)
     metrics_out["tuning_window"] = {"k_cycling": rule_tune.k_cycling, "k_storage": rule_tune.k_storage, "W": rule_tune.W, "m": cfg["m"]}
     inner = {a: {"inner_cv_pp": tuned[a]["inner_cv_pp"], "cond_scores": tuned[a]["cond_scores"], "best_hp": tuned[a]["best_hp"]} for a in arms}
     _json(os.path.join(run_dir, "tuning_done.json"), {"backbone": ctx["backbone"], "arms": inner, "budget": {"n_trials": cfg["n_trials"], "inner_k": cfg["inner_k"]}})

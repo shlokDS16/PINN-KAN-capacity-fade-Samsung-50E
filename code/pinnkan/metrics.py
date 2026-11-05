@@ -68,6 +68,20 @@ def condition_meta(prepared):
     return out
 
 
+def train_condition_meta(cells):
+    """cycling training condition -> {n_cells, lab (majority; ties: first in sorted order)}; identifiers only"""
+    out = {}
+    for c in cells:
+        if c.kind != "cycling":
+            continue
+        e = out.setdefault(c.cond, {"n_cells": 0, "labs": {}})
+        e["n_cells"] += 1
+        e["labs"][c.lab or ""] = e["labs"].get(c.lab or "", 0) + 1
+    for e in out.values():
+        e["lab"] = sorted(e["labs"].items(), key=lambda kv: (-kv[1], kv[0]))[0][0]
+    return out
+
+
 def r2_pooled(preds, prepared):
     """R^2 = 1 - SSE / SST with (y_true, y_pred) in the correct argument order"""
     yt, yp = [], []

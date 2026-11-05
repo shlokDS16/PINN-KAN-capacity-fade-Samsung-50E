@@ -60,6 +60,8 @@ ARMS = {
     "A8": ArmDef("A8", "free G (synthetic H7 only)", "free", {"width": ("cat", [16, 32, 64]), "wd": ("cat", DECADES)}),
     "A9": ArmDef("A9", "data-only F (lambda = 0)", "data", {"width": ("cat", [16, 32, 64, 128]), "depth": ("cat", [2, 3, 4]), "wd": ("cat", DECADES), "zdim": ("cat", [1, 2, 3])}),
     "A10": ArmDef("A10", "Stroebl semi-empirical (PROVISIONAL form)", "semi", tuned=False),
+    # A10 in its second form (PREREG_v4 7.2): the dataset authors' model as published, population parameters only (no per-cell factor)
+    "A10P": ArmDef("A10P", "Stroebl semi-empirical as published (no per-cell factor; PROVISIONAL form)", "semi", tuned=False),
     "A11": ArmDef("A11", "GP-ARD", "p3", {"nu": ("cat", [1.5, 2.5, -1.0]), "noise_lo": ("logu", 1e-6, 1e-2), "fs": ("cat", ["full", "min"]), "feat": ("cat", FEAT), "storage": ("cat", STORAGE)}),
     "A12": ArmDef("A12", "LightGBM", "p3", {"n_est": ("int", 50, 600), "lr": ("logu", 0.01, 0.3), "leaves": ("int", 4, 32), "mcs": ("int", 5, 60), "l2": ("logu", 1e-3, 10.0),
                                                "feat": ("cat", FEAT), "storage": ("cat", STORAGE)}),
@@ -241,7 +243,7 @@ class SemiArm(Arm):
         return self
 
     def predict(self, wcells):
-        return semi.predict_semi(self.form, self.theta, wcells, per_cell_factor=bool(self.ctx.get("per_cell_factor", True)))
+        return semi.predict_semi(self.form, self.theta, wcells, per_cell_factor=bool(self.ctx.get("per_cell_factor", True)) and self.arm_id != "A10P")
 
 
 class P3Arm(Arm):

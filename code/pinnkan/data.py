@@ -154,6 +154,19 @@ class WindowRule:
         return int(k)  # reference + k check-ups
 
 
+LABS = ("HM", "INT", "SIE")          # Samsung laboratories (PREREG_v4 3.3(7)); reference level = HM
+STAGES = ("1", "2")                  # reference level = stage 1
+
+
+def indicator_vector(lab, stage):
+    """lab-and-stage indicators of PREREG_v4 9.8 rule 2 / 9.9 (f): treatment coding [lab == INT, lab == SIE, stage == 2] with reference HM and stage 1; an unknown or empty
+    laboratory or stage is the reference (all zeros). Identifiers only. The coding is this build's choice (the prereg does not fix it; CHOICES.md)."""
+    return np.array([float(lab == LABS[1]), float(lab == LABS[2]), float(str(stage) == STAGES[1])], dtype=np.float32)
+
+
+N_IND = 3
+
+
 class DesignReopenError(RuntimeError):
     """k_full < 2: the grid k in {0, 2, k_full} is not defined and the design is re-opened (J16 section 8, PREREG_v4 4.1)"""
 

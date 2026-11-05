@@ -345,13 +345,14 @@ class Batch:
     obs_E: torch.Tensor       # (M,) E_n at obs_t
     t_end: torch.Tensor       # (C,) last observed t_n
     curves: list              # EFCCurve per series (rate beyond the data: mean rate)
+    ind: object = None        # (C, q) lab-and-stage indicators (rows 9.8(ii)); None = primary analysis
 
     @property
     def C(self):
         return len(self.ids)
 
 
-def _series_batch(spec, ids, conds, kinds, raws, ts, rets, curves):
+def _series_batch(spec, ids, conds, kinds, raws, ts, rets, curves, inds=None):
     s = torch.tensor(np.stack([spec.norm(r) for r in raws]), dtype=torch.float32)
     is_cyc = torch.tensor([1.0 if k == "cycling" else 0.0 for k in kinds])
     oc, ot, oy, oe, te = [], [], [], [], []
@@ -363,19 +364,25 @@ def _series_batch(spec, ids, conds, kinds, raws, ts, rets, curves):
         oe += list(cur.value(t) / spec.efc_scale)
         te.append(t.max() / spec.t_scale)
     f = lambda a: torch.tensor(np.asarray(a), dtype=torch.float32)
-    return Batch(list(ids), list(conds), list(kinds), s, is_cyc, torch.tensor(oc, dtype=torch.long), f(ot), f(oy), f(oe), f(te), list(curves))
+    ind = None if inds is None else torch.tensor(np.stack(inds), dtype=torch.float32)
+    return Batch(list(ids), list(conds), list(kinds), s, is_cyc, torch.tensor(oc, dtype=torch.long), f(ot), f(oy), f(oe), f(te), list(curves), ind)
 
 
-def batch_from_cells(spec, cells):
+def _inds(items, on):
+    from .data import indicator_vector
+    return [indicator_vector(x.lab, x.stage) for x in items] if on else None
+
+
+def batch_from_cells(spec, cells, indicator=False):
     """full records of training cells"""
     return _series_batch(spec, [c.cell_id for c in cells], [c.cond for c in cells], [c.kind for c in cells], [c.raw for c in cells],
-                         [c.t for c in cells], [c.ret for c in cells], [EFCCurve(c.t, c.efc) for c in cells])
+                         [c.t for c in cells], [c.ret for c in cells], [EFCCurve(c.t, c.efc) for c in cells], _inds(cells, indicator))
 
 
-def batch_from_windows(spec, wcells):
+def batch_from_windows(spec, wcells, indicator=False):
     """window observations of held-out cells (the only labels a model may use for them)"""
     return _series_batch(spec, [w.cell_id for w in wcells], [w.cond for w in wcells], [w.kind for w in wcells], [w.raw for w in wcells],
-                         [w.t_win for w in wcells], [w.y_win for w in wcells], [w.efc_curve for w in wcells])
+                         [w.t_win for w in wcells], [w.y_win for w in wcells], [w.efc_curve for w in wcells], _inds(wcells, indicator))
 
 
 def batch_forecast_query(spec, wcells):

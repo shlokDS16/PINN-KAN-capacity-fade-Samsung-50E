@@ -196,6 +196,12 @@ def node(rule, L, margin, label):
     return {"label": label, "margin": margin, "n": n, "positives": pos, "p": p, "p_plain": float(gt.betabin_p(pos, n, 0.0)) if n else 1.0}
 
 
+def level_of(res, names, nm):
+    """local level of one node: the level at its rejection, or its final level if it stayed open"""
+    k = list(names).index(nm)
+    return float(res.level_at_rejection[k]) if res.rejected[k] else float(res.final_level[k])
+
+
 def slot_level(res, names, i):
     """largest level the slot of secondary test i reaches: max over its two nodes of the level at rejection (rejected) or the final level (open)"""
     out = 0.0
@@ -327,7 +333,7 @@ def secondary_analysis(store, rule, cfg):
             rev[f] = rv
         any_rev = any(r["rejected"] for r in rev.values())
         tier = "reverse S" if any_rev else ("S" if sS else ("N" if sN else "none"))
-        out[t["name"]] = {"arm": t["arm"], "cell": t["cell"], "forms": t.get("forms", []), "pN": t["pN"], "pS": t["pS"], "N_rejected": sN, "S_rejected": sS, "slot_level": lvl, "reverse_S": rev,
+        out[t["name"]] = {"arm": t["arm"], "cell": t["cell"], "forms": t.get("forms", []), "pN": t["pN"], "pS": t["pS"], "N_rejected": sN, "S_rejected": sS, "slot_level": lvl, "N_level": level_of(res, names, f"N{i}"), "S_level": level_of(res, names, f"S{i}"), "reverse_S": rev,
                           "tier": tier, "crit_positives_slot": (rule.crit(next(iter(t["per_form"].values()))["N"]["n"], lvl) if t.get("forms") and lvl > 0 else None),
                           "per_form": {f: {"N": t["per_form"][f]["N"], "S": t["per_form"][f]["S"]} for f in t.get("forms", [])}}
     return {"rule": rule.describe(), "graph": "N_i / S_i nested graph (Holm with one node per test), initial level alpha/5 on each N_i", "tests": out,
@@ -659,10 +665,11 @@ def qualifier_sentence(kind, tier, X=None, interval=None, n=40):
     return Q_TEMPLATES[tier].format(A=A, B=B, X=fmt1(X) if X is not None else "?", interval=iv, n=n)
 
 
-def test_c_sentence(comparator_name, ratio, interval, k_below, n=13):
-    """the fixed D011 Test C sentence (no tier word, whatever the direction)"""
+def test_c_sentence(comparator_name, ratio, ci, k_below, n=13):
+    """the fixed D011 Test C sentence (no tier word, whatever the direction); ratio = median over conditions of S_A1 / S_comparator, ci its order-statistic interval, k_below =
+    number of conditions with ratio < 1"""
     return (f"on a held-out combination of temperature and laboratory (35 C cells from one laboratory, n = {n} conditions) the median condition error ratio against {comparator_name} was "
-            f"{ratio:.2f} ({ivs(*interval).replace('95 % interval', '95 % interval')}; {k_below} of {n} below); {TEST_C_TAIL}")
+            f"{ratio:.2f} (95 % interval [{ci[0]:.2f}, {ci[1]:.2f}]; {k_below} of {n} below); {TEST_C_TAIL}")
 
 
 # ------------------------------------------------------------------------------------------------ the whole step

@@ -161,21 +161,43 @@ def fit_semi(form: SemiForm, cells, n_starts=8, seed=0):
     return best.x, float(best.cost)
 
 
-def cell_factor(form: SemiForm, th, wc):
-    """delta_c by MAP from the window (kappa = exp(delta)); prior sd TAU, noise SIGMA / y_scale in retention units"""
+def cell_factor(form: SemiForm, th, wc, mu=0.0):
+    """delta_c by MAP from the window (kappa = exp(delta)); prior N(mu, TAU^2) (mu = 0 in the primary analysis), noise SIGMA / y_scale in retention units"""
     sig = SIGMA / form.spec.y_scale
     base = form.loss(th, wc.raw, wc.t_win[1:], wc.efc_win[1:])
     y = 1.0 - wc.y_win[1:]
 
     def nll(d):
-        return float(np.sum((np.exp(d) * base - y) ** 2) / sig ** 2 + d * d / TAU ** 2)
+        return float(np.sum((np.exp(d) * base - y) ** 2) / sig ** 2 + (d - mu) ** 2 / TAU ** 2)
     return float(minimize_scalar(nll, bounds=(-2.0, 2.0), method="bounded").x)
 
 
-def predict_semi(form: SemiForm, th, wcells, per_cell_factor=True):
+def indicator_beta(form: SemiForm, th, cells, ridge=1.0):
+    """rows 9.8(ii): prior mean of A10's per-cell factor from the lab-and-stage indicators. Each training cell's delta_c is the MAP from its full record (flat prior), then ridge
+    regression of delta_c on [1, indicators] (ridge 1 on the indicator coefficients, none on the intercept: the population fit is not centred on the reference group).
+    Returns [intercept, b_INT, b_SIE, b_stage2]."""
+    from .data import indicator_vector
+    X, d = [], []
+    for c in cells:
+        if c.n < 2 or not (form.has_cal or c.kind == "cycling"):
+            continue
+        wc = type("W", (), dict(raw=c.raw, t_win=c.t, efc_win=c.efc, y_win=c.ret))
+        X.append(np.concatenate([[1.0], indicator_vector(c.lab, c.stage).astype(float)]))
+        d.append(cell_factor(form, th, wc, mu=0.0))
+    if not X:
+        return np.zeros(4)
+    X, d = np.array(X), np.array(d)
+    R = ridge * np.eye(X.shape[1])
+    R[0, 0] = 0.0
+    return np.linalg.solve(X.T @ X + R, X.T @ d)
+
+
+def predict_semi(form: SemiForm, th, wcells, per_cell_factor=True, beta=None):
+    from .data import indicator_vector
     out = {}
     for w in wcells:
-        d = cell_factor(form, th, w) if (per_cell_factor and len(w.t_win) > 1) else 0.0      # k = 0: population parameters, factor 1 (PREREG_v4 4.1)
+        mu = 0.0 if beta is None else float(beta[0] + indicator_vector(w.lab, w.stage).astype(float) @ beta[1:])      # indicator prior mean of the factor (rows 9.8(ii))
+        d = cell_factor(form, th, w, mu) if (per_cell_factor and len(w.t_win) > 1) else (mu if per_cell_factor else 0.0)      # k = 0: population parameters, factor at its prior mean (1 in the primary analysis; PREREG_v4 4.1)
         efc_fc = w.efc_curve.value(w.t_fc)
         out[w.cell_id] = 1.0 - np.exp(d) * form.loss(th, w.raw, w.t_fc, efc_fc)
     return out

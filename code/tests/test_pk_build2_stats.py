@@ -381,9 +381,7 @@ def test_p3_and_gate_are_written_to_controls_json(build2_runs, tmp_path):
     assert ctl["gate_G"]["rule"].startswith("PREREG 11 row G")
 
 
-def test_lab_indicator_row_is_a_hard_error_not_a_guess(tmp_path):
-    with pytest.raises(run.NotBuiltError, match="lab_indicator"):
-        run.run({"run_id": "x", "dataset": "synthetic", "arms": ["A1"], "lab_indicator": True}, runs_dir=str(tmp_path))
+# build_v2 item 6: the lab-and-stage-indicator row is built (it was a hard error here); tests in test_pk_v2_rows.py
 
 
 def test_cells_with_two_points_do_not_break_a_fit(tmp_path):

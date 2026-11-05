@@ -157,10 +157,6 @@ def run(cfg_in, root=None, runs_dir=None):
         raise NotBuiltError("forecast_failure (PREREG 3.3(8)): the rule scores cells whose record ends inside the window 'as forecast failures (retention carried forward "
                             "from the last observation)', but the text gives no forecast times for a cell without post-window check-ups, so the scored set is undefined. "
                             "Specify the forecast times (or strike the row) before the freeze.")
-    if cfg["lab_indicator"]:
-        raise NotBuiltError("lab_indicator (PREREG 9.8(f), the lab-indicator rows for A1, A9, A12 on Test B and Test C): the text says 'a lab indicator in the per-cell prior/inputs' "
-                            "without fixing where it enters each arm (prior mean of delta_c / z_c for A1 and A9, an input column for A12), the coding of the three laboratories or the "
-                            "reference level; building one reading would be a guess. Specify the construction (or strike the row) before the freeze.")
     lo = {k: v for k, v in (cfg.get("law_overrides") or {}).items() if v is not None}
     if lo:
         bad = set(lo) - set(LAW_OVERRIDE_ARMS)
@@ -283,7 +279,7 @@ def _run(cfg_in, root=None, runs_dir=None):
         extra = twins_from_conditions(D["split"].get("test_conditions", []))
     rule_tune = rule if cfg["m"] is None else WindowRule.for_grid(spec, 2 if int(cfg["m"]) < 32 else "full", rule)      # PREREG_v4 4.1: inner CV scored at k = 2 for m < 32, at k_full for m = 32
     ctx = {"backbone": cfg["backbone"] if cfg["backbone"] != "tournament" else "self_limiting", "steps_scale": cfg["steps_scale"], "rule": rule_tune, "extra_twin_raw": extra,
-           "oracle": cfg["oracle_throughput"], "per_cell_factor": cfg["per_cell_factor"], "a10_starts": cfg.get("a10_starts", 8), "pinn": cfg["pinn"]}
+           "oracle": cfg["oracle_throughput"], "per_cell_factor": cfg["per_cell_factor"], "lab_indicator": bool(cfg["lab_indicator"]),  "a10_starts": cfg.get("a10_starts", 8), "pinn": cfg["pinn"]}
     arms = list(cfg["arms"])
     if mode == "confirmatory" and ds != "synthetic" and ({"A10", "A10P"} & set(arms)):
         semi.require_verified()

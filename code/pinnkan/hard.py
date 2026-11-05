@@ -9,10 +9,14 @@ from .law import (GRAD_CLIP, SIGMA, clip_and_count, clip_fraction, new_clip_stat
 
 
 class HardODE(nn.Module):
-    def __init__(self, spec, law: Law, n_cells, backbone):
+    def __init__(self, spec, law: Law, n_cells, backbone, n_ind=0):
         super().__init__()
         self.spec, self.law, self.backbone = spec, law, backbone
         self.delta = nn.Parameter(torch.zeros(n_cells))
+        self.beta = nn.Parameter(torch.zeros(n_ind)) if n_ind else None      # lab-and-stage indicators: prior mean of delta_c = ind . beta (rows 9.8(ii))
+
+    def prior_mean(self, ind):
+        return 0.0 if (self.beta is None or ind is None) else ind @ self.beta
 
     def predict_y(self, b: Batch, delta):
         a_cal, a_cyc = self.law.amplitudes(b.s, b.is_cyc, delta)
@@ -22,7 +26,7 @@ class HardODE(nn.Module):
     def loss(self, b: Batch, l2, sparsity):
         r = self.predict_y(b, self.delta) - b.obs_y
         n = r.numel()
-        return (r ** 2).mean() / SIGMA ** 2 + (self.delta ** 2).sum() / (_law.TAU ** 2 * n) + self.law.reg(l2, sparsity)
+        return (r ** 2).mean() / SIGMA ** 2 + ((self.delta - self.prior_mean(b.ind)) ** 2).sum() / (_law.TAU ** 2 * n) + self.law.reg(l2, sparsity)
 
 
 def make_law(spec, batch, hp, backbone):
@@ -32,7 +36,7 @@ def make_law(spec, batch, hp, backbone):
 
 def fit_hard(batch: Batch, spec, hp, backbone, seed, steps=1200, lr=0.02, clip=GRAD_CLIP):
     torch.manual_seed(seed)
-    m = HardODE(spec, make_law(spec, batch, hp, backbone), batch.C, backbone)
+    m = HardODE(spec, make_law(spec, batch, hp, backbone), batch.C, backbone, n_ind=0 if batch.ind is None else int(batch.ind.shape[1]))
     opt = torch.optim.Adam(m.parameters(), lr=lr)
     sch = torch.optim.lr_scheduler.CosineAnnealingLR(opt, steps, eta_min=lr * 0.05)
     l2, sp = float(hp.get("l2", 1e-4)), float(hp.get("sparsity", 0.0))
@@ -53,17 +57,19 @@ def fit_delta(m: HardODE, bw: Batch, steps=300, lr=0.05):
     flags = [p.requires_grad for p in m.parameters()]
     for p in m.parameters():
         p.requires_grad_(False)
-    delta = torch.zeros(bw.C, requires_grad=True)
+    mu = (m.prior_mean(bw.ind).detach() if (m.beta is not None and bw.ind is not None) else torch.zeros(bw.C))
+    delta = mu.clone().requires_grad_(True)
     opt = torch.optim.Adam([delta], lr=lr)
     for _ in range(steps):
         opt.zero_grad()
         r = m.predict_y(bw, delta) - bw.obs_y
-        ((r ** 2).sum() / SIGMA ** 2 + (delta ** 2).sum() / _law.TAU ** 2).backward()
+        ((r ** 2).sum() / SIGMA ** 2 + ((delta - mu) ** 2).sum() / _law.TAU ** 2).backward()
         opt.step()
     for p, f in zip(m.parameters(), flags):
         p.requires_grad_(f)
     delta = delta.detach().clone()
-    delta[torch.bincount(bw.obs_cell, minlength=bw.C) <= 1] = 0.0      # k = 0: no window check-up -> the prior mean
+    ref_only = torch.bincount(bw.obs_cell, minlength=bw.C) <= 1
+    delta[ref_only] = mu[ref_only]      # k = 0: no window check-up -> the prior mean (0 in the primary analysis)
     return delta
 
 
@@ -77,7 +83,7 @@ def split_by_cell(b: Batch, values):
 
 
 def predict_hard(m: HardODE, spec, wcells, steps=300):
-    bw = batch_from_windows(spec, wcells)
+    bw = batch_from_windows(spec, wcells, indicator=m.beta is not None)
     delta = fit_delta(m, bw, steps=steps)
     bq = batch_forecast_query(spec, wcells)
     with torch.no_grad():

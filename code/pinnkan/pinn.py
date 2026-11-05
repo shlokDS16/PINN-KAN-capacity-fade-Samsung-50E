@@ -100,13 +100,20 @@ def make_collocation(spec, b: Batch, seed, placement="record_end", n_a_per_cell=
 
 
 class PINNModel(nn.Module):
-    def __init__(self, spec, law: Law, n_cells, backbone, width=32, depth=3, zdim=2):
+    def __init__(self, spec, law: Law, n_cells, backbone, width=32, depth=3, zdim=2, n_ind=0):
         super().__init__()
         self.spec, self.law, self.backbone = spec, law, backbone
         self.net = SolutionNet(spec.d, zdim, width, depth)
         self.z = nn.Parameter(torch.zeros(n_cells, zdim))
         self.delta = nn.Parameter(torch.zeros(n_cells))
         self.zdim = zdim
+        self.beta = nn.Parameter(torch.zeros(n_ind)) if n_ind else None      # lab-and-stage indicators: prior mean of delta_c = ind . beta (rows 9.8(ii))
+
+    def prior_mean(self, ind):
+        """prior mean of the per-cell offset (zeros in the primary analysis)"""
+        if self.beta is None or ind is None:
+            return 0.0
+        return ind @ self.beta
 
     def F(self, t, s, z):
         return self.net(t.unsqueeze(1), s, z)[:, 0]
@@ -140,7 +147,7 @@ class PINNModel(nn.Module):
         data = (r ** 2).mean()
         R = self.residual_terms(b, col, gen, self.delta, self.z, n_a, n_b, n_c)
         res = (R ** 2).mean()
-        tot = (data + lam * res) / SIGMA ** 2 + (self.delta ** 2).sum() / (TAU ** 2 * n) + (self.z ** 2).sum() / n + self.law.reg(l2, sparsity)
+        tot = (data + lam * res) / SIGMA ** 2 + ((self.delta - self.prior_mean(b.ind)) ** 2).sum() / (TAU ** 2 * n) + (self.z ** 2).sum() / n + self.law.reg(l2, sparsity)
         return tot, data, res
 
 
@@ -149,12 +156,14 @@ def fit_pinn(b: Batch, spec, hp, backbone, seed, steps=2000, lr=5e-3, extra_twin
     are the warm start; the loss, recipe and collocation are those of every other PINN arm"""
     torch.manual_seed(seed)
     law = make_law(spec, b, hp, backbone) if law is None else law
-    m = PINNModel(spec, law, b.C, backbone, width=32, depth=3, zdim=2)
+    m = PINNModel(spec, law, b.C, backbone, width=32, depth=3, zdim=2, n_ind=0 if b.ind is None else int(b.ind.shape[1]))
     if init_from is not None:
         m.net.load_state_dict(init_from.net.state_dict())
         with torch.no_grad():
             m.z.copy_(init_from.z)
             m.delta.copy_(init_from.delta)
+            if m.beta is not None and init_from.beta is not None:
+                m.beta.copy_(init_from.beta)
     col = make_collocation(spec, b, seed, placement=hp.get("placement", "record_end"), extra_twin_raw=extra_twin_raw)
     m.col_t_max = col.t_max
     m.pts_per_cell = b.obs_t.numel() / b.C
@@ -192,8 +201,9 @@ def invert_pinn(m: PINNModel, bw: Batch, lam, seed, n_col=16, steps=200, lr=0.05
     nu = torch.stack([torch.tensor(bw.curves[c].rate(tc[c].numpy() * spec.t_scale) * to_n, dtype=torch.float32) for c in range(Ct)])
     cc = torch.arange(Ct).unsqueeze(1).expand(Ct, n_col).reshape(-1)
     tc, nu = tc.reshape(-1), nu.reshape(-1)
+    mu = (m.prior_mean(bw.ind).detach() if (m.beta is not None and bw.ind is not None) else torch.zeros(Ct))     # prior mean of delta_c (0 in the primary analysis)
     z = torch.zeros(Ct, m.zdim, requires_grad=True)
-    delta = torch.zeros(Ct, requires_grad=True)
+    delta = mu.clone().requires_grad_(True)
     opt = torch.optim.Adam([z, delta], lr=lr)
     for _ in range(steps):
         opt.zero_grad()
@@ -201,19 +211,19 @@ def invert_pinn(m: PINNModel, bw: Batch, lam, seed, n_col=16, steps=200, lr=0.05
         data = ((F - bw.obs_y) ** 2).sum()
         A_cal, A_cyc = m.law.amplitudes(bw.s, bw.is_cyc, delta)
         R = m.residual(tc, bw.s[cc], z[cc], A_cal[cc], A_cyc[cc], nu)
-        L = (data + lam * m.pts_per_cell * Ct * (R ** 2).mean()) / SIGMA ** 2 + (delta ** 2).sum() / TAU ** 2 + (z ** 2).sum()
+        L = (data + lam * m.pts_per_cell * Ct * (R ** 2).mean()) / SIGMA ** 2 + ((delta - mu) ** 2).sum() / TAU ** 2 + (z ** 2).sum()
         L.backward()
         opt.step()
     for p, f in zip(m.parameters(), flags):
         p.requires_grad_(f)
     z, delta = z.detach().clone(), delta.detach().clone()
     ref_only = torch.bincount(bw.obs_cell, minlength=Ct) <= 1      # k = 0 (PREREG_v4 4.1): no window check-up -> latents and offset stay at their prior means (z = 0, delta = 0)
-    z[ref_only], delta[ref_only] = 0.0, 0.0
+    z[ref_only], delta[ref_only] = 0.0, mu[ref_only]
     return z, delta
 
 
 def predict_pinn(m: PINNModel, spec, wcells, lam, seed, steps=200):
-    bw = batch_from_windows(spec, wcells)
+    bw = batch_from_windows(spec, wcells, indicator=m.beta is not None)
     z, delta = invert_pinn(m, bw, lam, seed, steps=steps)
     bq = batch_forecast_query(spec, wcells)
     with torch.no_grad():
@@ -223,11 +233,15 @@ def predict_pinn(m: PINNModel, spec, wcells, lam, seed, steps=200):
 
 # ------------------------------------------------------------------------------------------------ A9: data-only solution network
 class DataOnlyF(nn.Module):
-    def __init__(self, spec, n_cells, width, depth, zdim):
+    def __init__(self, spec, n_cells, width, depth, zdim, n_ind=0):
         super().__init__()
         self.spec, self.zdim = spec, zdim
         self.net = SolutionNet(spec.d, zdim, width, depth)
         self.z = nn.Parameter(torch.zeros(n_cells, zdim))
+        self.B = nn.Parameter(torch.zeros(n_ind, zdim)) if n_ind else None      # lab-and-stage indicators: prior mean of z_c = ind . B (rows 9.8(ii))
+
+    def z_prior(self, ind):
+        return 0.0 if (self.B is None or ind is None) else ind @ self.B
 
     def F(self, t, s, z):
         return self.net(t.unsqueeze(1), s, z)[:, 0]
@@ -238,7 +252,7 @@ class DataOnlyF(nn.Module):
 
 def fit_data_only(b: Batch, spec, hp, seed, steps=1500, lr=5e-3, clip=GRAD_CLIP):
     torch.manual_seed(seed)
-    m = DataOnlyF(spec, b.C, int(hp.get("width", 32)), int(hp.get("depth", 3)), int(hp.get("zdim", 2)))
+    m = DataOnlyF(spec, b.C, int(hp.get("width", 32)), int(hp.get("depth", 3)), int(hp.get("zdim", 2)), n_ind=0 if b.ind is None else int(b.ind.shape[1]))
     opt = torch.optim.Adam(m.parameters(), lr=lr)
     sch = torch.optim.lr_scheduler.CosineAnnealingLR(opt, steps, eta_min=lr * 0.1)
     wd = float(hp.get("wd", 1e-4))
@@ -247,7 +261,7 @@ def fit_data_only(b: Batch, spec, hp, seed, steps=1500, lr=5e-3, clip=GRAD_CLIP)
         opt.zero_grad(set_to_none=True)
         r = m.F(b.obs_t, b.s[b.obs_cell], m.z[b.obs_cell]) - b.obs_y
         n = r.numel()
-        ((r ** 2).mean() / SIGMA ** 2 + (m.z ** 2).sum() / n + wd * m.weight_l2()).backward()
+        ((r ** 2).mean() / SIGMA ** 2 + ((m.z - m.z_prior(b.ind)) ** 2).sum() / n + wd * m.weight_l2()).backward()
         clip_and_count(m.parameters(), clip, stats)       # same clip as the PINN arms (D013 C1): no optimiser-recipe confound in H1a
         opt.step()
         sch.step()
@@ -256,16 +270,17 @@ def fit_data_only(b: Batch, spec, hp, seed, steps=1500, lr=5e-3, clip=GRAD_CLIP)
 
 
 def predict_data_only(m: DataOnlyF, spec, wcells, steps=150, lr=0.05):
-    bw = batch_from_windows(spec, wcells)
+    bw = batch_from_windows(spec, wcells, indicator=m.B is not None)
     flags = [p.requires_grad for p in m.parameters()]
     for p in m.parameters():
         p.requires_grad_(False)
-    z = torch.zeros(bw.C, m.zdim, requires_grad=True)
+    zmu = torch.as_tensor(m.z_prior(bw.ind)).detach() * torch.ones(bw.C, m.zdim)
+    z = zmu.clone().requires_grad_(True)
     opt = torch.optim.Adam([z], lr=lr)
     for _ in range(steps):
         opt.zero_grad()
         r = m.F(bw.obs_t, bw.s[bw.obs_cell], z[bw.obs_cell]) - bw.obs_y
-        ((r ** 2).sum() / SIGMA ** 2 + (z ** 2).sum()).backward()
+        ((r ** 2).sum() / SIGMA ** 2 + ((z - zmu) ** 2).sum()).backward()
         opt.step()
     for p, f in zip(m.parameters(), flags):
         p.requires_grad_(f)

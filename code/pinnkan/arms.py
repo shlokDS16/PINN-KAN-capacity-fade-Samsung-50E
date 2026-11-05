@@ -139,7 +139,7 @@ class PINNArm(DiagMixin, Arm):
             hp["grid_cal"] = hp.get("grid_cal", 5)
         if self.arm_id == "A7":
             hp["map"] = "mlp"
-        b = batch_from_cells(self.spec, cells)
+        b = batch_from_cells(self.spec, cells, bool(self.ctx.get("lab_indicator")))
         pk = {k: v for k, v in (self.ctx.get("pinn") or {}).items() if k in ("clip", "warmup", "lr")}     # configurable (D013): clip / warm-up / lr
         self.n_train_used = len(cells)
         self.model = fit_pinn(b, self.spec, hp, self.ctx["backbone"], self.seed, steps=self.steps("pinn"), extra_twin_raw=self.ctx.get("extra_twin_raw"), **pk)
@@ -171,7 +171,7 @@ class SymbolicArm(DiagMixin, Arm):
         cap = symbolic.resolve_cap(sc.get("cap"))                      # raises CapNotSetError before any work
         cells = train_cells
         hp = dict(self.hp, map=a.map_kind)
-        b = batch_from_cells(self.spec, cells)
+        b = batch_from_cells(self.spec, cells, bool(self.ctx.get("lab_indicator")))
         pk = {k: v for k, v in (self.ctx.get("pinn") or {}).items() if k in ("clip", "warmup", "lr")}
         self.n_train_used = len(cells)
         steps = self.steps("pinn")
@@ -203,7 +203,7 @@ class HardArm(DiagMixin, Arm):
         hp = dict(self.hp, map="kan")
         self.n_train_used = len(train_cells)
         pk = {k: v for k, v in (self.ctx.get("pinn") or {}).items() if k == "clip"}
-        self.model = fit_hard(batch_from_cells(self.spec, train_cells), self.spec, hp, self.ctx["backbone"], self.seed, steps=self.steps("hard"), **pk)
+        self.model = fit_hard(batch_from_cells(self.spec, train_cells, bool(self.ctx.get("lab_indicator"))), self.spec, hp, self.ctx["backbone"], self.seed, steps=self.steps("hard"), **pk)
         self.n_params = sum(p.numel() for p in self.model.law.parameters())
         return self
 
@@ -215,7 +215,7 @@ class DataOnlyArm(DiagMixin, Arm):
     def fit(self, train_cells):
         self.n_train_used = len(train_cells)
         pk = {k: v for k, v in (self.ctx.get("pinn") or {}).items() if k == "clip"}
-        self.model = fit_data_only(batch_from_cells(self.spec, train_cells), self.spec, self.hp, self.seed, steps=self.steps("data"), **pk)
+        self.model = fit_data_only(batch_from_cells(self.spec, train_cells, bool(self.ctx.get("lab_indicator"))), self.spec, self.hp, self.seed, steps=self.steps("data"), **pk)
         self.n_params = sum(p.numel() for p in self.model.net.parameters())
         return self
 
@@ -239,18 +239,19 @@ class SemiArm(Arm):
         self.form = semi.SemiForm(self.spec)
         self.n_train_used = len([c for c in train_cells if c.n > 1 and (self.form.has_cal or c.kind == "cycling")])
         self.theta, self.cost = semi.fit_semi(self.form, train_cells, n_starts=int(self.ctx.get("a10_starts", 8)), seed=self.seed)
-        self.n_params = self.form.n_params
+        self.beta = semi.indicator_beta(self.form, self.theta, train_cells) if (self.ctx.get("lab_indicator") and self.arm_id != "A10P") else None      # rows 9.8(ii)
+        self.n_params = self.form.n_params + (0 if self.beta is None else len(self.beta))
         return self
 
     def predict(self, wcells):
-        return semi.predict_semi(self.form, self.theta, wcells, per_cell_factor=bool(self.ctx.get("per_cell_factor", True)) and self.arm_id != "A10P")
+        return semi.predict_semi(self.form, self.theta, wcells, per_cell_factor=bool(self.ctx.get("per_cell_factor", True)) and self.arm_id != "A10P", beta=self.beta)
 
 
 class P3Arm(Arm):
     def fit(self, train_cells):
         prep = prepare_many(train_cells, self.ctx["rule"])
         self.n_train_used = len(prep)          # cells without enough window / forecast points are dropped here only (documented, review m6)
-        self.learner = baselines.P3Learner("gp" if self.arm_id == "A11" else "lgb", self.hp, self.spec.name, self.seed, self.spec).fit(prep)
+        self.learner = baselines.P3Learner("gp" if self.arm_id == "A11" else "lgb", self.hp, self.spec.name, self.seed, self.spec, bool(self.ctx.get("lab_indicator"))).fit(prep)
         self.n_train_used = self.learner.n_train_used
         return self
 

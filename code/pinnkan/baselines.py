@@ -88,26 +88,34 @@ def _p3_cell_core(cond, tw, rw, tf, rf, stress, ds):
                 tf=tf, rf=rf, stress=np.asarray(stress, float))
 
 
-def cells_from_prepared(prepared, ds, spec=None, feat="raw"):
+def _stress_with_ind(stress, lab, stage, indicator):
+    """lab-and-stage indicator columns appended to the static stress features (D* feature set of the lab-indicator row, PREREG_v4 9.8 rule 2)"""
+    if not indicator:
+        return stress
+    from .data import indicator_vector
+    return np.concatenate([np.asarray(stress, float), indicator_vector(lab, stage).astype(float)])
+
+
+def cells_from_prepared(prepared, ds, spec=None, feat="raw", indicator=False):
     """training dict: window summary + forecast truth (the learner is trained to map window summary and horizon to the drop)"""
     if feat == "raw":
-        return {p.cell.cell_id: p3_cell(p.cell.cond, p.win.t_win, p.win.y_win, p.win.t_fc, p.fc_true, p.cell.raw, ds) for p in prepared}
-    return {p.cell.cell_id: p3_cell(p.cell.cond, p.win.t_win, p.win.y_win, p.win.t_fc, p.fc_true, pinn_stress_features(spec, p.cell.raw)[0], ds,
+        return {p.cell.cell_id: p3_cell(p.cell.cond, p.win.t_win, p.win.y_win, p.win.t_fc, p.fc_true, _stress_with_ind(p.cell.raw, p.cell.lab, p.cell.stage, indicator), ds) for p in prepared}
+    return {p.cell.cell_id: p3_cell(p.cell.cond, p.win.t_win, p.win.y_win, p.win.t_fc, p.fc_true, _stress_with_ind(pinn_stress_features(spec, p.cell.raw)[0], p.cell.lab, p.cell.stage, indicator), ds,
                                     extra=pinn_extra_columns(spec, p.win.t_fc, p.win.efc_curve.value(p.win.t_fc))) for p in prepared}
 
 
-def cells_from_windows(wcells, ds, spec=None, feat="raw"):
+def cells_from_windows(wcells, ds, spec=None, feat="raw", indicator=False):
     if feat == "raw":
-        return {w.cell_id: p3_cell(w.cond, w.t_win, w.y_win, w.t_fc, np.zeros(len(w.t_fc)), w.raw, ds) for w in wcells}   # rf unused by predict_cells
-    return {w.cell_id: p3_cell(w.cond, w.t_win, w.y_win, w.t_fc, np.zeros(len(w.t_fc)), pinn_stress_features(spec, w.raw)[0], ds,
+        return {w.cell_id: p3_cell(w.cond, w.t_win, w.y_win, w.t_fc, np.zeros(len(w.t_fc)), _stress_with_ind(w.raw, w.lab, w.stage, indicator), ds) for w in wcells}   # rf unused by predict_cells
+    return {w.cell_id: p3_cell(w.cond, w.t_win, w.y_win, w.t_fc, np.zeros(len(w.t_fc)), _stress_with_ind(pinn_stress_features(spec, w.raw)[0], w.lab, w.stage, indicator), ds,
                                extra=pinn_extra_columns(spec, w.t_fc, w.efc_curve.value(w.t_fc))) for w in wcells}
 
 
 class P3Learner:
     """A11 (kind='gp') and A12 (kind='lgb') on (stress, window summary, horizon)."""
 
-    def __init__(self, kind, hp, ds, seed, spec=None):
-        self.kind, self.hp, self.ds, self.seed, self.spec = kind, dict(hp), ds, seed, spec
+    def __init__(self, kind, hp, ds, seed, spec=None, indicator=False):
+        self.kind, self.hp, self.ds, self.seed, self.spec, self.indicator = kind, dict(hp), ds, seed, spec, bool(indicator)
         self.feat = self.hp.get("feat", "raw")
         self.storage = self.hp.get("storage", "in")
         if self.feat not in FEATURE_SETS or self.storage not in STORAGE_ROWS:
@@ -120,7 +128,7 @@ class P3Learner:
         if self.storage == "out":                     # storage rows option: out = the learner trains on cycling cells only
             prepared_train = [p for p in prepared_train if p.cell.kind != "storage"]
         self.n_train_used = len(prepared_train)
-        cells = cells_from_prepared(prepared_train, self.ds, self.spec, self.feat)
+        cells = cells_from_prepared(prepared_train, self.ds, self.spec, self.feat, self.indicator)
         names = sorted(cells)
         if cells and all(len(c["summ"]) == 0 for c in cells.values()):
             self.hp = dict(self.hp, fs="full")          # no window feature exists at k = 0: the 'min' feature set (which indexes window columns) is not defined
@@ -136,5 +144,5 @@ class P3Learner:
         return self
 
     def predict(self, wcells):
-        cells = cells_from_windows(wcells, self.ds, self.spec, self.feat)
+        cells = cells_from_windows(wcells, self.ds, self.spec, self.feat, self.indicator)
         return P3.predict_cells(cells, sorted(cells), self.ds, self.fn, self.tau_log, self.fs)

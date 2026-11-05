@@ -1,0 +1,13 @@
+# build_v2 choices (conservative readings where the spec is ambiguous)
+
+Format: item, the ambiguity, the reading taken, why it is the conservative one. Append-only.
+
+## Item 1: nested subsets
+1. **Standardisation (GAP-11).** Mean and population SD (ddof 0) over the fold's 32 training conditions; a coordinate with SD 0 keeps scale 1. Spec says "standardised by their mean and SD" without the ddof.
+2. **Distance ties and the first pick.** Ties in the distance and in the nearest-to-centroid rule go to the smallest condition id (ids are sorted before selection, so the result does not depend on the order in which ids are passed). The "centroid" is the origin of the standardised space (= the mean of the 32 conditions).
+3. **Constraint test.** Restriction to deficient temperatures is applied when `picks left within the first eight <= total deficit` (spec: "equals"; "<=" cannot differ because the deficit can never exceed the picks left, but it is the safer form). Required count per temperature is min(2, number available at that temperature).
+4. **Random-subset variant (g1 downgrade row).** A seeded permutation of the 32 ids (SeedSequence([20261105, crc32("B|g1|randsubset|<fold>|<j>")])), first m taken, **without** the temperature constraint (literal reading: "3 seeded random nested subsets in place of max-min"). Unconstrained subsets can only make the row harder on A1 and D*, which for a downgrade row is the conservative direction.
+5. **Where the thinning acts.** After the split-integrity check, on the cycling training cells only; storage cells and the test side are never touched. The 32 ids come from the split file (`train_cycling_conditions`), not from the cells on disk, so a partial download cannot change the subsets. m >= number of training conditions returns the same list object (m = 32 = Test B bit for bit, tested).
+6. **ISU fallback.** The same selector on (charge_c, discharge_c, dod_pct) from `isu_conditions.csv` with no temperature constraint (ISU has no temperature factor). Not exercised by a test on real files (no ISU subset is part of the Samsung run list).
+7. **Inner folds.** `inner_k` defaults to 2 for m in {8, 16} and 3 for m = 32 when `m` is set and `inner_k` is not given explicitly; `auto_budget` keeps this rule and lowers m = 32 to 2 only under the Partial plan.
+8. **`subsets.json` pin.** `runs/prereg/subsets.json` was generated from the split identifiers only (`code/prereg/make_subsets.py`) and records the composition by temperature. The lab composition (Table 2 appendix) needs the laboratory of each condition, which comes from the data tables, and is not written here.

@@ -30,6 +30,13 @@ def choose_budget(median_fit_secs):
     return {"n_trials": 20, "inner_k": 3, "rule": "N = 20 default"}
 
 
+def inner_k_for_m(m, partial=False):
+    """PREREG_v4 4.1: inner folds 2 for m in {8, 16}, 3 for m = 32 (the Partial plan lowers m = 32 to 2); None (no grid) keeps the V3 value 3 (2 under the Partial plan)"""
+    if partial:
+        return 2
+    return 3 if (m is None or m >= 32) else 2
+
+
 def inner_folds(cells, k, seed, spec, target_kind="cycling"):
     """condition -> inner fold, conditions of the scored kind only, stratified by temperature (round-robin through shuffled temperature strata)"""
     temp = {}

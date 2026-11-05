@@ -23,7 +23,7 @@ import numpy as np
 import pandas as pd
 
 from . import ROOT as _ROOT
-from . import guard, zyk
+from . import guard, subsets, zyk
 from .specs import SPECS, DatasetSpec
 
 # ------------------------------------------------------------------------------------------------ containers
@@ -361,6 +361,7 @@ class SplitView:
     input_files: list
     missing_train_conditions: list = field(default_factory=list)
     pinned: bool = False
+    subset_info: object = None   # D016 grid: nested training subset record (None = unthinned)
 
     @property
     def hash_ok(self):
@@ -377,7 +378,39 @@ def _input_manifest(root, dataset):
     return out
 
 
-def load_split(dataset, test, fold, role="train", root=None, retain_all=False, throughput="analytic", include_at=False, throughput_fallback="none", include_storage_0406=False):
+def apply_subset(train, dataset, test, fdef, fold, m, subset="maxmin", draw=0, root=None, ids=None):
+    """D016 grid (PREREG_v4 4.1): keep the first m conditions of the nested max-min order (or of the seeded random order) of the fold's training cycling
+    conditions; storage cells stay. m None or >= the number of training conditions = the unthinned training side (the SAME list, bit for bit).
+    -> (train, info). Identifiers only."""
+    if m is None:
+        return train, None
+    if ids is not None:                       # synthetic data: the training cycling conditions present in the training cells
+        ids = sorted(str(c) for c in ids)
+        cond_table = None
+    elif dataset == "samsung" and test in ("B", "C"):
+        ids = [str(c) for c in fdef["train_cycling_conditions"]]
+        cond_table = None
+    elif dataset == "isu" and fdef.get("train_conditions"):
+        ids = [str(c) for c in fdef["train_conditions"]]
+        cond_table = pd.read_csv(os.path.join(root or _ROOT, "data", "processed", "isu_conditions.csv")).set_index("group")
+    else:
+        raise ValueError(f"nested training subsets are defined for Samsung Test B/C and ISU Test B, not {dataset} test {test}")
+    if subset == "maxmin":
+        order = subsets.order_for_ids(ids, dataset, cond_table)
+    elif subset == "random":
+        order = subsets.random_order(ids, fold, draw)
+    else:
+        raise ValueError(f"subset must be 'maxmin' or 'random', not {subset!r}")
+    keep = subsets.subset_at(order, m)
+    info = {"m": int(m), "kind": subset, "draw": int(draw) if subset == "random" else None, "n_train_conditions": len(ids), "kept": keep, "order": order,
+            "thinned": len(keep) < len(ids), "sha256": _digest({"kept": keep, "order": order})}
+    if len(keep) >= len(ids):
+        return train, info
+    return subsets.thin_cells(train, keep), info
+
+
+def load_split(dataset, test, fold, role="train", root=None, retain_all=False, throughput="analytic", include_at=False, throughput_fallback="none", include_storage_0406=False,
+               m=None, subset="maxmin", subset_draw=0):
     """Cells of one outer split. role 'train' never contains a test cell or a test condition. role 'test' also returns the test cells
     and requires the FROZEN flag file; without it the guard raises before any test cell is built."""
     root = root or _ROOT
@@ -429,9 +462,10 @@ def load_split(dataset, test, fold, role="train", root=None, retain_all=False, t
     if expected is not None and loaded - expected:         # fail closed: every loaded training condition must be listed in the split
         raise SplitIntegrityError(f"loaded training conditions outside the split's training set: {sorted(loaded - expected)[:3]}")
     missing = sorted(expected - loaded) if expected is not None else []
+    train, sub_info = apply_subset(train, dataset, test, fdef, fold, m, subset, subset_draw, root)      # test cells are never thinned
     test_cells = None
     if role != "train":
         guard.require_frozen(f"release of test cells ({dataset} test {test} fold {fold})", root)
         test_cells = build(keep_test)
     return SplitView(dataset, test, int(fold), spec, train, test_cells, sorted({c.cond for c in train}), sorted(tc), sorted(tids), path,
-                     file_sha, stored, recomputed, _input_manifest(root, dataset), missing, pin is not None)
+                     file_sha, stored, recomputed, _input_manifest(root, dataset), missing, pin is not None, sub_info)

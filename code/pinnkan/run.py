@@ -24,9 +24,9 @@ import numpy as np
 import torch
 
 from . import ROOT as _ROOT
-from . import emit, guard, h7, law, margins, metrics, negcontrol, semi, stats_step, synth, tuning
+from . import emit, guard, h7, law, margins, metrics, negcontrol, semi, stats_step, subsets, synth, tuning
 from .arms import ARMS, H1B_POOL, NEURAL, default_hp, make_arm
-from .data import WindowRule, load_split, prepare_many, sha256_file
+from .data import WindowRule, apply_subset, load_split, prepare_many, sha256_file
 from .law import TAU
 from .specs import SPECS
 
@@ -39,7 +39,7 @@ DEFAULTS = {"mode": "inner", "test": "B", "fold": 0, "arms": ["A1", "A2", "A9", 
             # cells 04-06 as two-point records (i); min_fc_points: scored cells need this many forecast points (i, "cells with >= 3 forecast points" -> 3);
             # law_overrides: {Y0, gamma, tau} for the A2-only tournament row (m), {delta_scope: "total"} for row (l); throughput_fallback: "analytic" lets a
             # cycling cell without ZYK entries use the designed throughput under throughput="zyk" (otherwise ZykDataMissing)
-            "include_at": False, "include_storage_0406": False, "min_fc_points": 1, "law_overrides": {}, "throughput_fallback": "none", "forecast_failure": False, "lab_indicator": False}
+            "include_at": False, "include_storage_0406": False, "min_fc_points": 1, "m": None, "subset": "maxmin", "subset_draw": 0, "law_overrides": {}, "throughput_fallback": "none", "forecast_failure": False, "lab_indicator": False}
 TARGET_BY_TEST = {"B": "cycling", "C": "cycling", "A": "cycling", "S2": "storage", "S3": "storage"}   # the tuned task is the scored task (review M3)
 
 
@@ -133,11 +133,12 @@ def build_data(cfg, root, role):
         sc = cfg.get("synthetic", {})
         S = synth.make_synthetic(sc.get("kind", "G0"), sc.get("n_cyc_cond", 20), sc.get("n_sto_cond", 8), sc.get("reps", 2), sc.get("seed", 0))
         tr, te = synth.split_synthetic(S.cells, cfg["test"], sc.get("test_frac", 0.25), sc.get("seed", 0))
-        return {"spec": SPECS["synthetic"], "train": tr, "test": te if role != "train" else None, "synth": S,
-                "split": {"file": "synthetic (generated)", "note": "no outer test fold of real data exists"}, "manifest": []}
+        tr, sub = apply_subset(tr, "synthetic", cfg["test"], {}, cfg["fold"], cfg["m"], cfg["subset"], cfg["subset_draw"], ids={c.cond for c in tr if c.kind == "cycling"})
+        return {"spec": SPECS["synthetic"], "train": tr, "test": te if role != "train" else None, "synth": S, "subset": sub,
+                "split": {"file": "synthetic (generated)", "note": "no outer test fold of real data exists", "subset": sub}, "manifest": []}
     sv = load_split(ds, cfg["test"], cfg["fold"], role=role, root=root, retain_all=cfg["retain_all"], throughput=cfg["throughput"], include_at=cfg["include_at"],
-                    throughput_fallback=cfg["throughput_fallback"], include_storage_0406=cfg["include_storage_0406"])
-    return {"spec": sv.spec, "train": sv.train, "test": sv.test_cells, "sv": sv,
+                    throughput_fallback=cfg["throughput_fallback"], include_storage_0406=cfg["include_storage_0406"], m=cfg["m"], subset=cfg["subset"], subset_draw=cfg["subset_draw"])
+    return {"spec": sv.spec, "train": sv.train, "test": sv.test_cells, "sv": sv, "subset": sv.subset_info,
             "split": {"file": os.path.relpath(sv.split_file, root).replace("\\", "/"), "sha256_file": sv.split_sha256, "fold_hash_stored": sv.fold_hash_stored,
                       "fold_hash_recomputed": sv.fold_hash_recomputed, "fold_hash_ok": sv.hash_ok, "pinned_at_freeze": sv.pinned, "missing_train_conditions": sv.missing_train_conditions, "test_conditions": sv.test_conditions,
                       "n_train_cells": len(sv.train), "n_train_conditions": len(sv.train_conditions)}, "manifest": sv.input_files}
@@ -191,6 +192,15 @@ def _run(cfg_in, root=None, runs_dir=None):
     if cfg.get("target_kind") not in (None, tk):
         raise ConfigError(f"target_kind {cfg['target_kind']!r} contradicts test {cfg['test']!r} (scored kind is {tk!r})")
     cfg["target_kind"] = tk
+    if cfg["m"] is not None:
+        if int(cfg["m"]) not in subsets.GRID_M:
+            raise ConfigError(f"m must be one of {subsets.GRID_M} (PREREG_v4 4.1), not {cfg['m']!r}")
+        if cfg["subset"] not in ("maxmin", "random") or (cfg["subset"] == "random" and int(cfg["subset_draw"]) not in (0, 1, 2)):
+            raise ConfigError("subset must be 'maxmin' or 'random' (draw 0, 1 or 2)")
+        if cfg["test"] not in ("B", "C"):
+            raise ConfigError("the training-subset grid (m) is defined for Test B (and the Test C variant), not for tests A, S2, S3")
+        if "inner_k" not in cfg_in:
+            cfg["inner_k"] = tuning.inner_k_for_m(int(cfg["m"]))       # 2 for m in {8, 16}, 3 for m = 32 (PREREG_v4 4.1)
     chash = None
     if mode == "confirmatory" and ds != "synthetic":      # checks before anything is created or read (review M2)
         if cfg["steps_scale"] != 1.0:
@@ -253,6 +263,8 @@ def _run(cfg_in, root=None, runs_dir=None):
             D["test"] = metrics.permute_stress(D["test"], spec, cfg["fold"] + 1000)
     _json(os.path.join(run_dir, "split.json"), D["split"])
     _json(os.path.join(run_dir, "manifest.json"), D["manifest"])
+    if D.get("subset"):
+        _json(os.path.join(run_dir, "subsets.json"), D["subset"])      # nested training subset of this (fold, m): ids, order, hash (identifiers only)
     rec.log(f"run {run_id}: dataset {ds} test {cfg['test']} fold {cfg['fold']} mode {mode} (requested {cfg['mode']}) blinded={blinded}")
     rec.log(f"train cells {len(train)}: {sum(c.kind == 'cycling' for c in train)} cycling, {sum(c.kind == 'storage' for c in train)} storage; conditions {len({c.cond for c in train})}")
     if D["split"].get("missing_train_conditions"):
@@ -298,7 +310,7 @@ def _run(cfg_in, root=None, runs_dir=None):
                 make_arm(a, spec, default_hp(a) if ARMS[a].tuned else {}, 1000 + cfg["fold"], ctx).fit(train)
                 med[a] = time.time() - t0
         bud = tuning.choose_budget(med)
-        cfg["n_trials"], cfg["inner_k"] = bud["n_trials"], bud["inner_k"]
+        cfg["n_trials"], cfg["inner_k"] = bud["n_trials"], (bud["inner_k"] if cfg["m"] is None else tuning.inner_k_for_m(int(cfg["m"]), partial=bud["inner_k"] == 2))
         _json(os.path.join(run_dir, "budget_rule.json"), {**bud, "median_fit_seconds": med})
         rec.log(f"budget fixed before tuning: {bud}")
     if cfg["backbone"] == "tournament":

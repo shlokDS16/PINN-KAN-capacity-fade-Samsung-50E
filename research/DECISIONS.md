@@ -509,3 +509,32 @@ Row format:
   - the real tuned hyperparameters fall outside the sampled spaces;
   - an outer score is used to change the rule;
   - Shlok asks for labels at g1 or on the calendar law.
+
+### D022b Extraction audit: fallback adopted after the red-team re-check (2026-11-05, status: accepted; supersedes D022a's calibration plan)
+- **Decision:** debates/D022_datasets_kan/07_judge_recheck.md.
+  - The audit is not run as a calibrated contribution. The ~18 CPU-h calibration is not run.
+  - Laws are printed in closed form, with the 11a item 6 stability table (votes, tie share, additivity share, sign
+    votes; descriptive, no licence words).
+  - No audit contribution bullet. The KAN-side contribution is the held-out K1/K2 test of the KAN-extracted
+    closed-form law against an equally simplified additive law (NOVEL 0.60, 03_novelty_recheck row iii). The cap is
+    justified by the D021 synthetic false-structure study.
+  - N1(a) is adopted permanently: no T sign from the cycling law.
+  - N1(b), N1(c), N2 and the N3 omission control are adopted for any future version only.
+  - Now: label functions default `calibrated=False`; the banned-phrase list is extended with word-boundary matching;
+    the n3 wording is fixed.
+  - m7 stays open with the gate auditor (it also concerns PC-1).
+- **Alternatives and why they lost:**
+  - Fix N1-N3 and run the calibration: about 1.5 more days, beyond the ~2-day limit, for a predicted fail.
+  - The verdict would hinge on an invented laboratory-offset sd that the extraction cannot model, so even a pass is
+    weak evidence.
+  - C3 is near-automatic (n4).
+  - A separate A15-only additivity criterion: breaks K2 symmetry.
+- **Evidence:** debates/D022_datasets_kan/{06_redteam_recheck,07_judge_recheck,05_judge_audit_revision}.md;
+  code/pinnkan/stats_step.py 557 (fallback path); debates/D016_roles/03_novelty_recheck.md row (iii). No calibration fit
+  and no data value were used.
+- **Proposer / opponent / judge:** coder (v2 build) / red team B4 (re-check) / D022 judge.
+- **Re-open if:**
+  - Shlok asks for the audit as a contribution and accepts the delay (new version with laboratory-aware licences and
+    the N1-N3 fixes, fixed before any fit);
+  - a reviewer asks for an operating characteristic (descriptive run of the frozen v2 code);
+  - the K-chain test is found published.

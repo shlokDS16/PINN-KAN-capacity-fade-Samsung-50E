@@ -1,0 +1,24 @@
+{
+ "run_id": "item_f_samsung_B_g1_f3",
+ "dataset": "samsung",
+ "test": "B",
+ "fold": 3,
+ "mode": "inner",
+ "m": 8,
+ "subset": "maxmin",
+ "arms": [
+  "A1",
+  "A9",
+  "A11",
+  "A12"
+ ],
+ "window": {
+  "k_cycling": 4,
+  "k_storage": 2
+ },
+ "steps_scale": 1.0,
+ "backbone": "self_limiting",
+ "diagnostics": false,
+ "refit_timing": false,
+ "inversion_config_sha256": "3e902beacf3bf26f927a3043ac555f39fe5f4279f063e19936bf9dacb890abc2"
+}

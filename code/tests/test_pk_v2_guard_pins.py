@@ -1,4 +1,4 @@
-"""build_v2 follow-up: FROZEN pins subsets.json, symbolic_library.json and the item (f) dependence file; verification refuses on any difference."""
+"""build_v2 follow-up: FROZEN pins subsets.json and symbolic_library.json; verification refuses on any difference. D026: the item (f) file and its record are no longer pinned (the five item (f) configs are, see test_pk_d026_item_f.py)."""
 import json
 import os
 import shutil
@@ -21,7 +21,6 @@ def _pin_root(tmp_path, monkeypatch):
     (tmp_path / "code" / "pinnkan").mkdir(parents=True)
     shutil.copy(os.path.join(ROOT, "runs", "prereg", "subsets.json"), tmp_path / "runs" / "prereg" / "subsets.json")
     (tmp_path / "code" / "pinnkan" / "symbolic_library.json").write_text(json.dumps({"max_coeffs_per_edge": 3}))
-    v4.write_item_f(str(tmp_path / "runs" / "prereg"), {"rho_fold": 0.01})
     payload["pins"] = {}
     for name, rel in guard.PIN_FILES.items():
         payload["pins"][name] = {"file": rel, "sha256": guard.sha256_file(os.path.join(root, rel))}
@@ -29,8 +28,9 @@ def _pin_root(tmp_path, monkeypatch):
     return root, payload
 
 
-def test_pin_names_match_stats_v4_file_names():
-    assert os.path.basename(guard.PIN_FILES["item_f"]) == v4.ITEM_F_FILE and os.path.basename(guard.PIN_FILES["item_f_record"]) == v4.ITEM_F_HASH
+def test_pin_names_and_item_f_file_names():
+    assert set(guard.PIN_FILES) == {"subsets", "symbolic_library"}                       # D026 action 1: item_f and item_f_record left the pins
+    assert guard.ITEM_F_FILE == v4.ITEM_F_FILE and guard.ITEM_F_HASH == v4.ITEM_F_HASH
 
 
 def test_verification_passes_with_every_pin_in_place_and_without_pins_keeps_the_old_behaviour(tmp_path, monkeypatch):
@@ -62,17 +62,27 @@ def test_a_missing_pinned_file_refuses(tmp_path, monkeypatch, name):
         guard.verify_freeze(root)
 
 
-def test_build_freeze_payload_pins_the_three_files_and_refuses_when_one_is_missing(tmp_path, monkeypatch):
+def test_build_freeze_payload_pins_the_two_files_and_refuses_when_one_is_missing(tmp_path, monkeypatch):
     root, _ = _pin_root(tmp_path, monkeypatch)
     shutil.copy(os.path.join(ROOT, "runs", "prereg", "samsung_splits_v2.json"), tmp_path / "runs" / "prereg" / "samsung_splits_v2.json")
     p = guard.build_freeze_payload(root, [("samsung", "B")], [], prereg_file="runs/prereg/PREREG_v2.md")
     assert set(p["pins"]) == set(guard.PIN_FILES) and all(len(e["sha256"]) == 64 for e in p["pins"].values())
     assert p["pins"]["subsets"]["sha256"] == guard.sha256_file(os.path.join(root, "runs", "prereg", "subsets.json"))
-    os.remove(os.path.join(root, guard.PIN_FILES["item_f"]))
-    with pytest.raises(guard.TestFoldAccessError, match="cannot pin item_f"):
-        guard.build_freeze_payload(root, [("samsung", "B")], [], prereg_file="runs/prereg/PREREG_v2.md", require_pins=True)
-    q = guard.build_freeze_payload(root, [("samsung", "B")], [], prereg_file="runs/prereg/PREREG_v2.md")          # default: listed, and a FROZEN built so is refused
-    assert q["pins_missing"] == ["item_f"] and "item_f" not in q["pins"]
+    os.remove(os.path.join(root, guard.PIN_FILES["symbolic_library"]))
+    with pytest.raises(guard.TestFoldAccessError, match="cannot pin symbolic_library"):
+        guard.build_freeze_payload(root, [("samsung", "B")], [], prereg_file="runs/prereg/PREREG_v2.md", require_pins=True,
+                                   item_f_config_paths=_five_item_f_configs(tmp_path))
+    q = guard.build_freeze_payload(root, [("samsung", "B")], [], prereg_file="runs/prereg/PREREG_v2.md", item_f_config_paths=_five_item_f_configs(tmp_path))          # default: listed, and a FROZEN built so is refused
+    assert q["pins_missing"] == ["symbolic_library"] and "symbolic_library" not in q["pins"] and len(q["item_f_config_sha256s"]) == 5
     json.dump({**q, "commit": "a" * 40}, open(tmp_path / "runs" / "prereg" / "FROZEN", "w"))
     with pytest.raises(guard.TestFoldAccessError, match="without the pins"):
         guard.verify_freeze(root, check_git=False)
+
+
+def _five_item_f_configs(tmp_path):
+    out = []
+    for f in range(5):
+        p = tmp_path / f"if_cfg{f}.json"
+        p.write_text(json.dumps({"run_id": f"item_f_{f}", "dataset": "samsung", "test": "B", "fold": f, "mode": "inner", "m": 8}))
+        out.append(str(p))
+    return out

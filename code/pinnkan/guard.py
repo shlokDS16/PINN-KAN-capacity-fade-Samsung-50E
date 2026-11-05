@@ -5,7 +5,8 @@ FROZEN is a JSON file (review M2):
     {"commit": "<40-hex git commit of the frozen code>",
      "prereg_file": "runs/prereg/PREREG_v3.md" (optional, default; name the frozen successor explicitly if the final text has another name), "prereg_sha256": "<sha256 of that file>",
      "splits": {"<dataset>:<test>": {"file_sha256": "...", "fold_hash": "..."}, ...},
-     "config_sha256s": ["<canonical sha256 of each frozen run config>", ...]}
+     "config_sha256s": ["<canonical sha256 of each frozen run config>", ...],
+     "item_f_config_sha256s": ["<canonical sha256 of each of the five item (f) inner-run configs, folds 0-4>", ...]}   (D026; the item (f) file itself is written after FROZEN and is not pinned)
 Verification (`verify_freeze`): valid JSON with those keys; HEAD equals `commit`; the tracked files under code/ and runs/prereg/ are clean
 (untracked files and unrelated data/ edits do not count); the prereg file hashes to `prereg_sha256`. Split hashes and config hashes are checked by
 data.load_split and run.run against the same file. Nothing in this package writes FROZEN; `build_freeze_payload` only returns the dict.
@@ -21,7 +22,12 @@ from . import ROOT as _DEFAULT_ROOT
 
 FROZEN_REL = os.path.join("runs", "prereg", "FROZEN")
 SCORED_REL = os.path.join("runs", "prereg", "SCORED.jsonl")
-PIN_FILES = {"subsets": "runs/prereg/subsets.json", "symbolic_library": "code/pinnkan/symbolic_library.json", "item_f": "runs/prereg/item_f_dependence.json", "item_f_record": "runs/prereg/item_f_dependence.sha256.json"}   # Design R2 pins (build_v2): nested subsets, frozen symbolic library + cap, item (f) dependence file (stats_v4.ITEM_F_FILE)
+PIN_FILES = {"subsets": "runs/prereg/subsets.json", "symbolic_library": "code/pinnkan/symbolic_library.json"}   # Design R2 pins (build_v2): nested subsets, frozen symbolic library + cap. D026: the item (f) file and its record are NOT pinned here (written after FROZEN by the five pinned item (f) configs and stats_v4.build_item_f)
+ITEM_F_DIR_REL = os.path.join("runs", "item_f")                      # D026: untracked, outside runs/prereg/
+ITEM_F_FILE, ITEM_F_HASH = "item_f_dependence.json", "item_f_dependence.sha256.json"
+ITEM_F_ARTIFACTS = ("config.json", "tuning_done.json", "inner_folds.json", "comparators.json", "train_condition_meta.json")      # D026 record: sha256 of each, per item (f) run
+ITEM_F_FOLDS = [0, 1, 2, 3, 4]
+ITEM_F_N_CONFIGS = 5
 PREREG_DEFAULT = "runs/prereg/PREREG_v3.md"    # the freeze candidate (PREREG_v3 section 18.3); FROZEN stores the name of the final file explicitly
 GUARD_LOG = []
 
@@ -78,7 +84,7 @@ def verify_freeze(root=None, check_git=True, untracked_under=()):
     if not os.path.isfile(pf) or sha256_file(pf) != d["prereg_sha256"]:
         raise TestFoldAccessError("prereg file hash differs from the value pinned in FROZEN")
     if d.get("pins_missing"):
-        raise TestFoldAccessError(f"FROZEN was built without the pins {d['pins_missing']}: a freeze needs subsets.json, the symbolic library (cap set) and the item (f) file pinned")
+        raise TestFoldAccessError(f"FROZEN was built without the pins {d['pins_missing']}: a freeze needs subsets.json, the symbolic library (cap set) and the five item (f) run configs pinned")
     for name, ent in (d.get("pins") or {}).items():                # Design R2: files pinned by hash in FROZEN; any difference or absence refuses (a FROZEN without "pins" keeps the older behaviour)
         fp = os.path.join(root, ent["file"])
         if not os.path.isfile(fp):
@@ -159,18 +165,76 @@ def scored_before(config_hash, root=None):
     return any(json.loads(l).get("config_sha256") == config_hash for l in open(p, encoding="utf8") if l.strip())
 
 
-def record_scoring(config_hash, run_id, commit, root=None):
-    """append-only ledger of scored outer-test configurations: a second scoring of the same config is refused (stop rule 6)"""
+def record_scoring(config_hash, run_id, commit, root=None, dataset=None, item_f_sha256=None):
+    """append-only ledger of scored outer-test configurations: a second scoring of the same config is refused (stop rule 6).
+    D026: a Samsung row carries `item_f_sha256` (sha256 of the item (f) dependence file that `require_item_f_record` verified before the test fold was loaded); a Samsung row without it is refused."""
+    if dataset == "samsung" and not item_f_sha256:
+        raise TestFoldAccessError("a Samsung scoring row must carry item_f_sha256 (D026)")
     if scored_before(config_hash, root):
         raise TestFoldAccessError(f"config {config_hash[:12]} was already scored on an outer test fold (stop rule 6): refusing a second scoring")
     p = os.path.join(root or _DEFAULT_ROOT, SCORED_REL)
+    row = {"config_sha256": config_hash, "run_id": run_id, "commit": commit}
+    if dataset is not None:
+        row["dataset"] = dataset
+    if item_f_sha256 is not None:
+        row["item_f_sha256"] = item_f_sha256
     with open(p, "a", encoding="utf8") as fh:
-        fh.write(json.dumps({"config_sha256": config_hash, "run_id": run_id, "commit": commit}) + "\n")
+        fh.write(json.dumps(row) + "\n")
 
 
-def build_freeze_payload(root, split_keys, config_paths, prereg_file=PREREG_DEFAULT, pin_files=None, require_pins=False):
+def read_ledger(root=None):
+    p = os.path.join(root or _DEFAULT_ROOT, SCORED_REL)
+    if not os.path.isfile(p):
+        return []
+    return [json.loads(l) for l in open(p, encoding="utf8") if l.strip()]
+
+
+def require_item_f_record(root=None, runs_dir=None):
+    """D026 scorer gate: called before `build_data` in every Samsung real-data confirmatory run. Refuses (TestFoldAccessError) when the item (f) record is absent; when the item (f) file's
+    hash, the record's frozen_commit or the sha256 of any artifact listed for an item (f) run differs; when a listed run's config hash is not among the FROZEN `item_f_config_sha256s`;
+    or when the folds are not exactly 0-4. Returns the sha256 of the item (f) file (the value every Samsung ledger row must carry)."""
+    root = root or _DEFAULT_ROOT
+    runs_dir = runs_dir or os.path.join(root, "runs")
+    try:
+        fz = read_freeze(root)
+        if fz is None:
+            raise TestFoldAccessError("FROZEN is absent")
+        base = os.path.join(root, ITEM_F_DIR_REL)
+        pf, rf = os.path.join(base, ITEM_F_FILE), os.path.join(base, ITEM_F_HASH)
+        if not (os.path.isfile(pf) and os.path.isfile(rf)):
+            raise TestFoldAccessError(f"the item (f) dependence file or its record is absent in {ITEM_F_DIR_REL}: run the five item (f) runs and stats_v4.build_item_f before any Samsung confirmatory run")
+        rec = json.load(open(rf, encoding="utf8"))
+        sha = sha256_file(pf)
+        if rec.get("sha256") != sha:
+            raise TestFoldAccessError("the item (f) dependence file differs from the hash in its record")
+        if rec.get("frozen_commit") != fz["commit"]:
+            raise TestFoldAccessError("the item (f) record's frozen_commit is not the FROZEN commit")
+        runs = rec.get("runs") or []
+        if sorted(r.get("fold") for r in runs) != ITEM_F_FOLDS or sorted(rec.get("folds") or []) != ITEM_F_FOLDS:
+            raise TestFoldAccessError("the item (f) record's folds are not exactly 0-4")
+        pinned = set(fz.get("item_f_config_sha256s") or [])
+        for r in runs:
+            if r.get("config_sha256") not in pinned:
+                raise TestFoldAccessError(f"item (f) run {r.get('run_id')}: config hash is not among the FROZEN item_f_config_sha256s")
+            arts = r.get("artifacts") or {}
+            if set(arts) != set(ITEM_F_ARTIFACTS):
+                raise TestFoldAccessError(f"item (f) run {r.get('run_id')}: the record does not list exactly {list(ITEM_F_ARTIFACTS)}")
+            for name, h in arts.items():
+                fp = os.path.join(runs_dir, r["run_id"], name)
+                if not os.path.isfile(fp) or sha256_file(fp) != h:
+                    raise TestFoldAccessError(f"item (f) run {r['run_id']}: {name} is absent or differs from the recorded hash")
+    except TestFoldAccessError as e:
+        GUARD_LOG.append({"what": "item (f) record", "verified": False, "reason": str(e)})
+        raise TestFoldAccessError(f"refused: Samsung test fold not loaded. {e}") from e
+    GUARD_LOG.append({"what": "item (f) record", "verified": True, "item_f_sha256": sha})
+    return sha
+
+
+def build_freeze_payload(root, split_keys, config_paths, prereg_file=PREREG_DEFAULT, pin_files=None, require_pins=False, item_f_config_paths=None):
     """Helper for the lead at freeze time: returns the dict to put in FROZEN (does NOT write the file).
-    split_keys: [(dataset, test)], config_paths: run-config JSON files whose canonical hashes are pinned."""
+    split_keys: [(dataset, test)], config_paths: run-config JSON files whose canonical hashes are pinned. item_f_config_paths (D026): the five item (f) run configs (Samsung, test B, folds 0-4,
+    mode inner); their canonical hashes go to `item_f_config_sha256s`; with require_pins=True anything but five distinct configs refuses, otherwise the shortfall is listed in `pins_missing`
+    (and a FROZEN built so is refused)."""
     from .data import _digest, split_path  # local import: data imports guard
     splits = {}
     for ds, test in split_keys:
@@ -180,8 +244,13 @@ def build_freeze_payload(root, split_keys, config_paths, prereg_file=PREREG_DEFA
         splits[f"{ds}:{test}"] = {"file_sha256": sha256_file(p), "fold_hash": block.get("sha256_of_folds") or _digest(block)}
     from .run import DEFAULTS  # the runner hashes DEFAULTS + the file's keys
     cfgs = [canonical_config_hash({**DEFAULTS, **json.load(open(c, encoding="utf8"))}) for c in config_paths]
+    item_f = [canonical_config_hash({**DEFAULTS, **json.load(open(c, encoding="utf8"))}) for c in (item_f_config_paths or [])]
     pins, missing = {}, []
-    for name, rel in (PIN_FILES if pin_files is None else pin_files).items():      # subsets.json, symbolic_library.json (cap set) and the item (f) file must exist at the freeze
+    if len(item_f) != ITEM_F_N_CONFIGS or len(set(item_f)) != ITEM_F_N_CONFIGS:
+        if require_pins:
+            raise TestFoldAccessError(f"cannot pin the item (f) configs: {ITEM_F_N_CONFIGS} distinct configs are required (folds 0-4), got {len(item_f)}")
+        missing.append("item_f_configs")
+    for name, rel in (PIN_FILES if pin_files is None else pin_files).items():      # subsets.json and symbolic_library.json (cap set) must exist at the freeze
         fp = os.path.join(root, rel)
         if not os.path.isfile(fp):
             if require_pins:
@@ -190,4 +259,4 @@ def build_freeze_payload(root, split_keys, config_paths, prereg_file=PREREG_DEFA
             continue
         pins[name] = {"file": rel.replace("\\", "/"), "sha256": sha256_file(fp)}
     return {"commit": _git(root, "rev-parse", "HEAD"), "prereg_file": prereg_file, "prereg_sha256": sha256_file(os.path.join(root, prereg_file)),
-            "splits": splits, "config_sha256s": cfgs, "pins": pins, "pins_missing": missing}
+            "splits": splits, "config_sha256s": cfgs, "item_f_config_sha256s": item_f, "pins": pins, "pins_missing": missing}

@@ -504,6 +504,7 @@ def main(argv=None):
     ap.add_argument("--item-f-dir", default=None, help="directory of the hashed item (f) dependence file (D018); required for --design r2")
     ap.add_argument("--row", action="append", default=None, help="NAME=dir1,dir2,... for the downgrade-row re-runs: lab_indicator, retain_all, random_subset (draws separated by ';')")
     ap.add_argument("--item-f-sha256", default=None, help="the item (f) file hash pinned in git / FROZEN")
+    ap.add_argument("--ledger-root", default=None, help="project root whose runs/prereg/SCORED.jsonl is checked: every Samsung row must carry the same item_f_sha256 (D026)")
     ap.add_argument("--audit-dir", default=None, help="directory of calibration.json (runs/extraction_calibration); without it no edge-level wording is printed")
     ap.add_argument("--audit-thresholds-pin", default=None, help="sha256 of extraction_audit.json (mandatory with --audit-dir)")
     ap.add_argument("--calibration-sha256", default=None, help="sha256 of calibration.json (mandatory with --audit-dir)")
@@ -521,13 +522,13 @@ def main(argv=None):
             n_, v_ = item.split("=", 1)
             rr[n_] = [x.split(",") for x in v_.split(";")] if n_ == "random_subset" else v_.split(",")
         run_stats_v4(a.analysis_dir, runs["B"], json.loads(a.sign_rule) if a.sign_rule else None, item_f_dir=a.item_f_dir, row_runs=rr, h7_run=a.h7_run,
-                     item_f_sha256=a.item_f_sha256, strict=not a.lenient, audit_dir=a.audit_dir, audit_thresholds_pin=a.audit_thresholds_pin, calibration_sha256=a.calibration_sha256)
+                     item_f_sha256=a.item_f_sha256, ledger_root=a.ledger_root, strict=not a.lenient, audit_dir=a.audit_dir, audit_thresholds_pin=a.audit_thresholds_pin, calibration_sha256=a.calibration_sha256)
         return
     run_stats(a.analysis_dir, runs, a.negative_run, a.h7_run, a.stress_run, nc1_full=a.nc1_full, physval_runs=(runs.get("B") if a.physval else None))
 
 
 # --------------------------------------------------------------------------------------------------- Design R2 (PREREG_v4): see stats_v4.py
-def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, row_runs=None, h7_run=None, item_f_sha256=None, strict=True, n_expected=40, folds=range(5), audit_dir=None, audit_thresholds_pin=None, calibration_sha256=None, frozen_commit=None, licences=False):
+def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, row_runs=None, h7_run=None, item_f_sha256=None, strict=True, n_expected=40, folds=range(5), audit_dir=None, audit_thresholds_pin=None, calibration_sha256=None, frozen_commit=None, licences=False, ledger_root=None):
     """Design R2 statistics from grid runs, through the downgrade rows (stats_rows.run_v4_full). The item (f) dependence file must exist, match its hash (and `item_f_sha256` if given) and
     pre-date every outer score file (D018 2.3 (ii)); otherwise ItemFError. strict (default): every run must say design R2 and the grid must be complete (folds, cells, n, arms, selectors,
     both A10 forms; Store.check_complete). `row_runs`: {'lab_indicator': [dirs], 'retain_all': [dirs], 'random_subset': [[dirs of draw 0], [draw 1], [draw 2]]} (the re-runs of the
@@ -536,7 +537,9 @@ def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, r
     from . import guard, stats_rows, stats_v4
     if item_f_dir is None:
         raise stats_v4.ItemFError("item_f_dir is required: the statistics step is blocked without the hashed item (f) dependence file")
-    item_f = stats_v4.require_item_f(item_f_dir, run_dirs, item_f_sha256)
+    if ledger_root is None and guard.is_frozen():                          # D026: once a FROZEN exists in this tree the ledger check cannot be skipped by omission
+        ledger_root = guard._DEFAULT_ROOT
+    item_f = stats_v4.require_item_f(item_f_dir, run_dirs, item_f_sha256, ledger_root=ledger_root)      # D026: with ledger_root, every Samsung ledger row must carry the file's hash
     rule, c = stats_v4.resolve_config(cfg)
     store = stats_v4.Store.from_runs(run_dirs, strict=strict)
     if strict:

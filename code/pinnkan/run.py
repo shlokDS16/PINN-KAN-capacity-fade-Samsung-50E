@@ -244,7 +244,7 @@ def _run(cfg_in, root=None, runs_dir=None):
             cfg["p6b_decision_sha256"] = sha256_file(dec)
         if "inner_k" not in cfg_in:
             cfg["inner_k"] = tuning.inner_k_for_m(int(cfg["m"]), thin_folds=thin)       # 2 for m in {8, 16}, 3 for m = 32 (PREREG_v4 4.1)
-    chash = None
+    chash, item_f_sha = None, None
     if mode == "confirmatory" and ds != "synthetic":      # checks before anything is created or read (review M2)
         if cfg["steps_scale"] != 1.0:
             raise ConfigError("steps_scale != 1 is not allowed in a confirmatory run on real data")
@@ -254,6 +254,8 @@ def _run(cfg_in, root=None, runs_dir=None):
             raise ConfigError("auto_budget is wall-clock dependent and unhashed: a confirmatory run on real data takes N and inner_k from the config, fixed from the FB-8 timing run's budget_rule.json (review M4)")
         guard.require_frozen("confirmatory run", root)
         chash = guard.check_config_frozen({**DEFAULTS, **cfg_in}, root)     # hash of the config as written (DEFAULTS + file keys)
+        if ds == "samsung":                                                 # D026: the item (f) record is verified before build_data / load_split can release any test fold
+            item_f_sha = guard.require_item_f_record(root, runs_dir)
     if os.path.exists(run_dir):
         if os.path.exists(os.path.join(run_dir, "condition_scores.json")):
             raise ScoredRunError(f"{run_dir} holds a scored outer-test run; it is never replaced")
@@ -303,7 +305,8 @@ def _run(cfg_in, root=None, runs_dir=None):
         open(os.path.join(run_dir, "SYNTHETIC"), "w").write("synthetic data: invented ageing laws, not results\n")
     guard.GUARD_LOG.clear()
     t_start = time.time()
-    _json(os.path.join(run_dir, "config.json"), {**cfg, "mode_effective": mode, "blinded_samsung_pre_freeze": blinded})
+    _json(os.path.join(run_dir, "config.json"), {**cfg, "mode_effective": mode, "blinded_samsung_pre_freeze": blinded,
+                                                 "config_sha256": guard.canonical_config_hash({**DEFAULTS, **cfg_in}), "config_input": cfg_in})      # D026: the hash as pinned (DEFAULTS + the file's keys) and the input it was computed from (stats_v4.build_item_f recomputes it)
     _json(os.path.join(run_dir, "env.json"), env_info())
     _json(os.path.join(run_dir, "git.json"), git_info(root))
     _json(os.path.join(run_dir, "seeds.json"), {"final_refit_seeds": cfg["seeds"], "tuning_seed": "1000 + outer fold", "tpe_sampler_seed": "outer fold",
@@ -449,7 +452,7 @@ def _run(cfg_in, root=None, runs_dir=None):
     prep = KC[primary]["prep"]
     if ds != "synthetic":
         guard.require_frozen("score outer test fold", root)      # the scoring side of the guard
-        guard.record_scoring(chash, run_id, git_info(root)["commit"], root)     # a second scoring of the same config is refused
+        guard.record_scoring(chash, run_id, git_info(root)["commit"], root, dataset=ds, item_f_sha256=item_f_sha)     # a second scoring of the same config is refused
     bad = {c.kind for c in D["test"]} - {tk}
     if bad:
         raise ConfigError(f"test cells of kind {sorted(bad)} but the tuned and scored kind is {tk}")

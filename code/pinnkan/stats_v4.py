@@ -20,6 +20,7 @@ from types import SimpleNamespace
 import numpy as np
 
 from . import graph_test as gt
+from . import guard
 from .negcontrol import MC_SEED_ROOT
 from .stats_step import bca_mean_ci
 
@@ -539,7 +540,9 @@ def most_test(store, rule, cfg, e1_reached):
 
 
 # ------------------------------------------------------------------------------------------------ item (f) guard
-ITEM_F_FILE, ITEM_F_HASH = "item_f_dependence.json", "item_f_dependence.sha256.json"
+ITEM_F_FILE, ITEM_F_HASH = guard.ITEM_F_FILE, guard.ITEM_F_HASH
+ITEM_F_CELL = {"dataset": "samsung", "test": "B", "m": 8, "k": "2", "subset": "maxmin"}       # D026: g1 only; there is no g4 estimate
+ITEM_F_CONTRAST = ("D*", "A1")
 
 
 def _sha(path):
@@ -549,17 +552,138 @@ def _sha(path):
     return h.hexdigest()
 
 
-def write_item_f(directory, report):
-    """write the item (f) dependence report and its hash record; call BEFORE any outer score is computed"""
+def write_item_f(directory, report, extra=None):
+    """write the item (f) dependence report and its hash record; call BEFORE any outer score is computed. `extra` (D026): further fields of the record (frozen_commit, cell, contrast, folds, runs)"""
     os.makedirs(directory, exist_ok=True)
     p = os.path.join(directory, ITEM_F_FILE)
     with open(p, "w", encoding="utf8") as fh:
-        json.dump(report, fh, indent=1, sort_keys=True)
+        json.dump(report, fh, indent=1, sort_keys=True, default=lambda o: o.item() if isinstance(o, (np.generic,)) else (o.tolist() if isinstance(o, np.ndarray) else str(o)))
     import time
     rec = {"file": ITEM_F_FILE, "sha256": _sha(p), "written_unix": time.time(), "estimator": "graph_test.dependence_report", "rule": "hashed before any outer score; the statistics step refuses to run otherwise"}
+    rec.update(extra or {})
     with open(os.path.join(directory, ITEM_F_HASH), "w", encoding="utf8") as fh:
         json.dump(rec, fh, indent=1)
     return rec
+
+
+def _samsung_scores_under(runs_dir):
+    """D026 writer check: directories under `runs_dir` that hold a condition_scores*.json and are, or cannot be shown not to be, Samsung runs. A directory carrying the SYNTHETIC marker
+    (written by run.py for synthetic data and by the figure demos) is not a Samsung score; a directory whose config.json is absent or unreadable counts as Samsung (fail closed)."""
+    bad = []
+    for dp, _dn, fn in os.walk(runs_dir):
+        if not any(f.startswith("condition_scores") and f.endswith(".json") for f in fn):
+            continue
+        if "SYNTHETIC" in fn:
+            continue
+        try:
+            ds = json.load(open(os.path.join(dp, "config.json"), encoding="utf8")).get("dataset")
+        except Exception:  # noqa: BLE001
+            ds = "samsung"
+        if ds in ("samsung", None):
+            bad.append(dp)
+    return bad
+
+
+def build_item_f(root, run_dirs, directory=None, runs_dir=None, contrast=ITEM_F_CONTRAST, cell=None):
+    """D026 writer: the item (f) estimate from the five post-freeze inner runs at g1 (Samsung, test B, m = 8, k = 2, folds 0-4) and its hash record in runs/item_f/.
+    Refuses (ItemFError) when: the freeze is invalid or HEAD is not the FROZEN commit; a run's mode_effective is not 'inner'; a run's config hash (recomputed from the config the run recorded) is not in the
+    FROZEN `item_f_config_sha256s`; the folds are not exactly 0-4; any Samsung row exists in SCORED.jsonl or any Samsung condition_scores*.json exists under runs/; the item (f) file already exists
+    (append-only); or the estimate cannot be formed. `cell` (default ITEM_F_CELL, the Samsung g1 cell) exists for the synthetic smoke test only. The record gains frozen_commit, cell, contrast, folds and, per run, run_id, config hash and the sha256 of the five artifacts of guard.ITEM_F_ARTIFACTS."""
+    from .run import DEFAULTS
+    root = root or guard._DEFAULT_ROOT
+    cell = dict(cell or ITEM_F_CELL)
+    runs_dir = os.path.abspath(runs_dir or os.path.join(root, "runs"))
+    directory = directory or os.path.join(root, guard.ITEM_F_DIR_REL)
+    try:
+        fz = guard.verify_freeze(root)                                           # valid freeze, and HEAD equals the FROZEN commit
+    except guard.TestFoldAccessError as e:
+        raise ItemFError(f"item (f) writer refused: the freeze is invalid or HEAD is not the FROZEN commit ({e})") from e
+    if os.path.exists(os.path.join(directory, ITEM_F_FILE)) or os.path.exists(os.path.join(directory, ITEM_F_HASH)):
+        raise ItemFError(f"item (f) writer refused: {directory} already holds an item (f) file or record (append-only)")
+    rows = [r for r in guard.read_ledger(root) if r.get("dataset") in ("samsung", None)]
+    if rows:
+        raise ItemFError("item (f) writer refused: SCORED.jsonl already holds a Samsung row (or a row that does not name its dataset): the item (f) file must be hashed before any Samsung outer score")
+    scored = _samsung_scores_under(runs_dir)
+    if scored:
+        raise ItemFError(f"item (f) writer refused: a Samsung condition_scores*.json exists under runs/ ({os.path.relpath(scored[0], runs_dir)})")
+    pinned = set(fz.get("item_f_config_sha256s") or [])
+    entries, dstar = [], {}
+    for d in run_dirs:
+        d = os.path.abspath(d)
+        cp = os.path.join(d, "config.json")
+        if not os.path.isfile(cp):
+            raise ItemFError(f"item (f) writer refused: {d} has no config.json")
+        cfg = json.load(open(cp, encoding="utf8"))
+        if cfg.get("mode_effective") != "inner" or cfg.get("mode") != "inner":
+            raise ItemFError(f"item (f) writer refused: run {cfg.get('run_id')} has mode_effective {cfg.get('mode_effective')!r} (mode {cfg.get('mode')!r}), not 'inner'")
+        if os.path.dirname(d) != runs_dir or os.path.basename(d) != cfg.get("run_id"):
+            raise ItemFError(f"item (f) writer refused: run directory {d} is not runs/<run_id> of its own config")
+        got = {"dataset": cfg.get("dataset"), "test": cfg.get("test"), "m": cfg.get("m"), "subset": cfg.get("subset")}
+        want = {k: cell[k] for k in got}
+        if got != want:
+            raise ItemFError(f"item (f) writer refused: run {cfg.get('run_id')} is {got}, not the g1 cell {want}")
+        try:
+            h = guard.canonical_config_hash({**DEFAULTS, **cfg["config_input"]})
+        except KeyError as e:
+            raise ItemFError(f"item (f) writer refused: run {cfg.get('run_id')} did not record its config input (config_input)") from e
+        if h != cfg.get("config_sha256"):
+            raise ItemFError(f"item (f) writer refused: run {cfg.get('run_id')}: the recorded config hash does not match the recorded config input")
+        if h not in pinned:
+            raise ItemFError(f"item (f) writer refused: run {cfg.get('run_id')}: config hash {h[:12]} is not among the FROZEN item_f_config_sha256s")
+        arts = {}
+        for name in guard.ITEM_F_ARTIFACTS:
+            fp = os.path.join(d, name)
+            if not os.path.isfile(fp):
+                raise ItemFError(f"item (f) writer refused: run {cfg['run_id']} lacks {name}")
+            arts[name] = guard.sha256_file(fp)
+        comp = json.load(open(os.path.join(d, "comparators.json"), encoding="utf8"))
+        if contrast[0] not in comp:
+            raise ItemFError(f"item (f) writer refused: run {cfg['run_id']} has no {contrast[0]} comparator")
+        dstar[int(cfg["fold"])] = comp[contrast[0]]["arm"]
+        entries.append({"run_id": cfg["run_id"], "fold": int(cfg["fold"]), "config_sha256": h, "artifacts": arts})
+    entries.sort(key=lambda e: e["fold"])
+    if [e["fold"] for e in entries] != guard.ITEM_F_FOLDS:
+        raise ItemFError(f"item (f) writer refused: the folds are {[e['fold'] for e in entries]}, not exactly 0-4")
+    order = {e["run_id"]: os.path.join(runs_dir, e["run_id"]) for e in entries}
+    report = item_f_from_runs([order[e["run_id"]] for e in entries], tuple(contrast))
+    if "exceeds_rho_s0" not in report:
+        raise ItemFError(f"item (f) writer refused: the estimate cannot be formed ({report.get('note')})")
+    return write_item_f(directory, report, extra={"frozen_commit": fz["commit"], "cell": cell, "contrast": list(contrast), "folds": list(guard.ITEM_F_FOLDS),
+                                                  "runs": entries, "d_star_by_fold": {str(k): v for k, v in sorted(dstar.items())}})
+
+
+def item_f_concordance(item_f_dirs, confirmatory_dirs):
+    """D026 action 6, after scoring: descriptive concordance row, no consequence for any state, tier or sentence. For every fold, the item (f) run (inner mode, g1) against the confirmatory g1 run of the
+    same outer fold: D* arm, then for A1 and for D* (each side's own D*) the tuned hyper-parameters and the inner-CV condition scores on the conditions they share. Reads tuning_done.json and
+    comparators.json only (training side); reopen_flag is the D026 re-open trigger (a different D* in more than one fold)."""
+    def load(d):
+        cfg = json.load(open(os.path.join(d, "config.json"), encoding="utf8"))
+        return (int(cfg["fold"]), json.load(open(os.path.join(d, "tuning_done.json"), encoding="utf8")), json.load(open(os.path.join(d, "comparators.json"), encoding="utf8")))
+    a, b = {f: (t, c) for f, t, c in map(load, item_f_dirs)}, {f: (t, c) for f, t, c in map(load, confirmatory_dirs)}
+    rows = []
+    for f in sorted(set(a) & set(b)):
+        (ta, ca), (tb, cb) = a[f], b[f]
+        da, db = ca.get("D*", {}).get("arm"), cb.get("D*", {}).get("arm")
+        row = {"fold": f, "dstar_item_f": da, "dstar_confirmatory": db, "dstar_agree": bool(da is not None and da == db), "arms": {}}
+        for label, aa, bb in (("A1", "A1", "A1"), ("D*", da, db)):
+            if aa is None or bb is None or aa not in ta["arms"] or bb not in tb["arms"]:
+                row["arms"][label] = None
+                continue
+            sa, sb = ta["arms"][aa]["cond_scores"], tb["arms"][bb]["cond_scores"]
+            common = sorted(set(sa) & set(sb))
+            x, y = np.array([sa[c] for c in common], float), np.array([sb[c] for c in common], float)
+            rho = None
+            if len(common) > 2 and np.ptp(x) > 0 and np.ptp(y) > 0:
+                from scipy.stats import spearmanr
+                rho = float(spearmanr(x, y)[0])
+            row["arms"][label] = {"arm_item_f": aa, "arm_confirmatory": bb, "best_hp_equal": ta["arms"][aa]["best_hp"] == tb["arms"][bb]["best_hp"],
+                                  "best_hp_item_f": ta["arms"][aa]["best_hp"], "best_hp_confirmatory": tb["arms"][bb]["best_hp"],
+                                  "n_conditions_common": len(common), "n_conditions_item_f": len(sa), "n_conditions_confirmatory": len(sb),
+                                  "max_abs_diff_pp": (float(np.max(np.abs(x - y))) if common else None), "spearman": rho}
+        rows.append(row)
+    n_diff = sum(1 for r in rows if not r["dstar_agree"])
+    return {"rows": rows, "n_folds": len(rows), "n_folds_dstar_differs": n_diff, "reopen_flag": bool(n_diff > 1),
+            "note": "descriptive; no consequence for any state, tier or sentence. reopen_flag is the D026 re-open trigger (a different D* in more than one fold)"}
 
 
 def outer_score_mtimes(run_dirs):
@@ -572,8 +696,10 @@ def outer_score_mtimes(run_dirs):
     return out
 
 
-def require_item_f(directory, run_dirs, pinned_sha256=None):
-    """block the statistics step unless the item (f) file exists, matches its recorded hash, and was written before every outer score file of `run_dirs`"""
+def require_item_f(directory, run_dirs, pinned_sha256=None, ledger_root=None):
+    """block the statistics step unless the item (f) file exists, matches its recorded hash, and was written before every outer score file of `run_dirs`.
+    D026: with `ledger_root`, the Samsung rows of runs/prereg/SCORED.jsonl must exist, each carry `item_f_sha256`, all carry the same value, and that value must be the file's hash (and
+    `pinned_sha256`, if given). This is the primary evidence; the file-time comparison below stays secondary."""
     p, h = os.path.join(directory, ITEM_F_FILE), os.path.join(directory, ITEM_F_HASH)
     if not (os.path.exists(p) and os.path.exists(h)):
         raise ItemFError(f"item (f) dependence file or its hash record missing in {directory}: write it (stats_v4.write_item_f) before any outer score; the statistics step is blocked")
@@ -582,6 +708,16 @@ def require_item_f(directory, run_dirs, pinned_sha256=None):
         raise ItemFError("item (f) dependence file differs from its recorded hash (altered after hashing)")
     if pinned_sha256 is not None and _sha(p) != pinned_sha256:           # review M5: the file hash pinned outside the file system (git / FROZEN), so file times are not the only evidence
         raise ItemFError("item (f) dependence file differs from the pinned hash (item_f_sha256)")
+    if ledger_root is not None:
+        sam = [r for r in guard.read_ledger(ledger_root) if r.get("dataset") == "samsung"]
+        if not sam:
+            raise ItemFError("the scoring ledger holds no Samsung row: item (f) cannot be tied to the scores")
+        vals = {r.get("item_f_sha256") for r in sam}
+        if None in vals or len(vals) != 1:
+            raise ItemFError("Samsung ledger rows do not all carry the same item_f_sha256 (a row without it fails)")
+        (lv,) = vals
+        if lv != _sha(p) or (pinned_sha256 is not None and lv != pinned_sha256):
+            raise ItemFError("the item_f_sha256 of the Samsung ledger rows differs from the item (f) file hash")
     scores = outer_score_mtimes(run_dirs)
     if scores and not (os.path.getmtime(p) < min(scores) and rec["written_unix"] < min(scores)):
         raise ItemFError("item (f) dependence file was written after an outer score file existed: the pre-score rule of D018 2.3 (ii) is broken")

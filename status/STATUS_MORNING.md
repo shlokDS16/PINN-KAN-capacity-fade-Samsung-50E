@@ -3,6 +3,26 @@
 Folder: `C:\Users\Shlok\Downloads\PINN KAN battery paper` (own git repo). Budget: weekly usage 5% at
 start, 6% at 22:00 (see the end of this file for the latest); Fable 0%. CPU only, no GPU used.
 
+## 0000. LATEST (10:00, 5 Nov): statistics fix ruled (D018); one approval needed from you
+- **What changed:** the planned significance test was too lenient if results within a fold or lab are correlated
+  (runs/prereg/stats_sim_v4/RESULT.md). After debate (statistician proposal, Codex opponent, Opus judge:
+  debates/D018_test_rule/01_judge.md) the confirmatory test now needs 31 of 40 held-out conditions at the headline
+  cell instead of 28; labs are treated as fixed strata.
+- **Consequence (simulation, not a result):** to have an 80 % chance of showing the PINN's advantage, its true gain at
+  8 conditions / 2 check-ups must be about 21-25 % (not 17-22 % as said last night). The full PINN chain (gain, due to
+  the law, larger with fewer conditions) has probability about 0.36 (0.49-0.53 if a pending weighting simulation
+  allows w = 0.78). P0 (learning-curve paper, T4-T6) or P+ with clause e2/e3 is a likely outcome. The table does not change.
+- **Your decision (freeze condition):** approve or decline clause **e1'** (debates/D018_test_rule/01_judge.md section 4).
+  It covers the case "physics law significant and larger with fewer conditions, but not shown to be most of the gain":
+  "the same network without the physics law was [Y] % worse, and the advantage was larger with 8 than with 32 cycling
+  conditions". It uses only words already in clause e1.
+- **Novelty (debates/D016_roles/03_novelty_recheck.md):** "how many tests" framing is incremental (Lucu et al. JES 2020;
+  Stroebl JES 142 is optimal experimental design on our exact dataset). New: KAN law vs GAM law on held-out conditions,
+  and the combination. "First" only as a four-part sentence after Lucu A/B, Jia and Hallinger are read in full.
+- **Papers:** full texts saved in refs/fulltext/ (Zhang, Stroebl, PIKAN, PGKAN, KA-CRNN, Chen, Fan, Ren; refs 1, 3-7
+  captured, export pending). ScienceDirect rate-limits after about 20 pages; the rest continues in slower batches.
+- **Samsung full download:** running (about 1 GB of 10.29 GB at 09:40; network drops 09:21-09:37 slowed it).
+
 ## 000. LATEST (07:55, 5 Nov): you approved the outcome table; next steps running
 - Your approval is recorded as decision D017 (research/DECISIONS.md). The table in
   debates/D016_roles/02_judge.md section 4 is now fixed; changing it later needs a new decision before the freeze.

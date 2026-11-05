@@ -66,3 +66,8 @@
 - 04:05 D016 judge: REVISE -> Design R2 (data efficiency; ablation ladder; KAN law vs simplified GAM law on held-out conditions; closed table T1-T8 + M1/M2) committed. Status file section 00 asks Shlok to approve the table.
 - 04:07 builder gap-fill done (ca66522, e24d4e8; 256 tests); 6 choices to confirm (RESULT.md 7.3) by an independent reviewer next session. Blinding log started (runs/prereg/BLINDING_LOG.md).
 - 07:50 Shlok approved the D016 outcome table (D017, 9b9e0ee). Started: designer PREREG_v4, statistician sims (a)-(e) + graph_test, novelty re-check of D016 framing. Samsung fetch 115/279 at 07:42. Weekly 12%, cap for today 20%.
+- 08:44 full Samsung download started (tools/samsung_full_download.py, 16 workers, md5; data/raw/samsung50e_full). Per-member CU fetch stopped (data/STOP_SAMSUNG).
+- 08:50-09:45 e-gateway texts via Shlok's Chrome (VIT access): ScienceDirect PDFs cannot be saved by script; article full text captured into refs/fulltext/ (git-ignored). Chrome allows one automatic download per tab; texts staged in the site's localStorage and exported in batches. Rate limit ("Problem processing your request") after about 20 pages.
+- 09:05 PREREG_v4 draft committed (adbd3d7). Novelty re-check: framing INCREMENTAL (Lucu JES 2020), KAN-law test NOVEL, "first" only as 4-part conjunction. Stats sims (0b2234b): size criterion FAILS for the plain sign test under fold/lab clustering; fallback rho_s0 = 0.03.
+- 09:21-09:37 network drops. Codex turn 5 (opponent, REVISE). D018 judge (Opus, b29f6dd): fallback adopted, labs fixed strata, GAP-1 rule via d_c, w = 0.78 to be decided by a pre-ruled simulation, clause e1' needs Shlok (A6). Coder started D016 build (runs/build_v2). Designer (A1) and statistician (A2, A3) working on D018 actions.
+

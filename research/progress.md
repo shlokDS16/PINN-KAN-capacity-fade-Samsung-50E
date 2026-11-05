@@ -65,3 +65,4 @@
 - 03:52 D016: proposer Design R (data efficiency); Codex opponent REVISE; Opus judge running (02_judge.md).
 - 04:05 D016 judge: REVISE -> Design R2 (data efficiency; ablation ladder; KAN law vs simplified GAM law on held-out conditions; closed table T1-T8 + M1/M2) committed. Status file section 00 asks Shlok to approve the table.
 - 04:07 builder gap-fill done (ca66522, e24d4e8; 256 tests); 6 choices to confirm (RESULT.md 7.3) by an independent reviewer next session. Blinding log started (runs/prereg/BLINDING_LOG.md).
+- 07:50 Shlok approved the D016 outcome table (D017, 9b9e0ee). Started: designer PREREG_v4, statistician sims (a)-(e) + graph_test, novelty re-check of D016 framing. Samsung fetch 115/279 at 07:42. Weekly 12%, cap for today 20%.

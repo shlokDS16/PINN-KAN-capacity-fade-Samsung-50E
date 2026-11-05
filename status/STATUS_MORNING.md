@@ -3,7 +3,17 @@
 Folder: `C:\Users\Shlok\Downloads\PINN KAN battery paper` (own git repo). Budget: weekly usage 5% at
 start, 6% at 22:00 (see the end of this file for the latest); Fable 0%. CPU only, no GPU used.
 
-## 00. LATEST (04:05): the design changed after a red team; your approval is needed
+## 000. LATEST (07:55, 5 Nov): you approved the outcome table; next steps running
+- Your approval is recorded as decision D017 (research/DECISIONS.md). The table in
+  debates/D016_roles/02_judge.md section 4 is now fixed; changing it later needs a new decision before the freeze.
+- Running now (CPU only, no GPU): PREREG_v4 draft (runs/prereg/PREREG_v4.md), the statistician's size and power
+  simulations (runs/prereg/stats_sim_v4/), and the novelty re-check of the new framing
+  (debates/D016_roles/03_novelty_recheck.md). Then the D016 code (about 3-3.5 days) and the ISU pilot P6.
+- Samsung check-up fetch: 115 of 279 cells at 07:42, about 11 min per cell. Your full download would replace it.
+- Still needed from you: the e-gateway PDFs (Zhang JES 182, 125097 first) and the full Samsung download.
+- Budget: weekly 12% at 07:45, Fable 0%; today's cap 20%.
+
+## 00. (04:05) the design changed after a red team; approval given 07:50 (D017)
 - At 03:30 the red team rated the plan FATAL: as designed, the likely result showed no measurable benefit of
   the PINN or the KAN (debates/D015_redteam_v3/01_redteam.md). A new debate (proposer, Codex opponent, Opus
   judge) produced **Design R2** (debates/D016_roles/02_judge.md, DECISIONS D016):

@@ -43,3 +43,21 @@ Indicator coding (HM, stage 1 reference); where indicators enter A9 (z prior) an
 - `margins.json` per contrast and grid cell (pp-scale descriptive row): the run still writes the inner-CV E at the tuning k only.
 - Figure inputs for Fig. 4 / Fig. 5 (`emit.py`), the stability metric and per-input family-label table (11a item 6), the blinding-exclusion list in the scorer (3.3(11)), `guard.build_freeze_payload` additions (subsets.json, blinding_exclusions.json, library hash, stats_sim files) and `PREREG_DEFAULT`: not touched (the guard was left intact as instructed).
 - Rows (ii) and (iv) and the Samsung grid are re-run configs; their CPU cost is the lead's to schedule (PREREG 16, J16 6). The ISU fallback grid (`W` in {0, 2, 4}) is supported by `for_grid` for time windows but not exercised on real ISU files.
+
+## Review fixes (CODE_REVIEW.md: 0 critical, 7 important, 9 minor)
+Suite after the fixes: **464 passed, 0 failed** (run as one pytest process per test file; `test_pk_v2_review.py` has 17 tests, one or more per finding). `symbolic_library.json`, `semi.py` and the A10 code were not touched.
+
+| finding | fix | commit |
+|---|---|---|
+| I1 [W] of the T9 clause | taken only from the A10 forms that are reverse S | b5df90b |
+| I2 "most" under rows | d_c test recomputed in rows (ii)-(iv) and the lab-stratified row (binary, 0.025) | 6134369, ed4d123 |
+| I3 chain K silently struck | `ChainKMissingError` unless `k_chain_struck` is set; initial levels reported correctly | dea1f65 |
+| I4 `symbolic` config | in DEFAULTS, hashed, passed to the arm; refuses to start if `cap` disagrees with `symbolic_library.json`; unknown keys refused. Ruling (a): A15/G15 parent + refit steps = one A1 fit (`refit_frac` default 0.4) | ca6a4bb |
+| I6, M9 silent missing inputs | `Store.check_complete` (5 folds, all (m, k) cells, n = 40, required arms, D*/AG complete, both A10 forms), design and legacy-marker checks, per-seed files all or none | 8275d17 |
+| I5, M5 routing, provisional, pin | `run_stats_v4` and the CLI call `run_v4_full`; rows via `--row`; gate G from NC-1 and PC-1 (unseen = not evaluated); `status.provisional`; item (f) hash pinnable; `inner_folds.json` | 9dc0bf8 |
+| I7 rule 1 | `mean_vs_median` with `outcome.abstract_additions` | eb38a61 |
+| M1, M2, M3, M4, M6, M7 | fit-only timing; p6b hash in the hashed config and pinned-subsets check; counted window required; `auto_budget` refused on real confirmatory runs and A15/G15 in the Partial trigger; `nc1_full` per k; A9 latent forced at k = 0 (one commit, 1b13406) | 1b13406 |
+| M8 | left to the A10 verification agent | - |
+
+Lead rulings recorded in CHOICES.md: (a) matched budget; (b) random subsets unconstrained, with the reviewer's justification; (c) GRU struck; (d) cap/library agreement.
+Still open on the code side: the freeze payload (`guard.build_freeze_payload`) does not yet list `subsets.json`, the library file hash or the item (f) hash (guard left untouched); GRU strike needs the change-log row in PREREG_v4.

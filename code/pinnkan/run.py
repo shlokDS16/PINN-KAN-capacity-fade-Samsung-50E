@@ -24,7 +24,7 @@ import numpy as np
 import torch
 
 from . import ROOT as _ROOT
-from . import emit, guard, h7, law, margins, metrics, negcontrol, semi, stats_step, subsets, synth, tuning
+from . import emit, guard, h7, law, margins, metrics, negcontrol, selectors, semi, stats_step, subsets, synth, tuning
 from .arms import ARMS, H1B_POOL, NEURAL, default_hp, make_arm
 from .data import WindowRule, apply_subset, grid_ks, load_split, prepare_many, sha256_file
 from .law import TAU
@@ -199,6 +199,8 @@ def _run(cfg_in, root=None, runs_dir=None):
             raise ConfigError("subset must be 'maxmin' or 'random' (draw 0, 1 or 2)")
         if cfg["test"] not in ("B", "C"):
             raise ConfigError("the training-subset grid (m) is defined for Test B (and the Test C variant), not for tests A, S2, S3")
+        if "A5" in cfg["arms"] and int(cfg["m"]) < 32:
+            raise ConfigError("A5 (interaction GAM) runs at m = 32 only: its tensor terms cannot be supported by fewer conditions (PREREG_v4 7.1); at m < 32 AG = A4")
         if "inner_k" not in cfg_in:
             cfg["inner_k"] = tuning.inner_k_for_m(int(cfg["m"]))       # 2 for m in {8, 16}, 3 for m = 32 (PREREG_v4 4.1)
     chash = None
@@ -332,6 +334,9 @@ def _run(cfg_in, root=None, runs_dir=None):
     inner = {a: {"inner_cv_pp": tuned[a]["inner_cv_pp"], "cond_scores": tuned[a]["cond_scores"], "best_hp": tuned[a]["best_hp"]} for a in arms}
     _json(os.path.join(run_dir, "tuning_done.json"), {"backbone": ctx["backbone"], "arms": inner, "budget": {"n_trials": cfg["n_trials"], "inner_k": cfg["inner_k"]}})
     metrics_out["inner_cv_pp"] = {a: inner[a]["inner_cv_pp"] for a in arms}
+    comp = selectors.select_comparators({a: inner[a]["inner_cv_pp"] for a in arms}, cfg["m"])     # D* and AG by inner-CV score on the training conditions only (never by outer test error)
+    _json(os.path.join(run_dir, "comparators.json"), comp)
+    metrics_out["comparators"] = {k: v["arm"] for k, v in comp.items() if isinstance(v, dict) and "arm" in v}
     if cfg["diagnostics"]:
         diag, diag_arms = diagnostics(arms, tuned, train, spec, ctx, cfg["fold"])
         _json(os.path.join(run_dir, "diagnostics.json"), diag)

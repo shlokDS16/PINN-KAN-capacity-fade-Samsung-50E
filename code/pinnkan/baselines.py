@@ -33,7 +33,50 @@ def window_linear(wcells):
     return out
 
 
-def p3_cell(cond, tw, rw, tf, rf, stress, ds):
+# ---- D* feature option (PREREG_v4 7.4): the PINN's transformed inputs (A3 abscissae) plus t and EFC, raw and log. P3's feature builder is wrapped, not edited: a cell that carries
+# an 'extra' block (n_forecast x e) gets those columns inserted before the horizon column; a cell without it goes through P3's own code unchanged (bit for bit).
+_P3_FEAT_ROWS = P3.feat_rows
+
+
+def _feat_rows_with_extra(cell, ds, tau_log, fs):
+    X = _P3_FEAT_ROWS(cell, ds, tau_log, fs)
+    ex = cell.get("extra")
+    return X if ex is None else np.column_stack([X[:, :-1], ex, X[:, -1:]])
+
+
+if not getattr(P3.feat_rows, "_pinnkan_wrapped", False):
+    _feat_rows_with_extra._pinnkan_wrapped = True
+    P3.feat_rows = _feat_rows_with_extra
+
+FEATURE_SETS = ("raw", "pinn")
+STORAGE_ROWS = ("in", "out")
+
+
+def pinn_stress_features(spec, raw):
+    """A3 abscissae of raw stress rows (n, d): Arrhenius abscissa of T, log C-rates, log DoD, SOC_mid and SOC_mid^2 (law.ParamMap.feats; storage rows keep their (T, SOC) with the
+    log columns at the clamp, as in A3)"""
+    from .law import ParamMap
+    import torch
+    pm = ParamMap(spec)
+    with torch.no_grad():
+        return pm.feats(torch.tensor(spec.norm(np.atleast_2d(raw)), dtype=torch.float32)).numpy().astype(float)
+
+
+def pinn_extra_columns(spec, tf, efc_at_tf):
+    """t_n, E_n (the PINN's scaled time and cumulative throughput at the forecast points, causal curve) raw and log"""
+    tn = np.asarray(tf, float) / spec.t_scale
+    en = np.asarray(efc_at_tf, float) / spec.efc_scale
+    return np.column_stack([tn, en, np.log(tn + 1e-3), np.log(en + 1e-3)])
+
+
+def p3_cell(cond, tw, rw, tf, rf, stress, ds, extra=None):
+    out = _p3_cell_core(cond, tw, rw, tf, rf, stress, ds)
+    if extra is not None:
+        out["extra"] = extra
+    return out
+
+
+def _p3_cell_core(cond, tw, rw, tf, rf, stress, ds):
     if len(tw) < 2:          # k = 0: the window is the reference check-up only: stress and horizon, no window feature (PREREG_v4 4.1)
         return dict(cond=cond, tw=tw, rw=rw, t_last=tw[-1], r_last=rw[-1], summ=np.zeros(0), tf=tf, rf=rf, stress=np.asarray(stress, float))
     slope = np.polyfit(tw, rw, 1)[0]
@@ -45,23 +88,39 @@ def p3_cell(cond, tw, rw, tf, rf, stress, ds):
                 tf=tf, rf=rf, stress=np.asarray(stress, float))
 
 
-def cells_from_prepared(prepared, ds):
+def cells_from_prepared(prepared, ds, spec=None, feat="raw"):
     """training dict: window summary + forecast truth (the learner is trained to map window summary and horizon to the drop)"""
-    return {p.cell.cell_id: p3_cell(p.cell.cond, p.win.t_win, p.win.y_win, p.win.t_fc, p.fc_true, p.cell.raw, ds) for p in prepared}
+    if feat == "raw":
+        return {p.cell.cell_id: p3_cell(p.cell.cond, p.win.t_win, p.win.y_win, p.win.t_fc, p.fc_true, p.cell.raw, ds) for p in prepared}
+    return {p.cell.cell_id: p3_cell(p.cell.cond, p.win.t_win, p.win.y_win, p.win.t_fc, p.fc_true, pinn_stress_features(spec, p.cell.raw)[0], ds,
+                                    extra=pinn_extra_columns(spec, p.win.t_fc, p.win.efc_curve.value(p.win.t_fc))) for p in prepared}
 
 
-def cells_from_windows(wcells, ds):
-    return {w.cell_id: p3_cell(w.cond, w.t_win, w.y_win, w.t_fc, np.zeros(len(w.t_fc)), w.raw, ds) for w in wcells}   # rf unused by predict_cells
+def cells_from_windows(wcells, ds, spec=None, feat="raw"):
+    if feat == "raw":
+        return {w.cell_id: p3_cell(w.cond, w.t_win, w.y_win, w.t_fc, np.zeros(len(w.t_fc)), w.raw, ds) for w in wcells}   # rf unused by predict_cells
+    return {w.cell_id: p3_cell(w.cond, w.t_win, w.y_win, w.t_fc, np.zeros(len(w.t_fc)), pinn_stress_features(spec, w.raw)[0], ds,
+                               extra=pinn_extra_columns(spec, w.t_fc, w.efc_curve.value(w.t_fc))) for w in wcells}
 
 
 class P3Learner:
     """A11 (kind='gp') and A12 (kind='lgb') on (stress, window summary, horizon)."""
 
-    def __init__(self, kind, hp, ds, seed):
-        self.kind, self.hp, self.ds, self.seed = kind, dict(hp), ds, seed
+    def __init__(self, kind, hp, ds, seed, spec=None):
+        self.kind, self.hp, self.ds, self.seed, self.spec = kind, dict(hp), ds, seed, spec
+        self.feat = self.hp.get("feat", "raw")
+        self.storage = self.hp.get("storage", "in")
+        if self.feat not in FEATURE_SETS or self.storage not in STORAGE_ROWS:
+            raise ValueError(f"feat {self.feat!r} / storage {self.storage!r}: options are {FEATURE_SETS} / {STORAGE_ROWS}")
+        if self.feat == "pinn" and spec is None:
+            raise ValueError("feat='pinn' needs the dataset spec")
+        self.n_train_used = None
 
     def fit(self, prepared_train):
-        cells = cells_from_prepared(prepared_train, self.ds)
+        if self.storage == "out":                     # storage rows option: out = the learner trains on cycling cells only
+            prepared_train = [p for p in prepared_train if p.cell.kind != "storage"]
+        self.n_train_used = len(prepared_train)
+        cells = cells_from_prepared(prepared_train, self.ds, self.spec, self.feat)
         names = sorted(cells)
         if cells and all(len(c["summ"]) == 0 for c in cells.values()):
             self.hp = dict(self.hp, fs="full")          # no window feature exists at k = 0: the 'min' feature set (which indexes window columns) is not defined
@@ -77,5 +136,5 @@ class P3Learner:
         return self
 
     def predict(self, wcells):
-        cells = cells_from_windows(wcells, self.ds)
+        cells = cells_from_windows(wcells, self.ds, self.spec, self.feat)
         return P3.predict_cells(cells, sorted(cells), self.ds, self.fn, self.tau_log, self.fs)

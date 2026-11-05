@@ -318,9 +318,10 @@ def test_data_only_learners_a11_a12_run(g0):
 
 
 def test_arm_table_matches_prereg_dimensions():
+    """PREREG_v4 7.1 (build_v2 item 4): A11 5 and A12 7 dimensions (feature set and storage rows added), A1 h grid with h = 1"""
     dims = {a: arms.ARMS[a].dims for a in arms.ARMS}
     assert dims["A1"] == 6 and dims["A2"] == 4 and dims["A3"] == 3 and dims["A4"] == 4 and dims["A5"] == 5 and dims["A7"] == 5
-    assert dims["A9"] == 4 and dims["A10"] == 0 and dims["A11"] == 3 and dims["A12"] == 5 and dims["A13"] == 6 and dims["A14"] == 4
+    assert dims["A9"] == 4 and dims["A10"] == 0 and dims["A11"] == 5 and dims["A12"] == 7 and dims["A13"] == 6 and dims["A14"] == 4
     assert arms.H1B_POOL == ("A3", "A4", "A5", "A7")
     assert set(arms.ARMS["A1"].space["lam_res"][1]) == {1e-3, 1e-2, 1e-1, 1.0, 10.0, 100.0} and arms.ARMS["A1"].space["placement"][1] == ["record_end", "whole_axis"]
 

@@ -22,6 +22,9 @@ TOURNAMENT_HP = {"map": "kan", "h": 4, "grid": 5, "l2": 1e-4, "sparsity": 0.0}
 DECADES = [1e-5, 1e-4, 1e-3, 1e-2]
 LAM = [1e-3, 1e-2, 1e-1, 1.0, 10.0, 100.0]      # D013 C3: 1e-3 added (lower-edge precaution)
 PLACE = ["record_end", "whole_axis"]
+H_GRID = [1, 2, 3, 4, 6, 8]       # D016: hidden width h = 1 added (KAN [5,1,1]: at m = 8 the map can collapse towards a near-additive form); A1, A2 and A13 share the map space
+FEAT = ["raw", "pinn"]            # D* options (PREREG_v4 7.4): feature set and storage rows, chosen by inner CV
+STORAGE = ["in", "out"]
 
 BASE_STEPS = {"hard": 1200, "pinn": 2000, "data": 1500, "free": 1000}
 
@@ -42,9 +45,9 @@ class ArmDef:
 
 
 ARMS = {
-    "A1": ArmDef("A1", "PINN-KAN", "pinn", {"h": ("cat", [2, 3, 4, 6, 8]), "grid": ("cat", [2, 3, 5, 8, 12]), "l2": ("cat", DECADES),
+    "A1": ArmDef("A1", "PINN-KAN", "pinn", {"h": ("cat", H_GRID), "grid": ("cat", [2, 3, 5, 8, 12]), "l2": ("cat", DECADES),
                                             "sparsity": ("cat", [0.0, 1e-4, 1e-3, 1e-2]), "lam_res": ("cat", LAM), "placement": ("cat", PLACE)}, map_kind="kan"),
-    "A2": ArmDef("A2", "hard-ODE-KAN", "hard", {"h": ("cat", [2, 3, 4, 6, 8]), "grid": ("cat", [2, 3, 5, 8, 12]), "l2": ("cat", DECADES),
+    "A2": ArmDef("A2", "hard-ODE-KAN", "hard", {"h": ("cat", H_GRID), "grid": ("cat", [2, 3, 5, 8, 12]), "l2": ("cat", DECADES),
                                                 "sparsity": ("cat", [0.0, 1e-4, 1e-3, 1e-2])}, map_kind="kan"),
     "A3": ArmDef("A3", "PINN, parametric stress factors", "pinn", {"l2": ("cat", [1e-5, 1e-4, 1e-3, 1e-2, 1e-1]), "lam_res": ("cat", LAM), "placement": ("cat", PLACE)}, map_kind="param"),
     "A4": ArmDef("A4", "PINN, additive GAM", "pinn", {"grid": ("cat", [3, 5, 10, 20, 30]), "l2": ("cat", [1e-5, 1e-4, 1e-3, 1e-2, 1e-1]), "lam_res": ("cat", LAM), "placement": ("cat", PLACE)}, map_kind="gam"),
@@ -57,9 +60,13 @@ ARMS = {
     "A8": ArmDef("A8", "free G (synthetic H7 only)", "free", {"width": ("cat", [16, 32, 64]), "wd": ("cat", DECADES)}),
     "A9": ArmDef("A9", "data-only F (lambda = 0)", "data", {"width": ("cat", [16, 32, 64, 128]), "depth": ("cat", [2, 3, 4]), "wd": ("cat", DECADES), "zdim": ("cat", [1, 2, 3])}),
     "A10": ArmDef("A10", "Stroebl semi-empirical (PROVISIONAL form)", "semi", tuned=False),
-    "A11": ArmDef("A11", "GP-ARD", "p3", {"nu": ("cat", [1.5, 2.5, -1.0]), "noise_lo": ("logu", 1e-6, 1e-2), "fs": ("cat", ["full", "min"])}),
-    "A12": ArmDef("A12", "LightGBM", "p3", {"n_est": ("int", 50, 600), "lr": ("logu", 0.01, 0.3), "leaves": ("int", 4, 32), "mcs": ("int", 5, 60), "l2": ("logu", 1e-3, 10.0)}),
-    "A13": ArmDef("A13", "PINN-KAN, cycling cells only", "pinn", {"h": ("cat", [2, 3, 4, 6, 8]), "grid": ("cat", [2, 3, 5, 8, 12]), "l2": ("cat", DECADES),
+    "A11": ArmDef("A11", "GP-ARD", "p3", {"nu": ("cat", [1.5, 2.5, -1.0]), "noise_lo": ("logu", 1e-6, 1e-2), "fs": ("cat", ["full", "min"]), "feat": ("cat", FEAT), "storage": ("cat", STORAGE)}),
+    "A12": ArmDef("A12", "LightGBM", "p3", {"n_est": ("int", 50, 600), "lr": ("logu", 0.01, 0.3), "leaves": ("int", 4, 32), "mcs": ("int", 5, 60), "l2": ("logu", 1e-3, 10.0),
+                                               "feat": ("cat", FEAT), "storage": ("cat", STORAGE)}),
+    # descriptive row (what the features buy): A12 with the raw feature set, storage rows as tuned
+    "A12R": ArmDef("A12R", "LightGBM, raw features only (descriptive)", "p3", {"n_est": ("int", 50, 600), "lr": ("logu", 0.01, 0.3), "leaves": ("int", 4, 32), "mcs": ("int", 5, 60),
+                                                                            "l2": ("logu", 1e-3, 10.0), "storage": ("cat", STORAGE)}, fixed={"feat": "raw"}),
+    "A13": ArmDef("A13", "PINN-KAN, cycling cells only", "pinn", {"h": ("cat", H_GRID), "grid": ("cat", [2, 3, 5, 8, 12]), "l2": ("cat", DECADES),
                                                               "sparsity": ("cat", [0.0, 1e-4, 1e-3, 1e-2]), "lam_res": ("cat", LAM), "placement": ("cat", PLACE)}, map_kind="kan"),
     "A14": ArmDef("A14", "PINN-KAN, storage cells only (exploratory)", "pinn", {"grid_cal": ("cat", [2, 3, 5, 8, 12]), "l2": ("cat", DECADES), "lam_res": ("cat", LAM), "placement": ("cat", PLACE)}, map_kind="kan"),
     # A15 / G15 (PREREG_v4 7.1, 7.3): closed-form law extracted from a KAN with h in {1, 2} (A15, dims = A1's six with h restricted) / from A4's additive terms (G15, dims = A4's four)
@@ -241,7 +248,8 @@ class P3Arm(Arm):
     def fit(self, train_cells):
         prep = prepare_many(train_cells, self.ctx["rule"])
         self.n_train_used = len(prep)          # cells without enough window / forecast points are dropped here only (documented, review m6)
-        self.learner = baselines.P3Learner("gp" if self.arm_id == "A11" else "lgb", self.hp, self.spec.name, self.seed).fit(prep)
+        self.learner = baselines.P3Learner("gp" if self.arm_id == "A11" else "lgb", self.hp, self.spec.name, self.seed, self.spec).fit(prep)
+        self.n_train_used = self.learner.n_train_used
         return self
 
     def predict(self, wcells):
@@ -260,4 +268,4 @@ _CLS = {"sym": SymbolicArm, "free": FreeArm, "pinn": PINNArm, "hard": HardArm, "
 
 
 def make_arm(arm_id, spec, hp, seed, ctx):
-    return _CLS[ARMS[arm_id].family](arm_id, spec, hp, seed, ctx)
+    return _CLS[ARMS[arm_id].family](arm_id, spec, {**ARMS[arm_id].fixed, **hp}, seed, ctx)

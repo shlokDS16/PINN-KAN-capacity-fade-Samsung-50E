@@ -283,3 +283,92 @@ splits, stress coordinates and the go/no-go on observed fade per cell are writte
    then rerun `code/data_audit/nasa_calce_counts_pl.py` to fill the table in section 4.
 4. Confirm with Shlok whether "NASA and CALCE" should mean the sets above or also the NASA randomized-usage set (not
    recommended).
+
+## 9. Action A5 (D022 ruling, judge sections 1.2 item 7 and 1.7), 2026-11-05 afternoon
+
+Scope kept to identifiers: download, CRC, operation-table counts, citation check, reading Saxena et al. **No capacity array was
+read, loaded into a variable, printed or stored.** The only content looked at inside `.mat` files: the operation table
+(operation label, start date) and the variable names of the data table (string scan of the MATLAB object header). The
+data arrays (which include cumulative charge and discharge ampere-hours) were not decoded.
+
+### 9.1 Download of the eight PL zips: not finished (server unreachable)
+
+- From about 13:00 NST `web.calce.umd.edu` and `calce.umd.edu` refuse or time out (connection refused or timed out, from
+  the shell and from the fetch tool alike); the same server reset connections every few minutes before that. Nothing could
+  be resumed after 13:45. CALCE publishes no checksum, so completeness = byte size from `data/DEFERRED_URLS.tsv`.
+- State (bytes on disk / expected): `SOC_20-80_2C` 73,547,776 / 74,575,680 (98.6 %); `SOC_0-100_HalfC` 41,140,224 /
+  67,460,712 (61 %); `SOC_0-100_2C` 491,520 / 57,559,175; `SOC_40-60_HalfC` 311,296 / 72,818,135; `SOC_40-60_2C`,
+  `SOC_0-60_HalfC`, `SOC_40-100_HalfC`, `SOC_20-80_HalfC` not started. About 540 MB still to fetch. **The "at least six of
+  eight conditions" completeness gate cannot yet be evaluated; today 0 of 8 zips are complete.**
+- `tools/fetch_calce_queue.sh` rewritten and restarted: in-progress data stays in `<name>.part`, renamed only at the exact
+  size; the whole queue is retried in rounds (5 min apart, up to 200 rounds, 40 KB/s cap, 30 s connect timeout); stop with
+  `data/STOP_CALCE`; log `data/logs/fetch_calce.log`. It never touches `data/STOP_DOWNLOADS` or the Samsung downloader.
+  When it logs `ALLDONE`, rerun `python -P code/data_audit/nasa_calce_counts_pl.py data/raw/calce_pl_pouch <out.json>` (CRC of
+  every member plus the operation table).
+
+### 9.2 Operation-table counts per cell (members readable from the partial zips; CRC checked)
+
+Correction to section 4: the count for PL11 printed there (916) included ordinal labels ("1st Charge", ...). The script is
+fixed (it now sums only "N Partial Cycles" or "N Full Cycles" labels).
+
+| cell | zip | member CRC | operation rows | cycles by label | block sizes | first to last date |
+|---|---|---|---|---|---|---|
+| PL11 | `SOC_0-100_HalfC` | ok | 13 | 912 "Full Cycles" | 9 blocks of 101, 1 of 3, plus "1st Charge", "1st Discharge", "2nd Charge" | 2014-08-06 to 2015-07-31 (359 d) |
+| PL17 | `SOC_20-80_2C` | ok | 30 | 1,450 "Partial Cycles" | 25 blocks of 50, 2 blocks of 50 labelled "Data Missing", 1 block of 100, 2 "Single Cycle" rows | 2014-12-10 to 2015-12-23 (378 d) |
+| PL12, PL13, PL18, PL04 | `SOC_0-100_2C`, `SOC_0-100_HalfC`, `SOC_20-80_2C`, `SOC_40-60_HalfC` | member cut off | not read | not read | not read | not read |
+
+Member names seen in the local zip headers: two per window in the two zips that could be walked far enough (PL11 and PL13 in
+`SOC_0-100_HalfC`; PL17 and PL18 in `SOC_20-80_2C`), consistent with "two cells per window"; the other six zips are
+unverified. The 101-cycle blocks of the 0-100 % cells suggest 100 cycles plus one extra cycle per block (a check cycle);
+**this is a guess from the label, not verified** (it would need the Step and Cycle columns of the data table, to be read only
+after the card hash).
+
+**No temperature channel.** The data table of PL17 has the variables `Time_sec`, `Date_Time`, `Step`, `Cycle`, `Current_Amp`,
+`Voltage_Volt`, `Charge_Ah`, `Discharge_Ah` and nothing else (names only, from one file; the other files were not checked).
+Test temperature therefore cannot be obtained from the files; it can come only from the paper, so the extension must treat
+temperature as "unknown, constant by assumption" or exclude it from the active inputs.
+
+### 9.3 Saxena, Hendricks and Pecht (2016)
+
+- **Citation verified on Crossref:** DOI 10.1016/j.jpowsour.2016.07.057; Journal of Power Sources, vol. 327, pp. 394-400,
+  September 2016; authors Saxena, Hendricks, Pecht; title "Cycle life testing and modeling of graphite/LiCoO2 cells under
+  different state of charge ranges". Crossref lists 21 references and no abstract. OpenAlex: closed access, no repository copy.
+- **Reading depth: abstract level only (search digest of the CALCE abstract page).** The full text is paywalled
+  (ScienceDirect HTTP 403, ResearchGate 403, no open copy; the CALCE page says the article is available from the publisher or
+  to consortium members). **I could not read the paper**, so the requested facts are *not confirmed*:
+
+| fact asked for | status |
+|---|---|
+| test temperature | **unknown.** Not on the CALCE data page, not in the abstract digest, not in the files |
+| check-up cadence | page digest only: a full C/2 characterisation cycle every 50 or 100 partial cycles; the block labels (50, 100, 101) are compatible; not confirmed in the paper |
+| SOC-window control | page digest only: Coulomb counting sets the durations, 30 min rest after each charge and discharge step; not confirmed in the paper |
+| design | abstract digest: pouch cells cycled over SOC ranges and discharge currents; mean SOC, change in SOC and discharge rate significantly affect the capacity-loss rate |
+
+A search digest also mentioned SOC ranges "0-100, 20-80 and 20-100 %" on a CALCE group page; that conflicts with the data
+page (0-60, 40-60, 0-100, 20-80, 40-100) and was not used. Getting the full text needs the publisher through the VIT library
+e-gateway (Shlok to open it, or to save the PDF into `refs/`); after that the three rows above can be closed in minutes.
+Saxena's 2020 dissertation is a different experiment (rest time and temperature) and is not a source for this design.
+
+### 9.4 The 1.7 message: what holds, what does not
+
+| statement in 1.7 | check |
+|---|---|
+| "graphite/LiCoO2 pouch cells" | holds (paper title; CALCE page: pouch, 1.5 Ah) |
+| "eight combinations of state-of-charge window and discharge rate" | holds on the CALCE page digest (five windows, discharge C/2 or 2C, charge always C/2) and on the eight zip names; eight combinations, not ten (0-60 and 40-100 exist at C/2 only) |
+| "(two cells each)" | holds on the CALCE page digest; member names confirm it for two of eight zips; unverified for six |
+| "Saxena et al., J. Power Sources 2016" | holds, DOI verified; its content is not read beyond the abstract |
+| CS2/CX2 "in their constant-current tests, only two discharge rates within CS2 (0.5C and 1C)" | **holds only for the full-range types.** Per the CALCE page digest, CS2 types 5 (CS2_5, 6) and 6 (CS2_24, 25) are constant-current partial-voltage-range cycles at 0.55 A (3.77 to 2.7 V and 4.2 to 3.77 V), after a full 0.22 A cycle |
+| "no variation of state-of-charge window" (CS2/CX2) | **not correct as written.** Those four CS2 cells do vary the window (lower and upper part of the voltage range, two cells each). Their data are not on disk (CS2_6 154 MB, CS2_24 127 MB, CS2_5 and CS2_25 unsized) and none of them was in the retired paper |
+| "no ... stated temperature" | holds (the CALCE page states none except the CX2_4 ramp) |
+| "Thirteen of those cells were also used in the first author's earlier paper" | holds (CS2_33 to 38 and CX2_16, 33 to 38, by cell names found in the retired project's notes) |
+| "holding one condition out leaves a single training condition" | **too strong for CS2 as a whole.** With types 1, 2, 5, 6 there would be four constant-current conditions (full range 0.5C and 1C, two partial ranges at 0.5C), two to four cells each. The verdict (too few conditions, one cell model, temperature unknown, window defined by voltage not SOC) still stands, but the reason should say "four conditions with two to four cells each, temperature not stated" rather than "a single training condition" |
+
+**Answer for the lead: the 1.7 message is not factually correct as written.** The PL statements are consistent with what can
+be checked (page digest, zip names, member names, DOI) but rest on the CALCE page and not on the paper, and the CS2 statement
+"no variation of state-of-charge window" is contradicted by the page digest for CS2 types 5 and 6. Suggested replacement for
+the CS2 sentence: "The better-known CALCE CS2/CX2 prismatic cells have, in their constant-current tests, four conditions in
+CS2 (full-range 0.5C and 1C, and two partial-voltage ranges), two to four cells each, one cell model, and no stated
+temperature, so holding one condition out leaves too few training conditions to estimate the stress law." This re-check
+needs the CALCE page text again once the site is back (the digest is a small-model summary, not the page).
+Judge section 1.3 (no CS2/CX2 within-condition row) is unaffected: its retired-theme argument concerns CS2_33-38 and the CX2
+cells, not types 5 and 6.

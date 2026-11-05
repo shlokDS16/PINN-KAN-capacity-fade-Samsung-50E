@@ -24,11 +24,14 @@ for p in sorted(glob.glob(sys.argv[1] + "/*")):
                     var = os.path.basename(name)[:-4]
                     a = loadmat(io.BytesIO(data), squeeze_me=False)[var]
                     ops = [(str(a[r,0].ravel()[0]), str(a[r,1].ravel()[0])) for r in range(1, a.shape[0])]
-                    tot = sum(int(re.match(r"(\d+)", o).group(1)) for o,_ in ops if o[0].isdigit())
+                    tot = sum(int(m.group(1)) for o,_ in ops for m in [re.match(r"(\d+) (?:Partial|Full) Cycles", o)] if m)
+                    from collections import Counter
+                    labels = dict(Counter(re.sub(r"^\d+ ", "N ", o) if re.match(r"\d+ (?:Partial|Full)", o) else o for o,_ in ops))
+                    blocks = dict(Counter(o for o,_ in ops))
                     miss = sum(1 for o,_ in ops if "Missing" in o)
                     sing = sum(1 for o,_ in ops if o.startswith("Single"))
                     ds = [dt.datetime.strptime(d, "%B %d, %Y") for _,d in ops]
-                    out.setdefault(base, {})[name] = dict(crc_ok=ok, rows=len(ops), partial_total=tot, missing_blocks=miss, single=sing,
+                    out.setdefault(base, {})[name] = dict(crc_ok=ok, rows=len(ops), partial_total=tot, missing_blocks=miss, single=sing, labels=labels, block_sizes=blocks,
                         first=str(min(ds).date()), last=str(max(ds).date()), span_days=(max(ds)-min(ds)).days, bytes=usz)
             pos = end
 json.dump(out, open(sys.argv[2], "w"), indent=1)

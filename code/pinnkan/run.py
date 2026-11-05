@@ -196,7 +196,7 @@ def _run(cfg_in, root=None, runs_dir=None):
             raise ConfigError(f"symbolic.cap = {sc_['cap']} disagrees with max_coeffs_per_edge = {fcap} in symbolic_library.json: the cap is pinned in the library file (PREREG_v4 7.3, D021); remove the config value or change the file")
     if {"A15", "G15"} & set(cfg["arms"]):                                   # D022 2.2a item 5: the audit thresholds and the calibration rule are config keys (hence in the config hash)
         from . import extraction_audit as _xa
-        rule_file = os.path.join(root or _ROOT, "debates", "D022_datasets_kan", "calibration_rule.md")
+        rule_file = os.path.join(root or _ROOT, "debates", "D022_datasets_kan", "calibration_rule_v2.md")
         for key, path in (("extraction_audit_sha256", _xa.THRESHOLDS_FILE), ("calibration_rule_sha256", rule_file)):
             if cfg[key] is None:
                 if cfg["mode"] == "confirmatory" and ds != "synthetic":
@@ -484,7 +484,7 @@ def _run(cfg_in, root=None, runs_dir=None):
                 rec.add_preds("outer_test" if kl is None else f"outer_test_k{kl}", a, sd_, rows)
             if a in ("A15", "G15") and arm is not None:                          # the extraction audit reads one record per fold-by-seed law (D022 2.2a)
                 from . import extraction_audit as _xa
-                akey = "G15" if a == "G15" else f"A15h{int(tuned[a]['best_hp'].get('h', 0))}"
+                akey = _xa.arm_key(a, tuned[a]["best_hp"])                                  # unknown arm or missing h is an error (D022a m3)
                 law_records.append(_xa.law_record(akey, cfg["fold"], sd_, arm.report, spec, arm.model.law.cyc, arm.parent_cyc, arm.s_cyc_train))
             inversion.LOG.clear()                                                          # the invariance re-predictions are not part of the diagnostics
             if sd_ == cfg["seeds"][0] and arm is not None:

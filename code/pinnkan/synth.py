@@ -65,7 +65,7 @@ def make_design(n_cyc_cond, n_sto_cond, reps, seed):
 
 
 def truth_effect(family, sign, x, lo, hi, amp=0.5):
-    """log-rate contribution of one input for the extraction-audit calibration (rule: debates/D022_datasets_kan/calibration_rule.md): zero | linear | log (sign * amp * (2 g - 1) with g in
+    """log-rate contribution of one input for the extraction-audit calibration (rule: debates/D022_datasets_kan/calibration_rule_v2.md): zero | linear | log (sign * amp * (2 g - 1) with g in
     [0, 1] over the training-hull range [lo, hi]) and the report-only curved shapes quadratic | hinge. x is the physical positive stress value (temperature in kelvin)."""
     x = np.asarray(x, float)
     if family == "zero":
@@ -82,6 +82,11 @@ def truth_effect(family, sign, x, lo, hi, amp=0.5):
     raise ValueError(family)
 
 
+def truth_sign(family, sign):
+    """sign of the hull-averaged slope of a truth effect (D022a rule v2 section 4.1): 0 for the zero and the symmetric quadratic, the stratum sign for linear, log and hinge"""
+    return 0 if family in ("zero", "quadratic") else int(sign)
+
+
 def design_from_keys(cyc_keys, sto_keys, reps=2):
     """design tuples of make_synthetic from Samsung condition identifiers: cycling 'T35|SOCmax0.55|DoD0.25|Cch0.5|Cdch1' -> (T, SOC_max, DoD, C_ch, C_dch); storage 'T10|SOC0.5' -> (T, SOC)"""
     cyc = []
@@ -95,15 +100,22 @@ def design_from_keys(cyc_keys, sto_keys, reps=2):
     return cyc, sto, reps
 
 
-def _truth(kind, spec, truth=None):
-    """true log-rate functions of raw stress. truth (kind 'GA'): {input index: (family, sign, lo, hi)}; inputs missing from it contribute 0."""
+def _truth(kind, spec, truth=None, interaction=None):
+    """true log-rate functions of raw stress. truth (kind 'GA'): {input index: (family, sign, lo, hi[, amp])} (amp default 0.5); inputs missing from it contribute 0.
+    interaction (kind 'GA', D022a): (p, q, amp, lo_p, hi_p, lo_q, hi_q) adds amp * u_p * u_q, u the hull coordinate in [-1, 1] of the physical stress (T in kelvin)."""
     def f_cyc(raw):
         raw = np.atleast_2d(raw)
         if truth is not None:
             f = np.zeros(len(raw))
-            for i, (fam, sg, lo, hi) in truth.items():
+            for i, tup in truth.items():
+                fam, sg, lo, hi = tup[:4]
                 x = raw[:, i] + (273.15 if i == spec.t_index else 0.0)
-                f = f + truth_effect(fam, sg, x, lo, hi)
+                f = f + truth_effect(fam, sg, x, lo, hi, *(tup[4:5]))
+            if interaction is not None:
+                p_, q_, a_, lop, hip, loq, hiq = interaction
+                xp = raw[:, p_] + (273.15 if p_ == spec.t_index else 0.0)
+                xq = raw[:, q_] + (273.15 if q_ == spec.t_index else 0.0)
+                f = f + a_ * (2.0 * (xp - lop) / max(hip - lop, 1e-12) - 1.0) * (2.0 * (xq - loq) / max(hiq - loq, 1e-12) - 1.0)
             return f
         s = spec.norm(raw)
         sT, ssoc, sdod, scch, scdch = (s[:, i] for i in range(5))
@@ -124,17 +136,19 @@ def _truth(kind, spec, truth=None):
     return f_cyc, f_cal
 
 
-def make_synthetic(kind="G0", n_cyc_cond=20, n_sto_cond=8, reps=2, seed=0, backbone="self_limiting", fade_target=FADE_TARGET, noise=SIGMA, tau=TAU, design=None, truth=None):
-    """-> SynthSet. Cells are `Cell` objects (dataset 'synthetic', days, EFC); retention = 1 - y_s / 10 (+ noise)."""
+def make_synthetic(kind="G0", n_cyc_cond=20, n_sto_cond=8, reps=2, seed=0, backbone="self_limiting", fade_target=FADE_TARGET, noise=SIGMA, tau=TAU, design=None, truth=None, interaction=None, cond_offsets=None):
+    """-> SynthSet. Cells are `Cell` objects (dataset 'synthetic', days, EFC); retention = 1 - y_s / 10 (+ noise). cond_offsets (D022a): {cycling condition index: offset} added to the
+    cyclic log-rate of every cell of that condition (laboratory aliasing); the random draws are unchanged by it."""
     spec = SPECS["synthetic"]
     cyc, sto, reps = design if design is not None else make_design(n_cyc_cond, n_sto_cond, reps, seed)       # design: given condition lists (the real folds' training identifiers) instead of a Latin hypercube
-    f_cyc, f_cal = _truth(kind, spec, truth)
+    f_cyc, f_cal = _truth(kind, spec, truth, interaction)
     rng = np.random.default_rng([20261106, 1000 + seed])
     series = []
     for ci, (T, smax, dod, cch, cdch) in enumerate(cyc):
         raw = np.array([T, smax - dod / 2.0, dod, cch, cdch])
         for r in range(reps):
             series.append(("cycling", f"C{ci:02d}", raw, r))
+    offs = {f"C{int(k):02d}": float(v) for k, v in (cond_offsets or {}).items()}
     for si, (T, soc) in enumerate(sto):
         series.append(("storage", f"S{si:02d}", np.array([T, soc, 0.0, 0.0, 0.0]), 0))
     prepared = []
@@ -142,7 +156,7 @@ def make_synthetic(kind="G0", n_cyc_cond=20, n_sto_cond=8, reps=2, seed=0, backb
         days = np.array((CYC_WEEKS if kind_c == "cycling" else STO_WEEKS), float) * 7.0
         t = days - days[0]
         efc = spec.efc_rate(raw) * t if kind_c == "cycling" else np.zeros_like(t)
-        delta = rng.normal(0.0, tau)
+        delta = rng.normal(0.0, tau) + offs.get(cond, 0.0)
         prepared.append((kind_c, cond, raw, t, efc, delta))
 
     def y_true(c_cyc, c_cal, kind_c, cond, raw, t, efc, delta):

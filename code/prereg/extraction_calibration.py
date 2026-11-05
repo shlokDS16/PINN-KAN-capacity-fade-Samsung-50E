@@ -1,13 +1,16 @@
-"""D022 A2/A4: calibration of the extraction audit on design-matched synthetic truths. Rule: debates/D022_datasets_kan/calibration_rule.md (committed before this script).
+"""D022a: calibration of the extraction audit on whole synthetic datasets. Rule: debates/D022_datasets_kan/calibration_rule_v2.md (committed before this script).
 
-    .venv/Scripts/python.exe -P code/prereg/extraction_calibration.py --plan                 # prints the plan (counts), runs nothing
-    .venv/Scripts/python.exe -P code/prereg/extraction_calibration.py --proc 0 --nproc 3    # A4: from the FROZEN commit only
-    .venv/Scripts/python.exe -P code/prereg/extraction_calibration.py --finalize            # merges the records, writes calibration.json and its hash record
+    .venv/Scripts/python.exe -P code/prereg/extraction_calibration.py --plan
+    .venv/Scripts/python.exe -P code/prereg/extraction_calibration.py --proc 0 --nproc 3 --thresholds-pin <sha256> --rule-pin <sha256>      # from the FROZEN commit only
+    .venv/Scripts/python.exe -P code/prereg/extraction_calibration.py --finalize --thresholds-pin <sha256> --rule-pin <sha256>
+    .venv/Scripts/python.exe -P code/prereg/extraction_calibration.py --rerun --thresholds-pin <sha256> --rule-pin <sha256> --scratch <dir>  # gate auditor: 3 hash-chosen datasets, bit-identical
 
-Guard: a calibration run needs `guard.verify_freeze` (HEAD = frozen commit, clean tree), no outer score (`runs/prereg/SCORED.jsonl`), and the rule file hash. `--smoke` runs a few
-datasets with tiny settings into a temporary directory marked SMOKE (tests only; never a calibration). This build did NOT run the calibration."""
+Unit = one synthetic dataset (30 per arm) run through the real procedure (5 outer-fold designs at m = 32 x refit seeds 0-4 = 25 laws per arm), scored with the same label function as the real
+data. Guard: `guard.verify_freeze` with untracked files under code/ included, and both pins (thresholds file, rule file) equal to the files in the tree. The mtime of anything is logged, not
+checked. `--smoke` runs one (dataset, fold) with tiny settings into a directory marked SMOKE (tests only; never a calibration). This build did NOT run the calibration."""
 import argparse
 import hashlib
+import itertools
 import json
 import os
 import sys
@@ -26,66 +29,123 @@ torch.set_num_threads(1)
 from pinnkan import arms as A  # noqa: E402
 from pinnkan import extraction_audit as X  # noqa: E402
 from pinnkan import guard, subsets, synth  # noqa: E402
+from pinnkan.data import samsung_cond_key  # noqa: E402
 from pinnkan.specs import SPECS  # noqa: E402
 
 SPEC = SPECS["synthetic"]
-RULE_FILE = os.path.join(ROOT, "debates", "D022_datasets_kan", "calibration_rule.md")
+RULE_FILE = os.path.join(ROOT, "debates", "D022_datasets_kan", "calibration_rule_v2.md")
 OUT_DIR = os.path.join(ROOT, "runs", "extraction_calibration")
-FAM = ("zero", "linear", "log")
-CURVE = ("quadratic", "hinge")
-BLOCKS = {"additive": 12, "curved": 6, "noadd": 6}            # datasets per (fold, m): rule section 2
-FOLDS, MS = tuple(range(5)), (32, 8)
-ARMS = {"A15h1": ("A15", {"h": 1}), "A15h2": ("A15", {"h": 2}), "G15": ("G15", {})}
-INPUT_INDEX = {n: i for i, n in enumerate(SPEC.stress_names)}
+STRATA = ("zero", "linear", "log", "quadratic", "hinge")
+PAIRS = list(itertools.combinations(range(5), 2))
+FOLDS, SEEDS, ARM_IDS = tuple(range(5)), tuple(range(5)), ("A15", "G15")
+THR = X.load_thresholds()
+CAL = THR["calibration"]
+D_TOTAL = CAL["D"]
+M = 32
 
 
 class CalibrationGuardError(RuntimeError):
     pass
 
 
-# ------------------------------------------------------------------------------------------------ the plan (rule section 2)
-def truth_families(block, j):
-    """[(family, sign)] for the five inputs of dataset j: additive FAM[(j + i) mod 3], curved CURVE[(j + i) mod 2]; sign + if (j + i) is even, else -"""
-    out = []
-    for i in range(5):
-        fam = FAM[(j + i) % 3] if block == "additive" else CURVE[(j + i) % 2]
-        out.append((fam, 1 if (j + i) % 2 == 0 else -1))
-    return out
+# ------------------------------------------------------------------------------------------------ truth of a dataset (rule v2 section 2)
+def streams(j):
+    """amplitude, laboratory-offset, hyperparameter and noise streams of dataset j"""
+    return np.random.SeedSequence([20261105, zlib.crc32(f"calib2|d{j}".encode())]).spawn(4)
 
 
-def dataset_seed(block, fold, m, j):
-    return int(np.random.SeedSequence([20261105, zlib.crc32(f"calib|{block}|f{fold}|m{m}|j{j}".encode())]).generate_state(1)[0])
+def stratum(j, i):
+    return STRATA[(j + i) % 5]
 
 
+def stratum_sign(j, i):
+    return 1 if (j + i) % 2 == 0 else -1
+
+
+def interaction_pair(j):
+    """the interacting pair of dataset j (j = 0, 3, ..., 27), else None"""
+    return PAIRS[j // CAL["interaction_every"]] if j % CAL["interaction_every"] == 0 else None
+
+
+def global_hull(root=ROOT):
+    """fixed truth hull per input (T in kelvin): the union of the five folds' m = 32 training identifiers (identifiers only)"""
+    sub = json.load(open(os.path.join(root, "runs", "prereg", "subsets.json"), encoding="utf8"))["folds"]
+    keys = sorted({c for f in sub.values() for c in f["subsets"][str(M)]})
+    X_ = np.stack([subsets.parse_samsung_cond(c) for c in keys])
+    X_[:, 0] += 273.15
+    return X_.min(0), X_.max(0)
+
+
+def amplitudes(j):
+    """-> (A_i for the five inputs, A_int or None), log-uniform on the amplitude range"""
+    lo, hi = np.log(CAL["amplitude_range"][0]), np.log(CAL["amplitude_range"][1])
+    r = np.random.default_rng(streams(j)[0])
+    a = [float(np.exp(r.uniform(lo, hi))) for _ in range(5)]
+    return a, (float(np.exp(r.uniform(lo, hi))) if interaction_pair(j) is not None else None)
+
+
+def dataset_truth(j, hull=None):
+    """-> {truth: synth truth dict, interaction: tuple|None, info: {input name: {stratum, sign, interacting, amp}}}"""
+    lo, hi = hull if hull is not None else global_hull()
+    amps, a_int = amplitudes(j)
+    pair = interaction_pair(j)
+    truth, info = {}, {}
+    for i, name in enumerate(SPEC.stress_names):
+        fam, sg = stratum(j, i), stratum_sign(j, i)
+        truth[i] = (fam, sg, float(lo[i]), float(hi[i]), amps[i])
+        info[name] = {"stratum": fam, "sign": synth.truth_sign(fam, sg), "interacting": bool(pair is not None and i in pair), "amp": amps[i]}
+    inter = None if pair is None else (pair[0], pair[1], a_int, float(lo[pair[0]]), float(hi[pair[0]]), float(lo[pair[1]]), float(hi[pair[1]]))
+    return {"truth": truth, "interaction": inter, "info": info}
+
+
+def majority_labs(root=ROOT):
+    """cycling condition identifier -> majority laboratory (most cells; ties: first in sorted order) from the Samsung cell table (identifiers only), and the sha256 of the map"""
+    import pandas as pd
+    df = pd.read_csv(os.path.join(root, "data", "processed", "samsung_cells.csv"))
+    df = df[df["type"] == "z"]
+    cnt = {}
+    for _, r in df.iterrows():
+        key = samsung_cond_key("cycling", float(r["T_C"]), float(r["SOC_max"]), float(r["DoD"]), float(r["C_ch"]), float(r["C_dch"]))
+        cnt.setdefault(key, {}).setdefault(str(r["lab"]), 0)
+        cnt[key][str(r["lab"])] += 1
+    out = {k: sorted(v.items(), key=lambda kv: (-kv[1], kv[0]))[0][0] for k, v in cnt.items()}
+    return out, hashlib.sha256(json.dumps(out, sort_keys=True).encode()).hexdigest()
+
+
+def lab_offsets(j, labs):
+    """one N(0, sd^2) offset per laboratory (sorted names), shared by every fold of dataset j"""
+    r = np.random.default_rng(streams(j)[1])
+    names = sorted(set(labs))
+    return {n: float(v) for n, v in zip(names, r.normal(0.0, CAL["laboratory_offset_sd"], size=len(names)))}
+
+
+def draw_hp(j, fold, arm_id):
+    """uniform draw from the tuned space of PREREG 7.1 (A15: h and A1's other five dimensions; G15: the A4 space) for (dataset, fold, arm)"""
+    child = streams(j)[2].spawn(10)[2 * fold + (0 if arm_id == "A15" else 1)]
+    r = np.random.default_rng(child)
+    hp = {}
+    for name, sp in A.ARMS[arm_id].space.items():
+        if sp[0] != "cat":
+            raise ValueError(f"non-categorical dimension {name} in {arm_id}")
+        hp[name] = sp[1][int(r.integers(len(sp[1])))]
+    return hp
+
+
+def generator_seed(j, fold):
+    return int(streams(j)[3].spawn(5)[fold].generate_state(1)[0]) % (2 ** 31)
+
+
+# ------------------------------------------------------------------------------------------------ the plan
 def plan():
-    out = []
-    for block, S in BLOCKS.items():
-        for fold in FOLDS:
-            for m in MS:
-                for j in range(S):
-                    out.append({"block": block, "fold": fold, "m": m, "j": j, "arms": (["A15h2"] if block == "noadd" else list(ARMS)), "seed": dataset_seed(block, fold, m, j)})
-    return out
+    return [{"d": j, "fold": f} for j in range(D_TOTAL) for f in FOLDS]
 
 
 def plan_counts():
-    p = plan()
-    return {"datasets": len(p), "fits": sum(len(x["arms"]) for x in p), "by_block": {b: sum(len(x["arms"]) for x in p if x["block"] == b) for b in BLOCKS}}
+    return {"datasets": D_TOTAL, "work_items": len(plan()), "fits": D_TOTAL * len(FOLDS) * len(SEEDS) * len(ARM_IDS), "laws_per_arm_per_dataset": len(FOLDS) * len(SEEDS),
+            "interaction_datasets": sum(interaction_pair(j) is not None for j in range(D_TOTAL))}
 
 
-def edges_per_cell():
-    """synthetic edges per (input, m, arm, truth family) of the additive block over all folds: rule section 2 requires >= 20"""
-    n = {}
-    for x in plan():
-        if x["block"] != "additive":
-            continue
-        for i, (fam, _) in enumerate(truth_families("additive", x["j"])):
-            for a in x["arms"]:
-                n[(SPEC.stress_names[i], x["m"], a, fam)] = n.get((SPEC.stress_names[i], x["m"], a, fam), 0) + 1
-    return n
-
-
-# ------------------------------------------------------------------------------------------------ one dataset
-def fold_design(fold, m, root=ROOT):
+def fold_design(fold, m=M, root=ROOT):
     """training cycling conditions (first m of the pinned nested order, identifiers only) and the 19 storage conditions of the S2 split"""
     sub = json.load(open(os.path.join(root, "runs", "prereg", "subsets.json"), encoding="utf8"))["folds"][str(fold)]
     cyc = sub["subsets"][str(m)]
@@ -94,132 +154,210 @@ def fold_design(fold, m, root=ROOT):
     return cyc, sto
 
 
-def hull(cyc_keys):
-    X_ = np.stack([subsets.parse_samsung_cond(c) for c in cyc_keys])
-    X_[:, 0] += 273.15
-    return X_.min(0), X_.max(0)
+# ------------------------------------------------------------------------------------------------ one (dataset, fold)
+def build_set(j, fold, tr, labmap, offs, cyc, sto, reps=2):
+    design = synth.design_from_keys(cyc, sto, reps)
+    cond_off = {ci: offs[labmap[k]] for ci, k in enumerate(cyc)}
+    return synth.make_synthetic("GA", reps=reps, seed=generator_seed(j, fold), design=design, truth=tr["truth"], interaction=tr["interaction"], cond_offsets=cond_off)
 
 
-def build_dataset(spec_cell, cyc_keys, sto_keys, reps=2):
-    """-> (SynthSet, truth list). Truth of the additive / curved block per the table; the non-additive block is the project's kind G2 on the same design."""
-    design = synth.design_from_keys(cyc_keys, sto_keys, reps)
-    seed = spec_cell["seed"]
-    if spec_cell["block"] == "noadd":
-        return synth.make_synthetic("G2", reps=reps, seed=seed % (2 ** 31), design=design), None
-    lo, hi = hull(cyc_keys)
-    tf = truth_families(spec_cell["block"], spec_cell["j"])
-    truth = {i: (fam, sg, float(lo[i]), float(hi[i])) for i, (fam, sg) in enumerate(tf)}
-    return synth.make_synthetic("GA", reps=reps, seed=seed % (2 ** 31), design=design, truth=truth), tf
-
-
-def effect_error(sym_cyc, spec, s_train, i, truth_i, n=41):
-    """centred RMS of the extracted effect of input i against the truth effect, over the input's hull (partial dependences), divided by the range of the truth effect"""
-    fam, sg, lo, hi = truth_i
-    _, pd = X._signs_and_pd(sym_cyc, spec, s_train, n)
-    s = np.asarray(s_train, float)
-    grid = np.linspace(s[:, i].min(), s[:, i].max(), n)
-    raw = np.zeros((n, spec.d))
-    raw[:, i] = spec.denorm(np.tile(grid[:, None], (1, spec.d)))[:, i]
-    x = raw[:, i] + (273.15 if i == spec.t_index else 0.0)
-    t = synth.truth_effect(fam, sg, x, lo, hi)
-    a = pd[spec.stress_names[i]] - pd[spec.stress_names[i]].mean()
-    b = t - t.mean()
-    return float(np.sqrt(np.mean((a - b) ** 2)) / max(np.ptp(t), 1e-12))
-
-
-def run_dataset(spec_cell, cyc_keys, sto_keys, steps_scale=1.0, reps=2):
-    """fits every arm of the cell on the synthetic training cells and returns one record per (arm, input). Pipeline = arms.SymbolicArm (cap from the library file)."""
-    S0, tf = build_dataset(spec_cell, cyc_keys, sto_keys, reps)
+def run_item(j, fold, steps_scale=1.0, seeds=SEEDS, skip=frozenset(), reps=2, ctx=None, root=ROOT, arm_ids=ARM_IDS, labmap=None):
+    """fits every arm and seed of one (dataset, fold) and returns one record per (arm, seed). skip = set of (d, arm, fold, seed) already on disk."""
+    tr = dataset_truth(j, global_hull(root))
+    labmap = majority_labs(root)[0] if labmap is None else labmap
+    cyc, sto = fold_design(fold, M, root)
+    missing = [k for k in cyc if k not in labmap]
+    if missing:
+        raise CalibrationGuardError(f"no laboratory for {len(missing)} training condition(s), e.g. {missing[0]}: the Samsung cell table is incomplete (run the calibration after the cell download is complete)")
+    offs = lab_offsets(j, [labmap[k] for k in cyc])
+    S0 = build_set(j, fold, tr, labmap, offs, cyc, sto, reps)
     train = list(S0.cells)
-    lo, hi = hull(cyc_keys)
-    records = []
-    for key in spec_cell["arms"]:
-        arm_id, over = ARMS[key]
-        arm = A.make_arm(arm_id, SPEC, {**A.default_hp(arm_id), **over}, spec_cell["j"], {"backbone": "self_limiting", "steps_scale": steps_scale}).fit(train)
-        law = X.law_record(key, spec_cell["fold"], spec_cell["j"], arm.report, SPEC, arm.model.law.cyc, arm.parent_cyc, arm.s_cyc_train)
-        for i, name in enumerate(SPEC.stress_names):
-            r = law["inputs"][name]
-            rec = {"block": spec_cell["block"], "fold": spec_cell["fold"], "m": spec_cell["m"], "j": spec_cell["j"], "arm": key, "input": name, "chosen": r["family"], "sign": r["sign"],
-                   "bic_margin": r["bic_margin"], "additive": r["additive"], "outer_families": law["outer_families"], "refit_diverged": bool(arm.refit_diverged)}
-            if tf is not None:
-                rec.update(truth=tf[i][0], truth_sign=tf[i][1] if tf[i][0] != "zero" else 0)
-                if spec_cell["block"] == "curved":
-                    rec["effect_error"] = effect_error(arm.model.law.cyc, SPEC, arm.s_cyc_train, i, (tf[i][0], tf[i][1], float(lo[i]), float(hi[i])))
-            records.append(rec)
-    return records
+    recs = []
+    for arm_id in arm_ids:
+        hp = draw_hp(j, fold, arm_id)
+        for sd in seeds:
+            if (j, arm_id, fold, sd) in skip:
+                continue
+            t0 = time.process_time()
+            arm = A.make_arm(arm_id, SPEC, hp, sd, {"backbone": "self_limiting", "steps_scale": steps_scale, **(ctx or {})}).fit(train)
+            law = X.law_record(X.arm_key(arm_id, hp), fold, sd, arm.report, SPEC, arm.model.law.cyc, arm.parent_cyc, arm.s_cyc_train, THR)
+            recs.append({"d": j, "arm": arm_id, "fold": fold, "seed": sd, "hp": hp, "law": law, "cpu_s": time.process_time() - t0, "refit_diverged": bool(arm.refit_diverged)})
+    return recs
 
 
-# ------------------------------------------------------------------------------------------------ guard, run, finalize
-def rule_sha256():
-    return hashlib.sha256(open(RULE_FILE, "rb").read()).hexdigest()
+# ------------------------------------------------------------------------------------------------ records on disk
+def read_records(out_dir):
+    """-> {(d, arm, fold, seed): record}; the first record of a key wins (de-duplication); a torn LAST line of a file is ignored, any other unreadable line is an error"""
+    out = {}
+    for f in sorted(os.listdir(out_dir)) if os.path.isdir(out_dir) else []:
+        if not (f.startswith("records_p") and f.endswith(".jsonl")):
+            continue
+        lines = open(os.path.join(out_dir, f), encoding="utf8").read().split("\n")
+        if lines and lines[-1] == "":
+            lines = lines[:-1]
+        for n, line in enumerate(lines):
+            try:
+                r = json.loads(line)
+            except json.JSONDecodeError:
+                if n == len(lines) - 1:
+                    continue
+                raise CalibrationGuardError(f"{f}: unreadable line {n + 1} (not the last line)")
+            out.setdefault((r["d"], r["arm"], r["fold"], r["seed"]), r)
+    return out
 
 
-def require_run_conditions(root=ROOT):
-    """A4: the calibration runs from the FROZEN commit only, before any outer score"""
-    try:
-        d = guard.verify_freeze(root)
-    except guard.TestFoldAccessError as e:
-        raise CalibrationGuardError(f"not the frozen commit / clean tree: {e}") from e
-    sc = os.path.join(root, guard.SCORED_REL)
-    if os.path.isfile(sc) and os.path.getsize(sc) > 0:
-        raise CalibrationGuardError("an outer score already exists (runs/prereg/SCORED.jsonl): the calibration must be made and hashed before any outer score")
-    return d
+def cpu_seconds(recs):
+    return float(sum(r.get("cpu_s", 0.0) for r in recs.values()))
 
 
-def run_cells(proc, nproc, out_dir, steps_scale=1.0, limit=None, log=print):
+def run_cells(proc, nproc, out_dir, steps_scale=1.0, limit=None, seeds=SEEDS, log=print):
     os.makedirs(out_dir, exist_ok=True)
     path = os.path.join(out_dir, f"records_p{proc}.jsonl")
-    done = set()
-    if os.path.exists(path):
-        done = {(r["block"], r["fold"], r["m"], r["j"]) for r in (json.loads(l) for l in open(path, encoding="utf8"))}
-    cells = [c for i, c in enumerate(plan()) if i % nproc == proc]
     n = 0
-    for c in cells:
-        if (c["block"], c["fold"], c["m"], c["j"]) in done:
+    for idx, it in enumerate(plan()):
+        if idx % nproc != proc:
             continue
-        cyc, sto = fold_design(c["fold"], c["m"])
+        have = read_records(out_dir)
+        if cpu_seconds(have) >= CAL["cpu_cap_hours"] * 3600.0:
+            log(f"CPU cap of {CAL['cpu_cap_hours']} h reached: stopping")
+            break
+        if all((it["d"], a, it["fold"], s) in have for a in ARM_IDS for s in seeds):
+            continue
         t0 = time.time()
-        recs = run_dataset(c, cyc, sto, steps_scale)
+        recs = run_item(it["d"], it["fold"], steps_scale, seeds, skip=frozenset(have))
         with open(path, "a", encoding="utf8") as fh:
             for r in recs:
-                fh.write(json.dumps(r) + "\n")
-        log(f"{c['block']} f{c['fold']} m{c['m']} j{c['j']}: {len(recs)} edges in {time.time() - t0:.0f} s")
+                fh.write(json.dumps(r, sort_keys=True) + "\n")
+            fh.flush()
+        log(f"d{it['d']} f{it['fold']}: {len(recs)} fits in {time.time() - t0:.0f} s")
         n += 1
         if limit is not None and n >= limit:
             break
 
 
-def finalize(out_dir, require_complete=True):
-    """merge the per-process records, build the calibration tables, write calibration.json with its hash record (extraction_audit.write_calibration_record)"""
-    recs = []
-    for f in sorted(os.listdir(out_dir)):
-        if f.startswith("records_p") and f.endswith(".jsonl"):
-            recs += [json.loads(l) for l in open(os.path.join(out_dir, f), encoding="utf8")]
-    have = {(r["block"], r["fold"], r["m"], r["j"]) for r in recs}
-    want = {(c["block"], c["fold"], c["m"], c["j"]) for c in plan()}
-    if require_complete and have != want:
-        raise CalibrationGuardError(f"calibration incomplete: {len(want - have)} of {len(want)} datasets missing")
-    add = [r for r in recs if r["block"] == "additive"]
-    cells = X.calibration_tables(add)
-    short = {k: v["n"] for k, v in cells.items() if min(v["n"].values()) < X.load_thresholds()["min_synthetic_edges_per_truth_family"]}
-    curved = {}
-    for r in recs:
-        if r["block"] == "curved":
-            c = curved.setdefault(f"{r['input']}|{r['m']}|{r['arm']}|{r['truth']}", {"n": 0, "chosen": {}, "effect_error": []})
-            c["n"] += 1
-            c["chosen"][r["chosen"]] = c["chosen"].get(r["chosen"], 0) + 1
-            c["effect_error"].append(r["effect_error"])
-    noadd = {}
-    for r in recs:
-        if r["block"] == "noadd":
-            c = noadd.setdefault(f"{r['m']}", {"laws": 0, "outer_linear_or_zero": 0, "families": {}})
-            if r["input"] == SPEC.stress_names[0]:
-                c["laws"] += 1
-                c["outer_linear_or_zero"] += int(all(f in ("linear", "zero") for f in r["outer_families"]))
-            c["families"][r["chosen"]] = c["families"].get(r["chosen"], 0) + 1
-    cal = {"cells": cells, "cells_below_minimum_n": short, "curved_report_only": curved, "non_additive_h2": noadd, "n_records": len(recs), "rule_sha256": rule_sha256(),
-           "thresholds_sha256": X.thresholds_sha256(), "commit": guard._git(ROOT, "rev-parse", "HEAD"), "plan": plan_counts()}
-    return X.write_calibration_record(out_dir, cal), cal
+# ------------------------------------------------------------------------------------------------ scoring and the verdict
+def complete_datasets(recs, n_laws=None):
+    """dataset ids with the full set of (arm, fold, seed) keys"""
+    want = {(a, f, s) for a in ARM_IDS for f in FOLDS for s in SEEDS} if n_laws is None else n_laws
+    have = {}
+    for (d, a, f, s) in recs:
+        have.setdefault(d, set()).add((a, f, s))
+    return sorted(d for d, ks in have.items() if want <= ks)
+
+
+def score_all(recs, ds, hull=None):
+    """per complete dataset and arm: labels, baseline, scoring against the truth -> list of result dicts"""
+    out = []
+    for j in ds:
+        info = dataset_truth(j, hull)["info"]
+        for arm_id in ARM_IDS:
+            laws = [recs[(j, arm_id, f, s)]["law"] for f in FOLDS for s in SEEDS]
+            lab = X.label_law(laws, THR, calibrated=True)
+            base = X.baseline_labels(laws, THR)
+            sc, scb = X.score_dataset(lab, info), X.score_dataset(base, info)
+            out.append({"d": j, "arm": arm_id, "E": sc["E"], "false": sc["false"], "E_baseline": scb["E"], "false_baseline": scb["false"], "events": X.recall_events(lab, info, THR),
+                        "events_baseline": X.recall_events(base, info, THR), "labels": {n: {k: l[k] for k in ("label", "form", "sign", "tie_share", "n_not_retained")} for n, l in lab.items()},
+                        "baseline": base, "truth": info})
+    return out
+
+
+def descriptive_tables(results):
+    """per arm: confusion rows per (input, stratum) with exact intervals on the share of datasets with a false statement for that input; the not-retained share by amplitude band for
+    non-zero, non-interacting truths; the mean tie share. Nothing here licenses anything."""
+    bands = ("<0.1", "0.1-0.25", ">0.25")
+    out = {}
+    for arm_id in ARM_IDS:
+        rows = [r for r in results if r["arm"] == arm_id]
+        conf, ties, nr = {}, [], {b: [0, 0] for b in bands}
+        for r in rows:
+            for n, t in r["truth"].items():
+                lab = r["labels"][n]
+                c = conf.setdefault(f"{n}|{t['stratum']}", {"n": 0, "labels": {}, "false_statement": 0, "false_baseline": 0})
+                c["n"] += 1
+                key = lab["label"] + (f":{lab['form']}" if lab["form"] else "")
+                c["labels"][key] = c["labels"].get(key, 0) + 1
+                c["false_statement"] += int(any(f[0] == n for f in r["false"]))
+                c["false_baseline"] += int(any(f[0] == n for f in r["false_baseline"]))
+                ties.append(lab["tie_share"])
+                if t["stratum"] != "zero" and not t["interacting"]:
+                    b = "<0.1" if t["amp"] < 0.1 else ("0.1-0.25" if t["amp"] < 0.25 else ">0.25")
+                    nr[b][0] += int(lab["label"] == "not_retained")
+                    nr[b][1] += 1
+        for c in conf.values():
+            c["false_statement_ci"] = list(X.clopper_pearson(c["false_statement"], c["n"]))
+        out[arm_id] = {"confusion": conf, "mean_tie_share": float(np.mean(ties)) if ties else None,
+                       "false_zero_by_amplitude": {b: {"not_retained": v[0], "n": v[1], "ci": list(X.clopper_pearson(v[0], v[1]))} for b, v in nr.items()}}
+    return out
+
+
+def finalize(out_dir, frozen_commit, root=ROOT, lab_hash=None):
+    """merge the records, score the complete datasets, compute C1-C3, write calibration.json (the hash of the file is the pin of the statistics step)"""
+    recs = read_records(out_dir)
+    ds = complete_datasets(recs)
+    hull = global_hull(root)
+    results = score_all(recs, ds, hull)
+    per_arm = {a: [r for r in results if r["arm"] == a] for a in ARM_IDS}
+    verdict = X.verdict(per_arm, THR) if ds else {"void": True, "reason": "no complete dataset", "contribution": False}
+    cal = {"commit": frozen_commit, "rule_sha256": X.sha256_file(RULE_FILE), "thresholds_sha256": X.thresholds_sha256(), "lab_map_sha256": lab_hash if lab_hash is not None else majority_labs(root)[1], "D_completed": len(ds),
+           "complete_datasets": ds, "n_records": len(recs), "cpu_seconds": cpu_seconds(recs), "written_unix": time.time(), "plan": plan_counts(), "verdict": verdict,
+           "descriptive": descriptive_tables(results) if results else {}, "datasets": results}
+    p = os.path.join(out_dir, X.CALIBRATION_FILE)
+    with open(p, "w", encoding="utf8") as fh:
+        json.dump(cal, fh, indent=1, sort_keys=True)
+    return {"file": p, "sha256": X.sha256_file(p), "verdict": verdict}, cal
+
+
+# ------------------------------------------------------------------------------------------------ guard, re-run check
+def require_run_conditions(root=ROOT, thresholds_pin=None, rule_pin=None):
+    """the calibration runs from the FROZEN commit only: verify_freeze with untracked files under code/ included, and both pins equal to the files in the tree. No other order is enforced."""
+    if not thresholds_pin or not rule_pin:
+        raise CalibrationGuardError("both pins (--thresholds-pin, --rule-pin) are mandatory")
+    try:
+        d = guard.verify_freeze(root, untracked_under=("code",))
+    except guard.TestFoldAccessError as e:
+        raise CalibrationGuardError(f"not the frozen commit / clean tree (untracked files under code/ included): {e}") from e
+    if thresholds_pin != X.sha256_file(os.path.join(root, "code", "pinnkan", "extraction_audit.json")):
+        raise CalibrationGuardError("thresholds pin does not match extraction_audit.json in this tree")
+    if rule_pin != X.sha256_file(os.path.join(root, "debates", "D022_datasets_kan", "calibration_rule_v2.md")):
+        raise CalibrationGuardError("rule pin does not match calibration_rule_v2.md in this tree")
+    return d
+
+
+def rerun_choice(cal_sha256_hex, complete, k=None):
+    """the datasets of the bit-identical re-run: bytes of sha256(calibration.json) in order, index = byte mod len(complete), repeats skipped, until k are chosen"""
+    k = CAL["rerun_datasets"] if k is None else k
+    b = bytes.fromhex(cal_sha256_hex)
+    chosen = []
+    for byte in b:
+        d = complete[byte % len(complete)]
+        if d not in chosen:
+            chosen.append(d)
+        if len(chosen) == k:
+            return chosen
+    raise CalibrationGuardError("could not choose the re-run datasets from the hash bytes")
+
+
+def _same(a, b):
+    drop = lambda r: {k: v for k, v in r.items() if k != "cpu_s"}               # timing cannot be bit-identical
+    return json.dumps(drop(a), sort_keys=True) == json.dumps(drop(b), sort_keys=True)
+
+
+def rerun_check(out_dir, scratch, steps_scale=1.0, folds=FOLDS, seeds=SEEDS, datasets=None):
+    """re-run the hash-chosen datasets into `scratch` and compare with the stored records (cpu_s excluded). -> {datasets, identical, mismatches}"""
+    stored = read_records(out_dir)
+    cal_hash = X.sha256_file(os.path.join(out_dir, X.CALIBRATION_FILE))
+    ds = datasets if datasets is not None else rerun_choice(cal_hash, complete_datasets(stored))
+    mism = []
+    for j in ds:
+        for f in folds:
+            for r in run_item(j, f, steps_scale, seeds):
+                k = (r["d"], r["arm"], r["fold"], r["seed"])
+                if k not in stored or not _same(stored[k], r):
+                    mism.append(list(k))
+    os.makedirs(scratch, exist_ok=True)
+    out = {"datasets": ds, "identical": not mism, "mismatches": mism, "calibration_sha256": cal_hash}
+    json.dump(out, open(os.path.join(scratch, "rerun_check.json"), "w"), indent=1)
+    return out
 
 
 def main(argv=None):
@@ -228,21 +366,28 @@ def main(argv=None):
     ap.add_argument("--proc", type=int, default=0)
     ap.add_argument("--nproc", type=int, default=1)
     ap.add_argument("--finalize", action="store_true")
-    ap.add_argument("--smoke", default=None, help="directory: tiny run of a few datasets for tests; marked SMOKE, never a calibration")
+    ap.add_argument("--rerun", action="store_true")
+    ap.add_argument("--scratch", default=None)
+    ap.add_argument("--thresholds-pin", default=None)
+    ap.add_argument("--rule-pin", default=None)
+    ap.add_argument("--smoke", default=None, help="directory: tiny run of one (dataset, fold) for tests; marked SMOKE, never a calibration")
     ap.add_argument("--limit", type=int, default=None)
     a = ap.parse_args(argv)
     if a.plan:
-        print(json.dumps(plan_counts()), "min edges per cell:", min(edges_per_cell().values()))
+        print(json.dumps(plan_counts()))
         return
     if a.smoke:
         os.makedirs(a.smoke, exist_ok=True)
         open(os.path.join(a.smoke, "SMOKE"), "w").write("smoke run: not a calibration\n")
-        run_cells(a.proc, a.nproc, a.smoke, steps_scale=0.05, limit=a.limit or 1)
+        run_cells(a.proc, a.nproc, a.smoke, steps_scale=0.05, limit=a.limit or 1, seeds=(0,))
         return
-    d = require_run_conditions()
+    d = require_run_conditions(ROOT, a.thresholds_pin, a.rule_pin)
     if a.finalize:
-        rec, _ = finalize(OUT_DIR)
+        rec, _ = finalize(OUT_DIR, d["commit"])
         print(rec)
+        return
+    if a.rerun:
+        print(rerun_check(OUT_DIR, a.scratch or os.path.join(OUT_DIR, "rerun")))
         return
     print("calibration from frozen commit", d["commit"])
     run_cells(a.proc, a.nproc, OUT_DIR, limit=a.limit)

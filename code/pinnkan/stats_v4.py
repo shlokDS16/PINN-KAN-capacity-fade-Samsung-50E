@@ -588,20 +588,24 @@ def require_item_f(directory, run_dirs, pinned_sha256=None):
     return json.load(open(p, encoding="utf8"))
 
 
-def edge_level_wording(run_dirs, audit_dir, thresholds_pin=None, m=32):
-    """edge-level law wording of the extracted laws (labels, edge table, fixed sentences) -- the only function that produces it. It needs the calibration table of the audit: present,
-    matching its hash record, made with the thresholds in force, and written before every outer score file; otherwise `extraction_audit.AuditGuardError` (the caller then prints the law
-    in closed form without any named family). D022 2.2a item 5."""
+def edge_level_wording(run_dirs, audit_dir, thresholds_pin, calibration_sha256, frozen_commit, m=32, law="cyclic"):
+    """edge-level law wording of the extracted CYCLIC laws (labels, edge table, fixed sentences) -- the only function that produces it (a test asserts that nothing else in the statistics
+    step calls the label, sentence or audit functions). Mandatory: the thresholds pin and the sha256 of calibration.json; the record's commit must equal the FROZEN commit; exactly 25 laws
+    per arm at g4. The calendar extracted law gets no edge-level wording (AuditGuardError). An arm that failed C1 gets only the descriptive stability table. D022a 2.8."""
     from . import extraction_audit as X
-    cells = X.require_calibration(audit_dir, run_dirs, thresholds_pin)
-    laws, levels = X.collect_laws(run_dirs, m)
+    if law != "cyclic":
+        raise X.AuditGuardError("the calendar extracted law gets no edge-level wording: it is printed as a formula only (D022a 2.1)")
+    cal = X.require_calibration(audit_dir, thresholds_pin, calibration_sha256, frozen_commit)
+    laws = X.collect_laws(run_dirs, m)                          # AuditError unless exactly 25 laws per arm
+    v = cal["verdict"]
     out = {}
     for arm in ("A15", "G15"):
         if laws[arm]:
-            out[arm] = X.audit_arm(laws[arm], levels, cells, m, arm)
+            out[arm] = X.audit_arm(laws[arm], arm, bool(v["arms"][arm]["C1"]))
     if not out:
         raise X.AuditGuardError("no extracted laws (extracted_laws.json) in the runs")
-    return {"printed": True, "m": m, "arms": out, "discussion_sentence": X.load_thresholds()["wording"]["discussion_sentence"]}
+    return {"printed": True, "m": m, "arms": out, "contribution": bool(v["contribution"]), "failure_sentences": v["failure_sentences"], "calibration": v["arms"],
+            "calibration_sha256": calibration_sha256, "discussion_sentence": X.load_thresholds()["wording"]["discussion_sentence"]}
 
 
 def item_f_from_runs(run_dirs, contrast=("D*", "A1")):

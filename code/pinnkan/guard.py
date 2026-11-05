@@ -67,8 +67,9 @@ def read_freeze(root=None):
     return d
 
 
-def verify_freeze(root=None, check_git=True):
-    """full verification of the flag file; returns the parsed dict or raises TestFoldAccessError"""
+def verify_freeze(root=None, check_git=True, untracked_under=()):
+    """full verification of the flag file; returns the parsed dict or raises TestFoldAccessError. untracked_under (D022a): paths whose UNTRACKED files also refuse (`__pycache__` and *.pyc excepted);
+    the default () keeps the older behaviour"""
     root = root or _DEFAULT_ROOT
     d = read_freeze(root)
     if d is None:
@@ -91,6 +92,11 @@ def verify_freeze(root=None, check_git=True):
         dirty = _git(root, "status", "--porcelain", "--untracked-files=no", "--", "code", "runs/prereg")
         if dirty:
             raise TestFoldAccessError("tracked files under code/ or runs/prereg/ differ from the frozen commit: " + dirty.splitlines()[0])
+        if untracked_under:
+            extra = [l for l in _git(root, "status", "--porcelain", "--untracked-files=all", "--", *untracked_under).splitlines()
+                     if l.startswith("??") and "__pycache__" not in l and not l.endswith(".pyc")]
+            if extra:
+                raise TestFoldAccessError("untracked files under " + "/".join(untracked_under) + " (not in the frozen commit): " + extra[0])
     return d
 
 

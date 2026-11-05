@@ -504,7 +504,9 @@ def main(argv=None):
     ap.add_argument("--item-f-dir", default=None, help="directory of the hashed item (f) dependence file (D018); required for --design r2")
     ap.add_argument("--row", action="append", default=None, help="NAME=dir1,dir2,... for the downgrade-row re-runs: lab_indicator, retain_all, random_subset (draws separated by ';')")
     ap.add_argument("--item-f-sha256", default=None, help="the item (f) file hash pinned in git / FROZEN")
-    ap.add_argument("--audit-dir", default=None, help="directory of the hashed extraction-audit calibration (runs/extraction_calibration); without it no edge-level wording is printed")
+    ap.add_argument("--audit-dir", default=None, help="directory of calibration.json (runs/extraction_calibration); without it no edge-level wording is printed")
+    ap.add_argument("--audit-thresholds-pin", default=None, help="sha256 of extraction_audit.json (mandatory with --audit-dir)")
+    ap.add_argument("--calibration-sha256", default=None, help="sha256 of calibration.json (mandatory with --audit-dir)")
     ap.add_argument("--lenient", action="store_true", help="development only: skip the completeness and design checks of Store.from_runs / check_complete")
     ap.add_argument("--sign-rule", default=None, help="JSON of the statistics config, e.g. '{\"graph_w\": 0.78}' (sign_rule, rho_s0, graph_w, alpha, e1_prime_approved)")
     ap.add_argument("--physval", action="store_true", help="also write physval_11a.json (PREREG 11a items 1, 2, 4, 5) from the Test B fold runs")
@@ -519,19 +521,19 @@ def main(argv=None):
             n_, v_ = item.split("=", 1)
             rr[n_] = [x.split(",") for x in v_.split(";")] if n_ == "random_subset" else v_.split(",")
         run_stats_v4(a.analysis_dir, runs["B"], json.loads(a.sign_rule) if a.sign_rule else None, item_f_dir=a.item_f_dir, row_runs=rr, h7_run=a.h7_run,
-                     item_f_sha256=a.item_f_sha256, strict=not a.lenient, audit_dir=a.audit_dir)
+                     item_f_sha256=a.item_f_sha256, strict=not a.lenient, audit_dir=a.audit_dir, audit_thresholds_pin=a.audit_thresholds_pin, calibration_sha256=a.calibration_sha256)
         return
     run_stats(a.analysis_dir, runs, a.negative_run, a.h7_run, a.stress_run, nc1_full=a.nc1_full, physval_runs=(runs.get("B") if a.physval else None))
 
 
 # --------------------------------------------------------------------------------------------------- Design R2 (PREREG_v4): see stats_v4.py
-def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, row_runs=None, h7_run=None, item_f_sha256=None, strict=True, n_expected=40, folds=range(5), audit_dir=None, audit_thresholds_pin=None):
+def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, row_runs=None, h7_run=None, item_f_sha256=None, strict=True, n_expected=40, folds=range(5), audit_dir=None, audit_thresholds_pin=None, calibration_sha256=None, frozen_commit=None):
     """Design R2 statistics from grid runs, through the downgrade rows (stats_rows.run_v4_full). The item (f) dependence file must exist, match its hash (and `item_f_sha256` if given) and
     pre-date every outer score file (D018 2.3 (ii)); otherwise ItemFError. strict (default): every run must say design R2 and the grid must be complete (folds, cells, n, arms, selectors,
     both A10 forms; Store.check_complete). `row_runs`: {'lab_indicator': [dirs], 'retain_all': [dirs], 'random_subset': [[dirs of draw 0], [draw 1], [draw 2]]} (the re-runs of the
     rows (ii)-(iv)); a row that is not supplied is recorded as not run and the outcome is marked provisional. Gate G: NC-1 from the runs' invariance.json and PC-1 from the G0 run
     `h7_run`; an unevaluated control is listed and also makes the outcome provisional."""
-    from . import stats_rows, stats_v4
+    from . import guard, stats_rows, stats_v4
     if item_f_dir is None:
         raise stats_v4.ItemFError("item_f_dir is required: the statistics step is blocked without the hashed item (f) dependence file")
     item_f = stats_v4.require_item_f(item_f_dir, run_dirs, item_f_sha256)
@@ -555,7 +557,8 @@ def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, r
     if audit_dir is None:                                                  # conservative default: the law is printed, no edge family is named (D022 2.2a item 5)
         out["edge_wording"] = {"printed": False, "reason": "no calibration table supplied: the extracted laws are printed in closed form without named edge families"}
     else:
-        out["edge_wording"] = stats_v4.edge_level_wording(run_dirs, audit_dir, audit_thresholds_pin)         # raises AuditGuardError without a valid calibration table
+        fc = frozen_commit if frozen_commit is not None else (guard.read_freeze() or {}).get("commit")
+        out["edge_wording"] = stats_v4.edge_level_wording(run_dirs, audit_dir, audit_thresholds_pin, calibration_sha256, fc)         # raises AuditGuardError without the pins, a valid record from the FROZEN commit
     out["gate_G"] = gate_
     os.makedirs(analysis_dir, exist_ok=True)
     write_json(os.path.join(analysis_dir, "controls.json"), controls)

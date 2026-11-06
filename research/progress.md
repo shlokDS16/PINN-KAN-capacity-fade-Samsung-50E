@@ -13,7 +13,7 @@
   there); FB-8 timing on a pinned primary config (zyk, tournament, k grid), FB-9 nc1_full, FB-10 smoke, full suite; gate-auditor
   freeze audit (C21, C28, pins); lead writes FROZEN; then the item (f) runs, then the confirmatory runs.
 - **Data:** Samsung full release verified; CALCE PL 7 of 8 zips (tools/fetch_calce_queue.sh retrying the last).
-- **Lesson:** keep-awake lapses when the lead idles; use tools/keep_awake_while.py <pid> for unattended jobs.
+- **Lesson:** the 5-6 Nov overnight stall was low battery (Kernel-Power 42); charger in for overnight runs; tools/keep_awake_while.py covers idle sleep only.
 
 ## RESUME (older: 2026-11-05 ~04:15 by the overnight lead session)
 - **State:** topic and method decided by debate (D005 -> D011 -> D016). Current design = **Design R2**

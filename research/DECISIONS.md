@@ -681,3 +681,14 @@ Row format:
 - **Re-open if:** the coder cannot run the pre-`build_data` invariance test on synthetic records; the P3 re-simulation at
   (32, 2) shows the node's size above 1.2 x nominal; Shlok chooses an option that changes a state definition other than those
   listed.
+
+### D034 Shlok accepts the judge's recommendation on all six author decisions of D033 (2026-11-06, status: accepted)
+- **Decision:** AD1 Opt 1 (P3 compares g1 = (8, 2) with (32, 2): D_c = L_c(g1) - L_c(32, 2) in sections 2 and 9.4; P3 power
+  re-simulated); AD2 Opt 1 (modifier M3: P+ and A1 not better than R1 persistence at g1, margin 0, 30 of 40 at 0.025, outside the
+  graph; T1-T3 and T9a/T9b then take the K column's T4/T5/T6 with the added sentence); AD3 Opt 1 (keep; e3 carries the
+  attribution); AD4 Opt 1 ("when cycling tests are few" -> "with few cycling tests" unless P3 is S); AD5 Opt 1 ("readable" ->
+  "closed-form" in T1, T4, T7 and the matching "no ... claim" phrase); AD6 Opt 1 (keep A9 in D*, with the disclosure).
+  Exact texts: debates/D033_signoff/01_judge.md, AUTHOR DECISIONS (17e74af).
+- **Evidence:** Shlok's reply "Accept all six" (2026-11-06); D033 judge; red-team and statistician rev. 15 reports; Codex turn 11.
+- **Proposer / opponent / judge:** red team + statistician (findings) / Codex turn 11 / D033 judge; approved by Shlok.
+- **Re-open if:** the P3 re-simulation shows the AD1 contrast breaks the FWER guard (statistician), or Shlok changes an answer before FROZEN.

@@ -60,3 +60,46 @@ A run of `stats_step` from the committed configuration whose `contrasts_v4_B.jso
 Fixed: A1, A2, A3, B3, B4 (text). Partly fixed: A4, B1, B2, B5. New: N1 (MAJOR), N2-N5 (MINOR). No FATAL.
 
 7.3 item 6 sign-off: NOT SIGNED (A4 is not closed: the fail-closed banned-phrase check at `stats_step.py:575-576` raises on the legitimate Gate G reason "PC-1 failed (G0 recovery nRMSE > 0.15)" at `stats_step.py:417`, so a tripped Gate G on the one-shot confirmatory run produces an exception and no `contrasts_v4_B.json`; the licence, calibration-number, `calibrated=False` and `audit_dir` properties themselves hold. Record the resolution of N1 in the decision ledger and re-run the two test files; N2-N5 are recorded as open minors.)
+
+
+
+## Re-sign (round 3) (2026-11-06)
+
+Red team (checks only). Re-check of the coder's fixes in 3fce40a against HEAD 6782955. I edited no file under `code/` or `runs/prereg/`; Samsung data not opened.
+
+**Reading depth.** Full: the 3fce40a diff of `extraction_audit.py`, `extraction_audit.json`, `stats_step.py`, `PREREG_v4.md` and `PREFREEZE_STATUS.md`; `code/tests/test_c26_recheck.py`; `physval.py` 150-195; `fig5_stress.py` 68-80; `h7.py` 205-245 (the P1 text); `stats_step.py` 321-400 and 553-616. Partial: `stats_v4.py` (strings and the `edge_level_wording` call site only). Not read: the body of `test_extraction_fallback.py` beyond running it. **Executed (CPU, `CUDA_VISIBLE_DEVICES=""`):** `.venv/Scripts/python.exe -P -m pytest code/tests/test_c26_recheck.py code/tests/test_extraction_fallback.py -q` gives 60 passed in 13 s. Own probes: an AST scan of every string constant and f-string in `code/pinnkan/*.py` against `banned_phrases_in` (hits only in docstrings, an argparse help text, the v3-path NC-2 `wording` field at `stats_step.py:352` and the `h7.py:231` docstring; none in a string the Design R2 path writes); 14 evasion sentences; a sha256 comparison of section 11 (below).
+
+### 1. Per-finding status at HEAD
+
+| Finding | Status | Evidence |
+|---|---|---|
+| **N1** (MAJOR) PC-1 reason trips the fail-closed check | **Fixed** | `stats_step.py:417` now reads "PC-1 failed (G0 pipeline check: nRMSE > 0.15)", with no banned stem. Controls (with Gate G) are written first, then contrasts: `write_checked_json` (`stats_step.py:520`) writes a `.WORDING_VIOLATION.json` diagnostic that names path and pattern, not the sentence. Tests `test_c26_recheck.py:28-55` pass `gate_g` outputs for PC-1 only, NC-1 only, both and neither through the check, and run `run_stats_v4` with a tripped gate to completion (both files written). My AST scan found no other string in the R2 path that trips the list, including after the new subject words and stems (`h7.py` P1 text is a docstring; "recovers" is a dict key and keys are not checked). Residual: no `contrasts_v4_B.json` from a real run exists, so dynamic text (arm names, file-derived strings) is covered only by the fixture |
+| **B1** (MINOR) licence from a bare verdict | **Fixed in form** | `_licensed` (`extraction_audit.py:46-57`) needs `verdict` to be a dict with `void is False` and a non-empty `arms` dict. `label_text` (`:357`) and `results_sentence` (`:369`) raise `AuditGuardError` on a form or sign label without `licensed is True`; `label_input` sets `licensed` only after `_licensed` passed. Tests parametrise nine fake verdicts, all refused. A hand-built dict of the right shape, or a forged label with `licensed: True`, still passes: the check is structural, not authentic. Python-only, not reachable from the CLI or a config |
+| **A4** (MAJOR) banned list: holes, no caller | **Closed (heuristic), residual minors** | Caller: `write_checked_json` for controls, contrasts and, on the v3 path, physval. The N2 and N3 holes of round 2 are closed (tests `test_c26_recheck.py:104-129`: negation scoped to 3 tokens in the same clause; subject words widened to law, equation, formula, fitted, learned, KAN; stems for licence words, "upper limit", "calibration design/passed", "C1 passed"). Residual evasions in N2 below |
+| **N2** (MINOR) negation disables the whole sentence | **Fixed; residual evasions** | "the extracted law is not linear; it is exponential" and "cycling law: exponential" give no hit (the sentence splitter cuts at `;` and `:`, so the form word loses its subject word). "the extracted law, not unlike a power law, ..." gives no hit (3-token window). "does not fail to show an Arrhenius dependence" is flagged only because of the first-listed word, by accident. "the fitted cycling term depends on temperature through exp(-b/T)" gives no hit |
+| **N3** (MINOR) subject words, licence words | **Fixed** | `licen[cs]\w*` and the other new stems are in `extraction_audit.json`; the five claims of round 2 now hit (`test_c26_recheck.py:104-118`) |
+| **B5** (MINOR) partial grid aborts the step | **Fixed** | `run_stats_v4` catches `(AuditError, AuditGuardError)` around `edge_level_wording`; the test at `:132-142` removes the m = 32 laws and the step completes with "not available: ... no extracted laws" |
+| **N4** (MINOR) stale text | **Fixed** | `stats_step.py` help text and reason string rewritten; test `:145-148`; PREREG 17.2 C26 row and PREFREEZE row updated. The 17.2 row says N1-N5, B1 and B5 are "fixed in code"; N2 and N5 carry the residuals in this section, so the row reads a little stronger than the evidence |
+| **N5** (MINOR) controls and physval unchecked | **Fixed for controls; vacuous for physval** | controls: yes on the R2 path (`run_stats_v4`, `write_checked_json(... "controls")`). `physval_11a.json` goes through `write_checked_json` only inside `run_stats` (`stats_step.py:477-478`), which `_refuse_design_r2` blocks for R2 grid runs; `run_stats_v4` never writes `physval_11a.json` and no other code does (grep). The T-row suppression in `physval.py:161-190` (verified by reading) and the check on its output are therefore not exercised by the confirmatory CLI |
+| **A1, A2, A3, B3, B4** | closed in round 2 | not re-opened |
+| **B2** (MINOR) T term in the printed closed-form equation | **Open, left by design** | section 3 |
+
+### 2. Rev. 12 verdict: pure tightening
+
+- `git diff 3fce40a~1 3fce40a -- runs/prereg/PREREG_v4.md` has four hunks only: 7.3 item 6 (b) (line 191), 11a item 7 (line 430), the 17.2 C26 row (line 527) and one new change-log row (line 580). The first two drop the promised "T vote counts" and "A1's temperature partial dependence is shown" and put the fixed label "temperature (aliased with laboratory; no form or sign reported)" plus the note in their place. Both strings equal `extraction_audit.json:115` and `:127` exactly, and the T panel of `fig5_stress.py:72-77` draws only that label. No number, test, threshold, state, title or abstract sentence changes.
+- Section 11: the text between the "## 11. Outcomes" heading and the "## 11a." heading has the same sha256 (78832608ffaf909b7237612668faf92d0cf6dd658eb8ef9b42be3c015b070237) at 3fce40a~1 and at HEAD; no hunk lies in it. The 11a hunk is item 7, outside section 11. The rev. 12 row's statement that no section 11 text changes holds.
+- The 17.2 C26 row moves from "open" to "partly (rev. 12)": a status line, not a result claim.
+- N6 (MINOR, text): 11a item 6 and 7.3 item 6 (a) still list family votes and sign votes "per input" without a carve-out for T; item 7 and 7.3 (b) carve it out, and the code (`extraction_audit.py:391`, `:411`) prints the label only. The code is stricter than item 6, so this fails safe.
+- Verdict: rev. 12 is a pure tightening. It adds no new claim and changes no cell of the outcome table.
+
+### 3. B2 left unchanged: acceptable, with a recorded limit
+
+PREREG 7.3 items 1 and 6(a) say the fitted equation is printed in full, "shown, not described", with no form or direction named for individual effects. That is an explicit, pre-registered permission; the stability table and Fig. 5 carry the fixed T label only; the paper's fixed sentence states the aliasing. I accept leaving B2 as an open MINOR for the 7.3 item 6 sign-off. What the sign-off does not cover: a reader can still read a temperature coefficient and its sign off a printed equation, and the repository holds no code that produces that printed equation (the masking `describe` at `symbolic.py:445` has no caller), so what is printed lies outside this check.
+
+### 4. Open items after round 3
+
+No FATAL, no MAJOR. Open MINOR: B2; N2 residual (the list is a heuristic: splitting at `;` and `:`, "not unlike", double negation and formulas such as exp(-b/T) are not caught); N5 (physval path not exercised for R2); N6 (11a item 6 per-input wording); B1 (structural, not authentic); the 17.2 C26 row is slightly stronger than the evidence. The manuscript grep by the gate auditor stays.
+
+What would force rejection of "the confirmatory path emits no licence word, calibration number or temperature claim": a `contrasts_v4_B.json`, `controls.json` or physval output from the committed configuration holding a form or sign label, a C1-C3 number, a T share, direction or verdict, or a licence sentence. None found by reading, by the 60 tests or by the string scans.
+
+7.3 item 6 sign-off: SIGNED

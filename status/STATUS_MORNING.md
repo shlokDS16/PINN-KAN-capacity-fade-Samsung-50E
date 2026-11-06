@@ -3,7 +3,18 @@
 Folder: `C:\Users\Shlok\Downloads\PINN KAN battery paper` (own git repo). Budget: weekly usage 5% at
 start, 6% at 22:00 (see the end of this file for the latest); Fable 0%. CPU only, no GPU used.
 
-## 00000. LATEST (night 5-6 Nov, from 22:00): freeze preparation; three items need you
+## 000000. LATEST (09:10, 6 Nov): pilot P6 reported to you (freeze condition C6)
+- **P6 reading by the rule committed before the first fit (runs/pilot_P6/RULE.md, 6299c24): stop rule 10 NOT triggered.**
+  At the smallest cycling set (m = 8) with a 2-week window (the ISU analogue of the headline cell), the PINN-KAN (A1) had a lower
+  training-side inner-CV error than the best data-only learner on 4 of 5 ISU training sides; the data-only learner led on 1.
+  The trigger was "3 or more sides". This is training-side evidence on another dataset, not a result of the paper.
+  One descriptive row (mean statistic at window 0) gives 3 of 5; it does not carry the rule. Details: runs/pilot_P6/RESULT.md (d8d7034).
+- The laptop slept 23:30-08:20, so the night's runs paused (nothing lost); P6 finished at 08:50. A keep-awake helper now holds the
+  PC awake for unattended jobs (tools/keep_awake_while.py).
+- Running now: the coder batch before the freeze (KAN-fallback fixes C26, margins C12, blinding list and split copy C13, the
+  confirmatory config set C14).
+
+## 00000. (night 5-6 Nov, from 22:00): freeze preparation; three items need you
 - **Found and fixed: item (f) could not exist before the freeze.** The dependence estimate (item f) needs Samsung training-side
   scores, but before the freeze the code (rightly) blocks every Samsung run except timing. Debate D026 (lead proposal, Codex
   opponent, Opus judge): item (f) now comes from five separate training-side runs at the headline cell **after** the freeze and

@@ -39,7 +39,7 @@ DEFAULTS = {"mode": "inner", "test": "B", "fold": 0, "arms": ["A1", "A2", "A9", 
             # cells 04-06 as two-point records (i); min_fc_points: scored cells need this many forecast points (i, "cells with >= 3 forecast points" -> 3);
             # law_overrides: {Y0, gamma, tau} for the A2-only tournament row (m), {delta_scope: "total"} for row (l); throughput_fallback: "analytic" lets a
             # cycling cell without ZYK entries use the designed throughput under throughput="zyk" (otherwise ZykDataMissing)
-            "include_at": False, "include_storage_0406": False, "min_fc_points": 1, "m": None, "subset": "maxmin", "subset_draw": 0, "k": None, "design": "R2", "inversion_config_sha256": None, "inversion_diagnostics": None, "extraction_audit_sha256": None, "calibration_rule_sha256": None, "nc1_scramble_k": None, "symbolic": {}, "endpoint": "ensemble", "inner_k_thin": 2, "p6b_decision": None, "law_overrides": {}, "throughput_fallback": "none", "forecast_failure": False, "lab_indicator": False}
+            "include_at": False, "include_storage_0406": False, "min_fc_points": 1, "m": None, "subset": "maxmin", "subset_draw": 0, "k": None, "design": "R2", "inversion_config_sha256": None, "inversion_diagnostics": None, "extraction_audit_sha256": None, "calibration_rule_sha256": None, "nc1_scramble_k": None, "symbolic": {}, "endpoint": "ensemble", "inner_k_thin": 2, "p6b_decision": None, "law_overrides": {}, "throughput_fallback": "none", "forecast_failure": False, "lab_indicator": False, "score_blinded_cells": False}
 TARGET_BY_TEST = {"B": "cycling", "C": "cycling", "A": "cycling", "S2": "storage", "S3": "storage"}   # the tuned task is the scored task (review M3)
 
 
@@ -137,11 +137,11 @@ def build_data(cfg, root, role, runs_dir=None):
         return {"spec": SPECS["synthetic"], "train": tr, "test": te if role != "train" else None, "synth": S, "subset": sub,
                 "split": {"file": "synthetic (generated)", "note": "no outer test fold of real data exists", "subset": sub}, "manifest": []}
     sv = load_split(ds, cfg["test"], cfg["fold"], role=role, root=root, retain_all=cfg["retain_all"], throughput=cfg["throughput"], include_at=cfg["include_at"],
-                    throughput_fallback=cfg["throughput_fallback"], include_storage_0406=cfg["include_storage_0406"], m=cfg["m"], subset=cfg["subset"], subset_draw=cfg["subset_draw"], runs_dir=runs_dir)
+                    throughput_fallback=cfg["throughput_fallback"], include_storage_0406=cfg["include_storage_0406"], m=cfg["m"], subset=cfg["subset"], subset_draw=cfg["subset_draw"], runs_dir=runs_dir, score_blinded_cells=cfg["score_blinded_cells"])
     return {"spec": sv.spec, "train": sv.train, "test": sv.test_cells, "sv": sv, "subset": sv.subset_info,
             "split": {"file": os.path.relpath(sv.split_file, root).replace("\\", "/"), "sha256_file": sv.split_sha256, "fold_hash_stored": sv.fold_hash_stored,
                       "fold_hash_recomputed": sv.fold_hash_recomputed, "fold_hash_ok": sv.hash_ok, "pinned_at_freeze": sv.pinned, "missing_train_conditions": sv.missing_train_conditions, "test_conditions": sv.test_conditions,
-                      "n_train_cells": len(sv.train), "n_train_conditions": len(sv.train_conditions)}, "manifest": sv.input_files}
+                      "n_train_cells": len(sv.train), "n_train_conditions": len(sv.train_conditions), "blinding_excluded_cells": sv.blinding_excluded}, "manifest": sv.input_files}
 
 
 class NotBuiltError(RuntimeError):

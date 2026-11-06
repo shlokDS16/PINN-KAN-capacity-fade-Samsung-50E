@@ -1,0 +1,134 @@
+{
+ "cells_table": "data/processed/samsung_cells.csv",
+ "confirmatory_tests": [
+  "B",
+  "C",
+  "S2"
+ ],
+ "excluded": {
+  "B": {
+   "0": [
+    "TP_z18_01_s2"
+   ],
+   "1": [
+    "TP_z24_01_s1"
+   ],
+   "2": [
+    "TP_z02_01_s2",
+    "TP_z02_02_s2"
+   ]
+  },
+  "S2": {
+   "4": [
+    "TP_k03_01_s2"
+   ]
+  }
+ },
+ "kind_a": "pipeline parse and QC of 163 check-ups of 19 cells (BL 2026-11-05 00:09): disclosed (3.3(10)(a)), no exclusion",
+ "kind_b_cells": [
+  {
+   "cell_id": "TP_k03_01_s2",
+   "condition": "T23|SOC0.2",
+   "log_row": "BL 2026-11-04 22:40 (lead, P0 probe): TP_k03_01, stage 2"
+  },
+  {
+   "cell_id": "TP_z18_01_s2",
+   "condition": "T45|SOCmax0.8|DoD0.6|Cch0.2|Cdch0.44",
+   "log_row": "BL 2026-11-04 22:40 (lead, P0 probe): TP_z18_01, stage 2"
+  },
+  {
+   "cell_id": "TP_z02_01_s2",
+   "condition": "T45|SOCmax0.8|DoD0.6|Cch1|Cdch2",
+   "log_row": "BL 2026-11-05 03:15 (lead, QC flags): TP_z02_01_s2"
+  },
+  {
+   "cell_id": "TP_z02_02_s2",
+   "condition": "T45|SOCmax0.8|DoD0.6|Cch1|Cdch2",
+   "log_row": "BL 2026-11-05 03:15 (lead, QC flags): TP_z02_02_s2"
+  },
+  {
+   "cell_id": "TP_z24_01_s1",
+   "condition": "T45|SOCmax0.45|DoD0.05|Cch1|Cdch1.8",
+   "log_row": "BL 2026-11-05 ~04:00 (builder agent, grep): TP_z24_01_s1"
+  }
+ ],
+ "n_conditions_dropped": {
+  "B": 0,
+  "S2": 0
+ },
+ "other_tests_informational": {
+  "A": {
+   "0": [
+    "TP_z02_01_s2",
+    "TP_z24_01_s1"
+   ],
+   "1": [
+    "TP_z02_02_s2",
+    "TP_z18_01_s2"
+   ]
+  }
+ },
+ "per_fold": {
+  "B": {
+   "0": {
+    "conditions": {
+     "T45|SOCmax0.8|DoD0.6|Cch0.2|Cdch0.44": {
+      "excluded": [
+       "TP_z18_01_s2"
+      ],
+      "scored_cells_left": 11,
+      "test_cells_in_condition": 12
+     }
+    },
+    "conditions_dropped": [],
+    "n_test_conditions": 8
+   },
+   "1": {
+    "conditions": {
+     "T45|SOCmax0.45|DoD0.05|Cch1|Cdch1.8": {
+      "excluded": [
+       "TP_z24_01_s1"
+      ],
+      "scored_cells_left": 2,
+      "test_cells_in_condition": 3
+     }
+    },
+    "conditions_dropped": [],
+    "n_test_conditions": 8
+   },
+   "2": {
+    "conditions": {
+     "T45|SOCmax0.8|DoD0.6|Cch1|Cdch2": {
+      "excluded": [
+       "TP_z02_01_s2",
+       "TP_z02_02_s2"
+      ],
+      "scored_cells_left": 7,
+      "test_cells_in_condition": 9
+     }
+    },
+    "conditions_dropped": [],
+    "n_test_conditions": 8
+   }
+  },
+  "S2": {
+   "4": {
+    "conditions": {
+     "T23|SOC0.2": {
+      "excluded": [
+       "TP_k03_01_s2"
+      ],
+      "scored_cells_left": 5,
+      "test_cells_in_condition": 6
+     }
+    },
+    "conditions_dropped": [],
+    "n_test_conditions": 4
+   }
+  }
+ },
+ "rule": "PREREG_v4 3.3(11): a kind (b) cell that is an outer-test cell of a confirmatory test is excluded from its scoring for every arm and grid cell; it stays in training; a condition with no scored cell left is dropped and n is reduced",
+ "sha256": "5e9f502a6761f4e3672f9c5c0e731c113daa3ba578aef2b8e7f67ecb05d3a7c1",
+ "source_splits": "samsung_splits_v2.json",
+ "splits_sha256": "0446d5cfbd5b15ef93e97187f45fda0b391eb02fc905463e7df3b492cd4c8af8"
+}

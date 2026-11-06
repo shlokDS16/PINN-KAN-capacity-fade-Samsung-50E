@@ -24,7 +24,7 @@ import numpy as np
 import pandas as pd
 
 from . import ROOT as _ROOT
-from . import guard, subsets, zyk
+from . import blinding, guard, subsets, zyk
 from .specs import SPECS, DatasetSpec
 
 # ------------------------------------------------------------------------------------------------ containers
@@ -442,6 +442,7 @@ class SplitView:
     missing_train_conditions: list = field(default_factory=list)
     pinned: bool = False
     subset_info: object = None   # D016 grid: nested training subset record (None = unthinned)
+    blinding_excluded: list = field(default_factory=list)      # PREREG_v4 3.3(11): outer-test cells withheld from scoring (kind (b) pre-freeze exposures); [] = none
 
     @property
     def hash_ok(self):
@@ -490,7 +491,7 @@ def apply_subset(train, dataset, test, fdef, fold, m, subset="maxmin", draw=0, r
 
 
 def load_split(dataset, test, fold, role="train", root=None, retain_all=False, throughput="analytic", include_at=False, throughput_fallback="none", include_storage_0406=False,
-               m=None, subset="maxmin", subset_draw=0, runs_dir=None):
+               m=None, subset="maxmin", subset_draw=0, runs_dir=None, score_blinded_cells=False):
     """Cells of one outer split. role 'train' never contains a test cell or a test condition. role 'test' also returns the test cells
     and requires the FROZEN flag file; without it the guard raises before any test cell is built."""
     root = root or _ROOT
@@ -543,11 +544,15 @@ def load_split(dataset, test, fold, role="train", root=None, retain_all=False, t
         raise SplitIntegrityError(f"loaded training conditions outside the split's training set: {sorted(loaded - expected)[:3]}")
     missing = sorted(expected - loaded) if expected is not None else []
     train, sub_info = apply_subset(train, dataset, test, fdef, fold, m, subset, subset_draw, root)      # test cells are never thinned
-    test_cells = None
+    test_cells, blinded = None, []
     if role != "train":
         guard.require_frozen(f"release of test cells ({dataset} test {test} fold {fold})", root)
         if dataset == "samsung":                    # D026 review I1: the item (f) gate also guards every direct caller, not only run.py
             guard.require_item_f_record(root, runs_dir)
         test_cells = build(keep_test)
+        if dataset == "samsung" and not score_blinded_cells:          # 3.3(11): kind (b) pre-freeze exposures are not scored (training sides are untouched); conditions left without a cell vanish, n is reduced
+            ex = blinding.excluded_cells(root, test, fold, file_sha)
+            blinded = sorted(c.cell_id for c in test_cells if c.cell_id in ex)
+            test_cells = [c for c in test_cells if c.cell_id not in ex]
     return SplitView(dataset, test, int(fold), spec, train, test_cells, sorted({c.cond for c in train}), sorted(tc), sorted(tids), path,
-                     file_sha, stored, recomputed, _input_manifest(root, dataset), missing, pin is not None, sub_info)
+                     file_sha, stored, recomputed, _input_manifest(root, dataset), missing, pin is not None, sub_info, blinded)

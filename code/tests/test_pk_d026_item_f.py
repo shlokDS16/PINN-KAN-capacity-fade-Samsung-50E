@@ -89,6 +89,7 @@ def test_a1_item_f_files_are_not_pinned_and_the_five_configs_are(tmp_path, monke
     shutil.copy(os.path.join(ROOT, "runs", "prereg", "samsung_splits_v2.json"), tmp_path / "runs" / "prereg" / "samsung_splits_v2.json")
     os.makedirs(tmp_path / "code" / "pinnkan")
     shutil.copy(os.path.join(ROOT, "runs", "prereg", "subsets.json"), tmp_path / "runs" / "prereg" / "subsets.json")
+    shutil.copy(os.path.join(ROOT, "runs", "prereg", "blinding_exclusions.json"), tmp_path / "runs" / "prereg" / "blinding_exclusions.json")      # C13: a pin
     (tmp_path / "code" / "pinnkan" / "symbolic_library.json").write_text("{}")
     paths = []
     for f in range(5):
@@ -97,7 +98,7 @@ def test_a1_item_f_files_are_not_pinned_and_the_five_configs_are(tmp_path, monke
         paths.append(str(p))
     # the payload builds with no item (f) file anywhere under the root, and with require_pins
     pay = guard.build_freeze_payload(root, [("samsung", "B")], [], prereg_file="runs/prereg/PREREG_v2.md", require_pins=True, item_f_config_paths=paths)
-    assert set(pay["pins"]) == {"subsets", "symbolic_library"} and pay["pins_missing"] == []
+    assert set(pay["pins"]) == {"subsets", "symbolic_library", "blinding_exclusions"} and pay["pins_missing"] == []
     assert pay["item_f_config_sha256s"] == [_hash(_cfg_in(f)) for f in range(5)]
     # it refuses without the item (f) configs, or with fewer or duplicate ones
     for bad in (None, paths[:4], paths[:4] + [paths[0]]):

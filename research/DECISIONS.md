@@ -639,3 +639,15 @@ Row format:
 - **Evidence:** debates/D029_novelty_scope/01_judge.md (table of old and new text); Shlok's reply "Approve new T5/T6" (2026-11-06).
 - **Proposer / opponent / judge:** novelty auditor / Codex turn 10 / D029 judge; approved by Shlok.
 - **Re-open if:** Shlok changes his answer before FROZEN.
+
+### D031 Freeze in the main checkout, not a separate worktree (lead, procedural; 2026-11-06)
+- **Decision:** FROZEN is written and every confirmatory run executes in the main checkout
+  (`C:\Users\Shlok\Downloads\PINN KAN battery paper`, branch main) at the frozen commit. Nobody commits to main afterwards until
+  the confirmatory runs finish (verify_freeze requires HEAD = frozen commit). Work that must continue (manuscript, figures) runs
+  on a separate branch in its own git worktree.
+- **Why:** core.autocrlf=true. A fresh worktree checks text files out with CRLF, so byte hashes already embedded in the committed
+  configs (extraction_audit_sha256, the split file hash inside blinding_exclusions.json) would not match there, and regenerating the
+  configs in the worktree would move HEAD. The main checkout is the copy in which those hashes were computed.
+- **Alternatives:** `.gitattributes` with `-text` (changes checkout bytes of files Git wrote earlier; same mismatch risk); freeze in a
+  worktree and regenerate every hashed artifact there (circular with HEAD).
+- **Proposer / judge:** lead (procedure only; no rule, test or outcome changes). The gate auditor checks it at the freeze audit.

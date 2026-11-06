@@ -1,6 +1,21 @@
 # Progress
 
-## RESUME (updated 2026-11-05 ~04:15 by the overnight lead session; read this first)
+## RESUME (updated 2026-11-06 11:00 by the lead; read this first)
+- **State:** Design R2 approved (D016/D017/D019); PREREG_v4 rev. 13 (d551e8a; section 11 byte-identical to J16). Decisions
+  D026 (item (f) after FROZEN, ledger-gated), D027 review, D028 config rulings. Code: 740 tests pass (53abf0e); 276 confirmatory
+  configs + MANIFEST (code/prereg/make_confirmatory_configs.py). Pilot P6 done: stop rule 10 not triggered (d8d7034).
+  C26 signed by the red team (bc9e4c4). D025 window cap coded (835d1aa).
+- **Checklist:** runs/prereg/PREFREEZE_STATUS.md (gate auditor, f24c2a3; needs a refresh) + PREREG 17 (rev. 13 statuses);
+  remaining code-side items in runs/prereg/CODER_QUEUE.md (item 10: untracked negctl folders under runs/prereg).
+- **Blocked on Shlok:** Hallinger SSRN 7417281 PDF or waiver (FB-2, C8); Lucu 2020 A/B and Jia 2024 PDFs or waiver (C4).
+- **Next (lead):** novelty auditor confirms FB-1 and does C4 when the PDFs arrive; designer C20 final-text pass (stale evidence
+  cells, markers); statistician and red-team signatures; candidate freeze commit in a FROZEN worktree (CRLF: compute pins
+  there); FB-8 timing on a pinned primary config (zyk, tournament, k grid), FB-9 nc1_full, FB-10 smoke, full suite; gate-auditor
+  freeze audit (C21, C28, pins); lead writes FROZEN; then the item (f) runs, then the confirmatory runs.
+- **Data:** Samsung full release verified; CALCE PL 7 of 8 zips (tools/fetch_calce_queue.sh retrying the last).
+- **Lesson:** keep-awake lapses when the lead idles; use tools/keep_awake_while.py <pid> for unattended jobs.
+
+## RESUME (older: 2026-11-05 ~04:15 by the overnight lead session)
 - **State:** topic and method decided by debate (D005 -> D011 -> D016). Current design = **Design R2**
   (debates/D016_roles/02_judge.md): data efficiency (8/16/32 cycling conditions x 0/2/full check-ups), PINN
   attribution by ablation ladder, KAN closed-form law vs equally simplified GAM law on held-out conditions,

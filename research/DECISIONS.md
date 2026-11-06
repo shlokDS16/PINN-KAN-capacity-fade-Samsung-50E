@@ -627,3 +627,15 @@ Row format:
 - **Re-open if:** the (d) pass finds concurrent work (same-dataset learned-law data efficiency: stop rule 12; a matched
   extracted-law versus additive-law held-out test: item 1 and the conjunction lose their novelty phrase); a reading finds
   a k axis or physics-informed arm in a condition-count study; Shlok declines the T5/T6 replacement (record only).
+
+### D030 Shlok approves the replacement of titles T5 and T6 (2026-11-06, status: accepted)
+- **Decision:** the question-form titles T5 and T6 of the closed outcome table (PREREG_v4 section 11; D016 / D017) are replaced
+  by the D029 judge's wording: T5 "Physics-informed and data-driven forecasts of lithium-ion capacity fade against the number of
+  cycling tests and check-ups: learning curves with Kolmogorov-Arnold stress functions"; T6 the same with the ending "learning
+  curves on a designed ageing dataset". Same states (P0/K=, P0/K-), same evidence words, no change to state selection.
+- **Why:** Lucu et al. (JES 30, 101409 and 101410, 2020) already asked how many ageing tests a learned forecaster needs, so a
+  question-form title would present a published question as open (D029; novelty audit de07eb5; Codex turn 10).
+- **Alternatives:** keep T5/T6 as approved (D029 fallback; Introduction carries the Lucu extension sentence).
+- **Evidence:** debates/D029_novelty_scope/01_judge.md (table of old and new text); Shlok's reply "Approve new T5/T6" (2026-11-06).
+- **Proposer / opponent / judge:** novelty auditor / Codex turn 10 / D029 judge; approved by Shlok.
+- **Re-open if:** Shlok changes his answer before FROZEN.

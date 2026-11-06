@@ -65,3 +65,10 @@ The "needs a strike decision" list above is now **decided**; the status of each 
 C1: `zyk_table_sha256` (sha256 of the git-ignored `data/processed/samsung_zyk_efc.csv`) is in every Samsung zyk config (item (f) inherits it); `validate_config` requires 64 lower-case hex when throughput is zyk on Samsung (modes confirmatory and inner);
 `data._load_samsung` raises `ConfigError` on a mismatch or an absent table before any use. C2: ISU replication full-data analogue = `repl_isu_B_f{f}_full` (m and subset unset, k ["full"] = 4 weeks); the old `_g4` (m 32) files are gone.
 Set now: 276 configs (primary 26, rows 36, sensitivity 195, exploratory 4, replication 10, item (f) 5); MANIFEST regenerated; tests `test_d028_config_rulings.py` (9). **The FB-8 timing run must use a pinned primary config (zyk, tournament, k grid)**, per the judge.
+
+## N2 and N5 (queue items 6 and 7)
+- **N2:** `banned_phrases_in` now ends a sentence at . ! ? only (a ";" or ":" no longer separates the law from the form claimed); the negation test counts negating tokens in the window and an even count affirms ("not unlike an exponential", "not without a hinge");
+  `reverse_words` ("unlike") in `extraction_audit.json`; formulas: `formula_anywhere` (Arrhenius-type exp(-b/T), any sentence) and `formula_patterns` (exp(...), e^x, x^2, x**2, b/T, in a sentence that names a law or equation). The approved PREREG 11 sentences still pass.
+  `extraction_audit.json` changed again, so `extraction_audit_sha256` in the A15/G15 configs was regenerated (config set re-hashed, MANIFEST updated).
+- **N5:** `run_stats_v4(..., physval=True)` and the R2 CLI `--physval` write `physval_11a.json` (from the m = 32 runs, one per outer fold) through `write_checked_json`; without stress functions the status is "not available"; a banned sentence stops the step before `contrasts_v4_B.json`, leaving `physval_11a.json.WORDING_VIOLATION.json`.
+  Tests: `test_n2_n5_wording.py` (16).

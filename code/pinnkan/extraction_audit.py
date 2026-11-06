@@ -98,12 +98,13 @@ _CLAUSE_BREAK = re.compile(r"[,;:()]|\b(?:but|however|although|whereas|yet|while
 NEGATION_WINDOW = 3                                                              # tokens before a form word, inside its own clause, that negate it
 
 
-def _negated(low, start, negation_words):
-    """is the match at `start` of the lower-cased sentence `low` negated? Only a negation word within the NEGATION_WINDOW tokens before it, in the same clause (no comma, semicolon, colon,
-    bracket, "but", "and", ... in between), negates it: "is not linear", "not a hinge", "cannot represent the non-monotone ...". A negation elsewhere in the sentence does not (red-team N2)."""
+def _negated(low, start, negation_words, reverse_words=()):
+    """is the match at `start` of the lower-cased sentence `low` negated? Only negation words within the NEGATION_WINDOW tokens before it, in the same clause (no comma, semicolon, colon,
+    bracket, "but", "and", ... in between), negate it: "is not linear", "not a hinge", "cannot represent the non-monotone ...". A negation elsewhere in the sentence does not (red-team N2).
+    An odd number of negating tokens negates, an even number affirms: "not unlike an exponential" and "not without a hinge" (double negation; `reverse_words` such as "unlike" count as one) are claims."""
     seg = _CLAUSE_BREAK.split(low[:start])[-1]
     toks = re.findall(r"[a-z0-9_']+", seg)[-NEGATION_WINDOW:]
-    return any(t in negation_words or t.endswith("n't") for t in toks)
+    return sum(t in negation_words or t in reverse_words or t.endswith("n't") for t in toks) % 2 == 1
 
 
 def banned_phrases_in(text, thr=None):
@@ -120,15 +121,21 @@ def banned_phrases_in(text, thr=None):
     for pat in b["stems"]:
         if re.search(wb(pat), norm, flags=re.IGNORECASE):
             hits.append(pat)
-    negs = set(b["negation_words"])
-    for sent in re.split(r"(?<=[.;:!?]) ", norm):
+    for pat in b.get("formula_anywhere", ()):                     # an Arrhenius-type formula such as exp(-b/T) is banned in any sentence (red-team N2)
+        if re.search(pat, norm, flags=re.IGNORECASE):
+            hits.append(pat)
+    negs, rev = set(b["negation_words"]), set(b.get("reverse_words", ()))
+    for sent in re.split(r"(?<=[.!?]) ", norm):                    # a sentence ends at . ! ? only: a ";" or ":" does not separate the law named in one clause from the form claimed in the next (N2)
         low = sent.lower()
         if not any(re.search(wb(sw), low) for sw in b["subject_words"]):
             continue
         for fw in b["form_words"]:
-            if fw not in hits and any(not _negated(low, m.start(), negs) for m in re.finditer(wb(fw), low)):
+            if fw not in hits and any(not _negated(low, m.start(), negs, rev) for m in re.finditer(wb(fw), low)):
                 hits.append(fw)
-        if "shows" not in hits and any(not _negated(low, m.start(), negs) for m in re.finditer(b["shows_pattern"], low)):
+        for pat in b.get("formula_patterns", ()):                 # other formulas of the banned forms (exp(...), e^x, x^2, b/T) in a sentence that names a law or equation
+            if pat not in hits and re.search(pat, low, flags=re.IGNORECASE):
+                hits.append(pat)
+        if "shows" not in hits and any(not _negated(low, m.start(), negs, rev) for m in re.finditer(b["shows_pattern"], low)):
             hits.append("shows")
     return hits
 

@@ -517,6 +517,17 @@ def _pp_margins(out, store, run_dirs, strict, folds):
     return rec, {"status": "formed", "sha256": rec["sha256"], "file": "margins.json", "named_tier_pp": named}
 
 
+def _physval_v4(analysis_dir, run_dirs):
+    """physval_11a.json from the g4 runs (m = 32, one per outer fold: the stress functions of A1's final refit seeds) of a Design R2 grid; the file passes through write_checked_json. Runs without
+    stress_functions.json give status 'not available'."""
+    from . import physval as pv
+    dirs = [d for d in run_dirs if (lambda c: 32 if c.get("m") is None else int(c["m"]))(_load(os.path.join(d, "config.json"))) == 32 and os.path.exists(os.path.join(d, "stress_functions.json"))]
+    if not dirs:
+        return {"status": "not available: no stress_functions.json in the m = 32 runs"}
+    write_checked_json(os.path.join(analysis_dir, "physval_11a.json"), pv.physval_11a(dirs), "physval_11a")
+    return {"status": "written", "file": "physval_11a.json", "n_runs": len(dirs)}
+
+
 def write_checked_json(path, obj, where):
     """fail closed (red-team A4, N5): no generated sentence of `obj` may contain a banned claim. On a violation nothing is written to `path`; the offending paths and patterns are recorded in
     `<path>.WORDING_VIOLATION.json` (a diagnostic, itself written without the offending text) and BannedWordingError is raised."""
@@ -548,7 +559,7 @@ def main(argv=None):
     ap.add_argument("--calibration-sha256", default=None, help="sha256 of calibration.json (mandatory with --audit-dir)")
     ap.add_argument("--lenient", action="store_true", help="development only: skip the completeness and design checks of Store.from_runs / check_complete")
     ap.add_argument("--sign-rule", default=None, help="JSON of the statistics config, e.g. '{\"graph_w\": 0.78}' (sign_rule, rho_s0, graph_w, alpha, e1_prime_approved)")
-    ap.add_argument("--physval", action="store_true", help="also write physval_11a.json (PREREG 11a items 1, 2, 4, 5) from the Test B fold runs")
+    ap.add_argument("--physval", action="store_true", help="also write physval_11a.json (PREREG 11a items 1, 2, 4, 5): from the Test B fold runs (v3_legacy) or the m = 32 grid runs (r2), through the wording check")
     a = ap.parse_args(argv)
     runs = {}
     for item in a.runs:
@@ -560,13 +571,14 @@ def main(argv=None):
             n_, v_ = item.split("=", 1)
             rr[n_] = [x.split(",") for x in v_.split(";")] if n_ == "random_subset" else v_.split(",")
         run_stats_v4(a.analysis_dir, runs["B"], json.loads(a.sign_rule) if a.sign_rule else None, item_f_dir=a.item_f_dir, row_runs=rr, h7_run=a.h7_run,
-                     item_f_sha256=a.item_f_sha256, ledger_root=a.ledger_root, strict=not a.lenient, audit_dir=a.audit_dir, audit_thresholds_pin=a.audit_thresholds_pin, calibration_sha256=a.calibration_sha256)
+                     item_f_sha256=a.item_f_sha256, ledger_root=a.ledger_root, strict=not a.lenient, audit_dir=a.audit_dir, audit_thresholds_pin=a.audit_thresholds_pin, calibration_sha256=a.calibration_sha256,
+                     physval=a.physval)
         return
     run_stats(a.analysis_dir, runs, a.negative_run, a.h7_run, a.stress_run, nc1_full=a.nc1_full, physval_runs=(runs.get("B") if a.physval else None))
 
 
 # --------------------------------------------------------------------------------------------------- Design R2 (PREREG_v4): see stats_v4.py
-def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, row_runs=None, h7_run=None, item_f_sha256=None, strict=True, n_expected=40, folds=range(5), audit_dir=None, audit_thresholds_pin=None, calibration_sha256=None, frozen_commit=None, licences=False, ledger_root=None):
+def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, row_runs=None, h7_run=None, item_f_sha256=None, strict=True, n_expected=40, folds=range(5), audit_dir=None, audit_thresholds_pin=None, calibration_sha256=None, frozen_commit=None, licences=False, ledger_root=None, physval=False):
     """Design R2 statistics from grid runs, through the downgrade rows (stats_rows.run_v4_full). The item (f) dependence file must exist, match its hash (and `item_f_sha256` if given) and
     pre-date every outer score file (D018 2.3 (ii)); otherwise ItemFError. strict (default): every run must say design R2 and the grid must be complete (folds, cells, n, arms, selectors,
     both A10 forms; Store.check_complete). `row_runs`: {'lab_indicator': [dirs], 'retain_all': [dirs], 'random_subset': [[dirs of draw 0], [draw 1], [draw 2]]} (the re-runs of the
@@ -613,6 +625,8 @@ def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, r
     out["gate_G"] = gate_
     os.makedirs(analysis_dir, exist_ok=True)
     write_checked_json(os.path.join(analysis_dir, "controls.json"), controls, "controls")          # controls.json (with the Gate G diagnostic) is written first: a wording failure of the contrasts never hides a tripped gate (C26 N1, N5)
+    if physval:                                                            # N5: physval_11a.json (PREREG 11a items 1, 2, 4, 5) on the R2 path, through the same fail-closed wording check
+        out["physval"] = _physval_v4(analysis_dir, run_dirs)
     if pp_record is not None:
         write_checked_json(os.path.join(analysis_dir, "margins.json"), pp_record, "margins")
     write_checked_json(os.path.join(analysis_dir, "contrasts_v4_B.json"), out, "contrasts_v4_B")

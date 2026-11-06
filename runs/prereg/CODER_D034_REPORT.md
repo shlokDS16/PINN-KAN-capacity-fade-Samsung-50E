@@ -25,6 +25,6 @@ Scope: step 1 of `research/HANDOFF_2026-11-06.md`; texts from `debates/D033_sign
 1. **M3 and M2 together:** the abstract keeps the M2 tail (the semi-empirical model more accurate still) and then adds the M3 clause. PREREG 9.8 rule 5 (rev. 16) says the same; the judge text only says "adds". Title is T4/T5/T6 in that case.
 2. **Section 11 vs. T9 ids:** both T9 wordings share the ids T9a/T9b; the outcome dict does not carry a separate flag (the title string differs). Add one if the paper pipeline needs it.
 3. **Row (iv) and P3:** row (iv) is g1 only, so it covers P1, P2, "most" and `R1_g1`, not P3 (unchanged from before).
-4. **FB-8 cost:** the row runs at m = 32 now fit both k = 2 and k = full for 9 arms, 20 runs (rows ii and iii, 5 folds x ... at g4); include in the timing estimate.
+4. **FB-8 cost:** the row runs at m = 32 now fit both k = 2 and k = full for 9 arms: 10 runs (rows ii and iii, 5 folds each), about twice their earlier cost; include in the timing estimate.
 5. **Not done (not asked):** `tuning.choose_budget` still has its N = 40 / 20 / 10 branches (only reachable with `auto_budget`); the FB-8 Partial plan N = 10 is a generator constant (`N_TRIALS`) to edit and regenerate.
 6. `mean_vs_median` (9.8 rule 1) does not list M3's contrast; no rule asks for it.

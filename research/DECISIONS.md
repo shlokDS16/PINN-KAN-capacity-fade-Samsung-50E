@@ -659,3 +659,25 @@ Row format:
   D025's re-open condition is not triggered.
 - **Evidence:** runs/freeze_runs/D025_capped_cells.md (identifiers and counts only); every run also writes window_capped.json.
 - **Proposer / judge:** lead (record-only); gate auditor checks at the freeze audit (C28).
+
+### D033 Sign-off findings on PREREG_v4 rev. 15 (2026-11-06, status: accepted for code and text items; author items AD1-AD6 pending)
+- **Decision:** debates/D033_signoff/01_judge.md. Red-team F1 (= statistician D1, FATAL), F2, F6, F7, F8, D2, D3, D5 and M3 are
+  code fixes (one coder batch before FROZEN: pinned `runs/prereg/stats_config.json` with w 0.78 and e1' approved, refusal of
+  overrides after FROZEN, ties not dropped, bracket-source rule for row-set states, NaN-safe NC-1, wider `nc1_full` plus a
+  pre-`build_data` invariance test, NC-2 keeps each cell's throughput, Test C/S2 intervals wired in, n_expected from the pinned
+  exclusions, P-/K= joiner). F2, F5(d), F7, F8, D3, D4, D6, M1, M3-M6 get designer text in rev. 16 (section 11 and gated
+  decisions untouched). M7: no action (D029/D030). Author items for Shlok: AD1 (F3) P3 at (8, 2) against (32, 2), recommended,
+  or reworded e1/e1'/e2; AD2 (F4) modifier M3 on persistence R1 at g1, recommended, or an abstract qualifier, or keep; AD3 (F5a)
+  keep T1-T3 under e3, recommended; AD4 (F5b) T9 "with few cycling tests" unless P3 S, recommended; AD5 (F5c) "readable" ->
+  "closed-form", recommended; AD6 (F5d) keep A9 in D* with disclosure, recommended. Unanswered items keep the approved text;
+  AD1 and AD2 block the red-team signature.
+- **Alternatives and why they lost:** accepting the clause/title gaps by text edits alone (cannot change section 11, D017);
+  narrowing NC-1 text only (leaves the m = 16 and build-path gap untested); amending 9.3 to the code's tie rule (RES and D018
+  follow the text); dropping A9 from D* (lowers P1's bar).
+- **Evidence:** research/audits/SIGN_redteam_rev15.md; research/audits/SIGN_statistician_rev15.md;
+  debates/codex_panel/turn11_response.md; runs/prereg/PREREG_v4.md (rev. 15) sections 1, 2, 4.1, 9-11; code lines cited in the
+  judge file.
+- **Proposer / opponent / judge:** red team and statistician (findings) / Codex panel turn 11 (second reviewer) / D033 judge.
+- **Re-open if:** the coder cannot run the pre-`build_data` invariance test on synthetic records; the P3 re-simulation at
+  (32, 2) shows the node's size above 1.2 x nominal; Shlok chooses an option that changes a state definition other than those
+  listed.

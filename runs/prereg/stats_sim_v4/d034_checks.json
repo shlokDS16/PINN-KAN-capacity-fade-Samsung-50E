@@ -1,0 +1,19 @@
+{
+ "R_maxdiff_rho1=0.75_kappa=0.6": 9.402201239794294e-16,
+ "sigma_maxdiff_rho1=0.75_kappa=0.6": 0.0,
+ "Dnew_equals_old_at_kappa^(2/3)_rho1=0.75_kappa=0.6": 0.0,
+ "R_maxdiff_rho1=0.60_kappa=0.3": 4.701100619897147e-16,
+ "sigma_maxdiff_rho1=0.60_kappa=0.3": 0.0,
+ "Dnew_equals_old_at_kappa^(2/3)_rho1=0.60_kappa=0.3": 0.0,
+ "R_maxdiff_rho1=0.90_kappa=0.9": 9.367506770274758e-16,
+ "sigma_maxdiff_rho1=0.90_kappa=0.9": 0.0,
+ "Dnew_equals_old_at_kappa^(2/3)_rho1=0.90_kappa=0.9": 0.0,
+ "corr(L1g1, Lc) at kappa14 = 0.6": 0.7113786608980125,
+ "corr(L1g1, L1g4) at kappa14 = 0.6": 0.6,
+ "crit_counts_BB03": {
+  "0.0055": 32,
+  "0.0125": 31,
+  "0.0195": 30,
+  "0.025": 30
+ }
+}

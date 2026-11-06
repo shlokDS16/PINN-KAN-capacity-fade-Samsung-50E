@@ -1,0 +1,17 @@
+power isu_right rho1=0.60 72s
+power isu_right rho1=0.75 152s
+power isu_right rho1=0.90 230s
+chain f=0.00 l=0.00 rk=0.90 52s
+chain f=0.00 l=0.00 rk=0.95 104s
+chain f=0.10 l=0.05 rk=0.90 160s
+chain f=0.10 l=0.05 rk=0.95 229s
+m3 isu_right f=0.00 l=0.00 rk=0.90 14s
+m3 isu_right f=0.00 l=0.00 rk=0.95 27s
+m3 isu_right f=0.10 l=0.05 rk=0.90 41s
+m3 isu_right f=0.10 l=0.05 rk=0.95 56s
+power normal rho1=0.60 79s
+power normal rho1=0.75 150s
+power normal rho1=0.90 226s
+power isu_left rho1=0.60 75s
+power isu_left rho1=0.75 154s
+power isu_left rho1=0.90 238s

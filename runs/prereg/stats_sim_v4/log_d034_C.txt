@@ -1,0 +1,14 @@
+guard k=0.60 iid_fb0.03 104s
+guard k=0.60 fold10_lab05_fb0.03 233s
+guard k=0.30 iid_fb0.03 103s
+guard k=0.30 fold10_lab05_fb0.03 230s
+guard k=0.90 iid_fb0.03 110s
+guard k=0.90 fold10_lab05_fb0.03 235s
+m3 normal f=0.00 l=0.00 rk=0.90 5s
+m3 normal f=0.00 l=0.00 rk=0.95 10s
+m3 normal f=0.10 l=0.05 rk=0.90 14s
+m3 normal f=0.10 l=0.05 rk=0.95 19s
+m3 isu_left f=0.00 l=0.00 rk=0.90 4s
+m3 isu_left f=0.00 l=0.00 rk=0.95 8s
+m3 isu_left f=0.10 l=0.05 rk=0.90 13s
+m3 isu_left f=0.10 l=0.05 rk=0.95 17s

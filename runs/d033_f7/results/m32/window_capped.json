@@ -1,0 +1,9 @@
+{
+ "rule": "D025: window = min(k, n - 1) intermediate check-ups",
+ "cells": [
+  "SYN_G2_31_C00_1",
+  "SYN_G2_31_C00_2",
+  "SYN_G2_31_C01_1",
+  "SYN_G2_31_C01_2"
+ ]
+}

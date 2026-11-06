@@ -1,0 +1,49 @@
+{
+ "passed": true,
+ "per_k": {
+  "0": {
+   "passed": true,
+   "same_row_keys": true,
+   "max_abs_diff_outer": 0.0,
+   "max_abs_diff_inner_oof": 0.0,
+   "n_outer_rows": 9380,
+   "identical_records": {
+    "tuning_done.json": true,
+    "margins_inputs.json": true
+   },
+   "n_non_finite_predictions": 0
+  },
+  "2": {
+   "passed": true,
+   "same_row_keys": true,
+   "max_abs_diff_outer": 0.0,
+   "max_abs_diff_inner_oof": 0.0,
+   "n_outer_rows": 10332,
+   "identical_records": {
+    "tuning_done.json": true,
+    "margins_inputs.json": true
+   },
+   "n_non_finite_predictions": 0
+  },
+  "full": {
+   "passed": true,
+   "same_row_keys": true,
+   "max_abs_diff_outer": 0.0,
+   "max_abs_diff_inner_oof": 0.0,
+   "n_outer_rows": 8748,
+   "identical_records": {
+    "tuning_done.json": true,
+    "margins_inputs.json": true
+   },
+   "n_non_finite_predictions": 0
+  }
+ },
+ "n_outer_rows": 28460,
+ "max_abs_diff_outer": 0.0,
+ "clean_run": "C:/Users/Shlok/AppData/Local/Temp/claude/C--Users-Shlok-Downloads-Multi-Modality-Language-model--claude-worktrees-distracted-knuth-2988a8/d91c28c7-7463-4cd6-912a-36fe62f77487/scratchpad/f7runs\\d033_nc1_full_synth_m8_clean",
+ "scrambled_runs": {
+  "0": "C:/Users/Shlok/AppData/Local/Temp/claude/C--Users-Shlok-Downloads-Multi-Modality-Language-model--claude-worktrees-distracted-knuth-2988a8/d91c28c7-7463-4cd6-912a-36fe62f77487/scratchpad/f7runs\\d033_nc1_full_synth_m8_scrambled_k0",
+  "2": "C:/Users/Shlok/AppData/Local/Temp/claude/C--Users-Shlok-Downloads-Multi-Modality-Language-model--claude-worktrees-distracted-knuth-2988a8/d91c28c7-7463-4cd6-912a-36fe62f77487/scratchpad/f7runs\\d033_nc1_full_synth_m8_scrambled_k2",
+  "full": "C:/Users/Shlok/AppData/Local/Temp/claude/C--Users-Shlok-Downloads-Multi-Modality-Language-model--claude-worktrees-distracted-knuth-2988a8/d91c28c7-7463-4cd6-912a-36fe62f77487/scratchpad/f7runs\\d033_nc1_full_synth_m8_scrambled_kfull"
+ }
+}

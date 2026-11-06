@@ -27,8 +27,11 @@ from .stats_step import bca_mean_ci
 LOG_S, LOG_N = float(np.log(1.02)), float(-np.log(1.10))
 TIER_ORDER = ["reverse S", "none", "N", "S"]            # lowest first (PREREG_v4 9.5 scale)
 G1, G4 = (8, "2"), (32, "full")
-DEFAULT_CONFIG = {"sign_rule": "betabin", "rho_s0": gt.RHO_S0, "graph_w": 0.5, "alpha": 0.025, "e1_prime_approved": False, "sensitivity_rhos": list(gt.RHO_GRID),
+# D033 F1 / D1: the defaults ARE the registered configuration (PREREG_v4 9.4: w = 0.78, levels 0.0195 / 0.0055, counts 30 / 32; D019: clause e1' approved by the author). The same values are pinned
+# in runs/prereg/stats_config.json (guard.PIN_FILES); once FROZEN exists, `effective_config` refuses any cfg that differs from that file.
+DEFAULT_CONFIG = {"sign_rule": "betabin", "rho_s0": gt.RHO_S0, "graph_w": gt.W_ALT, "alpha": 0.025, "e1_prime_approved": True, "sensitivity_rhos": list(gt.RHO_GRID),
                   "k_chain_struck": False}
+STATS_CONFIG_REL = os.path.join("runs", "prereg", "stats_config.json")
 
 
 class SignRuleNotSetError(RuntimeError):
@@ -70,9 +73,8 @@ class SignRule:
         return float(gt.betabin_p(pos, n, self.rho))
 
     def test(self, L, margin):
-        """(positives, n, p): conditions with L exactly equal to the margin are dropped and n reduced (PREREG_v4 9.3)"""
+        """(positives, n, p): PREREG_v4 9.3 "ties and L_c = m are not positive; n is not reduced" (D033 D2): positives = #{L > margin}, n = L.size"""
         L = np.asarray(L, float)
-        L = L[L != margin]
         pos = int((L > margin).sum())
         return pos, int(L.size), (self.p(pos, L.size) if L.size else 1.0)
 
@@ -95,6 +97,39 @@ def resolve_config(cfg=None):
     if not (0.0 < w < 1.0 or (w == 1.0 and c["k_chain_struck"])):
         raise ValueError("graph_w must be in (0, 1) (1 only when chain K is struck)")
     return rule, c
+
+
+class StatsConfigPinError(RuntimeError):
+    """FROZEN exists and the statistics configuration (cfg / --sign-rule) differs from the pinned runs/prereg/stats_config.json, or that file is absent or altered (D033 F1)"""
+
+
+def config_sha256(c):
+    """canonical sha256 of a resolved statistics configuration (sorted keys, compact JSON)"""
+    return hashlib.sha256(json.dumps(c, sort_keys=True, default=str, separators=(",", ":")).encode()).hexdigest()
+
+
+def effective_config(cfg=None, root=None):
+    """-> (cfg to use, pin record). Before FROZEN: cfg as given (None = the registered defaults). Once FROZEN exists in `root`: the pinned runs/prereg/stats_config.json is the
+    configuration; a cfg whose resolved values differ from it on any key, a missing or altered file (hash against the FROZEN pin `stats_config`) refuses with StatsConfigPinError."""
+    root = root or guard._DEFAULT_ROOT
+    if not guard.is_frozen(root):
+        return cfg, {"frozen": False, "pinned": False}
+    p = os.path.join(root, STATS_CONFIG_REL)
+    if not os.path.isfile(p):
+        raise StatsConfigPinError(f"FROZEN exists but {STATS_CONFIG_REL} is absent")
+    sha = guard.sha256_file(p)
+    pin = ((guard.read_freeze(root) or {}).get("pins") or {}).get("stats_config")
+    if pin is None or pin.get("sha256") != sha:
+        raise StatsConfigPinError(f"{STATS_CONFIG_REL} is not pinned in FROZEN or differs from the pinned hash")
+    pinned = {k: v for k, v in json.load(open(p, encoding="utf8")).items() if not k.startswith("_")}
+    want = resolve_config(pinned)[1]
+    if cfg is not None:
+        have = resolve_config(cfg)[1]
+        bad = sorted(k for k in set(want) | set(have) if want.get(k) != have.get(k))
+        if bad:
+            raise StatsConfigPinError(f"the statistics configuration differs from the pinned {STATS_CONFIG_REL} after FROZEN on {bad}: {{k: (given, pinned)}} = "
+                                      + json.dumps({k: [have.get(k), want.get(k)] for k in bad}, default=str))
+    return want, {"frozen": True, "pinned": True, "file": STATS_CONFIG_REL.replace("\\", "/"), "file_sha256": sha}
 
 
 # ------------------------------------------------------------------------------------------------ the score store
@@ -785,7 +820,7 @@ def item_f_from_runs(run_dirs, contrast=("D*", "A1")):
 # ------------------------------------------------------------------------------------------------ the closed table (PREREG_v4 section 11 = D016 judge 4.2/4.3)
 LEAD_IN = "With eight cycling conditions and two check-ups per held-out cell,"
 E1 = "most of the advantage came from the physics law, since the same network without it was {Y} % worse, and the advantage was larger with 8 than with 32 cycling conditions"
-E1P = "the same network without the physics law was {Y} % worse, and the advantage was larger with 8 than with 32 cycling conditions"      # D018 section 4 (needs Shlok's approval; off by default)
+E1P = "the same network without the physics law was {Y} % worse, and the advantage was larger with 8 than with 32 cycling conditions"      # D018 section 4 (approved by Shlok, D019; in force by default since D033)
 E2 = "the same network without the physics law was {Y} % worse; a dependence of the advantage on the number of cycling conditions was not shown"
 E3 = "a gain attributable to the physics law within the same network was not shown"
 TITLES = {
@@ -896,8 +931,8 @@ def _sentence(P, K, tiers, num, ext, M2):
         kc = KCLAUSE_KEQ_PASS.format(iv=ivK) if tiers.get("K1") else KCLAUSE_KEQ_FAIL
     else:
         kc = KCLAUSE_KMINUS.format(Z=fmt1(Z) if Z is not None else "?", iv=ivK)
-    if P == "P-" and kc.startswith("and "):
-        kc = "whereas " + kc[4:]               # P-/K+ is written with 'whereas'; the same connector is used for P-/K= (the table fixes the K= clause but not the joiner)
+    if P == "P-" and K == "K+":
+        kc = "whereas " + kc[4:]               # D033 M3: only the P-/K+ row of the table is written with 'whereas'; the K= and K- clauses are printed as approved
     sentence = f"{LEAD_IN} {head}, {kc}"
     if M2:
         sentence += T9_TAIL.format(W=fmt1(W) if W is not None else "?", iv=ivW)
@@ -934,54 +969,120 @@ CONTRASTS_FOR_LABS = {"P1": ("A1", "D*", G1), "P2": ("A1", "A9", G1), "K1": ("A1
                       "QH_g1": ("A1", "A2", G1), "QH_g4": ("A1", "A2", G4), "QT_g1": ("A1", "A13", G1)}
 
 
-def primary_numbers(store, rule, tiers, sec=None):
-    """numbers of the abstract sentence from the primary entries (unadjusted fallback 95 % intervals)"""
-    num = {}
+class BracketSignError(RuntimeError):
+    """a number printed in an approved sentence has a sign that contradicts the state it is printed under (D033 F2): the run refuses to print it"""
+
+
+class BracketSourceError(RuntimeError):
+    """a downgrade-row source was named for a bracket but is incomplete (D033 F2)"""
+
+
+PRIMARY_SOURCE = {"kind": "primary"}
+
+
+def _source(sources, name):
+    return (sources or {}).get(name) or PRIMARY_SOURCE
+
+
+def _stat(src, store, rule, target, comp, cell, key, seed=False):
+    """(median L, lower, upper, n) of L = ln(S_comp / S_target) in the analysis `src` that set the contrast's effective tier (D033 F2): the primary analysis, or the first downgrade row
+    (i)-(iv) whose tier is the lowest. Row (i): the post-stratified weighted median with the two-sided 95 % within-stratum bootstrap interval (quantiles 0.025 / 0.975; seed rule of the
+    row's tier computation); rows (ii)-(iv): that row's own median with the rank-11 interval (the 95 % fallback rank of 9.7) of its own store. `key` names the contrast in the row (i) detail."""
+    kind = src["kind"]
+    if kind == "lab_stratified":
+        b, a = src["detail"][key], str(src["alpha"])
+        return float(b["point"]), float(b["lower"][a]), float(b["upper"][a]), int(sum(b["strata_sizes"].values()))
+    if kind != "primary" and src.get("store") is None:
+        raise BracketSourceError(f"source {kind!r} of {key} has no store")
+    st = store if kind == "primary" else src["store"]
+    st = st.seed_view() if seed else st
+    _, L, _ = st.L(target, comp, cell)
+    lo, hi, _, _ = rule.interval(L, 0.05)
+    return float(np.median(L)), float(lo), float(hi), int(L.size)
+
+
+def _need_sign(ok, what):
+    if not ok:
+        raise BracketSignError(f"{what}: the printed number would contradict the state it is printed under")
+
+
+def _a10_reverse_forms(sec, src, key="QA10_g1"):
+    if src["kind"] == "primary":
+        rs = (sec or {}).get("tests", {}).get(key, {}).get("reverse_S", {}) if sec is not None else None
+        return None if rs is None else [f for f, v in rs.items() if v.get("rejected")]
+    return list(src.get("reverse_forms") or [])
+
+
+def primary_numbers(store, rule, tiers, sec=None, sources=None):
+    """numbers of the abstract sentence (unadjusted fallback 95 % intervals), each bracket taken from the analysis that set that contrast's effective tier (D033 F2; `sources` from
+    stats_rows.number_sources; none = the primary analysis). Raises BracketSignError when a printed sign contradicts the state (P+: X > 0; P-: the data-driven learner better; K+/K-: Z; Y > 0
+    where the clause prints it; M2: the semi-empirical model better). `num['sources']` records the analysis used per contrast."""
+    num, used = {}, {}
     if store.has("D*", *G1) and store.has("A1", *G1):
-        _, L, _ = store.L("A1", "D*", G1)
-        num["n"] = int(L.size)
-        med = float(np.median(L))
-        lo, hi, _, _ = rule.interval(L, 0.05)
-        if tiers.get("P1") == "reverse S":
-            num["X"] = pct_reduction(-med)
-            num["interval_P1"] = (pct_reduction(-hi), pct_reduction(-lo))
+        src = _source(sources, "P1")
+        med, lo, hi, n = _stat(src, store, rule, "A1", "D*", G1, "P1")
+        used["P1"] = src["kind"]
+        num["n"] = n
+        t = tiers.get("P1")
+        if t == "reverse S":
+            _need_sign(med < 0, "P1 reverse S")
+            num["X"], num["interval_P1"] = pct_reduction(-med), (pct_reduction(-hi), pct_reduction(-lo))
         else:
-            num["X"] = pct_reduction(med)
-            num["interval_P1"] = (pct_reduction(lo), pct_reduction(hi))
+            if t == "S":
+                _need_sign(med > 0, "P1 tier S")
+            num["X"], num["interval_P1"] = pct_reduction(med), (pct_reduction(lo), pct_reduction(hi))
     if store.has("A9", *G1):
-        _, L, _ = store.L("A1", "A9", G1)
+        _, L, _ = store.L("A1", "A9", G1)                       # printed only when P2 holds in the primary analysis and in every row: the primary median is the number (no row lowers it then)
         num["Y"] = pct_excess(float(np.median(L)))
+        used["P2"] = "primary"
+        if tiers.get("P1") == "S" and tiers.get("P2"):
+            _need_sign(num["Y"] > 0, "P2 (the network without the law is worse)")
     kv = store.seed_view()
     if kv.has("A15", *G4) and kv.has("G15", *G4):
-        _, L, _ = kv.L("A15", "G15", G4)
-        L = -L if tiers.get("K2") == "reverse S" else L
-        lo, hi, _, _ = rule.interval(L, 0.05)
-        num["Z"] = pct_reduction(float(np.median(L)))
-        num["interval_K2"] = (pct_reduction(lo), pct_reduction(hi))
+        src = _source(sources, "K2")
+        med, lo, hi, _ = _stat(src, store, rule, "A15", "G15", G4, "K2", seed=True)
+        used["K2"] = src["kind"]
+        t = tiers.get("K2")
+        if t == "reverse S":
+            _need_sign(med < 0, "K2 reverse S")
+            num["Z"], num["interval_K2"] = pct_reduction(-med), (pct_reduction(-hi), pct_reduction(-lo))
+        else:
+            if t == "S":
+                _need_sign(med > 0, "K2 tier S")
+            num["Z"], num["interval_K2"] = pct_reduction(med), (pct_reduction(lo), pct_reduction(hi))
     forms = [f for f in A10_FORMS if store.has(f, *G1)]
     if sec is not None:                          # review I1: [W] only from the forms that are reverse S (the clause is printed iff M2); a form that is not reverse S can have a negative effect
-        rs = sec["tests"].get("QA10_g1", {}).get("reverse_S", {})
-        forms = [f for f in forms if rs.get(f, {}).get("rejected")]
+        src = _source(sources, "QA10_g1")
+        rf = _a10_reverse_forms(sec, src)
+        forms = [f for f in forms if rf is None or f in rf]
+    else:
+        src = _source(sources, "QA10_g1")
     if forms:
         best = None
         for f in forms:                           # M2: the weaker (smaller) reverse effect among the forms that are reverse S
-            _, L, _ = store.L(f, "A1", G1)                           # L > 0 = this form of A10 is better than A1
-            lo, hi, _, _ = rule.interval(L, 0.05)
-            cand = (pct_reduction(float(np.median(L))), (pct_reduction(lo), pct_reduction(hi)))
+            med, lo, hi, _ = _stat(src, store, rule, "A1", f, G1, f"QA10_g1:{f}")          # L = ln(S_f / S_A1)... of A1 against the form: L < 0 = the form is better than A1
+            cand = (pct_reduction(-med), (pct_reduction(-hi), pct_reduction(-lo)))
             best = cand if best is None or cand[0] < best[0] else best
+        if tiers.get("QA10_g1") == "reverse S" and sec is not None:
+            _need_sign(best[0] > 0, "Q-A10 reverse S (the semi-empirical model is more accurate)")
         num["W"], num["interval_W"] = best
+        used["QA10_g1"] = src["kind"]
+    num["sources"] = used
     return num
 
 
-def _qual_form(store, t, kind):
+def _qual_form(store, t, kind, stats=None, reverse_forms=None):
     """the arm whose numbers a qualifier sentence prints: Q-A10 has two forms; the one that is WEAKER for A1 sets the tier, so the sentence uses the form with the smallest median L
-    (largest reverse effect is not used: for a reverse-S tier the form with the smallest reverse effect among the reverse-S forms, the conservative statement)"""
+    (for a reverse-S tier the form with the smallest reverse effect among the reverse-S forms, the conservative statement). `stats` {form: (median L of A1 against the form, ...)} from the
+    analysis that set the tier (default: the primary store); `reverse_forms` the forms that are reverse S in that analysis (default: the primary flags)"""
     if kind != "QA10":
         return t["arm"]
     forms = t["forms"]
-    med = {f: float(np.median(store.L("A1", f, tuple(t["cell"]))[1])) for f in forms}
+    med = {f: (stats[f][0] if stats else float(np.median(store.L("A1", f, tuple(t["cell"]))[1]))) for f in forms}
     if t["tier"] == "reverse S":
-        rs = [f for f in forms if t["reverse_S"][f]["rejected"]]
+        rs = [f for f in forms if (f in reverse_forms if reverse_forms is not None else t["reverse_S"][f]["rejected"])]
+        if not rs:
+            raise BracketSourceError("Q-A10 is reverse S but no form is reverse S in the analysis that set the tier")
         return max(rs, key=lambda f: med[f])
     return min(forms, key=lambda f: med[f])
 
@@ -1034,8 +1135,9 @@ def per_seed_descriptive(store):
     return out
 
 
-def run_v4(store, cfg=None, gate=None, row_tiers=None):
-    """the whole confirmatory statistics of Design R2 from a Store. row_tiers (item 6): {contrast: lowest tier of the downgrade rows}; effective tier = min(primary, rows)."""
+def run_v4(store, cfg=None, gate=None, row_tiers=None, sources=None):
+    """the whole confirmatory statistics of Design R2 from a Store. row_tiers (item 6): {contrast: lowest tier of the downgrade rows}; effective tier = min(primary, rows).
+    sources (D033 F2; stats_rows.number_sources): {contrast: the analysis that set its effective tier}, from which the brackets of the abstract sentence are filled (none = the primary analysis)."""
     rule, c = resolve_config(cfg)
     prim, Ls = primary_analysis(store, rule, c)
     sec = secondary_analysis(store, rule, c)
@@ -1052,25 +1154,36 @@ def run_v4(store, cfg=None, gate=None, row_tiers=None):
     if most is not None and row_tiers and "most" in row_tiers:
         most["most"] = bool(most["most"] and row_tiers["most"])           # downgrade rows apply to the 'most' test as a binary pass/fail
     out = {
-        "rule": rule.describe(), "config": {k: c[k] for k in ("sign_rule", "rho_s0", "graph_w", "alpha", "e1_prime_approved", "k_chain_struck")}, "seed_root": MC_SEED_ROOT,
+        "rule": rule.describe(), "config": {k: c[k] for k in ("sign_rule", "rho_s0", "graph_w", "alpha", "e1_prime_approved", "k_chain_struck")}, "config_full": {k: c[k] for k in sorted(c)},
+        "config_sha256": config_sha256(c), "seed_root": MC_SEED_ROOT,
         "primary": prim, "secondary": sec, "plain_descriptive": plain_rows(store, c), "most_test": most, "dependence_sensitivity": dependence_sensitivity(store, rule, c),
         "estimated": estimated_tables(store, rule), "lab_rows": lab_rows(store, rule, CONTRASTS_FOR_LABS), "effective_tiers": tiers,
         "per_seed_descriptive": per_seed_descriptive(store), "endpoint_note": ENDPOINT_NOTE, "mean_vs_median": mean_vs_median(store, rule),
     }
     if "P1" in tiers:
-        out["outcome"] = assemble_outcome(tiers, primary_numbers(store, rule, tiers, sec), c, gate, None if most is None else most["most"])
+        nums = primary_numbers(store, rule, tiers, sec, sources)
+        out["outcome"] = assemble_outcome(tiers, nums, c, gate, None if most is None else most["most"])
         out["outcome"]["abstract_additions"] = out["mean_vs_median"]["abstract_additions"]
-        q = {}
+        out["outcome"]["number_sources"] = nums.get("sources")
+        q, qsrc = {}, {}
         for key, kind in (("QH_g1", "QH"), ("QH_g4", "QH"), ("QA10_g1", "QA10"), ("QA10_g4", "QA10"), ("QT_g1", "QT")):
             t = sec["tests"][key]
             if not t["forms"]:
                 continue
-            f = _qual_form(store, t, kind)
-            _, L, _ = store.L("A1", f, tuple(t["cell"]))
-            lo, hi, _, _ = rule.interval(L, 0.05)
-            med = float(np.median(L))
+            src = _source(sources, key)
+            cell = tuple(t["cell"])
+            stats = {f: _stat(src, store, rule, "A1", f, cell, f"{key}:{f}") for f in t["forms"]}
+            rf = _a10_reverse_forms(sec, src, key) if kind == "QA10" else None
+            f = _qual_form(store, t, kind, stats, rf)
+            med, lo, hi, n_ = stats[f]
+            if t["tier"] == "reverse S":
+                _need_sign(med < 0, f"{key} reverse S")
+            elif t["tier"] == "S":
+                _need_sign(med > 0, f"{key} tier S")
             X = pct_reduction(-med) if t["tier"] == "reverse S" else pct_reduction(med)
             iv = (pct_reduction(-hi), pct_reduction(-lo)) if t["tier"] == "reverse S" else (pct_reduction(lo), pct_reduction(hi))
-            q[key] = qualifier_sentence(kind, t["tier"], X, iv, int(L.size))
+            q[key] = qualifier_sentence(kind, t["tier"], X, iv, n_)
+            qsrc[key] = src["kind"]
         out["qualifier_sentences"] = q
+        out["qualifier_number_sources"] = qsrc
     return out

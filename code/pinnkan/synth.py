@@ -217,3 +217,22 @@ def split_synthetic(cells, test, frac=0.25, seed=0):
         te = set(rng.choice(conds, size=max(1, int(round(frac * len(conds)))), replace=False))
         return [c for c in cells if c.cond not in te], [c for c in cells if c.cond in te]
     return split_conditions(cells, frac, seed)
+
+
+def shorten_cells(cells, n_points_list):
+    """D033 F7: copies of `cells` in which the first len(n_points_list) CYCLING cells (in list order) are cut to the given number of check-ups (reference included), so that the record is shorter
+    than the window (the D025 cap binds) or has no forecast point left (unscored). None / empty = unchanged. The cut keeps the leading points, so labels before the cut are untouched."""
+    if not n_points_list:
+        return cells
+    import copy
+    todo = list(n_points_list)
+    out = []
+    for c in cells:
+        if c.kind == "cycling" and todo:
+            n = int(todo.pop(0))
+            if not 2 <= n <= c.n:
+                raise ValueError(f"short record of {n} points for a cell of {c.n} points")
+            c = copy.copy(c)
+            c.t, c.ret, c.efc, c.fc_ok = c.t[:n].copy(), c.ret[:n].copy(), c.efc[:n].copy(), c.fc_ok[:n].copy()
+        out.append(c)
+    return out

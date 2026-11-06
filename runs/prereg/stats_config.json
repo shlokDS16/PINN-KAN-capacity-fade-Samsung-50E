@@ -1,0 +1,16 @@
+{
+ "_comment": "D033 F1: the registered statistics configuration of Design R2 (PREREG_v4 9.3-9.4: Beta-binomial design-effect sign test rho_s0 0.03; graph weight w 0.78 = levels 0.0195 / 0.0055, counts 30 / 32; alpha 0.025; D019: clause e1' approved; chain K not struck). Pinned in FROZEN (guard.PIN_FILES['stats_config']); stats_v4.DEFAULT_CONFIG equals it (tested); after FROZEN run_stats_v4 refuses any cfg or --sign-rule that differs.",
+ "alpha": 0.025,
+ "e1_prime_approved": true,
+ "graph_w": 0.78,
+ "k_chain_struck": false,
+ "rho_s0": 0.03,
+ "sensitivity_rhos": [
+  0.0,
+  0.01,
+  0.02,
+  0.03,
+  0.05
+ ],
+ "sign_rule": "betabin"
+}

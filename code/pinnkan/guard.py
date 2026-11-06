@@ -22,7 +22,8 @@ from . import ROOT as _DEFAULT_ROOT
 
 FROZEN_REL = os.path.join("runs", "prereg", "FROZEN")
 SCORED_REL = os.path.join("runs", "prereg", "SCORED.jsonl")
-PIN_FILES = {"subsets": "runs/prereg/subsets.json", "symbolic_library": "code/pinnkan/symbolic_library.json", "blinding_exclusions": "runs/prereg/blinding_exclusions.json"}   # Design R2 pins (build_v2): nested subsets, frozen symbolic library + cap. D026: the item (f) file and its record are NOT pinned here (written after FROZEN by the five pinned item (f) configs and stats_v4.build_item_f)
+PIN_FILES = {"subsets": "runs/prereg/subsets.json", "symbolic_library": "code/pinnkan/symbolic_library.json", "blinding_exclusions": "runs/prereg/blinding_exclusions.json",
+             "stats_config": "runs/prereg/stats_config.json"}   # D033 F1: the registered statistics configuration. Design R2 pins (build_v2): nested subsets, frozen symbolic library + cap. D026: the item (f) file and its record are NOT pinned here (written after FROZEN by the five pinned item (f) configs and stats_v4.build_item_f)
 ITEM_F_DIR_REL = os.path.join("runs", "item_f")                      # D026: untracked, outside runs/prereg/
 ITEM_F_FILE, ITEM_F_HASH = "item_f_dependence.json", "item_f_dependence.sha256.json"
 ITEM_F_ARTIFACTS = ("config.json", "tuning_done.json", "inner_folds.json", "comparators.json", "train_condition_meta.json")      # D026 record: sha256 of each, per item (f) run

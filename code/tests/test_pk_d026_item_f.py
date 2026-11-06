@@ -90,6 +90,7 @@ def test_a1_item_f_files_are_not_pinned_and_the_five_configs_are(tmp_path, monke
     os.makedirs(tmp_path / "code" / "pinnkan")
     shutil.copy(os.path.join(ROOT, "runs", "prereg", "subsets.json"), tmp_path / "runs" / "prereg" / "subsets.json")
     shutil.copy(os.path.join(ROOT, "runs", "prereg", "blinding_exclusions.json"), tmp_path / "runs" / "prereg" / "blinding_exclusions.json")      # C13: a pin
+    shutil.copy(os.path.join(ROOT, "runs", "prereg", "stats_config.json"), tmp_path / "runs" / "prereg" / "stats_config.json")                      # D033 F1: a pin
     (tmp_path / "code" / "pinnkan" / "symbolic_library.json").write_text("{}")
     paths = []
     for f in range(5):
@@ -98,7 +99,7 @@ def test_a1_item_f_files_are_not_pinned_and_the_five_configs_are(tmp_path, monke
         paths.append(str(p))
     # the payload builds with no item (f) file anywhere under the root, and with require_pins
     pay = guard.build_freeze_payload(root, [("samsung", "B")], [], prereg_file="runs/prereg/PREREG_v2.md", require_pins=True, item_f_config_paths=paths)
-    assert set(pay["pins"]) == {"subsets", "symbolic_library", "blinding_exclusions"} and pay["pins_missing"] == []
+    assert set(pay["pins"]) == {"subsets", "symbolic_library", "blinding_exclusions", "stats_config"} and pay["pins_missing"] == []
     assert pay["item_f_config_sha256s"] == [_hash(_cfg_in(f)) for f in range(5)]
     # it refuses without the item (f) configs, or with fewer or duplicate ones
     for bad in (None, paths[:4], paths[:4] + [paths[0]]):
@@ -509,6 +510,10 @@ def test_a4_once_a_frozen_exists_the_statistics_step_checks_the_ledger_without_b
     from pinnkan import stats_step
     root, dirs, sha = _ledger_state(tmp_path, monkeypatch, [])
     h = str(tmp_path / "runs" / "item_f")
+    shutil.copy(os.path.join(ROOT, "runs", "prereg", "stats_config.json"), tmp_path / "runs" / "prereg" / "stats_config.json")                      # D033 F1: FROZEN pins the statistics configuration
+    fz = json.load(open(guard.frozen_path(root)))
+    fz.setdefault("pins", {})["stats_config"] = {"file": "runs/prereg/stats_config.json", "sha256": guard.sha256_file(str(tmp_path / "runs" / "prereg" / "stats_config.json"))}
+    json.dump(fz, open(guard.frozen_path(root), "w"))
     monkeypatch.setattr(guard, "_DEFAULT_ROOT", root)
     with pytest.raises(v4.ItemFError, match="no Samsung row"):                          # FROZEN exists in the (temporary) default root, the ledger holds no Samsung row
         stats_step.run_stats_v4(str(tmp_path / "an"), dirs, item_f_dir=h, item_f_sha256=sha)

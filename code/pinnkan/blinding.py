@@ -114,3 +114,20 @@ def excluded_cells(root, test, fold, splits_sha256=None):
     if splits_sha256 is not None and rec["splits_sha256"] != splits_sha256:
         raise BlindingExclusionError("blinding_exclusions.json was made from another split file than the one in use")
     return set(rec["excluded"].get(test, {}).get(str(int(fold)), []))
+
+
+N_DESIGN_CONDITIONS = {"B": 40, "S2": 19}
+
+
+def expected_n(root=None, test="B", path=None):
+    """D033 D5: the number of scored conditions of a confirmatory test = the designed number minus `n_conditions_dropped[test]` of the pinned blinding_exclusions.json (a condition left with no
+    scored cell is dropped and n is reduced, 3.3(11)). Test B designs 40 conditions. The file is required when FROZEN pins it; with no file (older trees) the designed number stands."""
+    from . import guard
+    root = root or _ROOT
+    p = path or os.path.join(root, EXCLUSIONS_REL)
+    if not os.path.isfile(p):
+        if "blinding_exclusions" in ((guard.read_freeze(root) or {}).get("pins") or {}):
+            raise BlindingExclusionError(f"{EXCLUSIONS_REL} is pinned in FROZEN but absent")
+        return N_DESIGN_CONDITIONS[test]
+    rec = load_record(root, p)
+    return N_DESIGN_CONDITIONS[test] - int(rec.get("n_conditions_dropped", {}).get(test, 0))

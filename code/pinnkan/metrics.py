@@ -168,8 +168,9 @@ def log_ratio(s_comp, s_pinn):
 
 
 def permute_stress(cells, spec, seed):
-    """Negative control (prereg 10): stress vectors (with the design throughput that goes with them) are permuted among the CYCLING conditions
-    of this set; condition labels, window and forecast data stay. Called separately for the training and the test set."""
+    """Negative control (prereg 10; D033 F8): ONLY the stress vectors are permuted among the CYCLING conditions of this set (a derangement whenever there is more than one condition).
+    Each cell keeps its own logged throughput (`efc`), check-up times, retention, forecast set and window, so the control moves the stress dependence the law learns and nothing else;
+    a partial control for E1 (it does not isolate latent / window inversion). Called separately for the training and the test set."""
     import copy
     rng = np.random.default_rng([20261107, 31, int(seed)])
     conds = sorted({c.cond for c in cells if c.kind == "cycling"})
@@ -186,8 +187,7 @@ def permute_stress(cells, spec, seed):
             out.append(c)
             continue
         n = copy.copy(c)
-        n.raw = raw_of[donor[c.cond]].copy()
-        n.efc = spec.efc_rate(n.raw) * c.t
+        n.raw = raw_of[donor[c.cond]].copy()          # the stress vector only: efc (the cell's own logged throughput), t, ret and fc_ok stay as they are
         n.meta = {**c.meta, "stress_permuted_from": donor[c.cond]}
         out.append(n)
     return out

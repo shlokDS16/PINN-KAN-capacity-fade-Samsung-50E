@@ -211,26 +211,73 @@ def lowest(*row_dicts):
     return out
 
 
+def _rank(v):
+    return int(v) if isinstance(v, bool) else v4.TIER_ORDER.index(v)
+
+
+def number_sources(first, rows, row_stores, lab_detail, rule):
+    """D033 F2: for every gated and secondary contrast, the analysis that set its effective tier = the primary analysis if it is the lowest (ties go to the primary), else the first row
+    (i) lab_stratified, (ii) lab_indicator, (iii) retain_all, (iv) random_subset whose tier is the lowest. The brackets of the abstract sentence are filled from that analysis
+    (`stats_v4.primary_numbers(..., sources)`). -> {contrast: {'kind': ..., 'store' | 'detail', 'alpha', 'reverse_forms' (secondary tests)}}"""
+    prim = {**first["primary"]["tiers"], **{k: v["tier"] for k, v in first["secondary"]["tests"].items()}}
+    alpha = first["config"]["alpha"]
+    lv, sec = primary_levels(first)
+    out = {}
+    for k, pv in prim.items():
+        have = [(n, rows[n][k]) for n in ROWS if rows.get(n) and k in rows[n]]
+        low = min([_rank(pv)] + [_rank(v) for _, v in have])
+        if _rank(pv) == low:
+            out[k] = {"kind": "primary"}
+            continue
+        kind = next(n for n, v in have if _rank(v) == low)
+        s_ = {"kind": kind, "alpha": alpha}
+        if kind == "lab_stratified":
+            s_["detail"] = lab_detail
+        else:
+            s_["store"] = row_stores[kind]
+        if k in first["secondary"]["tests"]:                                    # the forms that are reverse S in the analysis that set the tier (Q-A10 prints one of them)
+            t = first["secondary"]["tests"][k]
+            rf = []
+            for f in t["forms"]:
+                if kind == "lab_stratified":
+                    if lab_detail[f"{k}:{f}"]["upper"][str(alpha)] < -v4.LOG_S:
+                        rf.append(f)
+                else:
+                    _, L, _ = row_stores[kind].L("A1", f, tuple(t["cell"]))
+                    if _positives_reach(rule, -L, v4.LOG_S, sec[k]["slot"]):
+                        rf.append(f)
+            s_["reverse_forms"] = rf
+        out[k] = s_
+    return out
+
+
 def run_v4_full(store, cfg=None, lab_indicator=None, retain_all=None, random_subset=None, gate=None, B=B_BOOT):
     """the confirmatory result with the four downgrade rows. lab_indicator / retain_all: Stores from the re-runs (cells g1 and g4); random_subset: list of the three draws' Stores
-    (cell g1 only). A row that is not supplied is recorded as not run: the outcome is then `provisional`."""
+    (cell g1 only). A row that is not supplied is recorded as not run: the outcome is then `provisional`. The brackets of the abstract sentence come from the analysis that set each
+    contrast's effective tier (`number_sources`, D033 F2)."""
     rule, c = v4.resolve_config(cfg)
     first = v4.run_v4(store, cfg, gate)
     rows = {"lab_stratified": None, "lab_indicator": None, "retain_all": None, "random_subset": None}
+    row_stores = {}
     tiers_lab, lab_detail = lab_stratified_tiers(first, store, B)
     rows["lab_stratified"] = tiers_lab
     if lab_indicator is not None:
         rows["lab_indicator"] = row_tiers(first, lab_indicator, rule)
+        row_stores["lab_indicator"] = lab_indicator
     if retain_all is not None:
         rows["retain_all"] = row_tiers(first, retain_all, rule)
+        row_stores["retain_all"] = retain_all
     if random_subset:
-        rows["random_subset"] = row_tiers(first, average_stores(random_subset), rule, cells="g1")
+        row_stores["random_subset"] = average_stores(random_subset)
+        rows["random_subset"] = row_tiers(first, row_stores["random_subset"], rule, cells="g1")
     combined = lowest(*[r for r in rows.values() if r])
-    final = v4.run_v4(store, cfg, gate, combined)
+    sources = number_sources(first, rows, row_stores, lab_detail, rule)
+    final = v4.run_v4(store, cfg, gate, combined, sources)
     final["downgrade"] = {"rows": rows, "lab_stratified_detail": lab_detail, "lowest_over_rows": combined,
                           "rows_run": [k for k, v in rows.items() if v is not None], "rows_not_run": [k for k, v in rows.items() if v is None],
                           "provisional": any(v is None for v in rows.values()), "stratum_weights": LAB_STRATUM_WEIGHT,
-                          "rule": "the lowest tier over the primary analysis and the rows is the tier of the abstract and of the states (PREREG_v4 9.8 rule 2)"}
+                          "number_sources": {k: v["kind"] for k, v in sources.items()},
+                          "rule": "the lowest tier over the primary analysis and the rows is the tier of the abstract and of the states (PREREG_v4 9.8 rule 2); the brackets of the abstract sentence are filled from the analysis that set that tier"}
     if "outcome" in final:
         final["outcome"]["provisional_downgrade_rows_incomplete"] = final["downgrade"]["provisional"]
     return final
@@ -246,10 +293,14 @@ def descriptive_entries(store, arms=("A9", "A10", "A10P", "D*"), cell=v4.G4, tes
         conds, L, d = store.L("A1", a, cell)
         n = int(L.size)
         lo, hi, r, cov = v4.PLAIN.interval(L, 0.05)
+        lo9, hi9, r9, cov9 = v4.PLAIN.interval(L, 0.05 / 9)          # D033 D3 / PREREG_v4 9.7: the tables also print the plain interval at 1 - 0.05/9 ([L(2), L(12)] at n = 13, [L(4), L(16)] at n = 19)
         ratio = np.exp(-L)                                   # S_A1 / S_comparator
         rows[a] = {"n": n, "positives": int((L > 0).sum()), "k_ratio_below_1": int((ratio < 1).sum()), "p_plain": float(gt.betabin_p(int((L > 0).sum()), n, 0.0)),
                    "median_ratio": float(np.median(ratio)), "ratio_ci": [float(np.exp(-hi)), float(np.exp(-lo))], "interval_is_range": bool(r == 0), "mean_pp": float(d.mean()),
-                   "label": f"Test {test}: descriptive, plain exact, no tier word"}
+                   "ratio_ci_95": [float(np.exp(-hi)), float(np.exp(-lo))], "ratio_ci_95_rank": int(r), "ratio_ci_95_coverage": float(cov),
+                   "ratio_ci_simultaneous": [float(np.exp(-hi9)), float(np.exp(-lo9))], "ratio_ci_simultaneous_rank": int(r9), "ratio_ci_simultaneous_coverage": float(cov9),
+                   "interval_simultaneous_is_range": bool(r9 == 0),
+                   "label": f"Test {test}: descriptive, plain exact, no tier word; the abstract sentence prints ratio_ci (the plain 95 % interval), the tables print both"}
     return rows
 
 

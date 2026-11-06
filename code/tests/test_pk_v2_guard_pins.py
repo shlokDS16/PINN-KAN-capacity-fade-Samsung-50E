@@ -21,6 +21,7 @@ def _pin_root(tmp_path, monkeypatch):
     (tmp_path / "code" / "pinnkan").mkdir(parents=True)
     shutil.copy(os.path.join(ROOT, "runs", "prereg", "subsets.json"), tmp_path / "runs" / "prereg" / "subsets.json")
     shutil.copy(os.path.join(ROOT, "runs", "prereg", "blinding_exclusions.json"), tmp_path / "runs" / "prereg" / "blinding_exclusions.json")      # C13: pinned like subsets.json
+    shutil.copy(os.path.join(ROOT, "runs", "prereg", "stats_config.json"), tmp_path / "runs" / "prereg" / "stats_config.json")                      # D033 F1: the registered statistics configuration
     (tmp_path / "code" / "pinnkan" / "symbolic_library.json").write_text(json.dumps({"max_coeffs_per_edge": 3}))
     payload["pins"] = {}
     payload["item_f_config_sha256s"] = [f"{i}" * 64 for i in range(5)]      # D026 review m4: a pinned freeze lists five item (f) configs
@@ -31,7 +32,8 @@ def _pin_root(tmp_path, monkeypatch):
 
 
 def test_pin_names_and_item_f_file_names():
-    assert set(guard.PIN_FILES) == {"subsets", "symbolic_library", "blinding_exclusions"}                       # D026 action 1: item_f and item_f_record left the pins
+    assert set(guard.PIN_FILES) == {"subsets", "symbolic_library", "blinding_exclusions", "stats_config"}      # D026 action 1: item_f and item_f_record left the pins; D033 F1: stats_config joined
+    assert guard.PIN_FILES["stats_config"] == v4.STATS_CONFIG_REL.replace(os.sep, "/")
     assert guard.ITEM_F_FILE == v4.ITEM_F_FILE and guard.ITEM_F_HASH == v4.ITEM_F_HASH
 
 
@@ -68,6 +70,7 @@ def test_build_freeze_payload_pins_the_two_files_and_refuses_when_one_is_missing
     root, _ = _pin_root(tmp_path, monkeypatch)
     shutil.copy(os.path.join(ROOT, "runs", "prereg", "samsung_splits_v2.json"), tmp_path / "runs" / "prereg" / "samsung_splits_v2.json")
     shutil.copy(os.path.join(ROOT, "runs", "prereg", "blinding_exclusions.json"), tmp_path / "runs" / "prereg" / "blinding_exclusions.json")
+    shutil.copy(os.path.join(ROOT, "runs", "prereg", "stats_config.json"), tmp_path / "runs" / "prereg" / "stats_config.json")
     p = guard.build_freeze_payload(root, [("samsung", "B")], [], prereg_file="runs/prereg/PREREG_v2.md")
     assert set(p["pins"]) == set(guard.PIN_FILES) and all(len(e["sha256"]) == 64 for e in p["pins"].values())
     assert p["pins"]["subsets"]["sha256"] == guard.sha256_file(os.path.join(root, "runs", "prereg", "subsets.json"))

@@ -71,16 +71,22 @@ def test_the_run_refuses_to_score_without_a_sign_rule_and_defaults_are_the_rulin
         with pytest.raises(v4.SignRuleNotSetError):
             v4.resolve_config(bad)
     rule, c = v4.resolve_config()
-    assert rule.kind == "betabin" and rule.rho_s0 == 0.03 and c["graph_w"] == 0.5 and c["alpha"] == 0.025 and c["e1_prime_approved"] is False
+    assert rule.kind == "betabin" and rule.rho_s0 == 0.03 and c["graph_w"] == gt.W_ALT == 0.78 and c["alpha"] == 0.025 and c["e1_prime_approved"] is True      # D033 F1: the registered configuration
     with pytest.raises(ValueError):
         v4.resolve_config({"graph_w": 1.0})                              # w = 1 only when chain K is struck
     assert v4.resolve_config({"graph_w": 1.0, "k_chain_struck": True})[1]["graph_w"] == 1.0
 
 
-def test_ties_with_the_margin_are_dropped_and_n_reduced():
+def test_ties_with_the_margin_are_not_positive_and_n_is_not_reduced():
+    """PREREG_v4 9.3 (D033 D2): ties and L_c = m are not positive; n is not reduced"""
     L = np.array([0.1] * 33 + [0.0] * 4 + [-0.1] * 3)
     pos, n, p = v4.PLAIN.test(L, 0.0)
-    assert (pos, n) == (33, 36) and p == pytest.approx(float(gt.binom_tail_table(36)[33]))
+    assert (pos, n) == (33, 40) and p == pytest.approx(float(gt.binom_tail_table(40)[33]))
+    L2 = np.array([0.1] * 30 + [0.0] * 10)                                    # the statistician's demonstration: 30 positives and 10 exact zeros
+    r = v4.SignRule("betabin", 0.03)
+    pos2, n2, p2 = r.test(L2, 0.0)
+    assert (pos2, n2) == (30, 40) and p2 == pytest.approx(float(gt.betabin_p(30, 40, 0.03))) and p2 > 0.019 and p2 <= 0.025 * (1 + gt.TOL)
+    assert r.test(np.array([0.1] * 29 + [0.0] * 11), 0.0)[:2] == (29, 40) and r.test(np.array([0.1] * 29 + [0.0] * 11), 0.0)[2] > 0.025          # one tie no longer turns 29 of 40 into a pass
 
 
 # ------------------------------------------------------------------------------------------------ primary analysis: tiers, states, titles
@@ -98,15 +104,14 @@ def test_strong_everything_gives_P_plus_K_plus_title_T1_and_the_sentence():
     assert out["most_test"]["most"] is True and out["config"]["sign_rule"] == "betabin"
 
 
-def test_graph_counts_31_then_30_and_the_weight_is_a_config_value():
+def test_graph_counts_30_at_the_registered_weight_and_31_at_the_withdrawn_w_half():
     L = np.array([0.5] * 30 + [-0.02] * 10)                                # P1: 30 above ln 1.02, all above -ln 1.10
-    s = make_store(P1g1=L, K2=0.0)                                         # K2S fails, so chain K never hands its level over: P1 stays at 0.0125
-    a = v4.run_v4(s)["primary"]
-    assert a["nodes"]["P1S"]["positives"] == 30 and a["nodes"]["P1N"]["rejected"] and not a["nodes"]["P1S"]["rejected"]
-    assert a["nodes"]["P1S"]["crit_positives"] == 31 and a["tiers"]["P1"] == "N"
-    b = v4.run_v4(s, {"graph_w": 0.78})["primary"]
-    assert b["nodes"]["P1S"]["rejected"] and b["tiers"]["P1"] == "S" and b["nodes"]["P1S"]["crit_positives"] == 30
+    s = make_store(P1g1=L, K2=0.0)                                         # K2S fails, so chain K never hands its level over
+    b = v4.run_v4(s)["primary"]                                            # D033 F1: the default is w = 0.78 (P1N at 0.0195: 30 of 40)
+    assert b["nodes"]["P1S"]["positives"] == 30 and b["nodes"]["P1S"]["rejected"] and b["tiers"]["P1"] == "S" and b["nodes"]["P1S"]["crit_positives"] == 30
     assert b["initial_levels"]["P1N"] == pytest.approx(0.025 * 0.78) and b["initial_levels"]["K1"] == pytest.approx(0.025 * 0.22)
+    a = v4.run_v4(s, {"graph_w": 0.5})["primary"]                          # the withdrawn w = 1/2 graph, kept as a config value for the record: 31 of 40
+    assert a["nodes"]["P1N"]["rejected"] and not a["nodes"]["P1S"]["rejected"] and a["tiers"]["P1"] == "N" and a["nodes"]["P1S"]["crit_positives"] == 31
 
 
 def test_P0_with_tier_N_and_the_none_sentence():
@@ -288,13 +293,13 @@ def test_most_test_and_the_e1_prime_branch():
     assert mt["test_passes"] and mt["most"] and mt["crit_positives"] == 30 and out["outcome"]["extent_clause"] == "e1"
     assert mt["median_d"] == pytest.approx(np.log(1.2) - 0.5 * np.log(1.3))
     # law share below half of the total: d < 0 everywhere -> 'most' fails; e1 unless Shlok approved e1'
-    out2 = v4.run_v4(make_store(P1g1=np.log(1.6), A9g1=np.log(1.1)))
+    out2 = v4.run_v4(make_store(P1g1=np.log(1.6), A9g1=np.log(1.1)), {"e1_prime_approved": False})
     assert out2["primary"]["tiers"]["P2"] and out2["primary"]["tiers"]["P3"] and not out2["most_test"]["most"]
     assert out2["outcome"]["extent_clause"] == "e1" and "most of the advantage came from the physics law" in out2["outcome"]["abstract_sentence"]
-    out3 = v4.run_v4(make_store(P1g1=np.log(1.6), A9g1=np.log(1.1)), {"e1_prime_approved": True})
+    out3 = v4.run_v4(make_store(P1g1=np.log(1.6), A9g1=np.log(1.1)))                  # D033 F1: e1' is approved and in force by default
     s = out3["outcome"]["abstract_sentence"]
     assert out3["outcome"]["extent_clause"] == "e1'" and "most of the advantage" not in s and "the same network without the physics law was 10.0 % worse, and the advantage was larger with 8 than with 32 cycling conditions" in s
-    out4 = v4.run_v4(make_store(P1g1=np.log(1.6), A9g1=np.log(1.1)), {"e1_prime_approved": True}, row_tiers={"most": False})
+    out4 = v4.run_v4(make_store(P1g1=np.log(1.6), A9g1=np.log(1.1)), row_tiers={"most": False})
     assert out4["outcome"]["extent_clause"] == "e1'"
 
 

@@ -133,6 +133,8 @@ def build_data(cfg, root, role, runs_dir=None):
         sc = cfg.get("synthetic", {})
         S = synth.make_synthetic(sc.get("kind", "G0"), sc.get("n_cyc_cond", 20), sc.get("n_sto_cond", 8), sc.get("reps", 2), sc.get("seed", 0))
         tr, te = synth.split_synthetic(S.cells, cfg["test"], sc.get("test_frac", 0.25), sc.get("seed", 0))
+        sr = sc.get("short_records") or {}                               # D033 F7: short-record cells (the D025 cap and the unscored-cell paths of the real data) in the synthetic invariance run
+        tr, te = synth.shorten_cells(tr, sr.get("train_n_points")), synth.shorten_cells(te, sr.get("test_n_points"))
         tr, sub = apply_subset(tr, "synthetic", cfg["test"], {}, cfg["fold"], cfg["m"], cfg["subset"], cfg["subset_draw"], ids={c.cond for c in tr if c.kind == "cycling"})
         return {"spec": SPECS["synthetic"], "train": tr, "test": te if role != "train" else None, "synth": S, "subset": sub,
                 "split": {"file": "synthetic (generated)", "note": "no outer test fold of real data exists", "subset": sub}, "manifest": []}

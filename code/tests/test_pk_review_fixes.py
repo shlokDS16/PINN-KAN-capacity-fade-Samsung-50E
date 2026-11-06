@@ -190,7 +190,7 @@ def test_m4_permute_stress_moves_every_vector_and_keeps_labels():
         if c.kind == "storage":
             assert np.array_equal(c.raw, p.raw) and p is c
         else:
-            assert np.allclose(p.efc, SPEC.efc_rate(p.raw) * p.t)                                       # design throughput follows the stress vector
+            assert np.array_equal(p.efc, c.efc)                                                         # D033 F8: the cell keeps its own throughput; only the stress vector moves
             assert not np.allclose(p.raw, c.raw)
     tr, te = synth.split_conditions(S.cells, 0.3, 4)
     assert {c.cond for c in metrics.permute_stress(te, SPEC, 1000)} == {c.cond for c in te}              # permutation inside the test set only

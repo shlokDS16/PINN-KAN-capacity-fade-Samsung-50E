@@ -360,7 +360,7 @@ def nc1_from_runs(real_runs, full_pipeline_json=None):
         p = os.path.join(d, "invariance.json")
         if os.path.exists(p):
             recs.append(_load(p))
-    out = dict(runs_checked=len(recs), passed=bool(recs and all(r["passed"] for r in recs)), max_abs_diff=float(max((r["max_abs_diff"] for r in recs), default=float("nan"))),
+    out = dict(runs_checked=len(recs), passed=bool(recs and all(r["passed"] for r in recs)), max_abs_diff=(float("nan") if (not recs or any(not np.isfinite(r["max_abs_diff"]) for r in recs)) else float(max(r["max_abs_diff"] for r in recs))),
                n_rows=int(sum(r["n_rows"] for r in recs)), gating=True)
     if full_pipeline_json:
         f = _load(full_pipeline_json)
@@ -528,6 +528,31 @@ def _physval_v4(analysis_dir, run_dirs):
     return {"status": "written", "file": "physval_11a.json", "n_runs": len(dirs)}
 
 
+def _test_c_s2(mk, strict, test_c_runs, test_c_lab_indicator_runs, s2_runs):
+    """D033 D3: the descriptive Test C (A1 against A9, A10, D* at the k_full cell, n = 13) and S2 tables (plain exact, both intervals) and the Test C sentences; rule 9.8 (3): a Test C sentence
+    goes into the abstract only if the lab-indicator row leaves the sign of that comparator's median ratio unchanged (a row that was not run keeps it out and marks the outcome provisional)"""
+    from . import stats_rows, stats_v4
+    out = {}
+    if test_c_runs:
+        sc = mk(test_c_runs)
+        rows = stats_rows.descriptive_entries(sc, test="C")
+        lab = mk(test_c_lab_indicator_runs) if test_c_lab_indicator_runs else None
+        in_abs = {}
+        if lab is not None:
+            lrows = stats_rows.descriptive_entries(lab, test="C")
+            for a in rows:
+                med_p = float(np.median(sc.L("A1", a, stats_v4.G4)[1]))
+                med_l = float(np.median(lab.L("A1", a, stats_v4.G4)[1])) if a in lrows else None
+                in_abs[a] = stats_rows.test_c_in_abstract(med_p, med_l)
+        else:
+            in_abs = {a: False for a in rows}
+        out["test_c"] = {"rows": rows, "sentences": stats_rows.test_c_sentences(rows), "in_abstract": in_abs, "row_lab_indicator_not_run": lab is None,
+                         "rule": "PREREG_v4 9.8 rule 3: the fixed D011 sentence enters the abstract only if the lab-indicator row leaves the sign of the median ratio unchanged; otherwise Limitations; always in the Results"}
+    if s2_runs:
+        out["s2"] = {"rows": stats_rows.descriptive_entries(mk(s2_runs), test="S2"), "label": "descriptive (S2), plain exact, no tier word"}
+    return out
+
+
 def write_checked_json(path, obj, where):
     """fail closed (red-team A4, N5): no generated sentence of `obj` may contain a banned claim. On a violation nothing is written to `path`; the offending paths and patterns are recorded in
     `<path>.WORDING_VIOLATION.json` (a diagnostic, itself written without the offending text) and BannedWordingError is raised."""
@@ -551,14 +576,14 @@ def main(argv=None):
     ap.add_argument("--stress-run", default=None, help="Test B run directory holding stress_functions.json (control P2)")
     ap.add_argument("--design", choices=("r2", "v3_legacy"), default="r2", help="r2 = Design R2 (grid runs, stats_v4); v3_legacy = the PREREG_v3 analysis, history only")
     ap.add_argument("--item-f-dir", default=None, help="directory of the hashed item (f) dependence file (D018); required for --design r2")
-    ap.add_argument("--row", action="append", default=None, help="NAME=dir1,dir2,... for the downgrade-row re-runs: lab_indicator, retain_all, random_subset (draws separated by ';')")
+    ap.add_argument("--row", action="append", default=None, help="NAME=dir1,dir2,... for the downgrade-row re-runs: lab_indicator, retain_all, random_subset (draws separated by ';'), lab_indicator_C (the lab-indicator re-run of Test C)")
     ap.add_argument("--item-f-sha256", default=None, help="the item (f) file hash pinned in git / FROZEN")
     ap.add_argument("--ledger-root", default=None, help="project root whose runs/prereg/SCORED.jsonl is checked: every Samsung row must carry the same item_f_sha256 (D026)")
     ap.add_argument("--audit-dir", default=None, help="NOT USED in the confirmatory run (D022b: the extraction audit is struck; passing it raises AuditGuardError). Without it the descriptive stability table is printed, no edge-level licence wording")
     ap.add_argument("--audit-thresholds-pin", default=None, help="sha256 of extraction_audit.json (mandatory with --audit-dir)")
     ap.add_argument("--calibration-sha256", default=None, help="sha256 of calibration.json (mandatory with --audit-dir)")
     ap.add_argument("--lenient", action="store_true", help="development only: skip the completeness and design checks of Store.from_runs / check_complete")
-    ap.add_argument("--sign-rule", default=None, help="JSON of the statistics config, e.g. '{\"graph_w\": 0.78}' (sign_rule, rho_s0, graph_w, alpha, e1_prime_approved)")
+    ap.add_argument("--sign-rule", default=None, help="optional JSON override of the statistics config (sign_rule, rho_s0, graph_w, alpha, e1_prime_approved); the defaults are the registered values (w 0.78, clause e1-prime on; runs/prereg/stats_config.json) and, once FROZEN exists, any differing value is refused")
     ap.add_argument("--physval", action="store_true", help="also write physval_11a.json (PREREG 11a items 1, 2, 4, 5): from the Test B fold runs (v3_legacy) or the m = 32 grid runs (r2), through the wording check")
     a = ap.parse_args(argv)
     runs = {}
@@ -571,6 +596,7 @@ def main(argv=None):
             n_, v_ = item.split("=", 1)
             rr[n_] = [x.split(",") for x in v_.split(";")] if n_ == "random_subset" else v_.split(",")
         run_stats_v4(a.analysis_dir, runs["B"], json.loads(a.sign_rule) if a.sign_rule else None, item_f_dir=a.item_f_dir, row_runs=rr, h7_run=a.h7_run,
+                     test_c_runs=runs.get("C"), test_c_lab_indicator_runs=rr.get("lab_indicator_C"), s2_runs=runs.get("S2"),
                      item_f_sha256=a.item_f_sha256, ledger_root=a.ledger_root, strict=not a.lenient, audit_dir=a.audit_dir, audit_thresholds_pin=a.audit_thresholds_pin, calibration_sha256=a.calibration_sha256,
                      physval=a.physval)
         return
@@ -578,13 +604,25 @@ def main(argv=None):
 
 
 # --------------------------------------------------------------------------------------------------- Design R2 (PREREG_v4): see stats_v4.py
-def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, row_runs=None, h7_run=None, item_f_sha256=None, strict=True, n_expected=40, folds=range(5), audit_dir=None, audit_thresholds_pin=None, calibration_sha256=None, frozen_commit=None, licences=False, ledger_root=None, physval=False):
+def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, row_runs=None, h7_run=None, item_f_sha256=None, strict=True, n_expected=None, folds=range(5), audit_dir=None, audit_thresholds_pin=None, calibration_sha256=None, frozen_commit=None, licences=False, ledger_root=None, physval=False,
+                 root=None, test_c_runs=None, test_c_lab_indicator_runs=None, s2_runs=None):
     """Design R2 statistics from grid runs, through the downgrade rows (stats_rows.run_v4_full). The item (f) dependence file must exist, match its hash (and `item_f_sha256` if given) and
     pre-date every outer score file (D018 2.3 (ii)); otherwise ItemFError. strict (default): every run must say design R2 and the grid must be complete (folds, cells, n, arms, selectors,
     both A10 forms; Store.check_complete). `row_runs`: {'lab_indicator': [dirs], 'retain_all': [dirs], 'random_subset': [[dirs of draw 0], [draw 1], [draw 2]]} (the re-runs of the
     rows (ii)-(iv)); a row that is not supplied is recorded as not run and the outcome is marked provisional. Gate G: NC-1 from the runs' invariance.json and PC-1 from the G0 run
-    `h7_run`; an unevaluated control is listed and also makes the outcome provisional."""
-    from . import guard, stats_rows, stats_v4
+    `h7_run`; an unevaluated control is listed and also makes the outcome provisional.
+    D033: (F1) once FROZEN exists in `root` (default: the project root) the configuration is the pinned runs/prereg/stats_config.json and a differing `cfg` / `--sign-rule` is refused
+    (stats_v4.effective_config); the config and its hash are recorded in contrasts_v4_B.json. (D5) `n_expected` defaults to the designed 40 minus n_conditions_dropped of the pinned
+    blinding_exclusions.json; once FROZEN exists a different explicit value is refused. (D3) `test_c_runs`, `test_c_lab_indicator_runs` and `s2_runs` (grid-free runs of Test C and S2, k_full cell)
+    add the descriptive Test C / S2 tables with both intervals and the fixed Test C sentences (rule 9.8 (3))."""
+    from . import blinding, guard, stats_rows, stats_v4
+    root = root or guard._DEFAULT_ROOT
+    cfg, cfg_pin = stats_v4.effective_config(cfg, root)                     # D033 F1: first, before anything is read
+    n_derived = blinding.expected_n(root, "B")
+    if n_expected is None:
+        n_expected = n_derived
+    elif guard.is_frozen(root) and n_expected != n_derived:
+        raise stats_v4.StatsConfigPinError(f"n_expected = {n_expected} differs from the {n_derived} derived from the pinned blinding_exclusions.json (D033 D5)")
     if item_f_dir is None:
         raise stats_v4.ItemFError("item_f_dir is required: the statistics step is blocked without the hashed item (f) dependence file")
     if ledger_root is None and guard.is_frozen():                          # D026: once a FROZEN exists in this tree the ledger check cannot be skipped by omission
@@ -604,6 +642,15 @@ def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, r
     prov = {"rows_not_run": out["downgrade"]["rows_not_run"], "gate_not_evaluated": list(gate_.get("not_evaluated", [])) if isinstance(gate_, dict) else []}
     prov["provisional"] = bool(prov["rows_not_run"] or prov["gate_not_evaluated"])
     out["status"] = prov
+    out["config_pin"] = {**cfg_pin, "config_sha256": out["config_sha256"], "n_expected": n_expected, "n_expected_source": "40 - n_conditions_dropped['B'] of runs/prereg/blinding_exclusions.json"}
+    tc = _test_c_s2(mk, strict, test_c_runs, test_c_lab_indicator_runs, s2_runs)
+    if tc:
+        out.update(tc)
+        if "outcome" in out and "test_c" in tc:
+            out["outcome"]["test_c_sentences_for_abstract"] = {a: s_ for a, s_ in tc["test_c"].get("sentences", {}).items() if tc["test_c"]["in_abstract"].get(a)}
+        if "test_c" in tc and tc["test_c"]["row_lab_indicator_not_run"]:
+            prov["provisional"] = True
+            prov["test_c_lab_indicator_row_not_run"] = True
     if "outcome" in out:
         out["outcome"]["provisional"] = prov["provisional"]
     out["item_f"] = item_f

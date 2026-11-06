@@ -7,6 +7,7 @@ NC-2 (interpretive, not gating) is computed in stats_step.nc2 from a `permute_st
 Seed rule for every Monte Carlo step: SeedSequence([20261105, crc32(label)]) (`mc_rng`)."""
 import copy
 import json
+import math
 import os
 import zlib
 
@@ -73,15 +74,24 @@ def check_invariance(predict_fn, cells, rule, spec, oracle=False, predict_rule=N
         return dict(passed=False, max_abs_diff=float("nan"), n_rows=0, forecast_sets_equal=False)
     a = base_preds if (base_preds is not None and predict_rule is None) else predict_fn([p.win for p in p0])
     b = predict_fn([p.win for p in p1])
-    diffs = [float(np.max(np.abs(np.asarray(a[k]) - np.asarray(b[k])))) if len(a[k]) else 0.0 for k in a]
+    # D033 F6: a non-finite prediction (either run) or difference at ANY position fails the check (Python `max` ignores a NaN that is not first, so the finiteness is tested explicitly)
+    bad, diffs = False, []
+    for k in a:
+        ak, bk = np.asarray(a[k], float), np.asarray(b[k], float)
+        if ak.shape != bk.shape or not (np.isfinite(ak).all() and np.isfinite(bk).all()):
+            bad = True
+            continue
+        diffs.append(float(np.max(np.abs(ak - bk))) if len(ak) else 0.0)
     n = int(sum(len(a[k]) for k in a))
-    mx = max(diffs) if diffs else 0.0
-    return dict(passed=bool(mx == 0.0), max_abs_diff=float(mx), n_rows=n, forecast_sets_equal=True)
+    finite = not bad and all(math.isfinite(d) for d in diffs)
+    mx = (max(diffs) if diffs else 0.0) if finite else float("nan")
+    return dict(passed=bool(finite and mx == 0.0), max_abs_diff=float(mx), n_rows=n, forecast_sets_equal=True, non_finite=bool(not finite))
 
 
 def summarise(records):
     """records: {'arm|seed': check dict} -> invariance.json body"""
-    mx = max((r["max_abs_diff"] for r in records.values()), default=0.0)
+    vals = [r["max_abs_diff"] for r in records.values()]
+    mx = float("nan") if any(not math.isfinite(v) for v in vals) else max(vals, default=0.0)          # D033 F6: a NaN anywhere is reported as NaN, never dropped by max()
     return dict(passed=bool(all(r["passed"] for r in records.values())), max_abs_diff=float(mx), n_rows=int(sum(r["n_rows"] for r in records.values())), tolerance=0.0,
                 per_arm_seed=records, scramble="post-window retention replaced by garbage (NEGCONTROL_RULING section 3), same fitted arms and seeds, predict stage")
 
@@ -96,11 +106,14 @@ def compare_runs(dir_a, dir_b, outer_phase=None):
         oa, ob = pa.phase.astype(str).str.startswith("outer_test"), pb.phase.astype(str).str.startswith("outer_test")
     else:                                                  # one grid cell: scrambled after the window of that k, so only that k's outer rows must agree
         oa, ob = pa.phase.astype(str) == f"outer_test_k{outer_phase}", pb.phase.astype(str) == f"outer_test_k{outer_phase}"      # grid runs: outer_test_k0, outer_test_k2, outer_test_kfull
-    mx = float(np.max(np.abs(pa[oa].pred_retention.values - pb[ob].pred_retention.values))) if same_keys else float("nan")
-    # the inner OOF predictions use only training labels: also identical
-    mi = float(np.max(np.abs(pa[pa.phase == "inner_oof"].pred_retention.values - pb[pb.phase == "inner_oof"].pred_retention.values))) if same_keys else float("nan")
+    with np.errstate(invalid="ignore"):                    # inf - inf = nan is the intended failing value (D033 F6)
+        mx = float(np.max(np.abs(pa[oa].pred_retention.values - pb[ob].pred_retention.values))) if same_keys else float("nan")
+        # the inner OOF predictions use only training labels: also identical
+        mi = float(np.max(np.abs(pa[pa.phase == "inner_oof"].pred_retention.values - pb[pb.phase == "inner_oof"].pred_retention.values))) if same_keys else float("nan")
+    # D033 F6: any non-finite prediction in either run fails (NaN in both runs gives a NaN difference, inf in both gives inf - inf = NaN: both fail below; the count makes the cause visible)
+    n_nonfinite = int((~np.isfinite(pa.pred_retention.values.astype(float))).sum() + (~np.isfinite(pb.pred_retention.values.astype(float))).sum())
     same = {}
     for f in ("tuning_done.json", "margins_inputs.json"):
         same[f] = json.load(open(os.path.join(dir_a, f))) == json.load(open(os.path.join(dir_b, f)))
-    return dict(passed=bool(same_keys and mx == 0.0 and mi == 0.0 and all(same.values())), same_row_keys=same_keys, max_abs_diff_outer=mx, max_abs_diff_inner_oof=mi,
-                n_outer_rows=int(oa.sum()), identical_records=same)
+    return dict(passed=bool(same_keys and n_nonfinite == 0 and mx == 0.0 and mi == 0.0 and all(same.values())), same_row_keys=same_keys, max_abs_diff_outer=mx, max_abs_diff_inner_oof=mi,
+                n_outer_rows=int(oa.sum()), identical_records=same, n_non_finite_predictions=n_nonfinite)

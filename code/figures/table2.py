@@ -4,8 +4,8 @@ Part A: the estimated contrasts of A1 against D*, A9, AG, A2, A10 and A10P at g1
 median error ratio with its simultaneous exact interval, tier where the statistics step assigned one).
 Part B: controls (NC-1, NC-2, PC-1 to PC-3) from controls.json and the Gate G record; Q-T from the secondary family; the outcome-table state and title reached.
 Inputs: --analysis (contrasts_v4_B.json, controls.json). READ-ONLY: every number, tier and sentence is read from those files; only the arm-definition strings are typed.
-NOT AVAILABLE (gaps): the NC-2 row and the PC-2 / PC-3 verdicts are not written by the statistics step on the Design R2 path (printed as "not evaluated"); the candidates
-(A11, A12, A4, A5) against A1 individually are not in the estimated tables.
+The statistics step writes NC-2, PC-2 and PC-3 (controls.json), the Q-T median interval (secondary.tests.QT_g1.median_interval) and the candidates against A1 at g4
+(candidates_vs_a1.rows; descriptive, unadjusted interval, no tier); a record that a run did not produce is printed as "not evaluated".
 """
 import csv
 import sys
@@ -65,6 +65,19 @@ def main():
             t = pdt.tier_text(pdt.tier_read(S, comp, cell))
             L.append(f"{comp if nm == 'g1' else ''} & {what if nm == 'g1' else ''} & {nm} & {d} & {r} & {t} \\\\")
             rows.append([comp, what.replace("$", "").replace("\\", ""), nm, d.replace("$", ""), r.replace("$", "").replace("\\dagger", "+"), t])
+    cr = (S.get("candidates_vs_a1") or {}).get("rows", {})
+    if cr:
+        L.append("\\midrule")
+        L.append("\\multicolumn{6}{l}{\\emph{Candidates against A1 at g4 (descriptive, unadjusted 95\\% interval, no tier)}} \\\\")
+    for cand in ("A11", "A12", "A4", "A5"):
+        if cand not in cr:
+            continue
+        e = cr[cand]
+        ci = e.get("mean_pp_ci")
+        d = f"{mn(e['mean_pp'])} [{mn(ci[0])}, {mn(ci[1])}]" if ci else mn(e["mean_pp"])
+        r = f"{np.exp(e['median_L']):.2f} [{np.exp(e['median_ci'][0]):.2f}, {np.exp(e['median_ci'][1]):.2f}]" + ("$^{\\dagger}$" if e.get("interval_is_range") else "")
+        L.append(f"{cand} & candidate learner or additive law & g4 & {d} & {r} &  \\\\")
+        rows.append([cand, "candidate (descriptive, unadjusted interval)", "g4", d.replace("$", ""), r.replace("$", "").replace("\\dagger", "+"), ""])
     L += ["\\bottomrule", "\\end{tabular}", "\\par\\bigskip",
           "\\begin{tabular}{>{\\raggedright\\arraybackslash}p{4.4cm} >{\\raggedright\\arraybackslash}p{5.6cm} >{\\raggedright\\arraybackslash}p{4.6cm}}", "\\toprule",
           "\\multicolumn{3}{l}{\\textbf{B. Controls, Q-T and the outcome reached}} \\\\", "\\midrule", "Item & Record & Result \\\\", "\\midrule"]
@@ -73,16 +86,19 @@ def main():
     nc1, nc2 = neg.get("nc1"), neg.get("nc2")
     B = []
     B.append(("NC-1 (gate G)", (f"label invariance, max $|\\Delta\\hat y|$ = {nc1['max_abs_diff']:.1e} over {nc1['n_rows']} rows" if nc1 else "no invariance.json"), ok(nc1["passed"]) if nc1 else "not evaluated"))
-    B.append(("NC-2", (f"stress vectors permuted, {nc2['k_positive']}/{nc2['n']} positive" if nc2 else "not produced on the Design R2 path"), ok(nc2["passed"]) if nc2 else "not evaluated"))
+    B.append(("NC-2", (f"stress vectors permuted (g4), {nc2['k_positive']}/{nc2['n']} positive, needs {nc2['crit_positives']}, median ratio {np.exp(nc2['median_L']):.2f}" if nc2 else "no permute_stress runs given"), ok(nc2["passed"]) if nc2 else "not evaluated"))
     B.append(("PC-1 (gate G)", "G0 pipeline check, nRMSE $\\le 0.15$", ok(pos.get("P1_G0_nrmse_leq_0p15"))))
     rc = gate.get("reported_checks", {})
-    B.append(("PC-2", "calendar rate increases with temperature", ok(rc.get("PC-2_calendar_rate_monotone_in_T"))))
-    B.append(("PC-3", "A1 beats persistence at g4", ok(rc.get("PC-3_A1_beats_persistence"))))
+    pc2, pc3 = pos.get("PC2_detail") or {}, pos.get("PC3_detail") or {}
+    B.append(("PC-2", "calendar rate increases with temperature" + (f", {len(pc2['soc_evaluated'])} SOC levels, {pc2['n_members']} members" if pc2.get("soc_evaluated") else ""), ok(rc.get("PC-2_calendar_rate_monotone_in_T"))))
+    B.append(("PC-3", "A1 beats persistence at g4" + (f", {pc3['positives']}/{pc3['n']} positive" if pc3.get("positives") is not None else ""), ok(rc.get("PC-3_A1_beats_persistence"))))
     B.append(("Gate G", "; ".join(gate.get("reasons", [])) or "not tripped" + (f"; not evaluated: {', '.join(gate['not_evaluated'])}" if gate.get("not_evaluated") else ""), "tripped" if gate.get("tripped") else "open"))
     qt = S["secondary"]["tests"].get("QT_g1")
     mv = S["mean_vs_median"]["contrasts"].get("QT_g1")
     if qt:
-        B.append(("Q-T (A13 against A1, g1)", S.get("qualifier_sentences", {}).get("QT_g1", "") + (f" mean {mn(mv['mean_pp'])} pp" if mv else ""), "tier " + pdt.tier_text(qt["tier"])))
+        mi = qt.get("median_interval")
+        iv = f"; median ratio {np.exp(mi['median_L']):.2f} [{np.exp(mi['median_ci'][0]):.2f}, {np.exp(mi['median_ci'][1]):.2f}] (unadjusted 95 % interval)" if mi else ""
+        B.append(("Q-T (A13 against A1, g1)", S.get("qualifier_sentences", {}).get("QT_g1", "") + iv + (f"; mean {mn(mv['mean_pp'])} pp" if mv else ""), "tier " + pdt.tier_text(qt["tier"])))
     oc = S.get("outcome", {})
     if oc and not oc.get("gate_G"):
         B.append(("Outcome table", f"states {oc['P']} / {oc['K']}, extent {oc['extent_clause']}, title {oc['title_id']}: {oc['title']}" + (" (provisional: rows or controls not run)" if oc.get("provisional") else ""), f"M1 {oc['M1']}, M2 {oc['M2']}, M3 {oc['M3']}"))

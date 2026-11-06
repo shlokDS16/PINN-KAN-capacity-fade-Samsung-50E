@@ -495,6 +495,7 @@ def _run(cfg_in, root=None, runs_dir=None):
     cond_scores_out, per_arm, cell_scores_out = {kl: {} for kl in KC}, {kl: {} for kl in KC}, {kl: {} for kl in KC}
     seed_scores_out = {kl: {} for kl in KC}            # per-seed condition scores (mean over seeds of the per-seed condition RMSE): K1 / K2 and the descriptive row
     fitted, inv_records, law_records = {}, {}, []
+    law_forms, law_forms_errors = [], []          # G4 (STATS_GAPS_REPORT.md): closed forms, coefficient counts, BIC, partial dependences, log-rate on the fixed Latin hypercube; additive, never read by a test
     inv_calls, seed0_arms = [], {}
     for a in arms:
         ks_a = [kl for kl in KC if not (kl == "0" and a in ("R1", "R2"))]            # R1 and R2 need a window check-up (k >= 1): k = 0 is its own reference
@@ -525,6 +526,11 @@ def _run(cfg_in, root=None, runs_dir=None):
                 from . import extraction_audit as _xa
                 akey = _xa.arm_key(a, tuned[a]["best_hp"])                                  # unknown arm or missing h is an error (D022a m3)
                 law_records.append(_xa.law_record(akey, cfg["fold"], sd_, arm.report, spec, arm.model.law.cyc, arm.parent_cyc, arm.s_cyc_train))
+                try:
+                    law_forms.append(emit.law_extras(akey, cfg["fold"], sd_, arm, spec, train))
+                    law_forms_s_train = arm.s_cyc_train
+                except Exception as e_:  # noqa: BLE001  (a secondary artefact must not destroy a scored run; recorded, not hidden)
+                    law_forms_errors.append(f"{akey} seed {sd_}: {type(e_).__name__}: {e_}")
             inversion.LOG.clear()                                                          # the invariance re-predictions are not part of the diagnostics
             if sd_ == cfg["seeds"][0] and arm is not None:
                 seed0_arms[a] = arm
@@ -576,6 +582,14 @@ def _run(cfg_in, root=None, runs_dir=None):
         _json(os.path.join(run_dir, f"condition_scores_seed{suf}.json"), seed_scores_out[kl])      # per-seed endpoint: K1 / K2 and the descriptive row (D020 C1 item 4, 5)
         if kl != primary:
             _json(os.path.join(run_dir, f"condition_scores{suf}.json"), cond_scores_out[kl])
+    if law_forms or law_forms_errors:
+        try:
+            if law_forms_errors:
+                raise RuntimeError("; ".join(law_forms_errors))
+            _json(os.path.join(run_dir, "extracted_law_forms.json"), {"m": 32 if cfg["m"] is None else int(cfg["m"]), "fold": cfg["fold"], **emit.law_forms_header(spec, law_forms_s_train), "laws": law_forms})
+        except Exception as e_:  # noqa: BLE001
+            rec.log(f"EMIT FAILED (extracted_law_forms.json): {type(e_).__name__}: {e_}")
+            _json(os.path.join(run_dir, "emit_errors_law_forms.json"), {"error": f"{type(e_).__name__}: {e_}"})
     if law_records:
         from . import extraction_audit as _xa
         _json(os.path.join(run_dir, "extracted_laws.json"), {"m": 32 if cfg["m"] is None else int(cfg["m"]), "fold": cfg["fold"], "laws": law_records,
@@ -693,6 +707,23 @@ def _emit_artifacts(run_dir, rec, spec, train, prep, fitted, backbone, window_pr
     if prep and one:
         emit.superposition(one, prep, spec, backbone).to_csv(os.path.join(run_dir, "superposition.csv"), index=False)
     rec.log("emitted window.csv, stress_functions.json, residual_map.npz" + (", superposition.csv" if prep and one else ""))
+    _emit_gap_inputs(run_dir, rec, spec, train, prep, fitted)
+
+
+def _emit_gap_inputs(run_dir, rec, spec, train, prep, fitted):
+    """residual_cells.npz (G6: raw |R| at the scored cycling cells) and storage_hull.json (G3, PC-2); each in its own guard, additive, never read by a test or a tuning step"""
+    try:
+        rc = emit.residual_cells(fitted["A1"], spec, prep) if prep else None
+        if rc is not None:
+            np.savez(os.path.join(run_dir, "residual_cells.npz"), **rc)
+    except Exception as e_:  # noqa: BLE001
+        rec.log(f"EMIT FAILED (residual_cells.npz): {type(e_).__name__}: {e_}")
+        _json(os.path.join(run_dir, "emit_errors_residual_cells.json"), {"error": f"{type(e_).__name__}: {e_}"})
+    try:
+        _json(os.path.join(run_dir, "storage_hull.json"), emit.storage_hull(train))
+    except Exception as e_:  # noqa: BLE001
+        rec.log(f"EMIT FAILED (storage_hull.json): {type(e_).__name__}: {e_}")
+        _json(os.path.join(run_dir, "emit_errors_storage_hull.json"), {"error": f"{type(e_).__name__}: {e_}"})
 
 
 def write_reference(run_dir, train, rule, blinded, cfg, rec):

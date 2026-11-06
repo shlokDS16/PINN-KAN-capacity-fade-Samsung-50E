@@ -6,8 +6,8 @@ c  calendar share of the predicted fade of cycled cells (A1 filled, A2 open), on
    impossible split is the physval_11a item 4 count
 d  Arrhenius check of the calendar KAN: ln rate against 1000/T at four SOC, envelope of the run-writer stress_functions.json (merged over the grid runs); the PC-2 verdict is
    read from controls.json (printed only when the statistics step evaluated it)
-e  Q-T: training with against without the storage cells (A1 against A13 at g1): the mean paired pp difference with its BCa interval, the tier and the fixed sentence of
-   the statistics step (secondary.tests.QT_g1, mean_vs_median.contrasts.QT_g1, qualifier_sentences.QT_g1)
+e  Q-T: training with against without the storage cells (A1 against A13 at g1): the median error reduction with the interval of the statistics step
+   (secondary.tests.QT_g1.median_interval), the mean paired pp difference (BCa), the tier and the fixed sentence (qualifier_sentences.QT_g1)
 Inputs: --run-s2, --runs (grid runs), --stats, --physval, --controls. READ-ONLY.
 """
 import sys
@@ -43,7 +43,6 @@ def main():
     sc = pdt.load_scores(s2)
     ST, PV, CT = pdt.load_stats(a.stats), ps.load_json(ps.need(a.physval)), ps.load_json(ps.need(a.controls))
     sup = pd.concat([pd.read_csv(r / "superposition.csv") for r in runs], ignore_index=True)
-    SF = [ps.load_json(r / "stress_functions.json") for r in runs]
 
     fig = plt.figure(figsize=(ps.W_FULL, 11.6 * ps.CM))
     gs = fig.add_gridspec(2, 3, left=0.075, right=0.985, top=0.935, bottom=0.125, hspace=0.50, wspace=0.40)
@@ -102,22 +101,20 @@ def main():
     C.set_xlabel("Cycling temperature (°C)")
     C.set_ylabel("Calendar share of fade (%)")
     arms4 = PV["item4"].get("arms", {})
-    if arms4:
-        C.text(0.98, 0.03, "calendar term > observed fade:\n" + ", ".join(f"{k} {v['n_calendar_exceeds_observed_total']} cells" for k, v in sorted(arms4.items())), transform=C.transAxes,
-               ha="right", va="bottom", fontsize=7.5)
+    sub = ("above observed fade:\n" +", ".join(f"{k} {v['n_calendar_exceeds_observed_total']}" for k, v in sorted(arms4.items())) + " cells") if arms4 else ""
     C.legend(loc="upper left", fontsize=7.5, handletextpad=0.1, borderaxespad=0.1, labelspacing=0.25)
     C.set_ylim(0, 135)
     C.set_title("Calendar share, cycled cells", fontsize=8.5, pad=4)
+    if sub:
+        C.text(0.5, 0.20, sub, transform=C.transAxes, ha="center", va="center", fontsize=7, color="#333333", linespacing=1.15)
 
     D = ax[3]
-    arr = SF[0]["arrhenius"]
-    Tk = np.array(arr["T_C"]) + 273.15
-    xk = 1000 / Tk
+    arr = PV["arrhenius_ln_rate"]
+    xk = np.array(arr["inv_T_1000_per_K"])
     cols, mks = [ps.BLUE, ps.GREEN, ps.ORANGE, ps.VERM], ["o", "s", "^", "D"]
-    bands = pdt.merge_bands([s["arrhenius"]["ln_rate"] for s in SF])
-    for i, soc in enumerate(arr["soc"]):
-        D.fill_between(xk, bands["lo"][i], bands["hi"][i], color=cols[i], alpha=0.25, lw=0)
-        D.plot(xk, bands["mean"][i], color=cols[i], marker=mks[i], ms=4, lw=1.2, label=f"SOC {soc:g} %")
+    for i, soc in enumerate(arr["soc_selected"]):
+        D.fill_between(xk, arr["ln_rate"]["lo"][i], arr["ln_rate"]["hi"][i], color=cols[i], alpha=0.25, lw=0)
+        D.plot(xk, arr["ln_rate"]["mean"][i], color=cols[i], marker=mks[i], ms=4, lw=1.2, label=f"SOC {soc:g} %")
     D.set_xlabel("1000 / T (K$^{-1}$)")
     D.set_ylabel("ln rate (pp / 500 d)")
     sec = D.secondary_xaxis("top", functions=(lambda x: 1000 / x - 273.15, lambda t: 1000 / (t + 273.15)))
@@ -130,20 +127,22 @@ def main():
     E = ax[4]
     qt = ST["secondary"]["tests"].get("QT_g1")
     mv = ST["mean_vs_median"]["contrasts"].get("QT_g1")
-    if qt and mv:
-        lo_, hi_ = mv["mean_pp_ci"] if mv.get("mean_pp_ci") else (mv["mean_pp"], mv["mean_pp"])
+    mi = (qt or {}).get("median_interval")
+    if qt and mi:
+        lo_, hi_ = mi["rel_reduction_ci_pct"]
         E.plot([lo_, hi_], [0, 0], color=ps.BLUE, lw=1.6, solid_capstyle="butt")
-        E.plot([mv["mean_pp"]], [0], "o", color=ps.BLUE, ms=5.5)
-        E.axvline(0, color="#444444", lw=0.7)
+        E.plot([mi["rel_reduction_pct"]], [0], "o", color=ps.BLUE, ms=5.5, mfc="white" if mi.get("interval_is_range") else ps.BLUE)
+        E.axvline(0, ymax=0.55, color="#444444", lw=0.7)
         E.set_ylim(-1, 1.6)
         E.set_yticks([])
         E.spines["left"].set_visible(False)
-        E.set_xlabel("Without $-$ with storage cells, mean paired\ndifference (pp) [95 % BCa]")
+        E.set_xlabel("Error reduction by training with the\nstorage cells, median (%) [95 % interval]")
         E.set_title(f"Q-T at g1: tier {pdt.tier_text(qt['tier'])}", fontsize=8.5, pad=4)
-        E.text(0.0, 0.86, f"median error reduction {pdt.pct_from_log(mv['median_L']):.1f} %", transform=E.transAxes, fontsize=7.5, va="top")
+        if mv and mv.get("mean_pp_ci"):
+            E.text(0.0, 0.95, textwrap.fill(f"mean paired difference {mv['mean_pp']:.2f} pp [{mv['mean_pp_ci'][0]:.2f}, {mv['mean_pp_ci'][1]:.2f}] (BCa)", 44), transform=E.transAxes, fontsize=6.8, va="top")
         sent = ST.get("qualifier_sentences", {}).get("QT_g1")
         if sent:
-            E.text(0.0, 0.70, textwrap.fill(sent, 42), transform=E.transAxes, fontsize=6.8, va="top", color="#333333")
+            E.text(0.0, 0.70, textwrap.fill(sent, 44), transform=E.transAxes, fontsize=6.5, va="top", color="#333333")
     else:
         E.axis("off")
     ax[5].axis("off")

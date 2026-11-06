@@ -735,3 +735,20 @@ Row format:
   figure scripts now and repeat FB-8 to FB-10 (about 1.5 h CPU, no gain to the evidence).
 - **Evidence:** the audit file; the writer report; PREREG_v4 rev. 19 change-log row.
 - **Proposer / judge:** lead / gate auditor re-check.
+
+### D038 Statistics-step gaps G1-G8 built before the freeze; registered controls wired into Design R2 (lead; statistician SIGNED; 2026-11-06)
+- **Decision:** the figure alignment of C3 showed that `stats_step.run_stats_v4` (the Design R2 entry point) never computed NC-2,
+  PC-2 or PC-3 (section 10) and lacked descriptive inputs promised by sections 9.10, 11a and 14 (Table 1 arm table, R_LOO/R_WARP,
+  extracted-law forms and stability metric, 11a curves, pooled residual map, Q-T interval, candidates against A1). All are built
+  (`code/pinnkan/stats_gaps.py`, `stats_step.py`, `emit.py`, `physval.py`, `run.py`; report `code/pinnkan/STATS_GAPS_REPORT.md`).
+  NC-2 and PC-3 use the P-chain design-effect sign test of 9.3 at 0.025 (30 of 40), outside the graph, no alpha added; PC-2 is the
+  every-member monotonicity rule. A registered control that fails to compute stops a strict statistics run before the contrasts;
+  one that cannot be evaluated marks the outcome provisional. physval (11a) is on by default for R2. Gate G stays NC-1 + PC-1.
+  PREREG_v4 rev. 20 adds the statistician's operational rules T1 (PC-2), T2 (PC-3) and T3 (9.3 and 9.11 rows) verbatim. The figure
+  scripts read only these outputs and compute no statistic (`code/tests/test_figures_read_only.py`). This replaces D037's
+  deferral of the figure rows; D037's other content stands.
+- **Evidence:** `research/audits/SIGN_statistician_gaps.md` (NOT SIGNED with F1-F6, then SIGNED); `code/tests/head_comparison.py
+  --base 052eefd` (pre-existing outputs identical after stripping the new keys); 39 tests in `test_pk_stats_gaps_g1_g8.py`.
+- **Consequence:** code/ moves off 92db4cb, so FB-8 to FB-10 and the suite are repeated at the new candidate commit; the
+  92db4cb outputs are kept under `runs/freeze_runs/at_92db4cb/`.
+- **Proposer / validator:** coder (gaps) / statistician; lead (procedure).

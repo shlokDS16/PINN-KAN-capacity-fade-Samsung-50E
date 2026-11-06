@@ -53,7 +53,7 @@ ARMS = {  # id: (display name, colour, marker, linestyle)
     "A14": ("PINN-KAN, storage cells only", BLUE, "o", ":"),
     "A10P": ("Semi-empirical, as published", ORANGE, "*", "--"),
     "A15": ("Extracted closed-form law A15", INDIGO, "h", "-"),
-    "G15": ("Extracted additive law G15", WINE, "d", "--"),
+    "G15": ("Extracted additive law G15", "#117733", "d", "--"),
     "D*": ("Best data-driven learner D*", TEAL, "p", "-"),
     "AG": ("Best additive GAM AG", PURPLE, "v", "--"),
     "R1": ("Persistence", "#B0B0B0", "_", "-"),

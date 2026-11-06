@@ -10,8 +10,9 @@ What is generated, and by what:
   * the ANALYSIS files are produced by the real statistics-step code (`pinnkan.stats_v4.Store.from_runs`, `stats_rows.run_v4_full`, `stats_step.build_controls`,
     `stats_step._test_c_s2`, `stats_v4.edge_level_wording`, `physval.physval_11a`) run on these synthetic directories, so the figure scripts are exercised against the
     real output formats. This module computes no interval, test or tier itself.
-  * `analysis/arm_table.json` (Table 1) is NOT produced by the statistics step yet (ALIGN_V4_REPORT gap G1): the demo writes a SYNTHETIC stand-in so that the
-    table code path runs; its `producer` field says so.
+  * the inputs of the former gaps G1-G8 (arm_table, reference, NC-2 / PC-2 / PC-3, law summary, merged residual map, Q-T interval, candidates, figure inputs of physval)
+    are produced by `stats_step._stats_gaps_v4` and `physval_11a` from synthetic run files (incl. extracted_law_forms.json, residual_cells.npz, storage_hull.json) and
+    synthetic permute_stress runs (`nc2/`); no stand-in remains.
 
 Run:  .venv\\Scripts\\python.exe -P code\\figures\\make_demo_runs.py [--out DIR]     (default runs/figdemo_SYNTHETIC; CPU only, about 1 minute)
 """
@@ -274,6 +275,67 @@ def law_records(fold, rng, thr):
             recs.append(dict(arm=arm, fold=fold, seed=sd, h=2 if arm != "G15" else 1, outer_families=[], inputs=inputs))
     return recs
 
+def residual_cells_file(test, rng, n_members=5, n_t=6):
+    """residual_cells.npz in the format of pinnkan.emit.residual_cells: |R| of every member at the stress vector of every scored cycling cell (invented)"""
+    ids, conds, T, soc, cch = [], [], [], [], []
+    for e in test:
+        c = ps.parse_cond(e["key"])
+        for ce in e["cells"]:
+            ids.append(ce["cell_id"])
+            conds.append(e["key"])
+            T.append(c["T"])
+            soc.append(c["soc_mid"])
+            cch.append(c["c_ch"])
+    T, soc, cch = np.array(T), np.array(soc), np.array(cch)
+    base = 0.04 + 0.05 * np.abs(T - 30) / 20 * (0.5 + soc / 100) + 0.05 * cch
+    A = np.abs(base[:, None, None] * (1 + 0.15 * rng.normal(size=(len(ids), n_members, n_t))))
+    return dict(cell_id=np.array(ids), cond=np.array(conds), T=T, soc_mid=soc, c_ch=cch, absR=A)
+
+
+def storage_hull_file(D):
+    pts = sorted({(float(e["T"]), round(100.0 * float(e["key"].split("SOC")[-1]), 6)) for e in D["S2"]})
+    return dict(points_T_SOCpct=[list(p) for p in pts], definition="(temperature in C, SOC in %) of the training storage cells of this outer fold")
+
+
+def law_forms_file(fold, rng):
+    """extracted_law_forms.json in the format of pinnkan.emit.law_forms_header + law_extras (invented numbers): Latin hypercube, partial-dependence grids, training hull points,
+    one record per fold x seed law of A15 (h = 2) and G15 with closed form, coefficient count, training BIC, partial dependences and the log-rate on the hypercube"""
+    from pinnkan import emit
+    lhs = emit.lhs_points()
+    corners = np.array([[a, b, c, d, e] for a in (-0.9, 0.9) for b in (-0.9, 0.9) for c in (-0.9, 0.9) for d in (-0.9, 0.9) for e in (-0.9, 0.9)])
+    hull = np.vstack([corners, rng.uniform(-0.8, 0.8, (20, 5))])
+    grid = {"soc_mid": np.linspace(10, 90, 41), "dod": np.linspace(0, 80, 41), "c_ch": np.linspace(0, 1.2, 49), "c_dch": np.linspace(0, 2.2, 45)}
+    truth = {"soc_mid": lambda x: 0.0008 * (x - 55) ** 2 - 0.1, "dod": lambda x: 0.035 * x - 0.00022 * x ** 2 - 1.0,
+             "c_ch": lambda x: 0.2 * x + 1.4 * np.maximum(x - 0.7, 0) ** 1.2 - 0.3, "c_dch": lambda x: 0.05 * x - 0.06}
+    base_lr = 0.6 * lhs[:, 1] ** 2 + 0.5 * lhs[:, 2] + 0.4 * np.maximum(lhs[:, 3], 0) + 0.1 * lhs[:, 4]
+    laws = []
+    for arm, ncoef, bic0, noise in (("A15h2", 13, 410.0, 0.05), ("G15", 9, 430.0, 0.07)):
+        for sd in SEEDS:
+            pdv = {}
+            for k_, x in grid.items():
+                y = truth[k_](x) + rng.normal(0, noise) * np.sin(x / x.max() * 3)
+                pdv[k_] = (y - y.mean()).tolist()
+            lr = base_lr + rng.normal(0, noise) * lhs[:, 2] + rng.normal(0, noise / 2, len(lhs))
+            cf = f"cyclic law with {ncoef} coefficients in soc_mid, dod, c_ch and c_dch (temperature: aliased with laboratory; no form or sign reported); fold {fold}, seed {sd}"
+            laws.append(dict(arm=arm, fold=fold, seed=sd, h=2 if arm != "G15" else 1, n_coefs=ncoef + int(rng.integers(-1, 2)), n_params=ncoef * 2, train_bic=float(bic0 + rng.normal(0, 8)),
+                             cyclic=[], calendar=None, closed_form=cf, pd=pdv, log_rate_on_lhs=lr.tolist()))
+    return dict(fold=fold, lhs=dict(seed=emit.LHS_SEED, n=int(len(lhs)), space="normalised stress rows", points=lhs.tolist()), pd_grid={k: v.tolist() for k, v in grid.items()},
+                train_hull_points=hull.tolist(), laws=laws)
+
+
+def write_nc2_run(out, fold, real_dir, rng):
+    """NC-2 input (permute_stress run of Test B at g4, A1 only): the permuted-stress score is the real score times exp(0.15 + noise); config as a permute_stress run"""
+    d = out / "nc2" / f"m32_f{fold}_nc2"
+    mark(d)
+    real = json.load(open(real_dir / "condition_scores.json", encoding="utf8"))["A1"]
+    cs = {"A1": {c: float(v * np.exp(0.15 + rng.normal(0, 0.12))) for c, v in real.items()}}
+    dump(dict(run_id=d.name, dataset="synthetic", test="B", design="R2", m=32, fold=fold, seeds=SEEDS, mode="confirmatory", permute_stress=True, synthetic=True), d / "config.json")
+    dump(cs, d / "condition_scores.json")
+    met = metrics_block(cs, ["A1"], rng, 32)
+    dump(dict(blinded=False, mode="confirmatory", k_labels=["full"], k_primary="full", k_full=K_FULL, outer_test=met), d / "metrics.json")
+    dump(json.load(open(real_dir / "condition_meta.json", encoding="utf8")), d / "condition_meta.json")
+    return d
+
 
 # ------------------------------------------------------------------------------------------ writers
 def metrics_block(cs_k, arms, rng, n_cond):
@@ -336,6 +398,9 @@ def write_grid_run(out, D, meta_cells, fold, m, rng, state, subsets, thr, stress
         np.savez(d / "residual_map.npz", **residual_map(D, rng))
         superposition(test, rng).to_csv(d / "superposition.csv", index=False)
         dump(dict(m=32, fold=fold, laws=law_records(fold, rng, thr), levels={}, extraction_audit_sha256="synthetic"), d / "extracted_laws.json")
+        np.savez(d / "residual_cells.npz", **residual_cells_file(test, rng))
+        dump(storage_hull_file(D), d / "storage_hull.json")
+        dump(law_forms_file(fold, rng), d / "extracted_law_forms.json")
     return d, cs_all
 
 
@@ -372,6 +437,8 @@ def write_single_run(out, name, test_name, entries, t_all, n_win, scales_mean, r
     pd.DataFrame(wrows, columns=["cell_id", "cond", "t", "retention"]).to_csv(d / "window.csv", index=False)
     dump(dict(blinded=False, mode="confirmatory", backbone="self_limiting", outer_test=metrics_block(cs, arms, rng, 32), comparators={"D*": "A12"}), d / "metrics.json")
     dump({a: dict(median_fit_seconds=FITSEC.get(a, 1.0), n_trials=40, n_failed=0) for a in arms}, d / "timings.json")
+    m1 = float(np.mean(list(cs["A1"].values())))
+    dump(dict(R_LOO=m1 * 0.72, R_WARP=m1 * 0.80, n_conditions=len(conds_cells)), d / "reference_values.json")
     return d, cs
 
 
@@ -434,26 +501,6 @@ def fade_curves(meta, rng):
     return pd.DataFrame(rows, columns=["cell_id", "lab", "type", "stage", "T_C", "SOC_max", "DoD", "C_ch", "C_dch", "elapsed_days", "retention"])
 
 
-def arm_table_stand_in(cs_by_cell, metrics_by_cell, tc, s2):
-    """SYNTHETIC stand-in for analysis/arm_table.json (gap G1: the statistics step does not write it). Pools the per-fold values of the synthetic runs by condition count."""
-    def pooled(blocks):
-        arms = sorted({a for b in blocks for a in b})
-        res = {}
-        for a in arms:
-            bb = [b[a] for b in blocks if a in b]
-            n = np.array([x["n_conditions"] for x in bb], float)
-            w = n / n.sum()
-            res[a] = dict(mean_pp=float(np.sum(w * [x["primary_pp"] for x in bb])), seed_sd_pp=float(np.sqrt(np.sum((w * [x["seed_sd_of_mean"] for x in bb]) ** 2))), n_conditions=int(n.sum()),
-                          n_params=bb[0]["n_params"], n_train_used=bb[0]["n_train_used"], fit_seconds=float(np.mean([x["fit_seconds_one_fit"] for x in bb])))
-        return res
-    out = {"producer": "SYNTHETIC stand-in written by make_demo_runs.py; the statistics step does not write this file yet (ALIGN_V4_REPORT gap G1)", "cells": {}}
-    for (m, k), blocks in metrics_by_cell.items():
-        out["cells"][f"{m}|{k}"] = pooled(blocks)
-    out["test_c"] = pooled([tc])
-    out["s2"] = pooled([s2])
-    return out
-
-
 # ------------------------------------------------------------------------------------------ main
 def main(out_dir=None):
     ap = argparse.ArgumentParser(description=__doc__)
@@ -512,8 +559,7 @@ def main(out_dir=None):
     m32 = [str(p) for p in B_dirs if p.name.startswith("m32_")]
     res["edge_wording"] = {"printed": False, "reason": "descriptive reporting only: the extracted laws are printed in closed form without named edge families (D022b)",
                            "stability": v4.edge_level_wording(m32)}
-    stats_step.write_json(str(an / "contrasts_v4_B.json"), res)
-    stats_step.write_json(str(an / "controls.json"), controls)
+    # physval first (its figure inputs, G5, are written inside physval_11a); the A10 flag is patched for the synthetic demo only
     old = semi.A10_FORM["verified"]
     semi.A10_FORM["verified"] = True                 # synthetic demo only: exercises the "vs A10" branches of physval (the real flag is set after FB-2)
     try:
@@ -521,10 +567,16 @@ def main(out_dir=None):
     finally:
         semi.A10_FORM["verified"] = old
     stats_step.write_json(str(an / "physval_11a.json"), pv)
-    ref = stats_step.reference_from_runs([str(p) for p in B_dirs if p.name.startswith("m32_")])
-    stats_step.write_reference(str(an / "reference.json"), {"B": ref})
-    tc_met, s2_met = json.load(open(C_dir / "metrics.json", encoding="utf8"))["outer_test"], json.load(open(S_dir / "metrics.json", encoding="utf8"))["outer_test"]
-    dump(arm_table_stand_in(None, metrics_by_cell, tc_met, s2_met), an / "arm_table.json")
+    # G1-G8: the statistics step's own function (STATS_GAPS_REPORT.md) on the synthetic directories; NC-2 from synthetic permute_stress runs
+    nc2_dirs = [str(write_nc2_run(out, f, next(p for p in B_dirs if p.name == f"m32_f{f}"), rng)) for f in range(N_FOLDS)]
+    rule, cfg_ = v4.resolve_config(None)
+    ctl = stats_step._stats_gaps_v4(str(an), res, store, rule, cfg_, [str(p) for p in B_dirs], controls, nc2_dirs, [str(C_dir)], [str(S_dir)], True)
+    ctl, reg_err = ctl if isinstance(ctl, tuple) else (ctl, {})          # the statistics step returns (controls, registered-control errors)
+    assert not reg_err, reg_err
+    stats_step.write_json(str(an / "contrasts_v4_B.json"), res)
+    stats_step.write_json(str(an / "controls.json"), ctl)
+    if (an / "STATS_GAPS_ERRORS.json").exists():
+        print("STATS_GAPS_ERRORS:", (an / "STATS_GAPS_ERRORS.json").read_text())
     print("demo runs and analysis written to", out)
     return out
 

@@ -24,9 +24,9 @@ directory (or delete the old one) before use; tests use a temporary directory.
 | `fig2_design.py` | Fig. 2 | `--meta experiments_meta.csv --fade <check-up table> --subset-runs <grid runs> [--fold]` | design map, nested subsets (panel g) |
 | `fig3_forecasts.py` | Fig. 3 | `--runs-b <grid runs> --run-c` | forecasts at g1 and g4, Test C row |
 | `fig4_forest.py` (file name kept) | Fig. 4 | `--stats analysis/contrasts_v4_B.json` | learning curves over 3 x 3, ladder, mean pp (BCa), tiers |
-| `fig5_stress.py` | Fig. 5 | `--physval analysis/physval_11a.json --stats ... --runs <grid runs>` | E(SOC), a(SOC), storage rate, cyclic PD, stability table; T = fixed label |
+| `fig5_stress.py` | Fig. 5 | `--physval analysis/physval_11a.json --stats ... --law-summary analysis/law_summary.json` | E(SOC), a(SOC), storage rate, cyclic PD with A4 / A10 / A15 / G15, law summary, sign votes, closed forms; T = fixed label |
 | `fig6_storage.py` | Fig. 6 | `--run-s2 --runs <grid runs> --stats --physval --controls` | Q-T, S2 parity, calendar share, Arrhenius |
-| `fig7_residual.py` | Fig. 7 | `--run <grid runs> [--fold]` | residual map (descriptive) |
+| `fig7_residual.py` | Fig. 7 | `--map analysis/residual_map.npz` | residual map pooled over the outer folds (descriptive) |
 | `fig8_synthetic.py` | Fig. 8 | `--run <synthetic_H7> --controls` | G0 recovery, 0.15 line |
 | `table1.py` | Table 1 | `--analysis <analysis dir>` | arms x grid, Test C, S2 |
 | `table2.py` | Table 2 | `--analysis <analysis dir>` | ablations, controls, Q-T, outcome |
@@ -49,11 +49,22 @@ Test C and S2 runs: the same files with plain names (one cell).
 `edge_wording.stability` (descriptive stability table of A15 and G15); `analysis/physval_11a.json` (E(SOC) envelope, storage-rate envelopes, direction envelopes, superposition
 summary; temperature carries the fixed label only); `analysis/controls.json` (NC-1, PC-1, Gate G, reported checks).
 
-**Statistics-step outputs that DO NOT EXIST yet (gaps, see `ALIGN_V4_REPORT.md`):** `analysis/arm_table.json` (Table 1: per arm and cell `mean_pp`, `seed_sd_pp`, `n_conditions`,
-`n_params`, `n_train_used`, `fit_seconds`; keys `cells["m|k"]`, `test_c`, `s2`), `analysis/reference.json` on the Design R2 path (`values.B.{R_LOO, R_WARP}`), NC-2, PC-2 and PC-3 in
-`controls.json`, the A15 / G15 closed forms with coefficient counts, BIC and Latin-hypercube stability metric (Fig. 5), a(SOC) / A4 / A10 curves and Arrhenius lines in
-`physval_11a.json` (Figs. 5, 6 read the run writer's `stress_functions.json` meanwhile), the merged residual map (Fig. 7 shows one outer fold), Q-T interval in the estimated tables.
-The demo writes a SYNTHETIC stand-in for `arm_table.json` only (its `producer` field says so).
+**Statistics-step outputs added for gaps G1-G8 (`code/pinnkan/STATS_GAPS_REPORT.md`; all are read by the figure scripts and tables as stated):**
+- `analysis/arm_table.json` (G1; Table 1 reads it): `cells["m|k"][arm]`, `test_c[arm]`, `s2[arm]` with `mean_pp`, `seed_sd_pp` (and `seed_sd_pp_upper_bound`, `mean_pp_per_seed`), `n_conditions`,
+  `n_params`, `n_train_used`, `fit_seconds` (plus ranges and `n_folds`). `seed_sd_pp` is the SD over seeds of the SINGLE-SEED pooled mean (`mean_pp_per_seed`); the ensemble `mean_pp` has no seed replicate of its own.
+- `analysis/reference.json` (G2; Table 1 reads it): `values.B.{R_LOO, R_WARP, n_folds}` (the m = 32 runs), `values.C`, `values.S2` when those runs wrote `reference_values.json`.
+- `analysis/controls.json` (G3): `negative.nc2` (keys of the V3 record that Table 2 reads: `k_positive`, `n`, `passed`; plus `median_L`, `median_ci95`, `crit_positives`, `descriptive`), `positive.P2_monotone_in_T`
+  / `PC2_detail`, `positive.P3_passed` / `PC3_detail`, and the two reported checks in `gate_G.reported_checks` (`PC-2_calendar_rate_monotone_in_T`, `PC-3_A1_beats_persistence`; Fig. 6d and Table 2 read them).
+  `contrasts_v4_B.json gate_G.reported_checks` carries the same two values (gate rule and fields unchanged); an unevaluated registered control (NC-2, PC-2, PC-3) is listed in `status.registered_controls_not_evaluated` there and marks the outcome provisional.
+- `analysis/law_summary.json` (G4; Fig. 5 reads it): `arms.{A15, G15}.{n_laws, n_coefs, train_bic, stability, partial_dependence, representative, closed_forms}`; temperature carries the fixed label only.
+- `analysis/physval_11a.json` (G5; Figs. 5, 6 read them): `a_of_soc`, `arrhenius_ln_rate` (envelope of ln rate against 1000 / T at the selected SOC), `partial_dependence_overlays.per_input`
+  (grid, A1 envelope, `A4_mean`, `A10_mean` / `A10_lo` / `A10_hi`; the T entry is the fixed label only). Always written on the R2 path (`--no-physval` only with `--lenient`).
+- `analysis/residual_map.npz` (G6; Fig. 7 reads it): the keys of the run writer's `residual_map.npz` pooled over the five outer folds from the raw cell-level values of `residual_cells.npz`
+  (`n_cells_T_SOC`, `n_cells_cch_T` count the cells per bin; an empty bin is NaN).
+- `contrasts_v4_B.json`: `secondary.tests.QT_g1.median_interval` (G7, an `estimated.rows` style record with `median_ci`) and `candidates_vs_a1.rows.{A11, A12, A4, A5}` (G8, the same record per candidate at g4, descriptive);
+  `stats_gaps.status` lists what was formed.
+New run-writer files (Samsung layout, m = 32 runs): `extracted_law_forms.json`, `residual_cells.npz`, `storage_hull.json`.
+The demo produces every one of these files by running the statistics-step code (`stats_step._stats_gaps_v4`, `physval_11a`) on synthetic run directories (incl. `extracted_law_forms.json`, `residual_cells.npz`, `storage_hull.json` and synthetic permute_stress runs); no stand-in remains.
 
 Demo runs: every output built from them is named `*_SYNTHETIC.*` and carries the watermark "SYNTHETIC DEMO - NOT RESULTS". LaTeX previews of the tables:
 `paper/tables/preview/` (V3 previews there are stale).

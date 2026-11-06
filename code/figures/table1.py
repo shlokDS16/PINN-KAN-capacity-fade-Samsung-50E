@@ -5,8 +5,8 @@ best value per column in bold, second best underlined (sorting of the supplied v
 Panel B: Test C and S2 (k_full cell) mean +- seed SD; E/R_LOO and E/R_WARP = the supplied g4 mean divided by the supplied replicate-spread references ("replicate spread",
 descriptive, never a margin); fit time, parameters and n_train_used at g4.
 Inputs: --analysis (directory with arm_table.json and reference.json).
-READ-ONLY. `arm_table.json` (per-arm pooled mean, seed SD, parameters, n_train_used, fit seconds per grid cell, Test C, S2) is NOT written by the statistics step yet
-(ALIGN_V4_REPORT gap G1); `reference.json` (R_LOO, R_WARP) is not written on the Design R2 path either (gap G2). Without reference.json the E/R columns print "--".
+READ-ONLY. `arm_table.json` (per-arm pooled mean, seed SD, parameters, n_train_used, fit seconds per grid cell, Test C, S2) and `reference.json` (values.B.{R_LOO, R_WARP})
+are written by the statistics step (stats_gaps G1, G2). Without reference.json the E/R columns print "--".
 No interval, tier or test appears in this table: they live in Fig. 4 and Table 2.
 """
 import csv
@@ -87,8 +87,8 @@ def main():
         else:
             e1 = e2 = "--"
         tm = f"{g4[x]['fit_seconds']:.1f}" if x in g4 else "--"
-        npar = f"{g4[x]['n_params']:d}" if x in g4 else "--"
-        ntr = f"{g4[x]['n_train_used']:d}" if x in g4 else "--"
+        npar = f"{g4[x]['n_params']:.0f}" if x in g4 else "--"
+        ntr = f"{g4[x]['n_train_used']:.0f}" if x in g4 else "--"
         if x == "R1":
             L.append("\\midrule")
         L.append(f"{NAME[x]} & {c_} & {s_} & {e1} & {e2} & {tm} & {npar} & {ntr} \\\\")

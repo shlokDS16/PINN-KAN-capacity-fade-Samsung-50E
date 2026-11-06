@@ -206,3 +206,90 @@ def superposition(fitted, prepared, spec, backbone):
             y_obs = spec.y_scale * (1.0 - float(p.fc_true[-1]))
             rows.append((p.cell.cell_id, p.cell.cond, arm_id, y_cal / max(y_full, 1e-9), bool(y_cal > y_obs)))
     return pd.DataFrame(rows, columns=["cell_id", "cond", "arm", "share_cal", "cal_exceeds_total"])
+
+
+# ------------------------------------------------------------------------------------------------ inputs of the statistics-step gaps G4, G6 (STATS_GAPS_REPORT.md)
+LHS_N, LHS_SEED = 500, 20261106
+
+
+def lhs_points(n=LHS_N, d=5, seed=LHS_SEED):
+    """the fixed Latin hypercube of the law-stability metric (PREREG_v4 11a item 6): n points in the normalised stress space [-1, 1)^d, a local RandomState (no global RNG is touched).
+    Every run evaluates its extracted laws on these same points; the statistics step restricts them to the intersection of the five training hulls."""
+    rs = np.random.RandomState(seed)
+    u = np.empty((n, d))
+    for j in range(d):
+        u[:, j] = (rs.permutation(n) + rs.random_sample(n)) / n
+    return 2.0 * u - 1.0
+
+
+def _edges_record(stack, t_index=None, label=None):
+    """final (post-refit) family and coefficients of every edge of a symbolic.SymbolicStack; the cyclic temperature input (layer 0, column t_index) carries the fixed label only (D022b N1(a))"""
+    layers = []
+    for li, layer in enumerate(stack.sym_layers):
+        rows = []
+        for row in layer.edges:
+            r = []
+            for i, e in enumerate(row):
+                if t_index is not None and li == 0 and i == t_index:
+                    r.append({"display": label})
+                else:
+                    r.append({"family": e.family, "theta": [] if e.theta is None else [float(x) for x in e.theta.detach().cpu().numpy()]})
+            rows.append(r)
+        layers.append({"layer": li, "edges": rows})
+    return layers
+
+
+def law_extras(arm_key, fold, seed, arm, spec, train_cells):
+    """G4: one fold-by-seed extracted law (a fitted symbolic arm A15 / G15) -> closed form (final coefficients; temperature masked), coefficient count, training-side BIC, centred partial
+    dependences of the non-temperature inputs on the VARS grid (the grid of stress_functions.json) and the log-rate on the fixed Latin hypercube. No temperature curve, form or sign is written."""
+    from . import symbolic
+    from .extraction_audit import load_thresholds
+    law = arm.model.law
+    label = load_thresholds()["wording"]["temperature_label"]
+    cyc = _edges_record(law.cyc.net, spec.t_index, label)
+    cal = _edges_record(law.cal, None, None) if getattr(law, "cal", None) is not None and hasattr(law.cal, "sym_layers") else None
+    rep = {"cyclic": {"layers": cyc}}
+    if cal is not None:
+        rep["calendar"] = {"layers": cal}
+    base = np.unique(np.stack([c.raw for c in train_cells if c.kind == "cycling"]), axis=0)
+    pd_ = {name: _cyc_pd(law, spec, base, k, xs, scale).tolist() for name, (k, xs, scale) in VARS.items() if name != "T"}
+    with torch.no_grad():
+        lr = law.cyc(torch.tensor(lhs_points(), dtype=torch.float32)).detach().double().numpy().reshape(-1)
+    return dict(arm=arm_key, fold=int(fold), seed=int(seed), h=(len(cyc[0]["edges"]) if len(cyc) > 1 else 1), n_coefs=int(arm.n_coefs), n_params=int(arm.n_params), train_bic=float(arm.train_bic),
+                cyclic=cyc, calendar=cal, closed_form=symbolic.describe(rep, t_index=spec.t_index), pd=pd_, log_rate_on_lhs=lr.tolist())
+
+
+def law_forms_header(spec, s_train):
+    """run-level part of extracted_law_forms.json: the Latin hypercube, the partial-dependence grids and the training stress rows (normalised, identifiers of the design only) that
+    define this fold's training hull"""
+    return dict(lhs=dict(seed=LHS_SEED, n=LHS_N, space="normalised stress rows in [-1, 1)^5, columns T_C, soc_mid, dod, c_ch, c_dch", points=lhs_points().tolist()),
+                pd_grid={name: xs.tolist() for name, (k, xs, scale) in VARS.items() if name != "T"}, train_hull_points=np.asarray(s_train, float).tolist())
+
+
+def residual_cells(a1_arms, spec, prepared, n_t=6):
+    """G6: |R| of every fitted A1 member at the stress vector of every scored (outer-test) cycling cell and at n_t normalised times (the times of residual_map). Each test cell belongs to
+    exactly one outer fold, so the merged map of the statistics step pools these raw values (no median of medians). -> dict of arrays or None when there is no cycling test cell"""
+    cells = [p.cell for p in prepared if p.cell.kind == "cycling"]
+    if not cells:
+        return None
+    raw = np.stack([c.raw for c in cells]).astype(float)
+    s = torch.tensor(spec.norm(raw), dtype=torch.float32)
+    nu = torch.tensor(spec.efc_rate(raw) * spec.t_scale / spec.efc_scale, dtype=torch.float32)
+    per = []
+    for a in a1_arms:
+        m = a.model
+        with torch.no_grad():
+            a_cal, a_cyc = m.law.r_cal(s), m.law.r_cyc(s)
+        rows = []
+        for tn in np.linspace(0.1, 1.0, n_t) * m.col_t_max:
+            R = m.residual(torch.full((len(raw),), float(tn)), s, torch.zeros(len(raw), m.zdim), a_cal, a_cyc, nu)
+            rows.append(R.detach().abs().numpy().reshape(-1))
+        per.append(np.stack(rows))                                   # n_t x n_cells
+    A = np.stack(per).transpose(2, 0, 1)                             # n_cells x members x n_t
+    return dict(cell_id=np.array([c.cell_id for c in cells]), cond=np.array([c.cond for c in cells]), T=raw[:, 0], soc_mid=100.0 * raw[:, 1], c_ch=raw[:, 3], absR=A)
+
+
+def storage_hull(train_cells):
+    """G3 (PC-2): the (T, SOC %) points of the training storage cells (the design hull of the storage axis); identifiers of the design only"""
+    pts = sorted({(float(c.raw[0]), round(100.0 * float(c.raw[1]), 6)) for c in train_cells if c.kind == "storage"})
+    return dict(points_T_SOCpct=[list(p) for p in pts], definition="(temperature in C, SOC in %) of the training storage cells of this outer fold")

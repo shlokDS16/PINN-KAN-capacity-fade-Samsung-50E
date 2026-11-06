@@ -218,4 +218,61 @@ def physval_11a(run_dirs, published=None, meta_csv=None, strict=False):
         if strict:
             raise
         out["blocked"]["item5_vs_A10"] = str(e)
+    try:                                                                  # G5 (STATS_GAPS_REPORT.md): additive keys for Figs. 5 and 6; a failure here never removes the keys above
+        out.update(figure_inputs(run_dirs, M, strict=strict))
+    except Exception as e:  # noqa: BLE001
+        if strict and isinstance(e, UnverifiedArmError):
+            raise
+        out["figure_inputs_error"] = f"{type(e).__name__}: {e}"
+    return out
+
+
+# ------------------------------------------------------------------------------------------------ G5: curves behind Figs. 5 and 6 (items 1-3, 5)
+def figure_inputs(run_dirs, M=None, strict=False):
+    """-> dict of the NEW keys of physval_11a.json (nothing existing is changed):
+      a_of_soc                     calendar loss after 500 d at 25 C, a(SOC), pp, envelope over the fold x seed members (item 1)
+      arrhenius_ln_rate            ln storage rate at the selected SOC against 1000 / T (K), envelope over members, and the share of members increasing in T (items 1 and 3; the PC-2 verdict is controls.json)
+      partial_dependence_overlays  per non-temperature stress input: grid, A1 envelope over members, A4 mean (mean over folds of the per-fold mean of that fold's A4 seeds), A10 mean (mean and
+                                   min / max over folds; only while the A10 form is verified, otherwise `blocked_A10`). Temperature carries the fixed label only: no curve of A1, A4 or A10 (item 7, permanent)."""
+    M = M or merge_stress_functions(run_dirs)
+    sfs = [_load(os.path.join(d, "stress_functions.json")) for d in run_dirs]
+    out = {"a_of_soc": dict(soc=M["soc"].tolist(), a_pp500=_env(M["a"]), n_members=int(M["a"].shape[0]),
+                            definition=sfs[0].get("a_pp500_definition", "calendar loss after 500 d at 25 C (pp, backbone applied), no cycling"))}
+    arr = [s_.get("arrhenius") for s_ in sfs]
+    if all(a_ and "arrhenius_ln_rate" in s_.get("members", {}) for a_, s_ in zip(arr, sfs)):
+        T_C, sel = list(arr[0]["T_C"]), list(arr[0]["soc"])
+        if any(list(a_["T_C"]) != T_C or list(a_["soc"]) != sel for a_ in arr):
+            raise ValueError("stress_functions.json files with different Arrhenius grids cannot be merged")
+        L = np.concatenate([np.asarray(s_["members"]["arrhenius_ln_rate"], float) for s_ in sfs])           # members x n_sel x nT
+        order = np.argsort(T_C)
+        out["arrhenius_ln_rate"] = dict(
+            T_C=T_C, inv_T_1000_per_K=[1000.0 / (t + 273.15) for t in T_C], soc_selected=sel, ln_rate=_env(L), n_members=int(L.shape[0]),
+            share_members_increasing_in_T=[float(np.mean([bool(np.all(np.diff(L[m_, k][order]) > 0)) for m_ in range(L.shape[0])])) for k in range(L.shape[1])],
+            definition="ln of the initial storage rate (pp per 500 d) of the fitted A1 calendar law at the selected SOC (%) against 1000 / T; envelope = min / max over the fold x seed members")
+    else:
+        out["arrhenius_ln_rate"] = dict(status="not available: no arrhenius_ln_rate members in stress_functions.json")
+    ov = {}
+    try:
+        semi.require_verified()
+        a10_ok = True
+    except UnverifiedArmError as e:
+        if strict:
+            raise
+        a10_ok, ov["blocked_A10"] = False, str(e)
+    for var, c in M["cyc"].items():
+        if var in T_VARS:
+            ov[var] = dict(display=temperature_label())
+            continue
+        rec = dict(x=c["x"].tolist(), A1=_env(c["members"]), n_members=int(c["members"].shape[0]))
+        a4 = [np.asarray(s_["cyclic"][var]["A4"]["mean"], float) for s_ in sfs if "A4" in s_["cyclic"].get(var, {})]
+        rec["A4_mean"] = np.mean(a4, axis=0).tolist() if a4 else None
+        a10 = [np.asarray(s_["cyclic"][var]["A10"]["mean"], float) for s_ in sfs if "A10" in s_["cyclic"].get(var, {})]
+        if a10 and a10_ok:
+            rec["A10_mean"], rec["A10_lo"], rec["A10_hi"] = np.mean(a10, axis=0).tolist(), np.min(a10, axis=0).tolist(), np.max(a10, axis=0).tolist()
+        else:
+            rec["A10_mean"] = None
+        ov[var] = rec
+    out["partial_dependence_overlays"] = dict(
+        per_input=ov, definition="centred partial dependence of the log-rate (mean over the training cycling conditions, other inputs at their values); A4 = the additive GAM, A10 = the dataset authors' cycle model",
+        temperature="temperature (aliased with laboratory; no form or sign reported): no curve is written for A1, A4 or A10")
     return out

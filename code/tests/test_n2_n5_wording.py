@@ -73,13 +73,16 @@ def test_run_stats_v4_writes_physval_through_the_wording_check(tmp_path, monkeyp
     assert pv["n_runs"] == 5 and X.check_generated_sentences(pv, "physval_11a") is True and pv["item5"]["directions"]["c_ch"]["n_members"] == 15
 
 
-def test_physval_is_off_by_default_and_not_available_without_stress_functions(tmp_path):
+def test_physval_is_on_by_default_for_r2_and_not_available_without_stress_functions(tmp_path):
+    """F3 (statistician, 2026-11-06): 11a is registered, so physval is on by default; physval=False needs a lenient run"""
     tmp = str(tmp_path)
     dirs, fdir, sha = _grid(tmp)
     out = ss.run_stats_v4(os.path.join(tmp, "a"), dirs, item_f_dir=fdir, item_f_sha256=sha)
-    assert "physval" not in out and not os.path.exists(os.path.join(tmp, "a", "physval_11a.json"))
-    out = ss.run_stats_v4(os.path.join(tmp, "b"), dirs, item_f_dir=fdir, item_f_sha256=sha, physval=True)
-    assert out["physval"]["status"].startswith("not available") and not os.path.exists(os.path.join(tmp, "b", "physval_11a.json"))
+    assert out["physval"]["status"].startswith("not available") and not os.path.exists(os.path.join(tmp, "a", "physval_11a.json"))
+    out = ss.run_stats_v4(os.path.join(tmp, "b"), dirs, item_f_dir=fdir, item_f_sha256=sha, physval=False, strict=False)
+    assert "physval" not in out and not os.path.exists(os.path.join(tmp, "b", "physval_11a.json"))
+    with pytest.raises(ValueError, match="physval = False is refused"):
+        ss.run_stats_v4(os.path.join(tmp, "c"), dirs, item_f_dir=fdir, item_f_sha256=sha, physval=False)
 
 
 def test_a_banned_sentence_in_the_physval_output_stops_the_r2_step_and_leaves_a_diagnostic(tmp_path, monkeypatch):

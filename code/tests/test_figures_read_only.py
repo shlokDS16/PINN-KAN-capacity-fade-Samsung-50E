@@ -102,6 +102,23 @@ def demo(tmp_path_factory):
     return out
 
 
+def test_demo_analysis_carries_the_statistics_step_inputs_of_the_former_gaps(demo):
+    """the demo reads the statistics step's own G1-G8 outputs, no stand-in: arm_table / reference / law_summary / residual_map files, NC-2 / PC-2 / PC-3, Q-T interval, candidates"""
+    import json
+    an = demo / "analysis"
+    for f in ("arm_table.json", "reference.json", "law_summary.json", "residual_map.npz", "physval_11a.json", "controls.json", "contrasts_v4_B.json"):
+        assert (an / f).exists(), f
+    assert not (an / "STATS_GAPS_ERRORS.json").exists()
+    assert "stand-in" not in (an / "arm_table.json").read_text(encoding="utf8")
+    ctl = json.loads((an / "controls.json").read_text(encoding="utf8"))
+    assert ctl["negative"]["nc2"]["n"] == 40 and ctl["gate_G"]["reported_checks"]["PC-2_calendar_rate_monotone_in_T"] is not None and ctl["positive"]["PC3_detail"]["n"] == 40
+    st = json.loads((an / "contrasts_v4_B.json").read_text(encoding="utf8"))
+    assert st["secondary"]["tests"]["QT_g1"]["median_interval"]["median_ci"] and set(st["candidates_vs_a1"]["rows"]) == {"A11", "A12", "A4", "A5"}
+    pv = json.loads((an / "physval_11a.json").read_text(encoding="utf8"))
+    assert {"a_of_soc", "arrhenius_ln_rate", "partial_dependence_overlays"} <= set(pv)
+    assert "display" in pv["partial_dependence_overlays"]["per_input"]["T"] and "A1" not in pv["partial_dependence_overlays"]["per_input"]["T"]      # temperature: fixed label only
+
+
 def test_every_display_item_renders_from_synthetic_demo_runs(demo, tmp_path):
     import run_all_demo
     outd = tmp_path / "out"

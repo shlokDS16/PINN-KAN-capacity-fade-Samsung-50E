@@ -79,3 +79,26 @@ without error but were not opened as images (Tables 1-2 were not compiled with L
 
 The scripts no longer compute any statistic, so D037's premise holds. Changing `code/figures/*` moves `code/` off 92db4cb: the audit's alternative path ("align the scripts now") requires
 FB-8 to FB-10 and the suite to repeat. G1 to G3 are the items the lead should rule on before the post-run figure pass; they need edits to `stats_step.py` (not made).
+
+## 7. Follow-up 2026-11-06: gaps G1-G8 closed in the statistics step (STATS_GAPS_REPORT.md); figures and demo now read the real inputs
+
+Only `code/figures/*` and `code/tests/test_figures_read_only.py` changed; `code/pinnkan/*` untouched (a statistician is reviewing it). The statements of sections 2 and 3 about G1-G8 are superseded by this section.
+
+| gap | now read by | change |
+|---|---|---|
+| G1 arm_table | Table 1 | stand-in removed from the demo; Table 1 prints `n_params`, `n_train_used` as pooled means (`.0f`) |
+| G2 reference | Table 1 | E/R_LOO and E/R_WARP columns filled from `reference.json values.B` |
+| G3 NC-2, PC-2, PC-3 | Table 2 (Part B), Fig. 6d | Part B prints NC-2 (positives, critical count, median ratio), PC-2 (SOC levels, members), PC-3 (positives / n); "not evaluated" only when the record is absent |
+| G4 law summary | Fig. 5 | new `--law-summary law_summary.json`: A15 (solid) and G15 (dashed) median partial dependences on panels e-h, summary panel (stability metric, coefficient median [min, max], training BIC, law count), closed forms of the median-BIC representative laws (capped at 8 wrapped lines, then "full form in law_summary.json"); G15 colour changed to green (was too close to A4) |
+| G5 physval | Fig. 5, Fig. 6d | a(SOC), A4 / A10 overlays and Arrhenius lines come from `physval_11a.json`; `merge_bands` and the run-file reading are no longer used by any figure |
+| G6 residual map | Fig. 7 | new `--map analysis/residual_map.npz` (pooled over folds from raw cell values); prints the cell count per bin, empty bins read "no cell" |
+| G7 Q-T interval | Fig. 6e, Table 2 | median error reduction with the unadjusted 95 % interval (`QT_g1.median_interval`), mean pp (BCa), tier and sentence |
+| G8 candidates | Table 2 Part A | A11, A12, A4, A5 against A1 at g4 as a labelled block (descriptive, unadjusted interval, no tier) |
+
+Demo (`make_demo_runs.py`): writes the new run-writer files (`extracted_law_forms.json`, `residual_cells.npz`, `storage_hull.json`) and synthetic permute_stress runs (`nc2/`), then calls the statistics step's own `stats_step._stats_gaps_v4` and `physval_11a`; no stand-in. The smoke test asserts that the G1-G8 files and keys exist, `STATS_GAPS_ERRORS.json` is absent, NC-2 has n = 40, PC-2 / PC-3 are evaluated, and that temperature carries the fixed label only in the overlays. `run_all_demo.py`: Fig. 5 takes `--law-summary`, Fig. 7 takes `--map`.
+
+Render check: every PNG of the synthetic demo (Figs. 1-8, graphical abstract) was opened after the last layout change; fixed this round: Fig. 5 (title / panel-letter clash, clipped legend and closed-form column, overlapping table headers, overlapping closed-form blocks), Fig. 6 (clipped panel c count, panel e text on the axis line), Fig. 7 (caption over the watermark tag, circle clutter). Fig. 5 now needs 21.6 cm height at 16 cm width. Remaining weakness, not defects: the RMSE labels of Fig. 3 touch curves in a few panels; real closed forms (several lines each) may exceed the 8-line cap of the closed-form panel; the temperature row of the sign-vote table prints the fixed label across the row. Tables 1 and 2 were rendered to `.tex` / `.csv` and their CSV read, not compiled with LaTeX.
+
+Read-only test: all 20 tests pass (AST check unchanged, plus the new inputs test). Whole suite, one process per file: see below.
+
+Whole suite, one process per file (45 files): 44 pass, 1 fails: `test_n2_n5_wording.py::test_physval_is_off_by_default_and_not_available_without_stress_functions`. The failure is not from `code/figures`: the statistician's new `stats_step.run_stats_v4` always writes `physval_11a.json` on the R2 path (`--physval` opt-in became `--no-physval` opt-out, see the argparse diff), so the old assertion `"physval" not in out` for the default call no longer holds; the test needs the owner's update. `test_figures_read_only.py` 20 passed; `test_extraction_fallback.py` 30 passed (the pinned fig5 source form is kept). One demo adaptation: `stats_step._stats_gaps_v4` now returns `(controls, reg_err)` and takes `descriptive=`; the generator accepts both the old and the new return.

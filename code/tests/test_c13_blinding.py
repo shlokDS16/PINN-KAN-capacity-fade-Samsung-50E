@@ -79,7 +79,7 @@ def fake_samsung(monkeypatch):
     """the design table as the cell universe: every cell has its condition; _load_samsung applies `keep` as the real loader does"""
     df = pd.read_csv(CELLS, usecols=["cell_id", "type", "T_C", "SOC_max", "DoD", "C_ch", "C_dch", "cell"])
 
-    def fake(root, retain_all=False, throughput="analytic", include_at=False, keep=None, throughput_fallback="none", include_storage_0406=False):
+    def fake(root, retain_all=False, throughput="analytic", include_at=False, keep=None, throughput_fallback="none", include_storage_0406=False, zyk_table_sha256=None):
         out = []
         for r in df.itertuples():
             kind = "cycling" if r.type == "z" else "storage"

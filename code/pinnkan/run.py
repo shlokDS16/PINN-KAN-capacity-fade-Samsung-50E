@@ -171,15 +171,11 @@ def run(cfg_in, root=None, runs_dir=None):
     return _run(cfg_in, root, runs_dir)
 
 
-def _run(cfg_in, root=None, runs_dir=None):
+def validate_config(cfg_in, root=None):
+    """every static ConfigError check of a run configuration, without loading data, touching the freeze or creating anything -> the merged config (DEFAULTS + the file's keys, with target_kind
+    and the derived inner_k filled in). `_run` calls it first; the confirmatory config set is checked through it (code/tests/test_c14_confirmatory_configs.py)."""
     cfg = {**DEFAULTS, **cfg_in}
-    if torch.cuda.is_available():            # D013 C4: a wrong environment must not silently produce GPU numbers
-        raise DeviceError("CUDA is available to torch: runs are CPU only (CUDA_VISIBLE_DEVICES=-1 is forced by the package); no GPU use without the lead's instruction")
-    root = root or _ROOT
-    runs_dir = runs_dir or os.path.join(root, "runs")
-    run_id = cfg["run_id"]
-    run_dir = os.path.join(runs_dir, run_id)
-    ds, mode = cfg["dataset"], cfg["mode"]
+    ds, mode_ = cfg["dataset"], cfg["mode"]
     if cfg["permute_stress"] and cfg["test"] != "B":
         raise ConfigError("permute_stress (NC-2) is defined on Test B only, not on Test C (NEGCONTROL_RULING section 3)")
     if cfg["mc_seed_root"] != negcontrol.MC_SEED_ROOT:
@@ -244,14 +240,31 @@ def _run(cfg_in, root=None, runs_dir=None):
             cfg["p6b_decision_sha256"] = sha256_file(dec)
         if "inner_k" not in cfg_in:
             cfg["inner_k"] = tuning.inner_k_for_m(int(cfg["m"]), thin_folds=thin)       # 2 for m in {8, 16}, 3 for m = 32 (PREREG_v4 4.1)
-    chash, item_f_sha = None, None
-    if mode == "confirmatory" and ds != "synthetic":      # checks before anything is created or read (review M2)
+    if mode_ == "confirmatory" and ds != "synthetic":      # the config-only part of the real-data confirmatory refusals (the freeze and the item (f) record are checked in _run)
         if cfg["steps_scale"] != 1.0:
             raise ConfigError("steps_scale != 1 is not allowed in a confirmatory run on real data")
         if cfg["overwrite"]:
             raise ConfigError("overwrite is not allowed in a confirmatory run on real data (stop rule 4)")
         if cfg["auto_budget"]:
             raise ConfigError("auto_budget is wall-clock dependent and unhashed: a confirmatory run on real data takes N and inner_k from the config, fixed from the FB-8 timing run's budget_rule.json (review M4)")
+    wk = cfg["window"]
+    if ds != "synthetic" and (cfg["m"] is not None or cfg["k"] is not None) and SPECS[ds].window[0] == "count" and (wk.get("k_cycling") is None or wk.get("k_storage") is None):
+        raise ConfigError("a Design R2 grid run on real data needs window.k_cycling (= k_full) and window.k_storage from the counted listings [FB-6]; the placeholder defaults 4 and 2 are not used (review M3)")
+    return cfg
+
+
+def _run(cfg_in, root=None, runs_dir=None):
+    if torch.cuda.is_available():            # D013 C4: a wrong environment must not silently produce GPU numbers
+        raise DeviceError("CUDA is available to torch: runs are CPU only (CUDA_VISIBLE_DEVICES=-1 is forced by the package); no GPU use without the lead's instruction")
+    root = root or _ROOT
+    cfg = validate_config(cfg_in, root)          # every static ConfigError check (also used by the confirmatory config set test)
+    runs_dir = runs_dir or os.path.join(root, "runs")
+    run_id = cfg["run_id"]
+    run_dir = os.path.join(runs_dir, run_id)
+    ds, mode = cfg["dataset"], cfg["mode"]
+    tk = cfg["target_kind"]
+    chash, item_f_sha = None, None
+    if mode == "confirmatory" and ds != "synthetic":      # checks before anything is created or read (review M2)
         guard.require_frozen("confirmatory run", root)
         chash = guard.check_config_frozen({**DEFAULTS, **cfg_in}, root)     # hash of the config as written (DEFAULTS + file keys)
         if ds == "samsung":                                                 # D026: the item (f) record is verified before build_data / load_split can release any test fold
@@ -338,9 +351,7 @@ def _run(cfg_in, root=None, runs_dir=None):
     rec.log(f"train cells {len(train)}: {sum(c.kind == 'cycling' for c in train)} cycling, {sum(c.kind == 'storage' for c in train)} storage; conditions {len({c.cond for c in train})}")
     if D["split"].get("missing_train_conditions"):
         rec.log(f"NOTE: {len(D['split']['missing_train_conditions'])} training conditions of the split have no cells on disk (partial download)")
-    wk = cfg["window"]
-    if ds != "synthetic" and (cfg["m"] is not None or cfg["k"] is not None) and SPECS[ds].window[0] == "count" and (wk.get("k_cycling") is None or wk.get("k_storage") is None):
-        raise ConfigError("a Design R2 grid run on real data needs window.k_cycling (= k_full) and window.k_storage from the counted listings [FB-6]; the placeholder defaults 4 and 2 are not used (review M3)")
+    wk = cfg["window"]          # the FB-6 window-count check is in validate_config
     rule = WindowRule.for_spec(spec, k_cycling=wk.get("k_cycling"), k_storage=wk.get("k_storage"), W=wk.get("W"), shift=wk.get("shift", 0))
     _capped = window_capped_cells(list(train) + list(D.get("test") or []), rule)      # D025: capped cells are kept and listed (identifiers only)
     _json(os.path.join(run_dir, "window_capped.json"), {"rule": "D025: window = min(k, n - 1) intermediate check-ups", "cells": _capped})

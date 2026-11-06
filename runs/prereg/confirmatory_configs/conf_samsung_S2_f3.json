@@ -1,0 +1,21 @@
+{
+ "run_id": "conf_samsung_S2_f3",
+ "dataset": "samsung",
+ "test": "S2",
+ "fold": 3,
+ "mode": "confirmatory",
+ "arms": [
+  "A1",
+  "A9",
+  "A10",
+  "A10P"
+ ],
+ "window": {
+  "k_cycling": 4,
+  "k_storage": 2
+ },
+ "steps_scale": 1.0,
+ "n_trials": 20,
+ "backbone": "tournament",
+ "inversion_config_sha256": "3e902beacf3bf26f927a3043ac555f39fe5f4279f063e19936bf9dacb890abc2"
+}

@@ -17,8 +17,11 @@
   "k_storage": 2
  },
  "steps_scale": 1.0,
- "backbone": "self_limiting",
+ "n_trials": 20,
+ "backbone": "tournament",
+ "inversion_config_sha256": "3e902beacf3bf26f927a3043ac555f39fe5f4279f063e19936bf9dacb890abc2",
+ "extraction_audit_sha256": "4815023af8dd9bd5512b056e1664f5a13c55f952e424737176c035466b7dca51",
+ "calibration_rule_sha256": "342cf64e735c27ea550a2a80d917f7d18a62c6b5d1d9244437b89f6633dfabbc",
  "diagnostics": false,
- "refit_timing": false,
- "inversion_config_sha256": "3e902beacf3bf26f927a3043ac555f39fe5f4279f063e19936bf9dacb890abc2"
+ "refit_timing": false
 }

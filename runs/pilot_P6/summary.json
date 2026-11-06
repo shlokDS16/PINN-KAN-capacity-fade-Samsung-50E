@@ -1,0 +1,1155 @@
+{
+ "summary": {
+  "windows": {
+   "0": {
+    "primary_A1_vs_Dstar_median": {
+     "n_sides": 5,
+     "n_data_leads": 1,
+     "n_a1_lower": 4,
+     "data_leads_by_fold": {
+      "0": false,
+      "1": true,
+      "2": false,
+      "3": false,
+      "4": false
+     },
+     "verdict": "NOT_TRIGGERED",
+     "reason": "data-only learner not behind A1 on 1 of 5 evaluable sides (A1 lower on 4); rule: triggered iff >= 3 of 5 sides with data-only ahead, no margin"
+    },
+    "sides_primary_median": {
+     "0": [
+      4.6938973475654215,
+      8.325474429298861
+     ],
+     "1": [
+      4.839986920423632,
+      4.6064294506599754
+     ],
+     "2": [
+      5.173637648895566,
+      5.763443139625226
+     ],
+     "3": [
+      4.646762574515804,
+      4.716020264833551
+     ],
+     "4": [
+      4.801864603726887,
+      5.737562810015581
+     ]
+    },
+    "A1_vs_Dstar_mean": {
+     "n_sides": 5,
+     "n_data_leads": 3,
+     "n_a1_lower": 2,
+     "data_leads_by_fold": {
+      "0": false,
+      "1": true,
+      "2": true,
+      "3": true,
+      "4": false
+     },
+     "verdict": "TRIGGERED",
+     "reason": "data-only learner not behind A1 on 3 of 5 evaluable sides (A1 lower on 2); rule: triggered iff >= 3 of 5 sides with data-only ahead, no margin"
+    },
+    "oracle_best_data_only_median": {
+     "n_sides": 5,
+     "n_data_leads": 1,
+     "n_a1_lower": 4,
+     "data_leads_by_fold": {
+      "0": false,
+      "1": true,
+      "2": false,
+      "3": false,
+      "4": false
+     },
+     "verdict": "NOT_TRIGGERED",
+     "reason": "data-only learner not behind A1 on 1 of 5 evaluable sides (A1 lower on 4); rule: triggered iff >= 3 of 5 sides with data-only ahead, no margin"
+    },
+    "oracle_best_data_only_arm_by_fold": {
+     "0": "A12",
+     "1": "A12",
+     "2": "A12",
+     "3": "A12",
+     "4": "A12"
+    },
+    "A1_vs_A9_median": {
+     "n_sides": 5,
+     "n_data_leads": 0,
+     "n_a1_lower": 5,
+     "data_leads_by_fold": {
+      "0": false,
+      "1": false,
+      "2": false,
+      "3": false,
+      "4": false
+     },
+     "verdict": "NOT_TRIGGERED",
+     "reason": "data-only learner not behind A1 on 0 of 5 evaluable sides (A1 lower on 5); rule: triggered iff >= 3 of 5 sides with data-only ahead, no margin"
+    },
+    "A1_vs_A11_median": {
+     "n_sides": 5,
+     "n_data_leads": 0,
+     "n_a1_lower": 5,
+     "data_leads_by_fold": {
+      "0": false,
+      "1": false,
+      "2": false,
+      "3": false,
+      "4": false
+     },
+     "verdict": "NOT_TRIGGERED",
+     "reason": "data-only learner not behind A1 on 0 of 5 evaluable sides (A1 lower on 5); rule: triggered iff >= 3 of 5 sides with data-only ahead, no margin"
+    },
+    "A1_vs_A12_median": {
+     "n_sides": 5,
+     "n_data_leads": 1,
+     "n_a1_lower": 4,
+     "data_leads_by_fold": {
+      "0": false,
+      "1": true,
+      "2": false,
+      "3": false,
+      "4": false
+     },
+     "verdict": "NOT_TRIGGERED",
+     "reason": "data-only learner not behind A1 on 1 of 5 evaluable sides (A1 lower on 4); rule: triggered iff >= 3 of 5 sides with data-only ahead, no margin"
+    },
+    "physics_family_min_vs_Dstar_median": {
+     "n_sides": 5,
+     "n_data_leads": 1,
+     "n_a1_lower": 4,
+     "data_leads_by_fold": {
+      "0": false,
+      "1": true,
+      "2": false,
+      "3": false,
+      "4": false
+     },
+     "verdict": "NOT_TRIGGERED",
+     "reason": "data-only learner not behind A1 on 1 of 5 evaluable sides (A1 lower on 4); rule: triggered iff >= 3 of 5 sides with data-only ahead, no margin"
+    },
+    "paired_conditions_A1_vs_Dstar": {
+     "0": {
+      "n": 43,
+      "median_ln_Dstar_over_A1": 0.49421222632613404,
+      "share_A1_lower": 0.9069767441860465
+     },
+     "1": {
+      "n": 42,
+      "median_ln_Dstar_over_A1": -0.09025838814217263,
+      "share_A1_lower": 0.30952380952380953
+     },
+     "2": {
+      "n": 43,
+      "median_ln_Dstar_over_A1": -0.04415217057394427,
+      "share_A1_lower": 0.4418604651162791
+     },
+     "3": {
+      "n": 42,
+      "median_ln_Dstar_over_A1": 0.018141217763304726,
+      "share_A1_lower": 0.5238095238095238
+     },
+     "4": {
+      "n": 42,
+      "median_ln_Dstar_over_A1": 0.10971489642833615,
+      "share_A1_lower": 0.6428571428571429
+     }
+    },
+    "side_table": {
+     "A1": {
+      "0": {
+       "median": 4.6938973475654215,
+       "mean": 5.603616788521155,
+       "n": 43
+      },
+      "1": {
+       "median": 4.839986920423632,
+       "mean": 6.277351619407246,
+       "n": 42
+      },
+      "2": {
+       "median": 5.173637648895566,
+       "mean": 6.1229866452437545,
+       "n": 43
+      },
+      "3": {
+       "median": 4.646762574515804,
+       "mean": 5.710298998864145,
+       "n": 42
+      },
+      "4": {
+       "median": 4.801864603726887,
+       "mean": 5.8599965775159175,
+       "n": 42
+      }
+     },
+     "A2": {
+      "0": {
+       "median": 9.504225973842525,
+       "mean": 10.192869083451283,
+       "n": 43
+      },
+      "1": {
+       "median": 7.390638760617778,
+       "mean": 7.773654740861353,
+       "n": 42
+      },
+      "2": {
+       "median": 7.138518539109503,
+       "mean": 7.932259339360834,
+       "n": 43
+      },
+      "3": {
+       "median": 6.948483434838989,
+       "mean": 7.055732547675295,
+       "n": 42
+      },
+      "4": {
+       "median": 10.270726770047775,
+       "mean": 10.499686387155863,
+       "n": 42
+      }
+     },
+     "A4": {
+      "0": {
+       "median": 7.081349038278715,
+       "mean": 7.897941091220677,
+       "n": 43
+      },
+      "1": {
+       "median": 4.7470323856968575,
+       "mean": 6.199741319210574,
+       "n": 42
+      },
+      "2": {
+       "median": 5.465975781397417,
+       "mean": 6.332208572391941,
+       "n": 43
+      },
+      "3": {
+       "median": 4.341894293753642,
+       "mean": 4.986329237822488,
+       "n": 42
+      },
+      "4": {
+       "median": 5.081177813133017,
+       "mean": 6.073107321717054,
+       "n": 42
+      }
+     },
+     "A9": {
+      "0": {
+       "median": 11.039173570288845,
+       "mean": 12.33356828743145,
+       "n": 43
+      },
+      "1": {
+       "median": 6.181033060144679,
+       "mean": 8.270149690395433,
+       "n": 42
+      },
+      "2": {
+       "median": 11.36824389054626,
+       "mean": 12.430579521272703,
+       "n": 43
+      },
+      "3": {
+       "median": 6.670859399373983,
+       "mean": 7.872056024732385,
+       "n": 42
+      },
+      "4": {
+       "median": 8.155886560368533,
+       "mean": 9.53962060210571,
+       "n": 42
+      }
+     },
+     "A11": {
+      "0": {
+       "median": 8.325474429298861,
+       "mean": 8.687347111951082,
+       "n": 43
+      },
+      "1": {
+       "median": 5.706859706066002,
+       "mean": 6.500177546636322,
+       "n": 42
+      },
+      "2": {
+       "median": 7.353567192519558,
+       "mean": 7.741804465300154,
+       "n": 43
+      },
+      "3": {
+       "median": 5.272886868141182,
+       "mean": 5.957883683254428,
+       "n": 42
+      },
+      "4": {
+       "median": 8.059336144570086,
+       "mean": 8.849616427074945,
+       "n": 42
+      }
+     },
+     "A12": {
+      "0": {
+       "median": 5.516920923867925,
+       "mean": 6.060862661404304,
+       "n": 43
+      },
+      "1": {
+       "median": 4.6064294506599754,
+       "mean": 5.739261676509245,
+       "n": 42
+      },
+      "2": {
+       "median": 5.763443139625226,
+       "mean": 5.879677284260607,
+       "n": 43
+      },
+      "3": {
+       "median": 4.716020264833551,
+       "mean": 5.592049869770024,
+       "n": 42
+      },
+      "4": {
+       "median": 5.737562810015581,
+       "mean": 6.536615080646312,
+       "n": 42
+      }
+     }
+    }
+   },
+   "2": {
+    "primary_A1_vs_Dstar_median": {
+     "n_sides": 5,
+     "n_data_leads": 1,
+     "n_a1_lower": 4,
+     "data_leads_by_fold": {
+      "0": false,
+      "1": false,
+      "2": false,
+      "3": true,
+      "4": false
+     },
+     "verdict": "NOT_TRIGGERED",
+     "reason": "data-only learner not behind A1 on 1 of 5 evaluable sides (A1 lower on 4); rule: triggered iff >= 3 of 5 sides with data-only ahead, no margin"
+    },
+    "sides_primary_median": {
+     "0": [
+      4.22174423794345,
+      5.857899382197117
+     ],
+     "1": [
+      4.872417699066494,
+      5.03788865640037
+     ],
+     "2": [
+      4.898719153650267,
+      6.142123208334297
+     ],
+     "3": [
+      4.644919744212115,
+      4.258777637906239
+     ],
+     "4": [
+      5.383842595930643,
+      6.183388086515922
+     ]
+    },
+    "A1_vs_Dstar_mean": {
+     "n_sides": 5,
+     "n_data_leads": 2,
+     "n_a1_lower": 3,
+     "data_leads_by_fold": {
+      "0": false,
+      "1": true,
+      "2": false,
+      "3": true,
+      "4": false
+     },
+     "verdict": "NOT_TRIGGERED",
+     "reason": "data-only learner not behind A1 on 2 of 5 evaluable sides (A1 lower on 3); rule: triggered iff >= 3 of 5 sides with data-only ahead, no margin"
+    },
+    "oracle_best_data_only_median": {
+     "n_sides": 5,
+     "n_data_leads": 1,
+     "n_a1_lower": 4,
+     "data_leads_by_fold": {
+      "0": false,
+      "1": false,
+      "2": false,
+      "3": true,
+      "4": false
+     },
+     "verdict": "NOT_TRIGGERED",
+     "reason": "data-only learner not behind A1 on 1 of 5 evaluable sides (A1 lower on 4); rule: triggered iff >= 3 of 5 sides with data-only ahead, no margin"
+    },
+    "oracle_best_data_only_arm_by_fold": {
+     "0": "A11",
+     "1": "A12",
+     "2": "A12",
+     "3": "A12",
+     "4": "A12"
+    },
+    "A1_vs_A9_median": {
+     "n_sides": 5,
+     "n_data_leads": 0,
+     "n_a1_lower": 5,
+     "data_leads_by_fold": {
+      "0": false,
+      "1": false,
+      "2": false,
+      "3": false,
+      "4": false
+     },
+     "verdict": "NOT_TRIGGERED",
+     "reason": "data-only learner not behind A1 on 0 of 5 evaluable sides (A1 lower on 5); rule: triggered iff >= 3 of 5 sides with data-only ahead, no margin"
+    },
+    "A1_vs_A11_median": {
+     "n_sides": 5,
+     "n_data_leads": 0,
+     "n_a1_lower": 5,
+     "data_leads_by_fold": {
+      "0": false,
+      "1": false,
+      "2": false,
+      "3": false,
+      "4": false
+     },
+     "verdict": "NOT_TRIGGERED",
+     "reason": "data-only learner not behind A1 on 0 of 5 evaluable sides (A1 lower on 5); rule: triggered iff >= 3 of 5 sides with data-only ahead, no margin"
+    },
+    "A1_vs_A12_median": {
+     "n_sides": 5,
+     "n_data_leads": 1,
+     "n_a1_lower": 4,
+     "data_leads_by_fold": {
+      "0": false,
+      "1": false,
+      "2": false,
+      "3": true,
+      "4": false
+     },
+     "verdict": "NOT_TRIGGERED",
+     "reason": "data-only learner not behind A1 on 1 of 5 evaluable sides (A1 lower on 4); rule: triggered iff >= 3 of 5 sides with data-only ahead, no margin"
+    },
+    "physics_family_min_vs_Dstar_median": {
+     "n_sides": 5,
+     "n_data_leads": 1,
+     "n_a1_lower": 4,
+     "data_leads_by_fold": {
+      "0": false,
+      "1": false,
+      "2": false,
+      "3": true,
+      "4": false
+     },
+     "verdict": "NOT_TRIGGERED",
+     "reason": "data-only learner not behind A1 on 1 of 5 evaluable sides (A1 lower on 4); rule: triggered iff >= 3 of 5 sides with data-only ahead, no margin"
+    },
+    "paired_conditions_A1_vs_Dstar": {
+     "0": {
+      "n": 33,
+      "median_ln_Dstar_over_A1": 0.18007525138934802,
+      "share_A1_lower": 0.6363636363636364
+     },
+     "1": {
+      "n": 31,
+      "median_ln_Dstar_over_A1": -0.059333559419834536,
+      "share_A1_lower": 0.41935483870967744
+     },
+     "2": {
+      "n": 30,
+      "median_ln_Dstar_over_A1": 0.23663213895132626,
+      "share_A1_lower": 0.7
+     },
+     "3": {
+      "n": 30,
+      "median_ln_Dstar_over_A1": -0.09276316259353151,
+      "share_A1_lower": 0.3
+     },
+     "4": {
+      "n": 31,
+      "median_ln_Dstar_over_A1": 0.08479918950591915,
+      "share_A1_lower": 0.6451612903225806
+     }
+    },
+    "side_table": {
+     "A1": {
+      "0": {
+       "median": 4.22174423794345,
+       "mean": 5.1268178415946055,
+       "n": 33
+      },
+      "1": {
+       "median": 4.872417699066494,
+       "mean": 5.60467998183738,
+       "n": 31
+      },
+      "2": {
+       "median": 4.898719153650267,
+       "mean": 5.191572683162979,
+       "n": 30
+      },
+      "3": {
+       "median": 4.644919744212115,
+       "mean": 5.585616729870645,
+       "n": 30
+      },
+      "4": {
+       "median": 5.383842595930643,
+       "mean": 5.6454087501006684,
+       "n": 31
+      }
+     },
+     "A2": {
+      "0": {
+       "median": 6.697806370009759,
+       "mean": 8.469765700367693,
+       "n": 33
+      },
+      "1": {
+       "median": 6.143555746381426,
+       "mean": 7.195331517547852,
+       "n": 31
+      },
+      "2": {
+       "median": 6.317113562584255,
+       "mean": 7.6131761970426535,
+       "n": 30
+      },
+      "3": {
+       "median": 5.773063453102692,
+       "mean": 7.227494196500724,
+       "n": 30
+      },
+      "4": {
+       "median": 6.6590562636920385,
+       "mean": 8.147113888441478,
+       "n": 31
+      }
+     },
+     "A4": {
+      "0": {
+       "median": 7.076592435638992,
+       "mean": 7.604412973755742,
+       "n": 33
+      },
+      "1": {
+       "median": 4.68546630296968,
+       "mean": 5.552497625732213,
+       "n": 31
+      },
+      "2": {
+       "median": 5.657908003358551,
+       "mean": 5.514336734999377,
+       "n": 30
+      },
+      "3": {
+       "median": 4.766140684209194,
+       "mean": 5.157455148659342,
+       "n": 30
+      },
+      "4": {
+       "median": 5.214163369124189,
+       "mean": 5.7947879284298915,
+       "n": 31
+      }
+     },
+     "A9": {
+      "0": {
+       "median": 14.680908831752681,
+       "mean": 15.66138649591385,
+       "n": 33
+      },
+      "1": {
+       "median": 10.308332845158535,
+       "mean": 11.995408432376548,
+       "n": 31
+      },
+      "2": {
+       "median": 19.01922776490199,
+       "mean": 20.75291068243379,
+       "n": 30
+      },
+      "3": {
+       "median": 8.182908343393077,
+       "mean": 10.436101178826535,
+       "n": 30
+      },
+      "4": {
+       "median": 11.161720201301373,
+       "mean": 13.364870316404996,
+       "n": 31
+      }
+     },
+     "A11": {
+      "0": {
+       "median": 5.857899382197117,
+       "mean": 6.368652362864429,
+       "n": 33
+      },
+      "1": {
+       "median": 7.85742976428134,
+       "mean": 7.974810757008699,
+       "n": 31
+      },
+      "2": {
+       "median": 6.232464356606621,
+       "mean": 6.458335131692386,
+       "n": 30
+      },
+      "3": {
+       "median": 5.054154278408571,
+       "mean": 5.501440935663846,
+       "n": 30
+      },
+      "4": {
+       "median": 6.694364268643678,
+       "mean": 6.9265384689656795,
+       "n": 31
+      }
+     },
+     "A12": {
+      "0": {
+       "median": 5.975347232976578,
+       "mean": 6.765514429926429,
+       "n": 33
+      },
+      "1": {
+       "median": 5.03788865640037,
+       "mean": 5.417818888202535,
+       "n": 31
+      },
+      "2": {
+       "median": 6.142123208334297,
+       "mean": 6.646599969672417,
+       "n": 30
+      },
+      "3": {
+       "median": 4.258777637906239,
+       "mean": 5.1292296999839415,
+       "n": 30
+      },
+      "4": {
+       "median": 6.183388086515922,
+       "mean": 6.654568972614063,
+       "n": 31
+      }
+     }
+    }
+   },
+   "full": {
+    "primary_A1_vs_Dstar_median": {
+     "n_sides": 5,
+     "n_data_leads": 1,
+     "n_a1_lower": 4,
+     "data_leads_by_fold": {
+      "0": false,
+      "1": true,
+      "2": false,
+      "3": false,
+      "4": false
+     },
+     "verdict": "NOT_TRIGGERED",
+     "reason": "data-only learner not behind A1 on 1 of 5 evaluable sides (A1 lower on 4); rule: triggered iff >= 3 of 5 sides with data-only ahead, no margin"
+    },
+    "sides_primary_median": {
+     "0": [
+      4.844639777130062,
+      7.068292789054848
+     ],
+     "1": [
+      5.4149682892332685,
+      5.240147236565019
+     ],
+     "2": [
+      5.06682649710368,
+      6.062479124538614
+     ],
+     "3": [
+      4.795612697168467,
+      4.912066383040763
+     ],
+     "4": [
+      5.318844168206482,
+      7.025716951451024
+     ]
+    },
+    "A1_vs_Dstar_mean": {
+     "n_sides": 5,
+     "n_data_leads": 2,
+     "n_a1_lower": 3,
+     "data_leads_by_fold": {
+      "0": false,
+      "1": true,
+      "2": false,
+      "3": true,
+      "4": false
+     },
+     "verdict": "NOT_TRIGGERED",
+     "reason": "data-only learner not behind A1 on 2 of 5 evaluable sides (A1 lower on 3); rule: triggered iff >= 3 of 5 sides with data-only ahead, no margin"
+    },
+    "oracle_best_data_only_median": {
+     "n_sides": 5,
+     "n_data_leads": 1,
+     "n_a1_lower": 4,
+     "data_leads_by_fold": {
+      "0": false,
+      "1": true,
+      "2": false,
+      "3": false,
+      "4": false
+     },
+     "verdict": "NOT_TRIGGERED",
+     "reason": "data-only learner not behind A1 on 1 of 5 evaluable sides (A1 lower on 4); rule: triggered iff >= 3 of 5 sides with data-only ahead, no margin"
+    },
+    "oracle_best_data_only_arm_by_fold": {
+     "0": "A12",
+     "1": "A12",
+     "2": "A12",
+     "3": "A12",
+     "4": "A12"
+    },
+    "A1_vs_A9_median": {
+     "n_sides": 5,
+     "n_data_leads": 0,
+     "n_a1_lower": 5,
+     "data_leads_by_fold": {
+      "0": false,
+      "1": false,
+      "2": false,
+      "3": false,
+      "4": false
+     },
+     "verdict": "NOT_TRIGGERED",
+     "reason": "data-only learner not behind A1 on 0 of 5 evaluable sides (A1 lower on 5); rule: triggered iff >= 3 of 5 sides with data-only ahead, no margin"
+    },
+    "A1_vs_A11_median": {
+     "n_sides": 5,
+     "n_data_leads": 0,
+     "n_a1_lower": 5,
+     "data_leads_by_fold": {
+      "0": false,
+      "1": false,
+      "2": false,
+      "3": false,
+      "4": false
+     },
+     "verdict": "NOT_TRIGGERED",
+     "reason": "data-only learner not behind A1 on 0 of 5 evaluable sides (A1 lower on 5); rule: triggered iff >= 3 of 5 sides with data-only ahead, no margin"
+    },
+    "A1_vs_A12_median": {
+     "n_sides": 5,
+     "n_data_leads": 1,
+     "n_a1_lower": 4,
+     "data_leads_by_fold": {
+      "0": false,
+      "1": true,
+      "2": false,
+      "3": false,
+      "4": false
+     },
+     "verdict": "NOT_TRIGGERED",
+     "reason": "data-only learner not behind A1 on 1 of 5 evaluable sides (A1 lower on 4); rule: triggered iff >= 3 of 5 sides with data-only ahead, no margin"
+    },
+    "physics_family_min_vs_Dstar_median": {
+     "n_sides": 5,
+     "n_data_leads": 0,
+     "n_a1_lower": 5,
+     "data_leads_by_fold": {
+      "0": false,
+      "1": false,
+      "2": false,
+      "3": false,
+      "4": false
+     },
+     "verdict": "NOT_TRIGGERED",
+     "reason": "data-only learner not behind A1 on 0 of 5 evaluable sides (A1 lower on 5); rule: triggered iff >= 3 of 5 sides with data-only ahead, no margin"
+    },
+    "paired_conditions_A1_vs_Dstar": {
+     "0": {
+      "n": 43,
+      "median_ln_Dstar_over_A1": 0.2804318862437313,
+      "share_A1_lower": 0.8837209302325582
+     },
+     "1": {
+      "n": 41,
+      "median_ln_Dstar_over_A1": -0.05928580831561684,
+      "share_A1_lower": 0.43902439024390244
+     },
+     "2": {
+      "n": 42,
+      "median_ln_Dstar_over_A1": 0.04355181596865708,
+      "share_A1_lower": 0.5238095238095238
+     },
+     "3": {
+      "n": 42,
+      "median_ln_Dstar_over_A1": -0.03799116694996391,
+      "share_A1_lower": 0.4523809523809524
+     },
+     "4": {
+      "n": 42,
+      "median_ln_Dstar_over_A1": 0.10549722538456816,
+      "share_A1_lower": 0.6666666666666666
+     }
+    },
+    "side_table": {
+     "A1": {
+      "0": {
+       "median": 4.844639777130062,
+       "mean": 5.734129407251834,
+       "n": 43
+      },
+      "1": {
+       "median": 5.4149682892332685,
+       "mean": 6.159911982709484,
+       "n": 41
+      },
+      "2": {
+       "median": 5.06682649710368,
+       "mean": 5.861363788433453,
+       "n": 42
+      },
+      "3": {
+       "median": 4.795612697168467,
+       "mean": 6.276288158876743,
+       "n": 42
+      },
+      "4": {
+       "median": 5.318844168206482,
+       "mean": 6.336588487107563,
+       "n": 42
+      }
+     },
+     "A2": {
+      "0": {
+       "median": 5.637852983049359,
+       "mean": 6.511379280305651,
+       "n": 43
+      },
+      "1": {
+       "median": 5.638641459536383,
+       "mean": 6.097862395627719,
+       "n": 41
+      },
+      "2": {
+       "median": 5.591491683968785,
+       "mean": 6.242777479997915,
+       "n": 42
+      },
+      "3": {
+       "median": 5.607732995558807,
+       "mean": 6.539009115644591,
+       "n": 42
+      },
+      "4": {
+       "median": 5.777598330037437,
+       "mean": 6.64009274630655,
+       "n": 42
+      }
+     },
+     "A4": {
+      "0": {
+       "median": 7.654240130491776,
+       "mean": 8.515037403909782,
+       "n": 43
+      },
+      "1": {
+       "median": 4.94771180865552,
+       "mean": 6.097276661870856,
+       "n": 41
+      },
+      "2": {
+       "median": 5.29981124065673,
+       "mean": 6.043921403790514,
+       "n": 42
+      },
+      "3": {
+       "median": 5.0015748079668505,
+       "mean": 5.8526709084192685,
+       "n": 42
+      },
+      "4": {
+       "median": 5.557051606733893,
+       "mean": 6.515514873469287,
+       "n": 42
+      }
+     },
+     "A9": {
+      "0": {
+       "median": 13.04419223447604,
+       "mean": 14.560029634876638,
+       "n": 43
+      },
+      "1": {
+       "median": 9.146373381840204,
+       "mean": 12.006241572655792,
+       "n": 41
+      },
+      "2": {
+       "median": 13.225212705068023,
+       "mean": 16.907004499857884,
+       "n": 42
+      },
+      "3": {
+       "median": 9.826295113787426,
+       "mean": 10.98615035343926,
+       "n": 42
+      },
+      "4": {
+       "median": 10.815520641135098,
+       "mean": 12.956644525079511,
+       "n": 42
+      }
+     },
+     "A11": {
+      "0": {
+       "median": 7.068292789054848,
+       "mean": 8.209182547120419,
+       "n": 43
+      },
+      "1": {
+       "median": 5.626914213614494,
+       "mean": 7.250740609661166,
+       "n": 41
+      },
+      "2": {
+       "median": 7.166034264631579,
+       "mean": 7.346402569357612,
+       "n": 42
+      },
+      "3": {
+       "median": 5.319335678870383,
+       "mean": 6.016340628165748,
+       "n": 42
+      },
+      "4": {
+       "median": 7.497422756559121,
+       "mean": 8.502560303385758,
+       "n": 42
+      }
+     },
+     "A12": {
+      "0": {
+       "median": 6.399132427999003,
+       "mean": 7.344836985447636,
+       "n": 43
+      },
+      "1": {
+       "median": 5.240147236565019,
+       "mean": 5.576086961543859,
+       "n": 41
+      },
+      "2": {
+       "median": 6.062479124538614,
+       "mean": 6.293764707204552,
+       "n": 42
+      },
+      "3": {
+       "median": 4.912066383040763,
+       "mean": 5.641663519706268,
+       "n": 42
+      },
+      "4": {
+       "median": 7.025716951451024,
+       "mean": 7.410174051979399,
+       "n": 42
+      }
+     }
+    }
+   }
+  }
+ },
+ "comparators": {
+  "0": {
+   "inner_cv_pp": {
+    "A9": 10.555821957156967,
+    "A11": 6.11335967333968,
+    "A12": 6.888440567216486
+   },
+   "D*": "A11",
+   "complete": true
+  },
+  "1": {
+   "inner_cv_pp": {
+    "A9": 9.212674437373648,
+    "A11": 6.085913941676583,
+    "A12": 5.058172731447379
+   },
+   "D*": "A12",
+   "complete": true
+  },
+  "2": {
+   "inner_cv_pp": {
+    "A9": 9.233644786012082,
+    "A11": 5.576288934092733,
+    "A12": 4.394238134575085
+   },
+   "D*": "A12",
+   "complete": true
+  },
+  "3": {
+   "inner_cv_pp": {
+    "A9": 15.02502611366352,
+    "A11": 6.621001643896478,
+    "A12": 5.754464061162508
+   },
+   "D*": "A12",
+   "complete": true
+  },
+  "4": {
+   "inner_cv_pp": {
+    "A9": 10.860106887495725,
+    "A11": 6.470027269918602,
+    "A12": 4.557853502445164
+   },
+   "D*": "A12",
+   "complete": true
+  }
+ },
+ "split_sha256_before": "c1227642a067e61c4e5110d577e0b84b6ccb6da1cd8e4b48b16e03b2ba4419d8",
+ "split_sha256_after": "c1227642a067e61c4e5110d577e0b84b6ccb6da1cd8e4b48b16e03b2ba4419d8",
+ "cpu_hours": 2.0210112847222224,
+ "wall_hours_first_start_to_last_end": 9.507032418913312,
+ "wall_hours_sum_of_sessions": 9.507032418913312,
+ "fold_audit": [
+  {
+   "fold": 0,
+   "n_outer_test_conditions": 12,
+   "n_outer_test_cells": 48,
+   "n_training_conditions": 51,
+   "n_pseudo_train_conditions": 8,
+   "n_pseudo_test_conditions": 43,
+   "n_pseudo_test_cells": 171,
+   "intersection_conditions_with_outer_test": 0,
+   "intersection_cells_with_outer_test": 0,
+   "test_fold_scored": false,
+   "pseudo_train_conditions": [
+    "31",
+    "12",
+    "26",
+    "48",
+    "11",
+    "27",
+    "16",
+    "1"
+   ],
+   "split_sha256_file": "c1227642a067e61c4e5110d577e0b84b6ccb6da1cd8e4b48b16e03b2ba4419d8",
+   "fold_hash_ok": true,
+   "window_W": 2.0,
+   "min_window_points": 3,
+   "subset_sha256": "e6a916c102d9732c170610461f91b29b00f3914fbe7b85deb1615dbc8baf500e"
+  },
+  {
+   "fold": 1,
+   "n_outer_test_conditions": 13,
+   "n_outer_test_cells": 52,
+   "n_training_conditions": 50,
+   "n_pseudo_train_conditions": 8,
+   "n_pseudo_test_conditions": 42,
+   "n_pseudo_test_cells": 167,
+   "intersection_conditions_with_outer_test": 0,
+   "intersection_cells_with_outer_test": 0,
+   "test_fold_scored": false,
+   "pseudo_train_conditions": [
+    "56",
+    "16",
+    "42",
+    "49",
+    "45",
+    "24",
+    "48",
+    "12"
+   ],
+   "split_sha256_file": "c1227642a067e61c4e5110d577e0b84b6ccb6da1cd8e4b48b16e03b2ba4419d8",
+   "fold_hash_ok": true,
+   "window_W": 2.0,
+   "min_window_points": 3,
+   "subset_sha256": "9d2895b217309699f283311f98513750d2cc0f6a90ca3ae1f9de039a99c4071f"
+  },
+  {
+   "fold": 2,
+   "n_outer_test_conditions": 12,
+   "n_outer_test_cells": 48,
+   "n_training_conditions": 51,
+   "n_pseudo_train_conditions": 8,
+   "n_pseudo_test_conditions": 43,
+   "n_pseudo_test_cells": 171,
+   "intersection_conditions_with_outer_test": 0,
+   "intersection_cells_with_outer_test": 0,
+   "test_fold_scored": false,
+   "pseudo_train_conditions": [
+    "31",
+    "13",
+    "26",
+    "27",
+    "47",
+    "36",
+    "16",
+    "1"
+   ],
+   "split_sha256_file": "c1227642a067e61c4e5110d577e0b84b6ccb6da1cd8e4b48b16e03b2ba4419d8",
+   "fold_hash_ok": true,
+   "window_W": 2.0,
+   "min_window_points": 3,
+   "subset_sha256": "117a20ec2bd514f81526ad8f08bf54f9f0c76a12b1daa37a6def53835fc2893b"
+  },
+  {
+   "fold": 3,
+   "n_outer_test_conditions": 13,
+   "n_outer_test_cells": 51,
+   "n_training_conditions": 50,
+   "n_pseudo_train_conditions": 8,
+   "n_pseudo_test_conditions": 42,
+   "n_pseudo_test_cells": 168,
+   "intersection_conditions_with_outer_test": 0,
+   "intersection_cells_with_outer_test": 0,
+   "test_fold_scored": false,
+   "pseudo_train_conditions": [
+    "31",
+    "12",
+    "48",
+    "42",
+    "36",
+    "57",
+    "1",
+    "37"
+   ],
+   "split_sha256_file": "c1227642a067e61c4e5110d577e0b84b6ccb6da1cd8e4b48b16e03b2ba4419d8",
+   "fold_hash_ok": true,
+   "window_W": 2.0,
+   "min_window_points": 3,
+   "subset_sha256": "0edcb4a8310541779f3873e8df51c92aa0ef60a8f868a9063ce80c67af872e23"
+  },
+  {
+   "fold": 4,
+   "n_outer_test_conditions": 13,
+   "n_outer_test_cells": 52,
+   "n_training_conditions": 50,
+   "n_pseudo_train_conditions": 8,
+   "n_pseudo_test_conditions": 42,
+   "n_pseudo_test_cells": 167,
+   "intersection_conditions_with_outer_test": 0,
+   "intersection_cells_with_outer_test": 0,
+   "test_fold_scored": false,
+   "pseudo_train_conditions": [
+    "31",
+    "12",
+    "26",
+    "48",
+    "11",
+    "27",
+    "16",
+    "1"
+   ],
+   "split_sha256_file": "c1227642a067e61c4e5110d577e0b84b6ccb6da1cd8e4b48b16e03b2ba4419d8",
+   "fold_hash_ok": true,
+   "window_W": 2.0,
+   "min_window_points": 3,
+   "subset_sha256": "0afb2bd1e1a21a4b9906d1800035bdaa706d2914307d6efd3dc5081c5979da67"
+  }
+ ]
+}

@@ -1,0 +1,43 @@
+{
+ "pilot": "P6",
+ "status": "development, non-confirmatory; ISU is not blind (PREREG 3.4); not evidence for Samsung",
+ "rule_file": "runs/pilot_P6/RULE.md",
+ "rule": "stop rule 10 (PREREG section 12): triggered iff A1 is not lower than D* (median pseudo-test condition score) on at least 3 of the 5 ISU training sides at m = 8, W = 2 weeks; no margin",
+ "stop_rule_10_triggered": false,
+ "verdict": "NOT_TRIGGERED",
+ "verdict_reason": "data-only learner not behind A1 on 1 of 5 evaluable sides (A1 lower on 4); rule: triggered iff >= 3 of 5 sides with data-only ahead, no margin",
+ "complete": true,
+ "missing_units": [],
+ "n_sides_evaluable": 5,
+ "n_sides_data_only_leads": 1,
+ "n_sides_A1_lower": 4,
+ "data_leads_by_fold": {
+  "0": false,
+  "1": false,
+  "2": false,
+  "3": true,
+  "4": false
+ },
+ "Dstar_by_fold": {
+  "0": "A11",
+  "1": "A12",
+  "2": "A12",
+  "3": "A12",
+  "4": "A12"
+ },
+ "primary_window": "2",
+ "descriptive_other_windows": {
+  "0": {
+   "verdict": "NOT_TRIGGERED",
+   "n_data_leads": 1,
+   "n_a1_lower": 4
+  },
+  "full": {
+   "verdict": "NOT_TRIGGERED",
+   "n_data_leads": 1,
+   "n_a1_lower": 4
+  }
+ },
+ "design_changed": false,
+ "note": "the design is not changed on the pilot's size (stop rule 10); the lead tells Shlok if triggered; Shlok may stop before compute is spent"
+}

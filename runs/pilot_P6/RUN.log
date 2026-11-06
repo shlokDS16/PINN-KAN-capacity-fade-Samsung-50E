@@ -1,0 +1,37 @@
+[2026-11-05 23:19:42] P6 run start: smoke=False, folds [0, 1, 2, 3, 4], arms ['A1', 'A2', 'A4', 'A9', 'A11', 'A12'], windows ['0', '2', 'full'], inner_k 2, N=20, seeds [0, 1, 2, 3, 4], workers 3
+[2026-11-05 23:20:18] tournament f0: self_limiting (cpu 25 s); CPU total 0.007 h
+[2026-11-05 23:20:19] tournament f2: self_limiting (cpu 25 s); CPU total 0.014 h
+[2026-11-05 23:20:19] tournament f1: self_limiting (cpu 25 s); CPU total 0.021 h
+[2026-11-05 23:20:42] tournament f3: self_limiting (cpu 23 s); CPU total 0.027 h
+[2026-11-05 23:20:42] tournament f4: self_limiting (cpu 22 s); CPU total 0.033 h
+[2026-11-06 08:24:40] [1/30] f0 A1: inner-CV 4.876 pp (cpu 904 s, wall 32638 s); CPU total 0.284 h
+[2026-11-06 08:25:00] [2/30] f1 A1: inner-CV 5.217 pp (cpu 923 s, wall 32658 s); CPU total 0.541 h
+[2026-11-06 08:25:08] [3/30] f2 A1: inner-CV 4.603 pp (cpu 932 s, wall 32666 s); CPU total 0.800 h
+[2026-11-06 08:32:24] [4/30] f0 A4: inner-CV 5.760 pp (cpu 432 s, wall 436 s); CPU total 0.920 h
+[2026-11-06 08:34:42] [5/30] f3 A1: inner-CV 6.441 pp (cpu 596 s, wall 602 s); CPU total 1.085 h
+[2026-11-06 08:34:57] [6/30] f4 A1: inner-CV 4.637 pp (cpu 590 s, wall 597 s); CPU total 1.249 h
+[2026-11-06 08:39:38] [7/30] f1 A4: inner-CV 5.637 pp (cpu 430 s, wall 434 s); CPU total 1.369 h
+[2026-11-06 08:41:43] [8/30] f2 A4: inner-CV 5.351 pp (cpu 417 s, wall 421 s); CPU total 1.484 h
+[2026-11-06 08:41:52] [9/30] f3 A4: inner-CV 5.873 pp (cpu 411 s, wall 415 s); CPU total 1.599 h
+[2026-11-06 08:43:35] [10/30] f0 A9: inner-CV 10.556 pp (cpu 110 s, wall 112 s); CPU total 1.629 h
+[2026-11-06 08:43:40] [11/30] f1 A9: inner-CV 9.213 pp (cpu 107 s, wall 108 s); CPU total 1.659 h
+[2026-11-06 08:45:04] [12/30] f2 A9: inner-CV 9.234 pp (cpu 88 s, wall 88 s); CPU total 1.683 h
+[2026-11-06 08:45:53] [13/30] f3 A9: inner-CV 15.025 pp (cpu 132 s, wall 133 s); CPU total 1.720 h
+[2026-11-06 08:46:34] [14/30] f4 A4: inner-CV 4.523 pp (cpu 411 s, wall 416 s); CPU total 1.834 h
+[2026-11-06 08:46:53] [15/30] f4 A9: inner-CV 10.860 pp (cpu 108 s, wall 109 s); CPU total 1.864 h
+[2026-11-06 08:47:35] [16/30] f0 A2: inner-CV 4.688 pp (cpu 100 s, wall 102 s); CPU total 1.892 h
+[2026-11-06 08:48:16] [17/30] f1 A2: inner-CV 6.627 pp (cpu 102 s, wall 103 s); CPU total 1.920 h
+[2026-11-06 08:48:38] [18/30] f2 A2: inner-CV 6.228 pp (cpu 104 s, wall 105 s); CPU total 1.949 h
+[2026-11-06 08:48:43] [19/30] f0 A11: inner-CV 6.113 pp (cpu 5 s, wall 5 s); CPU total 1.950 h
+[2026-11-06 08:48:47] [20/30] f1 A11: inner-CV 6.086 pp (cpu 4 s, wall 4 s); CPU total 1.952 h
+[2026-11-06 08:48:52] [21/30] f2 A11: inner-CV 5.576 pp (cpu 5 s, wall 5 s); CPU total 1.953 h
+[2026-11-06 08:48:59] [22/30] f3 A11: inner-CV 6.621 pp (cpu 6 s, wall 6 s); CPU total 1.955 h
+[2026-11-06 08:49:04] [23/30] f4 A11: inner-CV 6.470 pp (cpu 5 s, wall 5 s); CPU total 1.956 h
+[2026-11-06 08:49:07] [24/30] f0 A12: inner-CV 6.888 pp (cpu 3 s, wall 3 s); CPU total 1.957 h
+[2026-11-06 08:49:10] [25/30] f1 A12: inner-CV 5.058 pp (cpu 3 s, wall 3 s); CPU total 1.958 h
+[2026-11-06 08:49:14] [26/30] f2 A12: inner-CV 4.394 pp (cpu 4 s, wall 4 s); CPU total 1.959 h
+[2026-11-06 08:49:17] [27/30] f3 A12: inner-CV 5.754 pp (cpu 3 s, wall 3 s); CPU total 1.960 h
+[2026-11-06 08:49:20] [28/30] f4 A12: inner-CV 4.558 pp (cpu 3 s, wall 3 s); CPU total 1.961 h
+[2026-11-06 08:49:24] [29/30] f3 A2: inner-CV 6.597 pp (cpu 108 s, wall 109 s); CPU total 1.990 h
+[2026-11-06 08:50:07] [30/30] f4 A2: inner-CV 4.570 pp (cpu 110 s, wall 111 s); CPU total 2.021 h
+[2026-11-06 08:50:08] P6 run end: CPU 2.021 h, wall 9.507 h, aborted=False

@@ -1,0 +1,53 @@
+{
+ "chosen": "self_limiting",
+ "best": "self_limiting",
+ "table": {
+  "constant": {
+   "mean_pp": 13.44857808406071,
+   "se_pp": 6.56180329784235,
+   "n_conditions": 5
+  },
+  "self_limiting": {
+   "mean_pp": 6.416843390626485,
+   "se_pp": 1.9850271242070467,
+   "n_conditions": 5
+  },
+  "accelerating": {
+   "mean_pp": 61.12304649613825,
+   "se_pp": 35.74448977616522,
+   "n_conditions": 5
+  }
+ },
+ "rule": "simplest backbone within one SE of the best (constant < self_limiting < accelerating)",
+ "fold": 2,
+ "inner_k": 2,
+ "wall_seconds": 26.722280979156494,
+ "cpu_seconds": 25.21875,
+ "audit": {
+  "fold": 2,
+  "n_outer_test_conditions": 12,
+  "n_outer_test_cells": 48,
+  "n_training_conditions": 51,
+  "n_pseudo_train_conditions": 8,
+  "n_pseudo_test_conditions": 43,
+  "n_pseudo_test_cells": 171,
+  "intersection_conditions_with_outer_test": 0,
+  "intersection_cells_with_outer_test": 0,
+  "test_fold_scored": false,
+  "pseudo_train_conditions": [
+   "31",
+   "13",
+   "26",
+   "27",
+   "47",
+   "36",
+   "16",
+   "1"
+  ],
+  "split_sha256_file": "c1227642a067e61c4e5110d577e0b84b6ccb6da1cd8e4b48b16e03b2ba4419d8",
+  "fold_hash_ok": true,
+  "window_W": 2.0,
+  "min_window_points": 3,
+  "subset_sha256": "117a20ec2bd514f81526ad8f08bf54f9f0c76a12b1daa37a6def53835fc2893b"
+ }
+}

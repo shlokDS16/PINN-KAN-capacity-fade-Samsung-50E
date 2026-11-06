@@ -1,0 +1,55 @@
+{
+ "pilot": "P6",
+ "status": "development, non-confirmatory (ISU is not blind, PREREG 3.4); never evidence for Samsung",
+ "spec": "PREREG_v4 17.2 C6 and section 12 rule 10; debates/D016_roles/02_judge.md (P6 lines 173, 320, 342, 384); debates/D016_roles/01_proposal.md 5.6; reading rule in runs/pilot_P6/RULE.md",
+ "dataset": "isu",
+ "test": "B",
+ "split_file": "runs/splits/isu_testB.json",
+ "folds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "m": 8,
+ "subset": "maxmin",
+ "window_W_weeks": 2.0,
+ "window_W_weeks_note": "tuning (inner CV) window and backbone-tournament window: W = 2 weeks as run.py does at m < 32 (rule_tune)",
+ "score_windows": [
+  "0",
+  "2",
+  "full"
+ ],
+ "score_windows_note": "ISU analogue of k in {0, 2, k_full}: W = 0 weeks (reference only), 2 weeks (g1 analogue, PREREG 4.1 / 1: scarce analogue), full = base window W = 4 weeks (data.WindowRule.for_grid)",
+ "primary_window": "2",
+ "inner_k": 2,
+ "arms": [
+  "A1",
+  "A2",
+  "A4",
+  "A9",
+  "A11",
+  "A12"
+ ],
+ "n_trials": 20,
+ "final_seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "steps_scale": 1.0,
+ "backbone": "tournament",
+ "workers": 3,
+ "cpu_hours_abort": 6.0,
+ "reading_rule": {
+  "primary_comparison": "A1 against D* (D* = arm of {A9, A11, A12} with the lowest inner-CV condition-mean score on the side's pseudo-train, selectors.select_comparators)",
+  "side_statistic": "median over the side's pseudo-test conditions of the ensemble condition score (pp), conditions scored by both arms",
+  "cell": "m = 8, W = 2 weeks (g1 analogue)",
+  "data_leads_on_side": "median(D*) <= median(A1), i.e. A1 is not lower than D*",
+  "stop_rule_10": "triggered iff data_leads_on_side on at least 3 of the 5 sides; no margin"
+ },
+ "config_path": "C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\code\\pilots\\p6_config.json"
+}

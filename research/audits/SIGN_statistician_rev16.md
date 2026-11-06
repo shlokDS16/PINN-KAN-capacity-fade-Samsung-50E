@@ -43,3 +43,15 @@ Independent recomputation: scipy `betabinom` (not the project's code) and a 4,00
 D1-D6 are fixed in code and text with tests that follow the frozen text. AD1 and AD2 are coded exactly as section 9 states, and M3 is outside the graph with no alpha added. Counts, levels, NC-2 and ranks are unchanged. N1-N3 are wording or budget notes that change no number used by any test.
 
 Statistician signature: SIGNED
+
+## Rev. 17 confirmation
+
+Read: `git diff fb98e9b 4e29223 -- runs/prereg/PREREG_v4.md code/pinnkan/stats_v4.py` (the diff is 15 insertions and 11 deletions in two files) against `runs/prereg/stats_sim_v4/RESULT_D034.md` (3.1, 4, 5) and `RESULT_weights.md`. No Samsung data opened; nothing edited except this file.
+
+- **N1 (9.8 rule 5): fixed.** The text now says the false-P+ error is bounded per title by the nominal 0.025 (intersection-union). When the false part is P1 the bound is the graph's family-wise rate. When the false part is A1 against persistence it is the R1 test's own size, nominal 0.025, which can exceed the graph's simulated 0.0192 in that configuration. The R1 test is placed outside the family-wise count of 9.11, and the column "P(P+ & M3)" is noted as P(P+ title). The figures quoted (0.0192, 0.80 x 0.025 in R4) match `RESULT_D034.md` sections 0 and 4.
+- **N2 (section 1 and the Power bullet): fixed.** K1 figures are 0.766 / 0.379 (independent, rhoK 0.95 / 0.90) and 0.709 / 0.408 (clustered), identical to the P_K1 column of `RESULT_D034.md` 3.1. They are labelled graph figures with hand-overs under the D034 contrast, not the 0.0055 test alone. The former-contrast figures 0.734 / 0.343 and 0.693 / 0.386 match `RESULT_weights.md` (lines 23-29). The w = 1/2 figures 0.781 / 0.379 and 0.732 / 0.424 are unchanged from rev. 16 and not touched by this diff.
+- **N3 (section 16): fixed.** The text states that rows (ii) and (iii) at m = 32 also fit k = 2, that the extra (32, 2) fits cost about as much again as those rows' runs, that this is not included in the "2-18 at N = 40" range, and that FB-8 times them. The rest of the section 16 arithmetic (125/65 = 1.92, 32/120, 50/170, 17 h / 57 h, 19/72) is unchanged and no number was altered.
+- **m-7 (`stats_v4.effective_config`): fail-closed, confirmed.** When the caller's root has no FROZEN file but the project's `guard._DEFAULT_ROOT` does, the function now switches to the project root and applies the pin check. Otherwise it returns unchanged. `os` is imported and `guard._DEFAULT_ROOT` / `is_frozen` exist. The change affects only a post-FROZEN call with a foreign root. It alters no test, count, level, margin or tier.
+- No number used by any test differs from the simulation files. Section 11 is stated to be byte-identical. I did not recompute that hash.
+
+Statistician signature carried to rev. 17: CONFIRMED

@@ -11,5 +11,5 @@ suite() { for t in code/tests/test_*.py; do r=$(.venv/Scripts/python.exe -P -m p
 C=runs/freeze_runs/configs
 ( for f in 0 1 2 3 4; do run $C/fb8_timing_samsung_B_f${f}_m32.json; done ) &
 ( for f in 0 1 2 3 4; do run $C/fb8_timing_samsung_B_f${f}_m8.json; done; run $C/fb10_smoke_isu_B0.json; run $C/fb10_smoke_snl_B0.json ) &
-( run $C/fb9_nc1_full_synth_m8.json; run $C/fb9_nc1_full_synth_m32.json; suite ) &
+( run $C/fb9_nc1_full_synth_m8.json; run $C/fb9_nc1_full_synth_m16.json; run $C/fb9_nc1_full_synth_m32.json; suite ) &
 wait; echo "$(date '+%F %T') ALL DONE" >> $L/queue.log

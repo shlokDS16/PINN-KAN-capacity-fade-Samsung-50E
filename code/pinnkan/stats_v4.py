@@ -118,7 +118,10 @@ def effective_config(cfg=None, root=None):
     configuration; a cfg whose resolved values differ from it on any key, a missing or altered file (hash against the FROZEN pin `stats_config`) refuses with StatsConfigPinError."""
     root = root or guard._DEFAULT_ROOT
     if not guard.is_frozen(root):
-        return cfg, {"frozen": False, "pinned": False}
+        if os.path.abspath(root) != os.path.abspath(guard._DEFAULT_ROOT) and guard.is_frozen(guard._DEFAULT_ROOT):
+            root = guard._DEFAULT_ROOT          # rev. 16 red team m-7: a caller-supplied root without FROZEN cannot skip the project's pin (fail closed)
+        else:
+            return cfg, {"frozen": False, "pinned": False}
     p = os.path.join(root, STATS_CONFIG_REL)
     if not os.path.isfile(p):
         raise StatsConfigPinError(f"FROZEN exists but {STATS_CONFIG_REL} is absent")

@@ -22,11 +22,13 @@ for f in range(5):
         c.update({"run_id": f"fb8_timing_samsung_B_f{f}_m{m}", "mode": "timing"})
         write(c["run_id"], c)
 
-for m in (8, 32):
+for m in (8, 16, 32):            # PREREG 10 grid coverage: m 8/16/32, short-record cells (D025 cap), every confirmatory arm of the grid config (rev. 16 red team m-6)
+    arms = json.load(open(os.path.join(CONF, f"conf_samsung_B_f0_m{m}.json"), encoding="utf8"))["arms"]
     write(f"fb9_nc1_full_synth_m{m}", {"run_id": f"fb9_nc1_full_synth_m{m}", "dataset": "synthetic", "mode": "nc1_full", "m": m, "k": "grid",
                                         "n_trials": 2, "inner_k": 2, "steps_scale": 0.15, "seeds": [0, 1, 2], "backbone": "tournament", "test": "B",
-                                        "arms": ["A1", "A2", "A9", "A10", "A12", "A15", "G15", "R1", "R2"],
-                                        "synthetic": {"kind": "G2", "n_cyc_cond": 40, "n_sto_cond": 19, "reps": 3, "seed": 31, "test_frac": 0.2}})
+                                        "arms": arms,
+                                        "synthetic": {"kind": "G2", "n_cyc_cond": 40, "n_sto_cond": 19, "reps": 3, "seed": 31, "test_frac": 0.2,
+                                                      "short_records": {"train_n_points": [4, 5], "test_n_points": [4, 3]}}})
 
 write("fb10_smoke_isu_B0", {"run_id": "fb10_smoke_isu_B0", "dataset": "isu", "test": "B", "fold": 0, "mode": "inner",
                             "arms": ["R1", "R2", "A10", "A12", "A2", "A9", "A4", "A1"], "n_trials": 2, "inner_k": 2, "steps_scale": 0.3,

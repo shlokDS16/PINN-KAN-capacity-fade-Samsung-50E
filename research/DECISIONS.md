@@ -605,3 +605,25 @@ Row format:
   (debates/D028_config_rulings/01_judge.md).
 - **Re-open if:** the ZYK table is rebuilt after the pin; the FB-8 timing run makes the descriptive rows displace any
   "never dropped" item; or Shlok wants a struck row back before FROZEN.
+
+### D029 Novelty scope after Lucu A/B; T5/T6 wording (2026-11-06, status: accepted for framing; title change pending the author)
+- **Decision:** debates/D029_novelty_scope/01_judge.md, verdict REVISE. Lucu A/B (JES 30, 2020) contain a nested GP
+  learning curve over the number of ageing conditions on held-out cells, so the D018 section 7 fifth bullet fired and
+  D018 section 6 "Effect on framing" is replaced: contribution list order (1) A15 versus G15 held-out test under the D022
+  protocol, novelty on the matched test only; (2) matched ladder and tuned comparators, Jia cross-dataset stated;
+  (3) m and k learning curves as an extension of Lucu A/B, Stroebl, Guo; (4) conjunction sentence after (d).
+  Auditor 5.2 bans adopted plus any "how many tests is open" sentence and "first" in every form. Condition (d) gates
+  every "to our knowledge" / "we found no earlier study" sentence and adds a method-level check of PIKAN/PGKAN and
+  KA-CRNN. Recommended to Shlok: T5/T6 drop the question form ("How many cycling tests and check-ups do ... need?"
+  becomes "Physics-informed and data-driven forecasts of lithium-ion capacity fade against the number of cycling tests
+  and check-ups:"), second halves unchanged; default if unanswered at FROZEN: keep as approved. No change to design,
+  tests, states, alpha, stop rules or freeze conditions other than C4.
+- **Alternatives and why they lost:** keep D018 section 6 as written (item 1 misstates Lucu as "number of cells" and
+  leaves the m-curve looking new); fix T5/T6 only through Introduction text (opponent: a question-form title is not
+  cured by body text); lead with the m-curve (now generic prior art); edit section 11 here (only Shlok may, D017).
+- **Evidence:** debates/D016_roles/04_novelty_C4_audit.md; notes/papers/lucu2020_A_B_JES30.md;
+  debates/codex_panel/turn10_response.md; debates/D018_test_rule/01_judge.md sections 6-7; runs/prereg/PREREG_v4.md 11.
+- **Proposer / opponent / judge:** novelty-auditor / Codex panel turn 10 / judge (debates/D029_novelty_scope/01_judge.md).
+- **Re-open if:** the (d) pass finds concurrent work (same-dataset learned-law data efficiency: stop rule 12; a matched
+  extracted-law versus additive-law held-out test: item 1 and the conjunction lose their novelty phrase); a reading finds
+  a k axis or physics-informed arm in a condition-count study; Shlok declines the T5/T6 replacement (record only).

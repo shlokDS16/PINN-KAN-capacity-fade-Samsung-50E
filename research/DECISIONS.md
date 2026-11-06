@@ -722,3 +722,16 @@ Row format:
 - **Evidence:** runs/freeze_runs/logs/queue.log and suite.log; runs/fb8_timing_samsung_B_f*_m*/timings.json;
   runs/freeze_runs/fb8b/fb8b_f{0-4}.json; runs/fb9_nc1_full_synth_m{8,16,32}/nc1_full.json; runs/fb10_smoke_{isu,snl}_B0.
 - **Proposer / judge:** lead (record-only; no rule, test, margin, weight or title changes). The gate auditor checks it.
+
+### D037 Freeze-audit remedies: paper-text items closed, figure scripts after the runs (lead, procedural; 2026-11-06)
+- **Decision:** the gate auditor's freeze audit (`research/audits/GATE_freeze_audit.md`, untracked) passed all briefed checks and
+  blocked on C3 (draft alignment) and C17 (disclosure sentences). Both are closed in `paper/draft/` by the writer
+  (`paper/draft/WRITER_C3_C17_REPORT.md`) and recorded in PREREG_v4 rev. 19 with the audit's text notes. The section 20 rows for
+  the figure scripts (`code/figures/*`) are done after the confirmatory runs, on a branch (D031): the scripts read only the
+  statistics outputs, and editing code/ now would move the frozen tree off the commit on which the FB runs ran.
+  Correction to D036 (rows are append-only): FB-8b counted 0 cells with a non-finite final latent, not "0 non-finite steps".
+  FROZEN gets split key ("samsung", "S3") as well (an exploratory S3 config is pinned; 18 step 4 "plus A/S3 entries as run").
+- **Alternatives:** Shlok defers C3/C17 by a decision row (the disclosures would then not be fixed before scoring); edit the
+  figure scripts now and repeat FB-8 to FB-10 (about 1.5 h CPU, no gain to the evidence).
+- **Evidence:** the audit file; the writer report; PREREG_v4 rev. 19 change-log row.
+- **Proposer / judge:** lead / gate auditor re-check.

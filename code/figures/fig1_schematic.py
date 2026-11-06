@@ -1,8 +1,9 @@
 """Fig. 1: method schematic. Data strip (storage cell, cycling cell, held-out cell, drawn from run files) feeding the
 solution network F, the KAN stress maps inside the law G, the soft residual with its collocation sets and the loss.
 Boxes, arrows and spline glyphs are drawn with matplotlib patches (coordinates in mm); the three data panels are real
-run data (the cell with the median A1 RMSE of the median-scoring condition of each run). No number is typed into the diagram.
-Inputs: --run-s2, --run-b, --run-c (predictions.csv, window.csv, condition_scores.json).
+run data (the cell at the middle rank of the supplied A1 cell scores of the condition at the middle rank of the supplied A1 condition scores). No number is typed
+into the diagram; the grid glyph (PREREG_v4 section 14: the grid of m and k) reads m and k from the run directories.
+Inputs: --run-s2, --run-b (a grid run directory or their parent), --run-c (predictions.csv, window.csv, condition_scores.json, cell_scores.json, metrics.json).
 """
 import sys
 from pathlib import Path
@@ -16,6 +17,8 @@ import pk_style as ps
 import pk_data as pdt
 
 W, H = 160.0, 93.0
+OFF = 20.0                                   # extra strip below the diagram for the grid glyph (mm)
+HT = H + OFF
 C_F, C_KAN, C_RES, C_IN, C_OUT = "#DCEBF7", "#FBE9C6", "#E6E0F0", "#EFEFEF", "#D9F0E6"
 
 
@@ -46,19 +49,18 @@ def spline_glyph(ax, x0, y0, w, h, kind, color=ps.BLUE, lw=1.0, frame=True):
     ax.plot(x0 + w * (0.06 + 0.88 * t), y0 + h * f, color=color, lw=lw, zorder=4)
 
 
-def data_panel(fig, rect_mm, run, title, pick_cond="median"):
-    pred, win, sc = pdt.load_predictions(run), pdt.load_window(run), pdt.load_scores(run)
-    conds = sorted(sc["A1"], key=lambda c: sc["A1"][c])
-    cond = conds[len(conds) // 2]
-    cell, _ = pdt.median_cell(pred, cond, "A1")
-    (tw, yw), (tf, yo), Y = pdt.cell_curve(pred, win, cell, "A1")
+def data_panel(fig, rect_mm, run, title, k="full"):
+    pred, win, sc, cs = pdt.load_predictions(run, pdt.k_suffix(run, k)[1]), pdt.load_window(run), pdt.load_scores(run, k), pdt.load_cell_scores(run, k)
+    cond = pdt.rank_pick(list(sc["A1"]), lambda c: sc["A1"][c], 0.5)
+    cell = pdt.pick_cell(cs["A1"], cond)
+    (tw, yw), (tf, yo), ens, Y = pdt.forecast_curves(pred, win, cell, "A1")
     x, y, w, h = rect_mm
-    ax = fig.add_axes([x / W, y / H, w / W, h / H])
+    ax = fig.add_axes([x / W, (y + OFF) / HT, w / W, h / HT])
     tw = np.r_[0, tw]
     yw = np.r_[100, yw]
     ax.axvspan(0, tw[-1], color="#E4E4E4", lw=0)
     ax.fill_between(tf, Y.min(0), Y.max(0), color=ps.BLUE, alpha=0.3, lw=0)
-    ax.plot(tf, Y.mean(0), color=ps.BLUE, lw=1.3)
+    ax.plot(tf, ens, color=ps.BLUE, lw=1.3)
     ax.plot(tw, yw, "o", ms=2.8, color="#222222")
     ax.plot(tf, yo, "o", ms=2.8, color="#222222", mfc="white", mew=0.8)
     ax.set_title(f"{title}\n{ps.cond_text(cond)}", fontsize=7.5, pad=2, linespacing=1.1)
@@ -74,22 +76,25 @@ def data_panel(fig, rect_mm, run, title, pick_cond="median"):
 def main():
     ap = ps.common_args(__doc__)
     ap.add_argument("--run-s2", required=True)
-    ap.add_argument("--run-b", required=True)
+    ap.add_argument("--run-b", required=True, help="a grid run directory or the directory of grid runs")
     ap.add_argument("--run-c", required=True)
     a = ap.parse_args()
     ps.apply()
-    prov = ps.Provenance(a.run_s2, a.run_b, a.run_c)
+    runs_b = pdt.expand_runs(a.run_b)
+    by_m = pdt.runs_by_m(runs_b)
+    run_b = by_m[max(by_m)][0]                                  # a full-data (largest m) run for the cycling panel
+    prov = ps.Provenance(a.run_s2, run_b, a.run_c)
     prov.require_frozen("Fig. 1 data strip")
 
-    fig = plt.figure(figsize=(ps.W_FULL, 9.7 * ps.CM))
+    fig = plt.figure(figsize=(ps.W_FULL, (9.7 + 2.15) * ps.CM))
     ax = fig.add_axes([0, 0, 1, 1])
     ax.set_xlim(0, W)
-    ax.set_ylim(0, H)
+    ax.set_ylim(-OFF, H)
     ax.axis("off")
 
     # ---- data strip
     data_panel(fig, (11, 71, 38, 16), a.run_s2, "Storage cell")
-    data_panel(fig, (64, 71, 38, 16), a.run_b, "Cycling cell")
+    data_panel(fig, (64, 71, 38, 16), run_b, "Cycling cell")
     data_panel(fig, (118, 71, 38, 16), a.run_c, "Held-out cell")
     # ---- row B: inputs -> F -> forecast
     box(ax, 2, 41, 40, 19, C_IN)
@@ -158,15 +163,16 @@ def main():
     titles = ["(a) record end", "(b) hull points", "(c) twins"]
     for k, (cx, ttl) in enumerate(zip((106.0, 123.0, 140.0), titles)):
         ax.add_patch(Rectangle((cx, 12.5), 14.5, 10.5, fc="white", ec="#777777", lw=0.5, zorder=3))
-        rg = np.random.default_rng(10 + k)
+        ux = lambda n, k=k: (np.arange(n) * 0.6180339887 + 0.13 * k) % 1.0          # schematic point layout: low-discrepancy sequences, no random numbers
+        uy = lambda n, k=k: (np.arange(n) * 0.7548776662 + 0.31 * k + 0.2) % 1.0
         if k == 0:
             tt = np.linspace(0, 1, 30)
             ax.plot(cx + 0.7 + 13 * tt, 13.5 + 8.0 * (1 - np.exp(-2.6 * tt)), color="#999999", lw=0.7, zorder=4)
             ax.scatter(np.full(6, cx + 13.5), np.linspace(20.0, 21.4, 6), s=2.2, color=ps.VERM, zorder=5, lw=0)
         elif k == 1:
-            ax.scatter(cx + 1 + 12.5 * rg.random(14), 13.5 + 8.5 * rg.random(14), s=2.2, color=ps.VERM, zorder=5, lw=0)
+            ax.scatter(cx + 1 + 12.5 * ux(14), 13.5 + 8.5 * uy(14), s=2.2, color=ps.VERM, zorder=5, lw=0)
         else:
-            ax.scatter(cx + 1 + 12.5 * rg.random(10), 13.5 + 8.5 * rg.random(10), s=2.2, color="#BBBBBB", zorder=4, lw=0)
+            ax.scatter(cx + 1 + 12.5 * ux(10), 13.5 + 8.5 * uy(10), s=2.2, color="#BBBBBB", zorder=4, lw=0)
             ax.scatter(np.full(4, cx + 11.0), 14.5 + 2.0 * np.arange(4), s=4.2, marker="D", color=ps.VERM, zorder=5, lw=0)
         txt(ax, cx + 7.25, 10.2, ttl, size=6.8, va="top", linespacing=1.05)
     txt(ax, 129.5, 5.0, "$\\mathcal{L}=\\mathcal{L}_{\\mathrm{data}}+\\lambda_{\\mathrm{res}}\\mathcal{L}_{\\mathrm{res}}$ + KAN sparsity", size=7.4)
@@ -178,6 +184,23 @@ def main():
     txt(ax, 76, 38.8, "", size=6)
     # F -> data loss note
     txt(ax, 96.8, 40.0, "", size=6)
+    # ---- grid of training conditions m and window check-ups k (read from the runs)
+    ms = sorted(by_m)
+    kl = [str(x) for x in pdt.load_metrics(run_b)["k_labels"]]
+    box(ax, 2, -OFF + 1.5, 156, OFF - 4.5, "#F7F7F7", lw=0.6)
+    txt(ax, 6, -5.6, "Evaluation grid (3 x 3)", size=8, fontweight="bold", ha="left")
+    txt(ax, 6, -10.4, "rows: training cycling conditions $m$ (nested max-min subsets);\ncolumns: model-visible check-ups $k$ after the reference", size=7, ha="left", va="center", linespacing=1.2)
+    txt(ax, 6, -15.8, "$g_1$ = scarce cell, $g_4$ = full-data cell", size=7, ha="left")
+    gx0, gy0, cw, chh = 98.0, -18.2, 17.0, 3.4
+    for j, kk in enumerate(kl):
+        txt(ax, gx0 + 2 + cw * (j + 0.5), gy0 + 3 * chh + 1.4, f"$k$ = {kk}", size=6.8)
+    for i, mm in enumerate(ms):
+        txt(ax, gx0 + 0.5, gy0 + chh * (len(ms) - 1 - i + 0.5), f"$m$ = {mm}", size=6.8, ha="right")
+        for j, kk in enumerate(kl):
+            hl = (i == 0 and kk == "2") or (i == len(ms) - 1 and kk == "full")
+            ax.add_patch(Rectangle((gx0 + 2 + cw * j, gy0 + chh * (len(ms) - 1 - i)), cw - 0.8, chh - 0.6, fc=ps.BLUE if hl else "white", ec="#777777", lw=0.5, alpha=0.85 if hl else 1.0, zorder=3))
+            if hl:
+                txt(ax, gx0 + 2 + cw * (j + 0.5) - 0.4, gy0 + chh * (len(ms) - 1 - i + 0.5) - 0.3, "$g_1$" if i == 0 else "$g_4$", size=6.8, color="white")
     ps.finish(fig, "fig1_schematic", prov, a.out_dir)
 
 

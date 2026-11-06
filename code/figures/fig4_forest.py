@@ -1,11 +1,12 @@
-"""Fig. 4: forest plot of paired condition-level contrasts, every arm against A1 (PINN-KAN) on Test B.
+"""Fig. 4 (file name kept from the V3 forest plot): learning curves of PINN-KAN (A1) over the 3 x 3 grid of training conditions m and window check-ups k.
 
-Inputs (paths as arguments):
-  --contrasts  analysis/contrasts_B.json   (written by the statistics step; tier, Holm level, per-condition log ratios)
-  --run        test_B run directory        (only used for provenance and for the fallback when --contrasts is absent)
-Shows, per row: per-condition ln(S_comp / S_A1) as grey dots, the median with its exact order-statistic 95 % interval
-(the estimand of the adopted exact sign test, TYPE1_SIGNFLIP.md), the margins ln(1.02) (tier S) and -ln(1.10) (tier N),
-and in the right-hand columns wins, mean paired difference in pp with BCa interval, and tier.
+PREREG_v4 section 14: median condition log ratio, drawn as the relative reduction of the error of A1 against D*, A9, AG, A2, A10 and A10P, with the SIMULTANEOUS exact
+intervals of the statistics step (Bonferroni over the nine cells); the ladder decomposition (law share with a non-KAN map; KAN share inside the law); the mean paired pp
+difference with its BCa interval; tiers only where the statistics step assigned one (the gated cells g1 = (8, 2), g4 = (32, full) and the secondary tests).
+Positive = PINN-KAN has the lower error.
+
+Input: --stats analysis/contrasts_v4_B.json (stats_step.run_stats_v4). READ-ONLY: every interval, tier, count and mean in the figure is a value of that file; the figure only
+converts a supplied median log ratio to a percentage (pk_data.pct_from_log) and sets axis limits from the supplied values.
 """
 import sys
 from pathlib import Path
@@ -16,160 +17,136 @@ from matplotlib.lines import Line2D
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import pk_style as ps
-import pk_data as pd_
+import pk_data as pdt
 
-ROWS = [  # (contrast key, label, group)
-    ("H1a", "H1a  A9 data-only F", "Primary family"),
-    ("H1b", None, "Primary family"),
-    ("pool_A3", "A3 parametric", "pool"),
-    ("pool_A4", "A4 additive GAM", "pool"),
-    ("pool_A5", "A5 interaction GAM", "pool"),
-    ("pool_A7", "A7 MLP stress map", "pool"),
-    ("H6", "H6  A10 semi-empirical model", "Primary family"),
-    ("H1c_A11", "H1c  A11 GP-ARD", "Key secondary (gated)"),
-    ("H1c_A12", "H1c  A12 LightGBM", "Key secondary (gated)"),
-    ("H2", "H2  A2 hard-ODE KAN", "Decision contrast"),
-    ("X1", "X1  A13 cycling cells only", "Descriptive"),
-]
+COMPS = ["D*", "A9", "AG", "A2", "A10", "A10P"]
+KS = ["0", "2", "full"]
+MS = [8, 16, 32]
+K_COL = {"0": plt.get_cmap("cividis")(0.10), "2": plt.get_cmap("cividis")(0.50), "full": plt.get_cmap("cividis")(0.85)}
+K_MK = {"0": "s", "2": "o", "full": "^"}
+K_OFF = {"0": -0.21, "2": 0.0, "full": 0.21}
+K_NAME = {"0": "k = 0 (reference check-up only)", "2": "k = 2", "full": "k = k$_{\\mathrm{full}}$"}
 
 
-def build_from_scores(run):
-    """Fallback without the statistics step: descriptive median and order-statistic interval, no tier."""
-    sc = pd_.load_scores(run)
-    conds = sorted(sc["A1"])
-    s1 = np.array([sc["A1"][c] for c in conds])
-    out = {}
-    names = {"H1a": "A9", "H6": "A10", "H1c_A11": "A11", "H1c_A12": "A12", "H2": "A2", "X1": "A13",
-             "pool_A3": "A3", "pool_A4": "A4", "pool_A5": "A5", "pool_A7": "A7"}
-    for key, a in names.items():
-        if a not in sc:
+def curve_panel(ax, rows, stats, comp):
+    ys = []
+    for k in KS:
+        rk = [r for r in rows if str(r["cell"][1]) == k]
+        if not rk:
             continue
-        s = np.array([sc[a][c] for c in conds])
-        L = np.log(s / s1)
-        lo, hi, _ = ps.median_order_ci(L)
-        blo, bhi = ps.bootstrap_mean_ci(s - s1, B=3000)
-        out[key] = dict(comp=a, L_by_cond=dict(zip(conds, L.tolist())), median_L=float(np.median(L)), median_ci95=[lo, hi],
-                        n=len(L), n_wins=int((L > 0).sum()), mean_pp=float((s - s1).mean()), mean_pp_ci95=[blo, bhi], tier=None)
-    return dict(margins=dict(S=float(np.log(1.02)), N=float(-np.log(1.10))), contrasts=out, n=len(conds))
+        xs = np.array([MS.index(r["cell"][0]) + K_OFF[k] for r in rk])
+        y = np.array([pdt.pct_from_log(r["median_L"]) for r in rk])
+        lo = np.array([r["simultaneous"]["rel_reduction_ci_pct"][0] for r in rk])
+        hi = np.array([r["simultaneous"]["rel_reduction_ci_pct"][1] for r in rk])
+        ax.plot(xs, y, color=K_COL[k], lw=0.9, zorder=2)
+        for x_, y_, l_, h_, r in zip(xs, y, lo, hi, rk):
+            ax.plot([x_, x_], [l_, h_], color=K_COL[k], lw=1.3, solid_capstyle="butt", zorder=3)
+            rng_only = bool(r["simultaneous"].get("is_range", False))
+            ax.plot([x_], [y_], marker=K_MK[k], ms=4.6, mfc="white" if rng_only else K_COL[k], mec=K_COL[k], mew=1.0, ls="none", zorder=4)
+            t = pdt.tier_text(pdt.tier_read(stats, comp, (r["cell"][0], r["cell"][1])))
+            if t:
+                ax.annotate(t, (x_, h_), xytext=(0, 2.5), textcoords="offset points", ha="center", va="bottom", fontsize=7.5, fontweight="bold", color="#222222")
+        ys += list(lo) + list(hi)
+    ax.axhline(0, color="#444444", lw=0.7, zorder=1)
+    ax.set_xticks(range(len(MS)))
+    ax.set_xticklabels([str(m) for m in MS])
+    ax.set_xlim(-0.55, len(MS) - 0.45)
+    return ys
 
 
 def main():
     ap = ps.common_args(__doc__)
-    ap.add_argument("--contrasts", default=None)
-    ap.add_argument("--run", required=True, help="Test B run directory")
+    ap.add_argument("--stats", required=True, help="analysis/contrasts_v4_B.json")
     a = ap.parse_args()
     ps.apply()
-    prov = ps.Provenance(a.run, a.contrasts)
+    prov = ps.Provenance(a.stats)
     prov.require_frozen("Fig. 4")
-    C = pd_.load_contrasts(a.contrasts) if a.contrasts else build_from_scores(a.run)
-    con = C["contrasts"]
-    mS, mN = C["margins"]["S"], C["margins"]["N"]
+    S = pdt.load_stats(a.stats)
 
-    rows = [r for r in ROWS if r[0] in con]
-    # y positions with gaps between groups
-    ys, y, last = [], 0.0, None
-    for key, lab, grp in rows:
-        g = "Primary family" if grp == "pool" and last in (None, "Primary family") else grp
-        if last is not None and grp != "pool" and grp != last:
-            y -= 0.75
-        ys.append(y)
-        y -= 1.0
-        if grp != "pool":
-            last = grp
-    ys = np.array(ys)
-    ymin, ymax = ys.min() - 1.5, ys.max() + 0.7
+    fig = plt.figure(figsize=(ps.W_FULL, 18.2 * ps.CM))
+    gs = fig.add_gridspec(3, 3, left=0.085, right=0.99, top=0.955, bottom=0.145, hspace=0.80, wspace=0.34)
+    ax = [fig.add_subplot(gs[i // 3, i % 3]) for i in range(9)]
+    allv = []
+    present = []
+    for i, comp in enumerate(COMPS):
+        rows = pdt.est_rows(S, comp)
+        if not rows:
+            ax[i].axis("off")
+            continue
+        present.append(i)
+        allv += curve_panel(ax[i], rows, S, comp)
+        ax[i].set_title(ps.ARMS[comp][0], fontsize=8.5, pad=4)
+        ax[i].set_xlabel("Training conditions $m$")
+        if i % 3 == 0:
+            ax[i].set_ylabel("Error reduction by\nPINN-KAN (%)")
+    pad = 0.12 * (max(allv) - min(allv))
+    for i in present:
+        ax[i].set_ylim(min(allv) - pad, max(allv) + 2.2 * pad)
+    if "P3" in S["effective_tiers"] and 0 in present:
+        ax[0].text(0.03, 0.04, f"P3: {pdt.tier_text(S['effective_tiers']['P3'])}", transform=ax[0].transAxes, fontsize=7.5, ha="left", va="bottom", color="#222222")
 
-    fig = plt.figure(figsize=(ps.W_FULL, 8.6 * ps.CM))
-    ax = fig.add_axes([0.262, 0.235, 0.335, 0.62])
-    rng = np.random.default_rng(1)
+    # ladder (g, h)
+    lad = S["estimated"]["ladder"]
+    for j, (key, title) in enumerate((("law_share_with_non_KAN_map", "Ladder: law with a non-KAN map\n(A9 to AG)"), ("KAN_share_inside_law", "Ladder: KAN inside the law\n(AG to A1)"))):
+        A = ax[6 + j]
+        ys = []
+        for k in KS:
+            rk = [r for r in lad if str(r["cell"][1]) == k]
+            rk.sort(key=lambda r: r["cell"][0])
+            if not rk:
+                continue
+            xs = np.array([MS.index(r["cell"][0]) + K_OFF[k] for r in rk])
+            y = np.array([pdt.pct_from_log(r[key]["median"]) for r in rk])
+            lo = np.array([r[key]["simultaneous"]["rel_reduction_ci_pct"][0] for r in rk])
+            hi = np.array([r[key]["simultaneous"]["rel_reduction_ci_pct"][1] for r in rk])
+            A.plot(xs, y, color=K_COL[k], lw=0.9, zorder=2)
+            for x_, y_, l_, h_, r in zip(xs, y, lo, hi, rk):
+                A.plot([x_, x_], [l_, h_], color=K_COL[k], lw=1.3, solid_capstyle="butt", zorder=3)
+                A.plot([x_], [y_], marker=K_MK[k], ms=4.6, mfc="white" if r[key]["simultaneous"].get("is_range") else K_COL[k], mec=K_COL[k], mew=1.0, ls="none", zorder=4)
+            ys += list(lo) + list(hi)
+        A.axhline(0, color="#444444", lw=0.7, zorder=1)
+        A.set_xticks(range(len(MS)))
+        A.set_xticklabels([str(m) for m in MS])
+        A.set_xlim(-0.55, len(MS) - 0.45)
+        A.set_xlabel("Training conditions $m$")
+        A.set_title(title, fontsize=8.5, pad=4, linespacing=1.1)
+        if j == 0:
+            A.set_ylabel("Share of the error\nreduction (%)")
+        if ys:
+            p_ = 0.1 * (max(ys) - min(ys))
+            A.set_ylim(min(ys) - p_, max(ys) + p_)
 
-    allL = np.concatenate([list(con[k]["L_by_cond"].values()) for k, _, _ in rows])
-    xlo = min(allL.min(), min(con[k]["median_ci95"][0] for k, _, _ in rows), mN) - 0.08
-    xhi = max(allL.max(), max(con[k]["median_ci95"][1] for k, _, _ in rows)) + 0.08
-    ax.set_xlim(xlo, xhi)
-    ax.set_ylim(ymin, ymax)
+    # mean paired difference, BCa (i)
+    F = ax[8]
+    labels, yy, y = [], [], 0.0
+    for comp in COMPS:
+        for cell, nm in ((pdt.G1, "g1"), (pdt.G4, "g4")):
+            rows = pdt.est_rows(S, comp, cell)
+            if not rows or "mean_pp_ci" not in rows[0]:
+                continue
+            r = rows[0]
+            lo, hi = r["mean_pp_ci"]
+            col = ps.ARMS[comp][1]
+            F.plot([lo, hi], [y, y], color=col, lw=1.4, solid_capstyle="butt")
+            F.plot([r["mean_pp"]], [y], marker="o", ms=4.6, mfc=col if nm == "g1" else "white", mec=col, mew=1.0, ls="none", zorder=4)
+            labels.append(f"{comp} {nm}")
+            yy.append(y)
+            y -= 1.0
+        y -= 0.35
+    F.axvline(0, color="#444444", lw=0.7, zorder=1)
+    F.set_yticks(yy)
+    F.set_yticklabels(labels, fontsize=7.5)
+    F.tick_params(axis="y", length=0)
+    F.spines["left"].set_visible(False)
+    F.set_xlabel("Comparator $-$ A1 (pp)")
+    F.set_title("Mean difference [95 % BCa]", fontsize=8.5, pad=4)
 
-    ax.axvline(0, color="#444444", lw=0.8, zorder=1)
-    ax.axvline(mS, color=ps.GREY, lw=0.8, ls=(0, (3, 2)), zorder=1)
-    ax.axvline(mN, color=ps.GREY, lw=0.8, ls=(0, (1, 2)), zorder=1)
-    # alternating row bands for the tested contrasts
-    for (key, lab, grp), yy in zip(rows, ys):
-        if grp == "pool":
-            ax.axhspan(yy - 0.5, yy + 0.5, color="#F2F2F2", lw=0, zorder=0)
-
-    xt = ax.get_yaxis_transform()
-    hdr_y = ymax + 0.15
-    ax.text(1.05, hdr_y, "Wins", transform=xt, ha="left", va="bottom", fontsize=8, fontweight="bold", clip_on=False)
-    ax.text(1.27, hdr_y, "Mean Δ (pp) [95 % BCa]", transform=xt, ha="left", va="bottom", fontsize=8, fontweight="bold", clip_on=False)
-    ax.text(1.97, hdr_y, "Tier", transform=xt, ha="center", va="bottom", fontsize=8, fontweight="bold", clip_on=False)
-
-    ylabels = []
-    for (key, lab, grp), yy in zip(rows, ys):
-        e = con[key]
-        arm = e["comp"]
-        name, col, mk, ls = ps.ARMS[arm]
-        pool = grp == "pool"
-        L = np.array(list(e["L_by_cond"].values()))
-        ax.scatter(L, yy + rng.uniform(-0.28, 0.28, len(L)), s=5, color="#8A8A8A", alpha=0.55, lw=0, zorder=2, clip_on=True)
-        lo, hi = e["median_ci95"]
-        ax.plot([lo, hi], [yy, yy], color=col, lw=1.6 if not pool else 1.1, solid_capstyle="butt", zorder=4)
-        for xe in (lo, hi):
-            ax.plot([xe, xe], [yy - 0.18, yy + 0.18], color=col, lw=1.0, zorder=4)
-        ax.plot([e["median_L"]], [yy], marker=mk if mk not in "_|" else "o", ms=6.5 if not pool else 4.8,
-                mfc=col if not pool else "white", mec=col, mew=1.1, ls="none", zorder=5)
-        if key == "H1b":
-            lab = f"H1b  best pool arm ({arm})"
-        ylabels.append(lab)
-        ax.text(1.05, yy, f"{e['n_wins']}/{e['n']}", transform=xt, ha="left", va="center", fontsize=8, clip_on=False)
-        lo_, hi_ = e["mean_pp_ci95"]
-        ax.text(1.27, yy, f"{ps.fmt(e['mean_pp'])} [{ps.fmt(lo_)}, {ps.fmt(hi_)}]", transform=xt, ha="left", va="center",
-                fontsize=8, clip_on=False)
-        t = e.get("tier", None)
-        if t in ("S", "N", "-"):
-            ax.text(1.97, yy, "–" if t == "-" else t, transform=xt, ha="center", va="center", fontsize=8,
-                    fontweight="bold", color="white" if t == "S" else "#222222", clip_on=False,
-                    bbox=dict(boxstyle="circle,pad=0.22", fc=ps.TIER_COL[t], ec="none"))
-        else:
-            ax.text(1.97, yy, "n.t." if "not tested" in e.get("status", "") else "desc.", transform=xt, ha="center",
-                    va="center", fontsize=7.5, color="#555555", clip_on=False)
-
-    ax.xaxis.set_major_locator(plt.MultipleLocator(0.5))
-    ax.set_yticks(ys)
-    ax.set_yticklabels(ylabels)
-    for tl, (key, lab, grp) in zip(ax.get_yticklabels(), rows):
-        if grp == "pool":
-            tl.set_fontsize(7.5)
-            tl.set_color("#444444")
-    ax.tick_params(axis="y", length=0)
-    ax.spines["left"].set_visible(False)
-    ax.set_xlabel("ln(error of comparator / error of PINN-KAN), per held-out condition")
-    ax.text(-0.04, 0.012, "← comparator better", transform=ax.get_xaxis_transform(), ha="right", va="bottom",
-            fontsize=7.5, color="#444444")
-    ax.text(0.04, 0.012, "PINN-KAN better →", transform=ax.get_xaxis_transform(), ha="left", va="bottom",
-            fontsize=7.5, color="#444444")
-
-    sec = ax.secondary_xaxis("top", functions=(np.exp, np.log))
-    rt = [t for t in (0.25, 0.5, 1, 2, 4) if np.exp(xlo) <= t <= np.exp(xhi)]
-    sec.set_xticks(rt)
-    sec.set_xticklabels([f"{t:g}" for t in rt])
-    sec.set_xlabel("Error ratio, comparator / PINN-KAN", fontsize=8, labelpad=3)
-    sec.spines["top"].set_visible(True)
-    sec.spines["top"].set_linewidth(0.6)
-
-    seen = set()
-    for (key, lab, grp), yy in zip(rows, ys):
-        g = "Primary family" if grp == "pool" else grp
-        if g not in seen:
-            seen.add(g)
-            ax.text(-0.02, yy + 0.66, g, transform=ax.get_yaxis_transform(), ha="right", va="center", fontsize=7.5,
-                    style="italic", color="#666666", clip_on=False)
-    handles = [Line2D([], [], color=ps.BLUE, marker="o", ms=5.5, lw=1.5, label="Median, 95 % interval (order statistics)"),
-               Line2D([], [], color="#8A8A8A", marker="o", ms=2.5, lw=0, alpha=0.7, label="One held-out condition"),
-               Line2D([], [], color=ps.GREY, lw=0.8, ls=(0, (3, 2)), label="Tier S margin, +2 %"),
-               Line2D([], [], color=ps.GREY, lw=0.8, ls=(0, (1, 2)), label="Tier N margin, −10 %")]
-    fig.legend(handles=handles, loc="lower center", ncol=2, bbox_to_anchor=(0.43, 0.035), fontsize=7.5, columnspacing=1.2,
-               handlelength=1.8, labelspacing=0.3)
-    # group labels written in figure coordinates, left of the row labels
+    handles = [Line2D([], [], color=K_COL[k], marker=K_MK[k], ms=4.6, lw=1.2, label=K_NAME[k]) for k in KS]
+    handles += [Line2D([], [], color="#555555", marker="o", mfc="white", ms=4.6, lw=0, label="interval = range of the conditions"),
+                Line2D([], [], color="#555555", marker="o", ms=4.6, lw=0, label="filled: g1, open: g4 (panel i)")]
+    fig.legend(handles=handles, loc="lower center", ncol=3, bbox_to_anchor=(0.5, 0.02), fontsize=7.5, columnspacing=1.2, handlelength=1.8, labelspacing=0.3)
+    fig.canvas.draw()
+    ps.label_panels(fig, ax)
     ps.finish(fig, "fig4_forest", prov, a.out_dir)
 
 

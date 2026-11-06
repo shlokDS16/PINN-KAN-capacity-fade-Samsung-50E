@@ -1,18 +1,17 @@
-"""Render every figure and table on the SYNTHETIC demo runs (runs/figdemo_SYNTHETIC).  Optional: --regen rebuilds the demo runs.
+"""Render every figure and table on SYNTHETIC demo runs (Design R2 layout).  Optional: --regen rebuilds the demo runs; --demo-dir / --out-dir redirect.
 
-    .venv\\Scripts\\python.exe -P code\\figures\\run_all_demo.py [--regen]
+    .venv\\Scripts\\python.exe -P code\\figures\\run_all_demo.py [--regen] [--demo-dir DIR] [--out-dir DIR]
 
-For the confirmatory results, call the same scripts with the real run directories (see code/figures/README.md); they refuse to read
-Samsung data until runs/prereg/FROZEN exists.
+For the confirmatory results call the same scripts with the real run directories and analysis directory (see code/figures/README.md); they refuse to read
+Samsung data until runs/prereg/FROZEN exists. Nothing here reads a Samsung, ISU or SNL file: the demo design is invented (make_demo_runs.py).
 """
+import argparse
 import subprocess
 import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
-D = ROOT / "runs" / "figdemo_SYNTHETIC"
-META = ROOT / "data" / "raw" / "samsung50e_meta" / "experiments_meta.csv"
 PY = sys.executable
 
 
@@ -25,24 +24,35 @@ def run(script, *args):
     return r.returncode
 
 
-def main():
-    if "--regen" in sys.argv:
-        run("make_demo_runs.py")
-    B, C, S2 = D / "test_B", D / "test_C", D / "test_S2"
-    A = D / "analysis"
+def render_all(D, out_dir=None):
+    """every item of PREREG_v4 section 14 from the demo directory D; returns the number of failed scripts"""
+    D = Path(D)
+    A, G = D / "analysis", D / "grid"
+    o = ["--out-dir", out_dir] if out_dir else []
     rc = 0
-    rc |= run("fig1_schematic.py", "--run-s2", S2, "--run-b", B, "--run-c", C)
-    rc |= run("fig2_design.py", "--meta", META, "--fade", D / "design" / "fade_curves.csv")
-    rc |= run("fig3_forecasts.py", "--run-b", B, "--run-c", C)
-    rc |= run("fig4_forest.py", "--run", B, "--contrasts", A / "contrasts_B.json")
-    rc |= run("fig5_stress.py", "--run", B)
-    rc |= run("fig6_storage.py", "--run-s2", S2, "--run-b", B)
-    rc |= run("fig7_residual.py", "--run", B)
-    rc |= run("fig8_synthetic.py", "--run", D / "synthetic_H7")
-    rc |= run("fig_graphical_abstract.py", "--meta", META, "--run-b", B, "--run-s2", S2, "--contrasts", A / "contrasts_B.json")
-    rc |= run("table1.py", "--run-b", B, "--run-c", C, "--run-s2", S2, "--run-isu", D / "isu_B", "--run-snl", D / "snl_B", "--analysis", A)
-    rc |= run("table2.py", "--run-b", B, "--analysis", A)
-    sys.exit(rc)
+    rc += bool(run("fig1_schematic.py", "--run-s2", D / "test_S2", "--run-b", G, "--run-c", D / "test_C", *o))
+    rc += bool(run("fig2_design.py", "--meta", D / "design" / "experiments_meta.csv", "--fade", D / "design" / "fade_curves.csv", "--subset-runs", G, *o))
+    rc += bool(run("fig3_forecasts.py", "--runs-b", G, "--run-c", D / "test_C", *o))
+    rc += bool(run("fig4_forest.py", "--stats", A / "contrasts_v4_B.json", *o))
+    rc += bool(run("fig5_stress.py", "--physval", A / "physval_11a.json", "--stats", A / "contrasts_v4_B.json", "--runs", G, *o))
+    rc += bool(run("fig6_storage.py", "--run-s2", D / "test_S2", "--runs", G, "--stats", A / "contrasts_v4_B.json", "--physval", A / "physval_11a.json", "--controls", A / "controls.json", *o))
+    rc += bool(run("fig7_residual.py", "--run", G, *o))
+    rc += bool(run("fig8_synthetic.py", "--run", D / "synthetic_H7", "--controls", A / "controls.json", *o))
+    rc += bool(run("fig_graphical_abstract.py", "--meta", D / "design" / "experiments_meta.csv", "--stats", A / "contrasts_v4_B.json", *o))
+    rc += bool(run("table1.py", "--analysis", A, *o))
+    rc += bool(run("table2.py", "--analysis", A, *o))
+    return rc
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--regen", action="store_true")
+    ap.add_argument("--demo-dir", default=str(ROOT / "runs" / "figdemo_SYNTHETIC"))
+    ap.add_argument("--out-dir", default=None, help="default: paper/figures and paper/tables (the tracked SYNTHETIC previews)")
+    a = ap.parse_args()
+    if a.regen:
+        run("make_demo_runs.py", "--out", a.demo_dir)
+    sys.exit(render_all(a.demo_dir, a.out_dir))
 
 
 if __name__ == "__main__":

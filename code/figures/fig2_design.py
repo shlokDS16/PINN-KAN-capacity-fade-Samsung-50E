@@ -3,6 +3,8 @@
 Panels a-d use METADATA ONLY (experiments_meta.csv: identifiers and test conditions); panels e-f use the check-up table
 (columns as data/processed/samsung_checkups.csv: cell_id, lab, stage, type, T_C, SOC_max, DoD, C_ch, C_dch, elapsed_days,
 retention) and are refused until runs/prereg/FROZEN exists (retention blinding, PREREG_v2 3.3(9)).
+Panel g (PREREG_v4 section 14): composition of the nested max-min training subsets at m = 8, 16, 32 (conditions per temperature and laboratory) of ONE outer fold, from the
+`subsets.json` and `train_condition_meta.json` of the grid runs (identifiers only). All numbers are design counts of identifiers; no statistic is computed.
 Encoding: colour = laboratory; stage 1 = filled marker / solid line, stage 2 = open marker / dashed line.
 """
 import sys
@@ -15,6 +17,7 @@ from matplotlib.lines import Line2D
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import pk_style as ps
+import pk_data as pdt
 
 
 def conditions(meta):
@@ -35,6 +38,8 @@ def main():
     ap = ps.common_args(__doc__)
     ap.add_argument("--meta", required=True, help="experiments_meta.csv (metadata only)")
     ap.add_argument("--fade", required=True, help="check-up table with retention (panels e-f)")
+    ap.add_argument("--subset-runs", required=True, help="grid run directories (or their parent): subsets.json + train_condition_meta.json (panel g)")
+    ap.add_argument("--fold", type=int, default=0, help="outer fold shown in panel g")
     a = ap.parse_args()
     ps.apply()
     prov = ps.Provenance(a.fade)
@@ -43,11 +48,10 @@ def main():
     meta.columns = [c.strip() for c in meta.columns]
     fade = pd.read_csv(ps.need(a.fade))
     gs, gc = conditions(meta)
-    rng = np.random.default_rng(3)
 
-    fig = plt.figure(figsize=(ps.W_FULL, 11.2 * ps.CM))
-    gsp = fig.add_gridspec(2, 3, left=0.075, right=0.99, top=0.955, bottom=0.20, hspace=0.72, wspace=0.40)
-    ax = [fig.add_subplot(gsp[i // 3, i % 3]) for i in range(6)]
+    fig = plt.figure(figsize=(ps.W_FULL, 15.4 * ps.CM))
+    gsp = fig.add_gridspec(3, 3, left=0.075, right=0.99, top=0.965, bottom=0.15, hspace=0.80, wspace=0.40)
+    ax = [fig.add_subplot(gsp[i // 3, i % 3]) for i in range(6)] + [fig.add_subplot(gsp[2, 0:2])]
 
     # a: storage T x SOC
     A = ax[0]
@@ -67,22 +71,22 @@ def main():
     A.set_xlim(-5, 107)
     A.set_xlabel("Storage SOC (%)")
     A.set_ylabel(ps.LBL["T"])
-    A.set_title("Storage (19 conditions)", fontsize=8.5, pad=4)
+    A.set_title(f"Storage ({len(gs)} conditions)", fontsize=8.5, pad=4)
 
     # b: cycling T x DoD
     B = ax[1]
-    for r in gc.itertuples():
+    for i_, r in enumerate(gc.itertuples()):
         lab = lab_of(r.labs)
         col = ps.LAB_COL[lab] if lab else "#555555"
         mk = "o" if lab else "D"
-        dx = rng.uniform(-1.3, 1.3)
+        dx = ((i_ * 37) % 100 / 100.0 - 0.5) * 2.6          # display jitter by row index (deterministic)
         B.scatter(r.amb_temp_tp + dx, 100 * r.dod_tp, s=8 + 2.6 * r.n, marker=mk, c=col, alpha=0.85, edgecolors="white",
                   linewidths=0.4, zorder=3)
     B.set_xticks([23, 35, 45])
     B.set_xlim(19, 49)
     B.set_xlabel(ps.LBL["T"])
     B.set_ylabel(ps.LBL["dod"])
-    B.set_title("Cycling (40 conditions)", fontsize=8.5, pad=4)
+    B.set_title(f"Cycling ({len(gc)} conditions)", fontsize=8.5, pad=4)
 
     # c: cycling charge x discharge rate
     C = ax[2]
@@ -143,11 +147,40 @@ def main():
     sub2 = fs[(fs.T_C == k2[0]) & (fs.SOC_max == k2[1])]
     curves(ax[5], sub2, f"Storage replicates\n{cnt.max()} cells, {k2[0]:g} °C, {100 * k2[1]:.0f} %")
 
+    # g: nested max-min subsets of one outer fold
+    G = ax[6]
+    runs = [r for r in pdt.expand_runs(a.subset_runs) if int(pdt.run_config(r)["fold"]) == a.fold]
+    byM = {pdt.run_m(r): r for r in runs}
+    xs, labs_all = [], ["SIE", "INT", "HM"]
+    xpos = 0.0
+    ticks, tl = [], []
+    temps = sorted({ps.parse_cond(c)["T"] for r in byM.values() for c in ps.load_json(r / "subsets.json")["kept"]})
+    for mm in sorted(byM):
+        sub = ps.load_json(byM[mm] / "subsets.json")
+        meta_t = ps.load_json(byM[mm] / "train_condition_meta.json")
+        for T in temps:
+            bottom = 0
+            for lab in labs_all:
+                n = sum(1 for c in sub["kept"] if ps.parse_cond(c)["T"] == T and meta_t[c]["lab"] == lab)
+                if n:
+                    G.bar(xpos, n, 0.8, bottom=bottom, color=ps.LAB_COL[lab], zorder=3)
+                    bottom += n
+            G.text(xpos, bottom + 0.3, f"{bottom}", ha="center", va="bottom", fontsize=7.5)
+            ticks.append(xpos)
+            tl.append(f"{T:g}")
+            xpos += 1.0
+        G.text(xpos - 0.5 * len(temps) - 0.5, -0.2, f"$m$ = {mm}", ha="center", va="top", fontsize=8, transform=G.get_xaxis_transform(), clip_on=False)
+        xpos += 0.9
+    G.set_xticks(ticks)
+    G.set_xticklabels(tl)
+    G.set_xlabel("Cycling temperature (°C), by nested subset size", labelpad=14)
+    G.set_ylabel("Training conditions")
+    G.set_title(f"Nested max-min subsets, outer fold {a.fold}", fontsize=8.5, pad=4)
     handles = [Line2D([], [], marker="o", ls="none", color=ps.LAB_COL[l], ms=5, label=f"Laboratory {l}") for l in labs_all]
     handles += [Line2D([], [], marker="D", ls="none", color="#555555", ms=4.5, label="Several laboratories"),
                 Line2D([], [], marker="o", ls="none", color="#555555", ms=5, label="Stage 1 (filled, solid)"),
                 Line2D([], [], marker="o", ls="none", color="#555555", mfc="white", ms=5, label="Stage 2 (open, dashed)")]
-    fig.legend(handles=handles, loc="lower center", ncol=3, bbox_to_anchor=(0.5, 0.02), fontsize=7.5, columnspacing=1.0,
+    fig.legend(handles=handles, loc="lower center", ncol=3, bbox_to_anchor=(0.5, 0.015), fontsize=7.5, columnspacing=1.0,
                handletextpad=0.3)
     fig.canvas.draw()
     ps.label_panels(fig, ax)

@@ -1,7 +1,8 @@
 """Shared style, palette, labels, provenance and I/O helpers for all figure and table scripts.
 
 Rules enforced here (CONTRACT 6a, figure-smith):
-* every figure script reads only run directories passed as arguments (no number typed by hand);
+* every figure script reads only run directories / statistics-step outputs passed as arguments (no number typed by hand) and computes NO interval, test,
+  p-value, tier, count of positive conditions, effect size or bootstrap (ALIGN_V4_REPORT.md; tests/test_figures_read_only.py);
 * Okabe-Ito based, colour-blind-safe palette; method identity = colour + marker + line style;
 * fonts 8-9 pt at the final width (16 cm full, 13 cm medium);
 * a figure built from a run directory that carries a `SYNTHETIC` marker file is watermarked
@@ -50,19 +51,25 @@ ARMS = {  # id: (display name, colour, marker, linestyle)
     "A12": ("LightGBM", TEAL, "p", "-"),
     "A13": ("PINN-KAN, cycling cells only", BLUE, "o", ":"),
     "A14": ("PINN-KAN, storage cells only", BLUE, "o", ":"),
+    "A10P": ("Semi-empirical, as published", ORANGE, "*", "--"),
+    "A15": ("Extracted closed-form law A15", INDIGO, "h", "-"),
+    "G15": ("Extracted additive law G15", WINE, "d", "--"),
+    "D*": ("Best data-driven learner D*", TEAL, "p", "-"),
+    "AG": ("Best additive GAM AG", PURPLE, "v", "--"),
     "R1": ("Persistence", "#B0B0B0", "_", "-"),
     "R2": ("Window-linear", "#8C8C8C", "|", "-"),
 }
 SHORT = {"A1": "PINN-KAN", "A2": "Hard-ODE", "A3": "Parametric", "A4": "Add. GAM", "A5": "Int. GAM", "A7": "MLP map",
          "A8": "Free G", "A9": "Data-only F", "A10": "Semi-emp.", "A11": "GP-ARD", "A12": "LightGBM",
-         "A13": "Cycling-only", "A14": "Storage-only", "R1": "Persistence", "R2": "Window-lin."}
+         "A13": "Cycling-only", "A14": "Storage-only", "R1": "Persistence", "R2": "Window-lin.", "A10P": "Semi-emp. (publ.)",
+         "A15": "Law A15", "G15": "Law G15", "D*": "D*", "AG": "AG"}
 
 LAB_COL = {"SIE": ORANGE, "INT": GREEN, "HM": PURPLE}
 LAB_NAME = {"SIE": "SIE", "INT": "INT", "HM": "HM"}
 TEMPS = [10, 23, 35, 45]
 _cv = plt.get_cmap("cividis")
 TEMP_COL = {10: _cv(0.02), 23: _cv(0.30), 35: _cv(0.55), 45: _cv(0.80)}
-TIER_COL = {"S": GREEN, "N": SKY, "-": "#BBBBBB"}
+TIER_COL = {"S": GREEN, "N": SKY, "-": "#BBBBBB", "none": "#BBBBBB", "reverse S": VERM}
 
 # --------------------------------------------------------------------------------------------- labels (one unit per quantity)
 LBL = {
@@ -221,44 +228,6 @@ def common_args(description: str):
     ap = argparse.ArgumentParser(description=description)
     ap.add_argument("--out-dir", default=None, help="default: paper/figures")
     return ap
-
-
-def bootstrap_mean_ci(x, B=10000, seed=0, alpha=0.05):
-    """BCa two-sided interval of the mean over resampled conditions (descriptive; the unit is the condition)."""
-    from scipy import stats
-    x = np.asarray(x, float)
-    n = len(x)
-    rng = np.random.default_rng(seed)
-    boot = x[rng.integers(0, n, (B, n))].mean(1)
-    th = x.mean()
-    frac = np.clip((boot < th).mean(), 1.0 / (B + 1), 1 - 1.0 / (B + 1))
-    z0 = stats.norm.ppf(frac)
-    jk = (x.sum() - x) / (n - 1)
-    dj = jk.mean() - jk
-    den = 6.0 * (np.sum(dj ** 2) ** 1.5)
-    a = np.sum(dj ** 3) / den if den > 0 else 0.0
-    out = []
-    for q in (alpha / 2, 1 - alpha / 2):
-        zq = stats.norm.ppf(q)
-        adj = stats.norm.cdf(z0 + (z0 + zq) / (1 - a * (z0 + zq)))
-        out.append(float(np.quantile(boot, np.clip(adj, 0, 1))))
-    return out[0], out[1]
-
-
-def median_order_ci(x, conf=0.95):
-    """Distribution-free interval for the median: order statistics L_(l), L_(n+1-l) with coverage >= conf
-    (the interval that belongs to the exact sign test adopted in TYPE1_SIGNFLIP.md)."""
-    from scipy import stats
-    x = np.sort(np.asarray(x, float))
-    n = len(x)
-    a = 1 - conf
-    l = 1
-    for k in range(1, n // 2 + 1):          # largest k with P(Bin(n, .5) <= k-1) <= a/2
-        if stats.binom.cdf(k - 1, n, 0.5) <= a / 2:
-            l = k
-        else:
-            break
-    return float(x[l - 1]), float(x[n - l]), l
 
 
 def fmt(x, nd=2):

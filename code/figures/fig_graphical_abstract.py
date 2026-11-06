@@ -1,10 +1,10 @@
 """Graphical abstract (Journal of Energy Storage / Elsevier: >= 1328 x 531 px, readable at 13 x 5.2 cm, landscape).
 
 Left: the design (metadata only: storage and cycling conditions, laboratories); middle: the model in three glyphs (solution network F,
-KAN stress maps inside the law G, soft residual); right: the primary contrasts on held-out cycling conditions (median error ratio
-comparator / PINN-KAN with its exact 95 % interval and the tier) read from the statistics step. Output size 13 cm x 5.2 cm at 600 dpi
+KAN stress maps inside the law G, soft residual); right: the primary contrasts at the scarce cell g1 = (8 training conditions, 2 check-ups) on held-out
+cycling conditions (median error ratio comparator / PINN-KAN with its simultaneous exact interval and the tier), all read from the statistics step. Output size 13 cm x 5.2 cm at 600 dpi
 = 3071 x 1228 px.
-Inputs: --meta (experiments_meta.csv), --run-b, --run-s2 (condition counts), --contrasts (analysis/contrasts_B.json).
+Inputs: --meta (experiments_meta.csv), --stats (analysis/contrasts_v4_B.json; condition counts n are read from it). READ-ONLY.
 """
 import sys
 from pathlib import Path
@@ -25,19 +25,17 @@ TXT = 7.6
 def main():
     ap = ps.common_args(__doc__)
     ap.add_argument("--meta", required=True)
-    ap.add_argument("--run-b", required=True)
-    ap.add_argument("--run-s2", required=True)
-    ap.add_argument("--contrasts", required=True)
+    ap.add_argument("--stats", required=True)
     a = ap.parse_args()
     ps.apply()
-    prov = ps.Provenance(a.run_b, a.run_s2, a.contrasts)
+    prov = ps.Provenance(a.stats)
     prov.require_frozen("Graphical abstract")
     meta = pd.read_csv(ps.need(a.meta))
     meta.columns = [c.strip() for c in meta.columns]
-    nB = len(pdt.load_scores(a.run_b)["A1"])
-    nS = len(pdt.load_scores(a.run_s2)["A1"])
+    S = pdt.load_stats(a.stats)
+    nB = pdt.est_rows(S, "D*", pdt.G1)[0]["n"]
+    nS = len(meta[meta.type == "k"].groupby(["amb_temp_tp", "soc_max_tp"]))          # design count of storage conditions (metadata identifiers)
     labs = sorted(meta.lab.unique())
-    C = pdt.load_contrasts(a.contrasts)["contrasts"]
 
     fig = plt.figure(figsize=(13.0 * ps.CM, 5.2 * ps.CM))
     ax = fig.add_axes([0, 0, 1, 1])
@@ -65,7 +63,7 @@ def main():
     axs.set_title(f"storage, {nS}", fontsize=7.4, pad=2)
     axc = fig.add_axes([25.5 / W, 21.5 / H, 15 / W, 15 / H])
     for (T, d, lab), g in cyc.groupby(["amb_temp_tp", "dod_tp", "lab"]):
-        axc.scatter(T + np.random.default_rng(int(1000 * d)).uniform(-1.2, 1.2), 100 * d, s=7, color=ps.LAB_COL[lab], lw=0)
+        axc.scatter(T + ((int(1000 * d) * 37) % 100 / 100.0 - 0.5) * 2.4, 100 * d, s=7, color=ps.LAB_COL[lab], lw=0)
     axc.set_xticks([])
     axc.set_yticks([])
     axc.set_xlabel("T", fontsize=7, labelpad=1)
@@ -95,25 +93,25 @@ def main():
     arrow(ax, (66, 15.6), (66, 13.8), ms=5, lw=0.8)
     arrow(ax, (42.4, 24), (47.6, 24), ms=6, lw=0.9)
     # ---- block 3: mini forest
-    keys = [("H1a", "Data-only"), ("H1b", "Best map"), ("H6", "Authors'")]
-    keys = [(k, l) for k, l in keys if k in C]
+    keys = [("D*", "Best learner"), ("A9", "Data-only"), ("A10", "Authors'")]
+    rows = {k: pdt.est_rows(S, k, pdt.G1)[0] for k, _ in keys}
     fa = fig.add_axes([107.5 / W, 14.5 / H, 17.0 / W, 19.0 / H])
     fa.patch.set_alpha(0)
-    lo_all = min(np.exp(C[k]["median_ci95"][0]) for k, _ in keys)
-    hi_all = max(np.exp(C[k]["median_ci95"][1]) for k, _ in keys)
+    lo_all = min(np.exp(r["simultaneous"]["lo"]) for r in rows.values())
+    hi_all = max(np.exp(r["simultaneous"]["hi"]) for r in rows.values())
     for i, (k, lab) in enumerate(keys):
         y = len(keys) - 1 - i
-        e = C[k]
-        lo, hi, m = (np.exp(v) for v in (e["median_ci95"][0], e["median_ci95"][1], e["median_L"]))
-        fa.plot([lo, hi], [y, y], color=ps.BLUE, lw=1.6)
-        fa.plot([m], [y], "o", color=ps.BLUE, ms=4.5)
+        e = rows[k]
+        fa.plot([np.exp(e["simultaneous"]["lo"]), np.exp(e["simultaneous"]["hi"])], [y, y], color=ps.BLUE, lw=1.6)
+        fa.plot([np.exp(e["median_L"])], [y], "o", color=ps.BLUE, ms=4.5)
     fa.axvline(1.0, color="#444444", lw=0.7)
     fa.set_xscale("log")
     fa.set_xlim(0.7 * min(1.0, lo_all), 1.15 * hi_all)
     fa.set_ylim(-0.6, len(keys) - 0.4)
     fa.set_yticks([])
-    fa.set_xticks([t for t in (1, 2, 4) if fa.get_xlim()[0] <= t <= fa.get_xlim()[1]])
-    fa.set_xticklabels([f"{t}" for t in (1, 2, 4) if fa.get_xlim()[0] <= t <= fa.get_xlim()[1]])
+    tk = [t for t in (1, 2, 4) if fa.get_xlim()[0] <= t <= fa.get_xlim()[1]]
+    fa.set_xticks(tk)
+    fa.set_xticklabels([f"{t}" for t in tk])
     fa.minorticks_off()
     fa.tick_params(labelsize=7.2, length=2, pad=1.5)
     fa.set_xlabel("error ratio", fontsize=7.2, labelpad=1.5)
@@ -121,12 +119,13 @@ def main():
         y = len(keys) - 1 - i
         yy = 13.5 + 20.0 * (y + 0.6) / (len(keys) + 0.2)
         ax.text(106.8, yy, lab, ha="right", va="center", fontsize=7.2, zorder=6)
-        t = C[k].get("tier")
-        if t in ("S", "N", "-"):
-            ax.text(127.4, yy, "–" if t == "-" else t, ha="center", va="center", fontsize=7.4, fontweight="bold",
-                    color="white" if t == "S" else "#222222", zorder=6,
-                    bbox=dict(boxstyle="circle,pad=0.2", fc=ps.TIER_COL[t], ec="none"))
-    txt(ax, 109.5, 40.0, f"{nB} cycling conditions\nheld out; median error\nratio, 95 % interval", size=7.0, linespacing=1.15)
+        t = pdt.tier_read(S, k, pdt.G1)
+        tt = pdt.tier_text(t)
+        if t is not None:
+            tc = ps.TIER_COL.get(t, "#BBBBBB") if isinstance(t, str) else (ps.GREEN if t else "#BBBBBB")
+            ax.text(127.4, yy, (("S" if t else "–") if isinstance(t, bool) else ("rS" if t == "reverse S" else tt)), ha="center", va="center", fontsize=7.4, fontweight="bold", color="white" if tc == ps.GREEN else "#222222", zorder=6,
+                    bbox=dict(boxstyle="circle,pad=0.2", fc=tc, ec="none"))
+    txt(ax, 109.5, 40.0, f"{nB} cycling conditions\nheld out; median error\nratio, simult. interval", size=7.0, linespacing=1.15)
     txt(ax, 109.5, 6.2, "> 1: PINN-KAN better", size=7.0, color="#444444")
     ps.finish(fig, "graphical_abstract", prov, a.out_dir)
 

@@ -1,6 +1,7 @@
 """Fig. 7: PDE-residual map |R| of the fitted PINN-KAN over (T, SOC) and (C_ch, T), training conditions overlaid.
 
-Input: --run (Test B run directory) with residual_map.npz written by the analysis step:
+Input: --run (a grid run directory, or the directory of grid runs: the m = 32 run of outer fold --fold is used) with residual_map.npz written by the run writer. One outer fold is shown:
+the statistics step does not merge the maps over folds (ALIGN_V4_REPORT gap G6). Format:
   T_edges, soc_edges, cch_edges (bin edges), absR_T_SOC [nT x nSOC], absR_cch_T [nT x nC]  (median |R| over members, law units),
   train_T_SOC [n x 2] (T, SOC or SOC_mid of training conditions), train_cch_T [m x 2] (C_ch, T).
 Each panel has its own colour scale (as in the exemplar Yuan Fig. 15); values are printed in the cells.
@@ -15,6 +16,7 @@ import matplotlib.patheffects as pe
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import pk_style as ps
+import pk_data as pdt
 
 
 def heat(ax, edges_x, edges_y, Z, xlabel, ylabel, pts, ptsxy, cmap="cividis"):
@@ -42,11 +44,15 @@ def heat(ax, edges_x, edges_y, Z, xlabel, ylabel, pts, ptsxy, cmap="cividis"):
 def main():
     ap = ps.common_args(__doc__)
     ap.add_argument("--run", required=True)
+    ap.add_argument("--fold", type=int, default=0)
     a = ap.parse_args()
     ps.apply()
-    prov = ps.Provenance(a.run)
+    cand = [r for r in pdt.expand_runs(a.run) if pdt.run_m(r) == 32 and int(pdt.run_config(r)["fold"]) == a.fold and (r / "residual_map.npz").exists()]
+    if not cand:
+        raise SystemExit(f"MISSING INPUT: no m = 32 run of fold {a.fold} with residual_map.npz under {a.run}")
+    prov = ps.Provenance(cand[0])
     prov.require_frozen("Fig. 7")
-    Z = np.load(ps.need(Path(a.run) / "residual_map.npz"))
+    Z = np.load(ps.need(cand[0] / "residual_map.npz"))
     fig = plt.figure(figsize=(ps.W_FULL, 6.8 * ps.CM))
     A = fig.add_axes([0.075, 0.20, 0.34, 0.70])
     cA = fig.add_axes([0.425, 0.20, 0.012, 0.70])

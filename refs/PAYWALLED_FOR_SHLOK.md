@@ -10,6 +10,9 @@
   https://doi.org/10.1016/j.est.2020.101410 (ScienceDirect, e-gateway). Save as `refs/pdf/lucu2020_A.pdf`, `refs/pdf/lucu2020_B.pdf`.
 - Jia et al., IEEE Trans. Transp. Electrif. 10(1) (2024) 1056: https://doi.org/10.1109/TTE.2023.3266386 (IEEE Xplore,
   e-gateway). Save as `refs/pdf/jia2024_tte.pdf`.
+- Status 2026-11-06 11:30: **Jia saved** (`refs/pdf/jia2024_tte.pdf`, 5.4 MB, IEEE in-page fetch). **Lucu Part A full text
+  captured** (`refs/fulltext/lucu2020_A_JES30_101409.txt`, abstract + body + references; scripted PDF fetch returns 403).
+  **Lucu Part B** stuck at the Cloudflare check: asked Shlok to save it to Downloads (with Hallinger).
 
 ## URGENT (2026-11-05 afternoon): needed for the CALCE section (D022)
 - **Saxena et al., J. Power Sources 2016** (CALCE PL pouch design paper): https://doi.org/10.1016/j.jpowsour.2016.07.057

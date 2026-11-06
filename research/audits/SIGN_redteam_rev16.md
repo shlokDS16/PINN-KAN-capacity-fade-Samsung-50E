@@ -139,3 +139,28 @@ None.
 - **"Closed-form" titles (T1, T4, T7):** a K+ state whose extracted law cannot be written out for the fold-by-seed laws of the stability table.
 
 Red-team signature (sections 1, 10, 11): SIGNED
+
+
+## Rev. 17 confirmation
+
+Scope: `git diff a03ff81 4e29223` on `runs/prereg/PREREG_v4.md`, `code/pinnkan/stats_v4.py`, `code/tests/test_pk_rev16_m7.py`, `runs/freeze_runs/make_configs.py`. Samsung data not opened. Nothing else edited. Checks run: sha256 of section 11, grep for the old phrases, the K1 figures against `RESULT_D034.md` 3.1, the generated FB-9 configs, `python -m pytest code/tests/test_pk_rev16_m7.py code/tests/test_pk_d033_coder.py` (41 passed).
+
+| Item | Status | Evidence |
+|---|---|---|
+| m-1 | FIXED | Section 1 P3 bullet (`:18`) and section 2 P3 row (`:36`) now say the tuning protocol follows m (2 inner folds at m = 8, 3 at m = 32; tournament and D\* re-chosen per (fold, m)) and name the selection-noise reading as an alternative the design does not separate. "Only ... differs" is gone (grep). The claim is weakened, not strengthened. |
+| m-2 | FIXED | 9.8 rule 5 (`:305`) now reads "R1 test rejected (A1 better than R1), that is, M3 fails", consistent with `:24`, `:325`, `stats_v4.py`. The bound is stated per title at the nominal 0.025 (intersection-union), says it can exceed the graph's simulated 0.0192 when the false part is A1 against persistence, and places the R1 test outside the family-wise count. The `RESULT_D034.md` 6 column label is corrected in a note. Weaker claim than before. |
+| m-3 | FIXED | 9.8 rule 4 (`:303`): "by construction" removed. It now says that on D\* = A9 folds the most-test count equals the P2 count and adds no information, and that P2 S is a pooled statement. |
+| m-4 | FIXED | Section 10 (`:338`): "none of the five Samsung outer folds is compared ... (`nc1_full` is synthetic-only)". The self-contradiction is gone. |
+| m-5 | FIXED | NC-1 purpose (`:333`) now excepts the QC-drop path and names its effect (retained record, forecast set, D025 window), that NC-1 holds it fixed, and that it is shared by all arms and disclosed in Limitations. |
+| m-6 | FIXED | `make_configs.py`: FB-9 configs at m 8, 16, 32. Each takes `arms` from `conf_samsung_B_f0_m{m}.json` (14, 11, 15 arms: A4, A10P, A11, A13, A15, G15 etc. now present where the grid config has them). Short-record cells (`short_records`) are set, and `run.py:136` and `synth.shorten_cells` read exactly those keys. The generated `runs/freeze_runs/configs/fb9_*.json` match. This is configuration only. FB-9 is still due, unrun, at the frozen commit. |
+| m-7 | FIXED | `effective_config`: a caller `root` without FROZEN falls back to the frozen project root and then enforces the pin. Both new tests pass, and the existing D033 pin tests (41 in total) still pass. The two tests monkeypatch `guard`, so the real pin path under a copied tree is not exercised. This is a coverage note only. |
+| m-8 | LEFT BY DESIGN | Inside section 11, unchanged. The mapping stays unambiguous (the M3 line overrides T1-T3 and T9). It remains open for the author. It is not a defect of this revision. |
+| m-9 | FIXED | "the K1 null is rejected (K1 passes)" in both places in section 1. |
+
+Section 11: sha256 of "## 11. Outcomes" up to, not including, "## 11a." is 001b1c798342... at both a03ff81 and 4e29223. Untouched.
+
+No claim strengthened. Two observations that do not block:
+- The K1 figures changed 0.734 / 0.343 / 0.693 / 0.386 to 0.766 / 0.379 / 0.709 / 0.408 (statistician N2). They match `RESULT_D034.md` 3.1, rows `P_K1`, and the old figures are kept and labelled "former contrast". They are simulation power figures for the expected endpoint, not a test, margin or claim. The 0.03 shift is larger than the roughly 0.01 Monte Carlo noise that `RESULT_D034.md` quotes for P3, and it is attributed there to the new contrast. I did not re-simulate.
+- m-1 and m-2 add reading text only. No title, tier, margin, count or graph weight changed.
+
+Red-team signature carried to rev. 17: CONFIRMED

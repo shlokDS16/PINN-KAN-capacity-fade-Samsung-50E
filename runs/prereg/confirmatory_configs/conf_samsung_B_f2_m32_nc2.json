@@ -17,6 +17,7 @@
  "n_trials": 20,
  "backbone": "tournament",
  "throughput": "zyk",
+ "zyk_table_sha256": "dfc379a6544f0fc5e6465be95e9f005f823f68ecba31d89ccad10270ce64295d",
  "inversion_config_sha256": "3e902beacf3bf26f927a3043ac555f39fe5f4279f063e19936bf9dacb890abc2",
  "permute_stress": true
 }

@@ -275,9 +275,14 @@ def samsung_cond_key(kind, T, soc_max, dod, c_ch, c_dch):
     return "T%g|SOC%g" % (T, soc_max)
 
 
-def _load_samsung(root, retain_all=False, throughput="analytic", include_at=False, drop_incidents=True, keep=None, throughput_fallback="none", include_storage_0406=False):
+def _load_samsung(root, retain_all=False, throughput="analytic", include_at=False, drop_incidents=True, keep=None, throughput_fallback="none", include_storage_0406=False, zyk_table_sha256=None):
     if throughput not in ("analytic", "zyk"):
         raise ValueError(throughput)
+    if throughput == "zyk" and zyk_table_sha256 is not None:      # D028 C1: the ZYK table is git-ignored; the config pins its hash and a different file is refused before use
+        zp = os.path.join(root, zyk.ZYK_TABLE_REL)
+        if not os.path.isfile(zp) or sha256_file(zp) != zyk_table_sha256:
+            from .run import ConfigError
+            raise ConfigError(f"zyk_table_sha256 does not match {zyk.ZYK_TABLE_REL} in this tree (absent or another table): the primary ZYK throughput table is pinned by hash (D028 C1)")
     df = pd.read_csv(os.path.join(root, "data", "processed", "samsung_checkups.csv"))
     if throughput == "zyk":
         # ZYK-logged throughput (prereg 5, FB-5): cumulative EFC from the ZYK segment table, computed on the UNFILTERED rows so that the segments before dropped or
@@ -491,7 +496,7 @@ def apply_subset(train, dataset, test, fdef, fold, m, subset="maxmin", draw=0, r
 
 
 def load_split(dataset, test, fold, role="train", root=None, retain_all=False, throughput="analytic", include_at=False, throughput_fallback="none", include_storage_0406=False,
-               m=None, subset="maxmin", subset_draw=0, runs_dir=None, score_blinded_cells=False):
+               m=None, subset="maxmin", subset_draw=0, runs_dir=None, score_blinded_cells=False, zyk_table_sha256=None):
     """Cells of one outer split. role 'train' never contains a test cell or a test condition. role 'test' also returns the test cells
     and requires the FROZEN flag file; without it the guard raises before any test cell is built."""
     root = root or _ROOT
@@ -530,7 +535,7 @@ def load_split(dataset, test, fold, role="train", root=None, retain_all=False, t
 
     def build(keep):
         if dataset == "samsung":
-            return _load_samsung(root, retain_all, throughput, include_at, keep=keep, throughput_fallback=throughput_fallback, include_storage_0406=include_storage_0406)
+            return _load_samsung(root, retain_all, throughput, include_at, keep=keep, throughput_fallback=throughput_fallback, include_storage_0406=include_storage_0406, zyk_table_sha256=zyk_table_sha256)
         return (_load_isu if dataset == "isu" else _load_snl)(root, keep=keep)
 
     train = build(keep_train)             # outer-test cells are filtered out before any array is built

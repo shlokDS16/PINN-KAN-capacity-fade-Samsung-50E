@@ -1,11 +1,9 @@
 {
- "run_id": "repl_isu_B_f2_g4",
+ "run_id": "repl_isu_B_f2_full",
  "dataset": "isu",
  "test": "B",
  "fold": 2,
  "mode": "confirmatory",
- "m": 32,
- "subset": "maxmin",
  "k": [
   "full"
  ],

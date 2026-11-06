@@ -18,12 +18,14 @@ GROUPS (directory under runs/prereg/confirmatory_configs/; MANIFEST.json lists e
   sensitivity   9.9 rows with a re-run (reported, no consequence) at g1 and g4, 5 folds. The arm list of these rows is not fixed by the PREREG: A1 A9 A11 A12 A10 A10P (P1, P2, D*, Q-A10) is an
                 assumption of this script, except where the row names its arms. (i): include_at, include_storage_0406, min_fc_points 3, oracle_throughput, backbone self_limiting,
                 score_blinded_cells (all at g1 and g4), windows k_full - 1 = 3 and k_full + 2 = 6 (g4 only); (k) clip 10 / 50 and warm-up 0.2 / 0.6 for P2 (arms A1 A9; warm-up acts on A1 only);
-                (l) delta scope total (A1); (m) A2-only tournament sensitivity Y0 {0.5, 2}, gamma {0.15, 0.6}, TAU {0.075, 0.3}, one change at a time (A2).
+                (l) delta scope total (A1); (m) A2-only tournament sensitivity Y0 {0.5, 2}, gamma {0.15, 0.6}, TAU {0.075, 0.3}, one change at a time (A2);
+                (p) second TPE seed tpe_seed = 100 + fold at g1 (A1 A9 A11 A12); (t) A10 / A10P without SOC = 100 % storage cells at g1 and g4 (A1 A10 A10P) (D028).
   exploratory   Test A folds 0-2 (A1 A2 A9) and S3 (A1 A9 A10 A10P; the PREREG names no arms for S3, the S2 arms are assumed).
-  replication   optional ISU descriptive replication (3.4 (ii)): Test B folds 0-4 at the scarce analogue (m 8, W = 2 weeks) and the g4 analogue (m 32, W = full = 4 weeks), A1 A9 A11 A12 A10.
-Not generated (see runs/prereg/CODER_BATCH_REPORT.md, "needs a strike decision"): rows the code cannot run as written, SNL, A14.
+  replication   optional ISU descriptive replication (3.4 (ii), D028 C2): Test B folds 0-4 at the scarce analogue (m 8, W = 2 weeks) and the full-data analogue (unthinned training side, m unset,
+                W = full = 4 weeks), A1 A9 A11 A12 A10.
+Struck by the judge (D028; no config): first-CU reference row, forecast-failure row 3.3(8), separate h_cal/h_cyc for A2, A14, SNL replication; the ISU fallback grid lapsed.
 
-Every Samsung config: dataset samsung, throughput zyk (FB-5 met: analytic throughput rejected, ZYK-logged throughput applies to every cycling cell), mode confirmatory, steps_scale 1, no overwrite,
+Every Samsung config: dataset samsung, throughput zyk with zyk_table_sha256 (FB-5 met: ZYK-logged throughput applies to every cycling cell; the table is git-ignored, so its hash is pinned), mode confirmatory, steps_scale 1, no overwrite,
 window {k_cycling 4, k_storage 2} (FB-6), n_trials 20 (FB-8 may change it: edit N_TRIALS and regenerate), backbone tournament (7), inversion_config_sha256 (D023), and for A15 / G15
 `extraction_audit_sha256` and `calibration_rule_sha256`. The five item (f) configs are the g1 config (m = 8, k grid) of the same fold with only run_id, mode = inner, arms = A1 A9 A11 A12,
 diagnostics = false and refit_timing = false changed (D026 02_judge.md). Seeds, the MC seed root and the sampler seeds are fixed in code. No data is read here."""
@@ -36,12 +38,13 @@ import sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.insert(0, os.path.join(ROOT, "code"))
 
-from pinnkan import extraction_audit, guard, inversion  # noqa: E402
+from pinnkan import extraction_audit, guard, inversion, zyk  # noqa: E402
 from pinnkan.run import DEFAULTS  # noqa: E402
 
 CONF_DIR = os.path.join(ROOT, "runs", "prereg", "confirmatory_configs")
 ITEM_F_DIR = os.path.join(ROOT, "runs", "item_f", "configs")
 RULE_FILE = os.path.join(ROOT, "debates", "D022_datasets_kan", "calibration_rule_v2.md")
+ZYK_TABLE = os.path.join(ROOT, zyk.ZYK_TABLE_REL)           # git-ignored; its hash is pinned in every Samsung config (D028 C1)
 WINDOW = {"k_cycling": 4, "k_storage": 2}                  # FB-6 counts; every Samsung grid config carries them
 N_TRIALS = 20                                              # FB-8 timing run (runs/freeze_shakedown/RESULT.md): 20 unless the freeze-commit timing run changes it
 BACKBONE = "tournament"                                    # PREREG_v4 7: the state factor is chosen once per (outer fold, m)
@@ -54,6 +57,7 @@ CELLS = {"g1": {"m": 8, "k": [2]}, "g4": {"m": 32, "k": ["full"]}}
 ROW_ARMS = {"g1": ["A1", "A2", "A9", "A10", "A10P", "A11", "A12", "A13"], "g4": ["A1", "A2", "A9", "A10", "A10P", "A11", "A12", "A15", "G15"]}
 SENS_ARMS = ["A1", "A9", "A11", "A12", "A10", "A10P"]
 RANDSUB_ARMS = ["A1", "A9", "A11", "A12"]
+TPE_ARMS = ["A1", "A9", "A11", "A12"]
 GROUP_DIRS = {"primary": "", "rows": "rows", "sensitivity": "sensitivity", "exploratory": "exploratory", "replication": "replication"}
 
 
@@ -67,7 +71,7 @@ def make_config(run_id, test, fold, arms, m=None, k=None, **extra):
         c.update(m=int(m), subset="maxmin")
     if k is not None:
         c["k"] = k
-    c.update(arms=_arms(arms), window=dict(WINDOW), steps_scale=1.0, n_trials=N_TRIALS, backbone=BACKBONE, throughput=THROUGHPUT, inversion_config_sha256=inversion.config_sha256())
+    c.update(arms=_arms(arms), window=dict(WINDOW), steps_scale=1.0, n_trials=N_TRIALS, backbone=BACKBONE, throughput=THROUGHPUT, zyk_table_sha256=extraction_audit.sha256_file(ZYK_TABLE), inversion_config_sha256=inversion.config_sha256())
     if {"A15", "G15"} & set(arms):
         c["extraction_audit_sha256"] = extraction_audit.thresholds_sha256()
         c["calibration_rule_sha256"] = extraction_audit.sha256_file(RULE_FILE)
@@ -127,6 +131,11 @@ def sensitivity_configs():
             for tag, lo in (("Y05", {"Y0": 0.5}), ("Y2", {"Y0": 2.0}), ("g015", {"gamma": 0.15}), ("g06", {"gamma": 0.6}), ("tau0075", {"tau": 0.075}), ("tau03", {"tau": 0.3})):
                 rid = f"sens_a2_{tag}_B_f{f}_{cell}"
                 out[rid + ".json"] = cell_config(rid, f, ["A2"], cell, law_overrides=dict(lo))
+        c = cell_config(f"sens_tpe2_B_f{f}_g1", f, TPE_ARMS, "g1", tpe_seed=100 + f)        # 9.9 (p): second TPE search seed 100 + fold on P1 and P2 (D028)
+        out[f"sens_tpe2_B_f{f}_g1.json"] = c
+        for cell in ("g1", "g4"):
+            rid = f"sens_a10nosoc100_B_f{f}_{cell}"
+            out[rid + ".json"] = cell_config(rid, f, ["A1", "A10", "A10P"], cell, a10_drop_soc100_storage=True)      # 9.9 (t): A10 / A10P without the SOC = 100 % storage cells (D028)
         for tag, kc in (("kfull_m1", WINDOW["k_cycling"] - 1), ("kfull_p2", WINDOW["k_cycling"] + 2)):
             rid = f"sens_{tag}_B_f{f}_g4"
             c = cell_config(rid, f, SENS_ARMS, "g4")
@@ -145,13 +154,15 @@ def exploratory_configs():
 
 
 def replication_configs():
-    """optional ISU replication (3.4 (ii)): scarce analogue (m 8, W = 2 weeks) and the g4 analogue (m 32, W = full = 4 weeks); no window dict (time window), arms A1 A9 A11 A12 A10"""
+    """optional ISU replication (3.4 (ii), D028 C2): scarce analogue (m 8, W = 2 weeks) and the full-data analogue (unthinned training side, m unset, W = full = 4 weeks); no window dict (time window), arms A1 A9 A11 A12 A10"""
     out = {}
     for f in range(5):
-        for cell in ("g1", "g4"):
-            rid = f"repl_isu_B_f{f}_{cell}"
-            out[rid + ".json"] = {"run_id": rid, "dataset": "isu", "test": "B", "fold": f, "mode": "confirmatory", "m": CELLS[cell]["m"], "subset": "maxmin", "k": list(CELLS[cell]["k"]),
-                                  "arms": _arms(["A1", "A9", "A11", "A12", "A10"]), "steps_scale": 1.0, "n_trials": N_TRIALS, "backbone": BACKBONE, "inversion_config_sha256": inversion.config_sha256()}
+        base = {"dataset": "isu", "test": "B", "fold": f, "mode": "confirmatory", "arms": _arms(["A1", "A9", "A11", "A12", "A10"]), "steps_scale": 1.0, "n_trials": N_TRIALS, "backbone": BACKBONE,
+                "inversion_config_sha256": inversion.config_sha256()}
+        rid = f"repl_isu_B_f{f}_g1"                                    # scarce analogue: 8 conditions, W = 2 weeks
+        out[rid + ".json"] = {"run_id": rid, **{k: base[k] for k in ("dataset", "test", "fold", "mode")}, "m": 8, "subset": "maxmin", "k": [2], **{k: base[k] for k in ("arms", "steps_scale", "n_trials", "backbone", "inversion_config_sha256")}}
+        rid = f"repl_isu_B_f{f}_full"                                  # full-data analogue (D028 C2): the unthinned training side (m unset), W = full = 4 weeks
+        out[rid + ".json"] = {"run_id": rid, **{k: base[k] for k in ("dataset", "test", "fold", "mode")}, "k": ["full"], **{k: base[k] for k in ("arms", "steps_scale", "n_trials", "backbone", "inversion_config_sha256")}}
     return out
 
 

@@ -73,12 +73,12 @@ def cv_rows(arm_id, hp, cells, fold_of, k, spec, rule, seed, ctx, target_kind="c
     return rows, secs / max(nfit, 1)
 
 
-def tune(arm_id, cells, spec, rule, n_trials, inner_k, outer_fold, ctx, target_kind="cycling"):
+def tune(arm_id, cells, spec, rule, n_trials, inner_k, outer_fold, ctx, target_kind="cycling", tpe_seed=None):
     """-> dict(best_hp, inner_cv_pp, cond_scores, trials, n_failed, median_fit_seconds, ...). Uses training cells only (the caller passes nothing else)."""
     seed = 1000 + int(outer_fold)
     fold_of = inner_folds(cells, inner_k, seed, spec, target_kind)
     a = ARMS[arm_id]
-    out = {"arm": arm_id, "tuning_seed": seed, "tpe_seed": int(outer_fold), "inner_k": inner_k, "n_trials": n_trials if a.tuned else 0,
+    out = {"arm": arm_id, "tuning_seed": seed, "tpe_seed": int(outer_fold if tpe_seed is None else tpe_seed), "inner_k": inner_k, "n_trials": n_trials if a.tuned else 0,
            "n_inner_conditions": len(fold_of)}
     if not a.tuned:
         rows, s = cv_rows(arm_id, {}, cells, fold_of, inner_k, spec, rule, seed, ctx, target_kind)
@@ -94,7 +94,7 @@ def tune(arm_id, cells, spec, rule, n_trials, inner_k, outer_fold, ctx, target_k
         v = primary_score(rows)
         return v if np.isfinite(v) else BIG
 
-    study = optuna.create_study(direction="minimize", sampler=optuna.samplers.TPESampler(seed=int(outer_fold)))
+    study = optuna.create_study(direction="minimize", sampler=optuna.samplers.TPESampler(seed=int(outer_fold if tpe_seed is None else tpe_seed)))      # D028 C3: tpe_seed (None = the outer fold) is the 9.9 (p) second search seed; the tuning-fit seed and the inner folds stay
     max_failed = max(2, n_trials // 4)       # equal-budget rule (review m7): failed trials are redrawn until N valid ones exist, up to a cap
     while True:
         done = [t for t in study.trials if t.state.name == "COMPLETE"]

@@ -39,7 +39,7 @@ DEFAULTS = {"mode": "inner", "test": "B", "fold": 0, "arms": ["A1", "A2", "A9", 
             # cells 04-06 as two-point records (i); min_fc_points: scored cells need this many forecast points (i, "cells with >= 3 forecast points" -> 3);
             # law_overrides: {Y0, gamma, tau} for the A2-only tournament row (m), {delta_scope: "total"} for row (l); throughput_fallback: "analytic" lets a
             # cycling cell without ZYK entries use the designed throughput under throughput="zyk" (otherwise ZykDataMissing)
-            "include_at": False, "include_storage_0406": False, "min_fc_points": 1, "m": None, "subset": "maxmin", "subset_draw": 0, "k": None, "design": "R2", "inversion_config_sha256": None, "inversion_diagnostics": None, "extraction_audit_sha256": None, "calibration_rule_sha256": None, "nc1_scramble_k": None, "symbolic": {}, "endpoint": "ensemble", "inner_k_thin": 2, "p6b_decision": None, "law_overrides": {}, "throughput_fallback": "none", "forecast_failure": False, "lab_indicator": False, "score_blinded_cells": False}
+            "include_at": False, "include_storage_0406": False, "min_fc_points": 1, "m": None, "subset": "maxmin", "subset_draw": 0, "k": None, "design": "R2", "inversion_config_sha256": None, "inversion_diagnostics": None, "extraction_audit_sha256": None, "calibration_rule_sha256": None, "nc1_scramble_k": None, "symbolic": {}, "endpoint": "ensemble", "inner_k_thin": 2, "p6b_decision": None, "law_overrides": {}, "throughput_fallback": "none", "forecast_failure": False, "lab_indicator": False, "score_blinded_cells": False, "zyk_table_sha256": None, "tpe_seed": None, "a10_drop_soc100_storage": False}
 TARGET_BY_TEST = {"B": "cycling", "C": "cycling", "A": "cycling", "S2": "storage", "S3": "storage"}   # the tuned task is the scored task (review M3)
 
 
@@ -137,7 +137,7 @@ def build_data(cfg, root, role, runs_dir=None):
         return {"spec": SPECS["synthetic"], "train": tr, "test": te if role != "train" else None, "synth": S, "subset": sub,
                 "split": {"file": "synthetic (generated)", "note": "no outer test fold of real data exists", "subset": sub}, "manifest": []}
     sv = load_split(ds, cfg["test"], cfg["fold"], role=role, root=root, retain_all=cfg["retain_all"], throughput=cfg["throughput"], include_at=cfg["include_at"],
-                    throughput_fallback=cfg["throughput_fallback"], include_storage_0406=cfg["include_storage_0406"], m=cfg["m"], subset=cfg["subset"], subset_draw=cfg["subset_draw"], runs_dir=runs_dir, score_blinded_cells=cfg["score_blinded_cells"])
+                    throughput_fallback=cfg["throughput_fallback"], include_storage_0406=cfg["include_storage_0406"], m=cfg["m"], subset=cfg["subset"], subset_draw=cfg["subset_draw"], runs_dir=runs_dir, score_blinded_cells=cfg["score_blinded_cells"], zyk_table_sha256=cfg["zyk_table_sha256"])
     return {"spec": sv.spec, "train": sv.train, "test": sv.test_cells, "sv": sv, "subset": sv.subset_info,
             "split": {"file": os.path.relpath(sv.split_file, root).replace("\\", "/"), "sha256_file": sv.split_sha256, "fold_hash_stored": sv.fold_hash_stored,
                       "fold_hash_recomputed": sv.fold_hash_recomputed, "fold_hash_ok": sv.hash_ok, "pinned_at_freeze": sv.pinned, "missing_train_conditions": sv.missing_train_conditions, "test_conditions": sv.test_conditions,
@@ -156,7 +156,7 @@ def _check_overrides(cfg):
     if cfg["forecast_failure"]:
         raise NotBuiltError("forecast_failure (PREREG 3.3(8)): the rule scores cells whose record ends inside the window 'as forecast failures (retention carried forward "
                             "from the last observation)', but the text gives no forecast times for a cell without post-window check-ups, so the scored set is undefined. "
-                            "Specify the forecast times (or strike the row) before the freeze.")
+                            "Struck (D028): the D025 window cap leaves every Samsung cell at least one post-window check-up, so the scored set of this row is empty.")
     lo = {k: v for k, v in (cfg.get("law_overrides") or {}).items() if v is not None}
     if lo:
         bad = set(lo) - set(LAW_OVERRIDE_ARMS)
@@ -255,6 +255,16 @@ def validate_config(cfg_in, root=None):
             raise ConfigError("overwrite is not allowed in a confirmatory run on real data (stop rule 4)")
         if cfg["auto_budget"]:
             raise ConfigError("auto_budget is wall-clock dependent and unhashed: a confirmatory run on real data takes N and inner_k from the config, fixed from the FB-8 timing run's budget_rule.json (review M4)")
+    zs = cfg["zyk_table_sha256"]                           # D028 C1: ZYK throughput on real data needs the pinned table hash (64 hex characters)
+    if zs is not None and not (isinstance(zs, str) and len(zs) == 64 and all(ch in "0123456789abcdef" for ch in zs)):
+        raise ConfigError("zyk_table_sha256 must be 64 lower-case hex characters (sha256 of data/processed/samsung_zyk_efc.csv)")
+    if ds == "samsung" and cfg["throughput"] == "zyk" and zs is None and cfg["mode"] in ("confirmatory", "inner"):
+        raise ConfigError("zyk_table_sha256 is required with throughput 'zyk' on Samsung (the ZYK table is git-ignored; D028 C1)")
+    tseed = cfg["tpe_seed"]
+    if tseed is not None and (isinstance(tseed, bool) or not isinstance(tseed, int) or tseed < 0):
+        raise ConfigError("tpe_seed must be None (the outer-fold index) or an integer >= 0 (D028 C3)")
+    if cfg["a10_drop_soc100_storage"] and not ({"A10", "A10P"} & set(cfg["arms"])):
+        raise ConfigError("a10_drop_soc100_storage is the A10 sensitivity row (9.9 (t)): it needs A10 or A10P in arms (D028 C4)")
     wk = cfg["window"]
     if ds != "synthetic" and (cfg["m"] is not None or cfg["k"] is not None) and SPECS[ds].window[0] == "count" and (wk.get("k_cycling") is None or wk.get("k_storage") is None):
         raise ConfigError("a Design R2 grid run on real data needs window.k_cycling (= k_full) and window.k_storage from the counted listings [FB-6]; the placeholder defaults 4 and 2 are not used (review M3)")
@@ -375,7 +385,7 @@ def _run(cfg_in, root=None, runs_dir=None):
         extra = twins_from_conditions(D["split"].get("test_conditions", []))
     rule_tune = rule if cfg["m"] is None else WindowRule.for_grid(spec, 2 if int(cfg["m"]) < 32 else "full", rule)      # PREREG_v4 4.1: inner CV scored at k = 2 for m < 32, at k_full for m = 32
     ctx = {"backbone": cfg["backbone"] if cfg["backbone"] != "tournament" else "self_limiting", "steps_scale": cfg["steps_scale"], "rule": rule_tune, "extra_twin_raw": extra,
-           "oracle": cfg["oracle_throughput"], "per_cell_factor": cfg["per_cell_factor"], "lab_indicator": bool(cfg["lab_indicator"]), "symbolic": dict(cfg["symbolic"] or {}), "a10_starts": cfg.get("a10_starts", 8), "pinn": cfg["pinn"]}
+           "oracle": cfg["oracle_throughput"], "per_cell_factor": cfg["per_cell_factor"], "lab_indicator": bool(cfg["lab_indicator"]), "a10_drop_soc100_storage": bool(cfg["a10_drop_soc100_storage"]), "symbolic": dict(cfg["symbolic"] or {}), "a10_starts": cfg.get("a10_starts", 8), "pinn": cfg["pinn"]}
     arms = list(cfg["arms"])
     if mode == "confirmatory" and ds != "synthetic" and ({"A10", "A10P"} & set(arms)):
         semi.require_verified()
@@ -419,7 +429,7 @@ def _run(cfg_in, root=None, runs_dir=None):
         t0 = time.time()
         inversion.TAG.clear()
         inversion.TAG.update({"arm": a, "k": "inner"})
-        r = tuning.tune(a, train, spec, rule_tune, cfg["n_trials"], cfg["inner_k"], cfg["fold"], ctx, tk)
+        r = tuning.tune(a, train, spec, rule_tune, cfg["n_trials"], cfg["inner_k"], cfg["fold"], ctx, tk, tpe_seed=cfg["tpe_seed"])
         tuned[a] = r
         timings[a] = {"tuning_seconds": time.time() - t0, "median_fit_seconds": r["median_fit_seconds"], "n_trials": r["n_trials"], "n_failed": r["n_failed"]}
         rec.add_preds("inner_oof", a, 1000 + cfg["fold"], r["rows"])

@@ -56,3 +56,12 @@ Rows (a)-(e), (j), (q), (s), (v), (vi) of 9.9 are statistics-step or diagnostics
 7. **SNL replication (3.4 (ii)).** PREREG fixes the scarce window analogue only for ISU (2 weeks, [D]); SNL's window is unit-different and no scarce analogue is stated.
 8. **ISU fallback grid (3.4 (i), m x W in {0, 2, 4})** applies only if Samsung is not parsed by 07 Nov 09:00; not generated (conditional, and past/near its date); EXT-PL and EXT-NA run from their own card.
 Not config-pinned by design: synthetic runs (G0, NC-1; no pin needed), timing and pilot runs (not confirmatory mode).
+
+## D028 (judge ruling `debates/D028_config_rulings/01_judge.md`; coder actions C1-C5 done)
+The "needs a strike decision" list above is now **decided**; the status of each item:
+1. First-CU reference row: **struck** (no config). 2. Forecast-failure row 3.3(8): **struck**; `forecast_failure` stays refused and the message says "Struck (D028)". 3. 9.9 (n) separate h_cal/h_cyc: **struck**.
+4. 9.9 (p) second TPE seed: **built**: config key `tpe_seed` (None = outer fold; only `TPESampler(seed=)` changes), configs `sens_tpe2_B_f{f}_g1` (tpe_seed = 100 + fold; A1 A9 A11 A12). 5. 9.9 (t): **built**: key `a10_drop_soc100_storage`
+(A10/A10P fitted without storage cells at SOC = 1.0; refused without A10 or A10P in arms), configs `sens_a10nosoc100_B_f{f}_{g1,g4}` (A1 A10 A10P). 6. A14: **struck**. 7. SNL replication: **struck**. 8. ISU fallback grid: **lapsed**.
+C1: `zyk_table_sha256` (sha256 of the git-ignored `data/processed/samsung_zyk_efc.csv`) is in every Samsung zyk config (item (f) inherits it); `validate_config` requires 64 lower-case hex when throughput is zyk on Samsung (modes confirmatory and inner);
+`data._load_samsung` raises `ConfigError` on a mismatch or an absent table before any use. C2: ISU replication full-data analogue = `repl_isu_B_f{f}_full` (m and subset unset, k ["full"] = 4 weeks); the old `_g4` (m 32) files are gone.
+Set now: 276 configs (primary 26, rows 36, sensitivity 195, exploratory 4, replication 10, item (f) 5); MANIFEST regenerated; tests `test_d028_config_rulings.py` (9). **The FB-8 timing run must use a pinned primary config (zyk, tournament, k grid)**, per the judge.

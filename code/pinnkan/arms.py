@@ -249,6 +249,8 @@ class FreeArm(Arm):
 class SemiArm(Arm):
     def fit(self, train_cells):
         self.form = semi.SemiForm(self.spec)
+        if self.ctx.get("a10_drop_soc100_storage"):         # 9.9 (t), D028 C4: A10 / A10P are fitted without the storage cells at SOC = 100 % (the authors' calendar fit excludes them); no other arm and no scored cell changes
+            train_cells = [c for c in train_cells if not (c.kind == "storage" and abs(float(c.raw[self.spec.soc_index]) - 1.0) < 1e-9)]
         self.n_train_used = len([c for c in train_cells if c.n > 1 and (self.form.has_cal or c.kind == "cycling")])
         self.theta, self.cost = semi.fit_semi(self.form, train_cells, n_starts=int(self.ctx.get("a10_starts", 8)), seed=self.seed)
         self.beta = semi.indicator_beta(self.form, self.theta, train_cells) if (self.ctx.get("lab_indicator") and self.arm_id != "A10P") else None      # rows 9.8(ii)

@@ -8,3 +8,6 @@ __pycache__/
 runs/**/*.pt
 .venv/
 refs/fulltext/
+
+# per-run directories of the negative-control ruling (summaries are committed; NEGCONTROL_RULING.md)
+runs/prereg/stats_ruling/negctl/nc_*/

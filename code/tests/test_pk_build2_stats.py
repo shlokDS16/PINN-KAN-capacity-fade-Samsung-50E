@@ -367,7 +367,7 @@ def test_gate_g_v4_is_nc1_and_pc1_only_and_pc2_pc3_are_reported():
     ok = {"negative": {"nc1": {"passed": True}}, "positive": {"P1_G0_nrmse_leq_0p15": True, "P2_monotone_in_T": False, "P3_passed": False}}
     g = st.gate_g(ok)
     assert g["tripped"] is False and g["reasons"] == [] and g["not_evaluated"] == [] and g["reported_checks"]["PC-2_calendar_rate_monotone_in_T"] is False        # PC-2 / PC-3 failing is not a gate input
-    assert st.gate_g({"negative": {"nc1": {"passed": True}}, "positive": {"P1_G0_nrmse_leq_0p15": False}})["reasons"] == ["PC-1 failed (G0 recovery nRMSE > 0.15)"]
+    assert st.gate_g({"negative": {"nc1": {"passed": True}}, "positive": {"P1_G0_nrmse_leq_0p15": False}})["reasons"] == ["PC-1 failed (G0 pipeline check: nRMSE > 0.15)"]
     assert st.gate_g({"negative": {"nc1": {"passed": False}}, "positive": {"P1_G0_nrmse_leq_0p15": True}})["reasons"] == ["NC-1 tripped"]
     g2 = st.gate_g({"negative": {"nc1": {"passed": True}}, "positive": {}})
     assert not g2["tripped"] and g2["not_evaluated"] == ["PC-1"]

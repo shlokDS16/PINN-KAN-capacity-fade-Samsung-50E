@@ -500,7 +500,7 @@ def test_label_functions_default_to_no_licence_and_refuse_a_bare_true():
         with pytest.raises(X.AuditGuardError, match="verified calibration"):
             call()
     assert _LL(_laws())["dod"]["label"] == "form"                               # only the calibration script's sentinel (or a verified record) licenses
-    assert X.label_law(_laws(), calibrated={"verdict": {"contribution": True}})["dod"]["label"] == "form"
+    assert X.label_law(_laws(), calibrated={"verdict": {"void": False, "contribution": True, "arms": {"A15": {"C1": True}}}})["dod"]["label"] == "form"
     for empty in ({}, {"verdict": {}}, {"verdict": None}, {"commit": "x"}):
         assert X._licensed(empty) is False and X.label_law(_laws(), calibrated=empty)["dod"]["label"] == "not_identified"
 

@@ -414,7 +414,7 @@ def gate_g(controls):
         reasons.append("NC-1 tripped")
     pc1 = pos.get("P1_G0_nrmse_leq_0p15")
     if pc1 is False:
-        reasons.append("PC-1 failed (G0 recovery nRMSE > 0.15)")
+        reasons.append("PC-1 failed (G0 pipeline check: nRMSE > 0.15)")           # no word of the banned-claim list (C26 N1): a tripped gate is reported, not blocked by the wording check
     pending = []
     if not nc1_seen:
         pending.append("NC-1")
@@ -475,7 +475,7 @@ def run_stats(analysis_dir, runs_by_test, negative_run=None, h7_run=None, stress
         write_json(os.path.join(analysis_dir, f"sensitivity_{t}.json"), stats_ext.sensitivity_for_test(c, folds, t))
         out[t] = c
     if physval_runs:
-        write_json(os.path.join(analysis_dir, "physval_11a.json"), physval.physval_11a(physval_runs))
+        write_checked_json(os.path.join(analysis_dir, "physval_11a.json"), physval.physval_11a(physval_runs), "physval_11a")          # C26 N5: the same fail-closed wording check
     if reference_by_test is None:
         ref = {t: reference_from_runs(d) for t, d in runs_by_test.items()}
         reference_by_test = {t: v for t, v in ref.items() if v}
@@ -489,6 +489,18 @@ def run_stats(analysis_dir, runs_by_test, negative_run=None, h7_run=None, stress
     if any(_load(os.path.join(d, "config.json")).get("dataset") == "synthetic" for ds in runs_by_test.values() for d in ds):
         open(os.path.join(analysis_dir, "SYNTHETIC"), "w").write("analysis of synthetic runs\n")
     return out
+
+
+def write_checked_json(path, obj, where):
+    """fail closed (red-team A4, N5): no generated sentence of `obj` may contain a banned claim. On a violation nothing is written to `path`; the offending paths and patterns are recorded in
+    `<path>.WORDING_VIOLATION.json` (a diagnostic, itself written without the offending text) and BannedWordingError is raised."""
+    from .extraction_audit import BannedWordingError, check_generated_sentences
+    try:
+        check_generated_sentences(obj, where)
+    except BannedWordingError as e:
+        write_json(path + ".WORDING_VIOLATION.json", {"where": where, "violations": [{"path": p_, "patterns": h_} for p_, h_ in getattr(e, "violations", [])]})
+        raise
+    write_json(path, obj)
 
 
 def main(argv=None):
@@ -505,7 +517,7 @@ def main(argv=None):
     ap.add_argument("--row", action="append", default=None, help="NAME=dir1,dir2,... for the downgrade-row re-runs: lab_indicator, retain_all, random_subset (draws separated by ';')")
     ap.add_argument("--item-f-sha256", default=None, help="the item (f) file hash pinned in git / FROZEN")
     ap.add_argument("--ledger-root", default=None, help="project root whose runs/prereg/SCORED.jsonl is checked: every Samsung row must carry the same item_f_sha256 (D026)")
-    ap.add_argument("--audit-dir", default=None, help="directory of calibration.json (runs/extraction_calibration); without it no edge-level wording is printed")
+    ap.add_argument("--audit-dir", default=None, help="NOT USED in the confirmatory run (D022b: the extraction audit is struck; passing it raises AuditGuardError). Without it the descriptive stability table is printed, no edge-level licence wording")
     ap.add_argument("--audit-thresholds-pin", default=None, help="sha256 of extraction_audit.json (mandatory with --audit-dir)")
     ap.add_argument("--calibration-sha256", default=None, help="sha256 of calibration.json (mandatory with --audit-dir)")
     ap.add_argument("--lenient", action="store_true", help="development only: skip the completeness and design checks of Store.from_runs / check_complete")
@@ -558,12 +570,12 @@ def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, r
         out["outcome"]["provisional"] = prov["provisional"]
     out["item_f"] = item_f
     if audit_dir is None:                                                  # D022b: the law is printed in closed form, no edge family is named; the descriptive stability table is added when the runs hold extracted laws
-        out["edge_wording"] = {"printed": False, "reason": "no calibration table supplied: the extracted laws are printed in closed form without named edge families"}
+        out["edge_wording"] = {"printed": False, "reason": "descriptive reporting only: the extracted laws are printed in closed form without named edge families (D022b)"}
         if any(os.path.exists(os.path.join(d, "extracted_laws.json")) for d in run_dirs):
-            from .extraction_audit import AuditError
+            from .extraction_audit import AuditError, AuditGuardError
             try:
                 out["edge_wording"]["stability"] = stats_v4.edge_level_wording(run_dirs)
-            except AuditError as e:                                            # a lenient or partial-grid run must not abort: the descriptive table is recorded as unavailable
+            except (AuditError, AuditGuardError) as e:                         # a lenient or partial-grid run (or no g4 laws at all) must not abort: the descriptive table is recorded as unavailable (C26 B5)
                 out["edge_wording"]["stability"] = {"status": f"not available: {e}"}
     elif not licences:
         from .extraction_audit import AuditGuardError
@@ -572,9 +584,7 @@ def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, r
         fc = frozen_commit if frozen_commit is not None else (guard.read_freeze() or {}).get("commit")
         out["edge_wording"] = stats_v4.edge_level_wording(run_dirs, audit_dir, audit_thresholds_pin, calibration_sha256, fc, licences=True)         # raises AuditGuardError without the pins, a valid record from the FROZEN commit
     out["gate_G"] = gate_
-    from .extraction_audit import check_generated_sentences
-    check_generated_sentences(out, "contrasts_v4_B")                          # fail closed: no banned claim in any generated sentence (red-team A4)
     os.makedirs(analysis_dir, exist_ok=True)
-    write_json(os.path.join(analysis_dir, "controls.json"), controls)
-    write_json(os.path.join(analysis_dir, "contrasts_v4_B.json"), out)
+    write_checked_json(os.path.join(analysis_dir, "controls.json"), controls, "controls")          # controls.json (with the Gate G diagnostic) is written first: a wording failure of the contrasts never hides a tripped gate (C26 N1, N5)
+    write_checked_json(os.path.join(analysis_dir, "contrasts_v4_B.json"), out, "contrasts_v4_B")
     return out

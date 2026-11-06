@@ -45,7 +45,7 @@
  },
  "bic_margin_note": "appendix field only: computed on the KAN's grid, not a data statistic; it licenses nothing",
  "banned_phrases": {
-  "note": "D022b/red-team A4. Normalisation before matching: hyphens, line breaks and runs of white space become one space; case-insensitive. Stems are banned anywhere; form words are banned in a sentence that also names the extracted law (subject words) unless the sentence carries a negation word; approved text of PREREG 11 / 11a must not match (tested). The gate auditor still reads the manuscript.",
+  "note": "D022b/red-team A4. Normalisation before matching: hyphens, line breaks and runs of white space become one space; case-insensitive. Stems are banned anywhere; form words are banned in a sentence that also names a law or equation (subject words) unless that very word is negated (a negation word within 3 tokens before it, in the same clause; red-team N2, N3); approved text of PREREG 11 / 11a must not match (tested). The gate auditor still reads the manuscript.",
   "stems": [
    "recover\\w*",
    "discover\\w*",
@@ -56,7 +56,12 @@
    "enforced",
    "more identified",
    "better identified",
-   "fewer identified"
+   "fewer identified",
+   "licen[cs]\\w*",
+   "calibration (?:design|condition|table|record|passed|failed|met)",
+   "calibrated (?:law|arm|audit)",
+   "upper limit",
+   "c1 (?:passed|met|failed)"
   ],
   "form_words": [
    "arrhenius",
@@ -76,7 +81,15 @@
    "g15",
    "cycling law",
    "stress law",
-   "kan law"
+   "kan law",
+   "calendar law",
+   "law",
+   "equation",
+   "formula",
+   "fitted",
+   "learned",
+   "pinn kan",
+   "kan"
   ],
   "shows_pattern": "\\bshows? (?:an? |the )(?:\\w+ ){0,2}(?:form|law|dependence)\\b",
   "negation_words": [

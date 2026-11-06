@@ -50,8 +50,9 @@ def _licensed(calibrated):
         return False
     if calibrated is CALIBRATION_RUN:
         return True
-    if isinstance(calibrated, dict):                                       # a record returned by require_calibration carries its verdict; an empty or verdict-less dict is no calibration
-        return bool(calibrated.get("verdict"))
+    if isinstance(calibrated, dict):                                       # D022b B1: a record returned by require_calibration carries a verdict that is a dict, not void, and holds per-arm results; a bare {"verdict": True} is no calibration
+        v = calibrated.get("verdict")
+        return isinstance(v, dict) and v.get("void") is False and isinstance(v.get("arms"), dict) and bool(v["arms"])
     raise AuditGuardError("a licence word needs a verified calibration (the dict returned by require_calibration); a bare True is refused (D022b N3)")
 
 
@@ -85,18 +86,32 @@ def rule_sha256():
 
 
 class BannedWordingError(RuntimeError):
-    """a generated sentence of the statistics step contains a banned claim (fail closed)"""
+    """a generated sentence of the statistics step contains a banned claim (fail closed); `violations` = [(path, patterns)]"""
+    violations = ()
 
 
 def _norm(text):
     return re.sub(r"[\s\-~]+", " ", str(text)).strip()
 
 
+_CLAUSE_BREAK = re.compile(r"[,;:()]|\b(?:but|however|although|whereas|yet|while|and)\b")
+NEGATION_WINDOW = 3                                                              # tokens before a form word, inside its own clause, that negate it
+
+
+def _negated(low, start, negation_words):
+    """is the match at `start` of the lower-cased sentence `low` negated? Only a negation word within the NEGATION_WINDOW tokens before it, in the same clause (no comma, semicolon, colon,
+    bracket, "but", "and", ... in between), negates it: "is not linear", "not a hinge", "cannot represent the non-monotone ...". A negation elsewhere in the sentence does not (red-team N2)."""
+    seg = _CLAUSE_BREAK.split(low[:start])[-1]
+    toks = re.findall(r"[a-z0-9_']+", seg)[-NEGATION_WINDOW:]
+    return any(t in negation_words or t.endswith("n't") for t in toks)
+
+
 def banned_phrases_in(text, thr=None):
-    """banned claims in `text` (D022 section 4 and PREREG 7.3 item 1; red-team A4) -> list of matched patterns. Stems (recover*, discover*, identified, identifiable, identifiability,
-    no effect, enforced, ...) are banned anywhere; a form word (Arrhenius, power law, exponential, quadratic, hinge, threshold, activation energy, non-monotone) or "shows a/the ... form" is
-    banned in a sentence that names the extracted law unless that sentence is negated. Hyphens, line breaks and case are normalised; word boundaries (also against `_`) so that
-    "unenforced" and "not_identified" do not match. The approved PREREG 11 / 11a sentences must not match (tests)."""
+    """banned claims in `text` (D022 section 4 and PREREG 7.3 item 1; red-team A4, N2, N3) -> list of matched patterns. Stems (recover*, discover*, identified, identifiable, identifiability,
+    no effect, enforced, licence words, calibration-result phrases, ...) are banned anywhere. A form word (Arrhenius, power law, exponential, quadratic, hinge, threshold, activation energy,
+    non-monotone) or "shows a/the ... form" is banned in a sentence that names a law or equation (subject words) unless THAT word is itself negated (the negation word must stand within
+    NEGATION_WINDOW tokens before it, in the same clause; a negation elsewhere in the sentence does not exempt it). Hyphens, line breaks and case are normalised; word boundaries (also
+    against `_`) so that "unenforced" and "not_identified" do not match. The approved PREREG 11 / 11a sentences must not match (tests)."""
     thr = thr or load_thresholds()
     b = thr["banned_phrases"]
     hits = []
@@ -105,16 +120,15 @@ def banned_phrases_in(text, thr=None):
     for pat in b["stems"]:
         if re.search(wb(pat), norm, flags=re.IGNORECASE):
             hits.append(pat)
+    negs = set(b["negation_words"])
     for sent in re.split(r"(?<=[.;:!?]) ", norm):
         low = sent.lower()
         if not any(re.search(wb(sw), low) for sw in b["subject_words"]):
             continue
-        if any(re.search(wb(nw), low) for nw in b["negation_words"]):
-            continue
         for fw in b["form_words"]:
-            if re.search(wb(fw), low) and fw not in hits:
+            if fw not in hits and any(not _negated(low, m.start(), negs) for m in re.finditer(wb(fw), low)):
                 hits.append(fw)
-        if re.search(b["shows_pattern"], low) and "shows" not in hits:
+        if "shows" not in hits and any(not _negated(low, m.start(), negs) for m in re.finditer(b["shows_pattern"], low)):
             hits.append("shows")
     return hits
 
@@ -137,7 +151,9 @@ def check_generated_sentences(obj, where="output", thr=None):
                 walk(v, f"{path}[{i}]")
     walk(obj, where)
     if bad:
-        raise BannedWordingError(f"banned wording in generated sentences: {bad[:3]}")
+        err = BannedWordingError(f"banned wording in generated sentences: {bad[:3]}")
+        err.violations = [(p_, h_) for p_, h_, _ in bad]
+        raise err
     return True
 
 
@@ -302,7 +318,7 @@ def label_input(name, laws, thr=None, calibrated=False, n_expected=None):
     margins = [r["bic_margin"] for r in recs if r["bic_margin"] is not None]
     approx = [bool(r["approx"]) for r in recs if r["approx"] is not None]
     out = {"input": name, "n_laws": N, "need": need, "n_not_retained": n_not_ret, "n_nonadditive": n_nonadd, "wins": wins, "tie_share": ties / N, "sign_votes": {"+": votes[1], "-": votes[-1]},
-           "bic_margin_median": (float(np.median(margins)) if margins else None), "extraction_loss": bool(approx and np.mean(approx) > thr["approx_flag_min_share"]), "form": None, "sign": 0, "reasons": []}
+           "bic_margin_median": (float(np.median(margins)) if margins else None), "extraction_loss": bool(approx and np.mean(approx) > thr["approx_flag_min_share"]), "form": None, "sign": 0, "reasons": [], "licensed": False}
     why = out["reasons"]
     form_ok = (N - n_nonadd) >= need and wins[F] >= need                      # (a) additive in >= 20, (b)+(c) one family strictly wins in >= 20 (two families cannot both reach 20 of 25)
     sign_ok = (N - n_nonadd) >= need and max(votes.values()) >= need and votes[1] != votes[-1]
@@ -313,6 +329,7 @@ def label_input(name, laws, thr=None, calibrated=False, n_expected=None):
         out["label"] = "not_identified"
         why.append("no verified calibration: no label is printed (D022b: the audit is struck; descriptive reporting only)")
         return out
+    out["licensed"] = True                                                      # set only after _licensed() passed; label_text and results_sentence refuse a form / sign label without it (D022b B1)
     if n_not_ret >= need:
         out["label"] = "not_retained"
     elif n_nonadd > N - need:
@@ -340,6 +357,8 @@ def label_law(laws, thr=None, calibrated=False, n_expected=None):
 def label_text(lab, thr=None):
     thr = thr or load_thresholds()
     w = thr["wording"]["labels"]
+    if lab["label"] in ("form", "sign") and lab.get("licensed") is not True:
+        raise AuditGuardError("a form or sign label text needs a label produced under a verified calibration (D022b B1)")
     if lab["label"] == "form":
         return w["form"].format(family=lab["form"])
     if lab["label"] == "sign":
@@ -350,6 +369,8 @@ def label_text(lab, thr=None):
 def results_sentence(labels, arm, thr=None):
     """the fixed Results sentence (11a item 10): counts of licensed forms, of signs licensed without a form, of inputs not identified (composed included) and of inputs not retained"""
     thr = thr or load_thresholds()
+    if any(l["label"] in ("form", "sign") and l.get("licensed") is not True for l in labels.values()):
+        raise AuditGuardError("the Results sentence counts licensed forms and signs: it needs labels produced under a verified calibration (D022b B1)")
     n = len(labels)
     j = sum(l["label"] == "form" for l in labels.values())
     s = sum(l["label"] == "sign" for l in labels.values())

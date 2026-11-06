@@ -651,3 +651,11 @@ Row format:
 - **Alternatives:** `.gitattributes` with `-text` (changes checkout bytes of files Git wrote earlier; same mismatch risk); freeze in a
   worktree and regenerate every hashed artifact there (circular with HEAD).
 - **Proposer / judge:** lead (procedure only; no rule, test or outcome changes). The gate auditor checks it at the freeze audit.
+
+### D032 D025 cell list corrected from the code (record-only; lead, 2026-11-06)
+- **Decision:** D025's rule stands; its example list is corrected: at k_full = 4 the cap binds for six scoreable cycling cells
+  (TP_z04_01_s1, TP_z20_02_s2, TP_z20_03_s2, TP_z23_01_s2, TP_z23_02_s2, TP_z23_03_s2), at k = 2 for TP_z20_02_s2 and TP_z23_01_s2.
+  Counts are post-QC check-ups (the code's cell.n), D025 had counted listings. Condition-level n stays 40 at k = 4 and k = 2, so
+  D025's re-open condition is not triggered.
+- **Evidence:** runs/freeze_runs/D025_capped_cells.md (identifiers and counts only); every run also writes window_capped.json.
+- **Proposer / judge:** lead (record-only); gate auditor checks at the freeze audit (C28).

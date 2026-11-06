@@ -121,7 +121,7 @@ def test_every_config_has_the_fixed_confirmatory_keys_and_the_pinned_hashes():
     inv, ext = inversion.config_sha256(), extraction_audit.thresholds_sha256()
     rule = extraction_audit.sha256_file(os.path.join(ROOT, "debates", "D022_datasets_kan", "calibration_rule_v2.md"))
     for rid, c in _flat().items():
-        assert c["mode"] == "confirmatory" and c["steps_scale"] == 1.0 and not c.get("overwrite") and not c.get("auto_budget") and c["n_trials"] == 20, rid
+        assert c["mode"] == "confirmatory" and c["steps_scale"] == 1.0 and not c.get("overwrite") and not c.get("auto_budget") and c["n_trials"] == 40, rid
         assert c["inversion_config_sha256"] == inv and set(c["arms"]) <= set(A.ARMS) and not set(c["arms"]) & set(A.OUT_OF_SCOPE_ARMS), rid
         assert c["backbone"] == ("self_limiting" if rid.startswith("sens_selflim") else "tournament"), rid
         if {"A15", "G15"} & set(c["arms"]):
@@ -134,18 +134,18 @@ def test_every_config_has_the_fixed_confirmatory_keys_and_the_pinned_hashes():
 def test_downgrade_rows_follow_prereg_9_8_cells_and_arms():
     rows = _all()["rows"]
     assert len(rows) == 36
-    g1_arms, g4_arms = {"A1", "A2", "A9", "A10", "A10P", "A11", "A12", "A13"}, {"A1", "A2", "A9", "A10", "A10P", "A11", "A12", "A15", "G15"}
+    g1_arms, g4_arms = {"A1", "A2", "A9", "A10", "A10P", "A11", "A12", "A13", "R1"}, {"A1", "A2", "A9", "A10", "A10P", "A11", "A12", "A15", "G15"}
     for tag, key in (("labind", "lab_indicator"), ("retain", "retain_all")):
         sel = {n: c for n, c in rows.items() if n.startswith(f"row_{tag}_B")}
         assert len(sel) == 10
         for n, c in sel.items():
             g1 = n.endswith("_g1.json")
-            assert c[key] is True and c["m"] == (8 if g1 else 32) and c["k"] == ([2] if g1 else ["full"]) and set(c["arms"]) == (g1_arms if g1 else g4_arms), n
-            assert labels(c) == (["2"] if g1 else ["full"]), n
+            assert c[key] is True and c["m"] == (8 if g1 else 32) and c["k"] == ([2] if g1 else [2, "full"]) and set(c["arms"]) == (g1_arms if g1 else g4_arms), n
+            assert labels(c) == (["2"] if g1 else ["2", "full"]), n
         assert sorted({c["fold"] for c in sel.values()}) == [0, 1, 2, 3, 4]
     rs = {n: c for n, c in rows.items() if n.startswith("row_randsub")}
     assert len(rs) == 15 and {(c["fold"], c["subset_draw"]) for c in rs.values()} == {(f, d) for f in range(5) for d in range(3)}
-    assert all(c["subset"] == "random" and c["m"] == 8 and c["k"] == [2] and set(c["arms"]) == {"A1", "A9", "A11", "A12"} for c in rs.values())
+    assert all(c["subset"] == "random" and c["m"] == 8 and c["k"] == [2] and set(c["arms"]) == {"A1", "A9", "A11", "A12", "R1"} for c in rs.values())
     lc = rows["row_labind_C_f0.json"]
     assert lc["test"] == "C" and lc["lab_indicator"] is True and set(lc["arms"]) == {"A1", "A9", "A10", "A10P", "A11", "A12"}
 
@@ -186,7 +186,7 @@ def test_config_hashes_are_distinct_and_match_the_manifest():
     by_id = {r["run_id"]: r for r in man["files"]}
     for c in allc:
         assert by_id[c["run_id"]]["config_sha256"] == guard.canonical_config_hash({**run.DEFAULTS, **c})
-    assert man["n_trials"] == 20 and man["counts"] == {"primary": 26, "rows": 36, "sensitivity": 195, "exploratory": 4, "replication": 10, "item_f": 5}
+    assert man["n_trials"] == 40 and man["counts"] == {"primary": 26, "rows": 36, "sensitivity": 195, "exploratory": 4, "replication": 10, "item_f": 5}
 
 
 def test_item_f_configs_are_the_g1_config_with_only_the_d026_differences():

@@ -28,11 +28,12 @@ def table(L_by, base=2.0):
     return None
 
 
-def make_store(P1g1=0.3, P1g4=0.05, A9g1=0.2, K1=0.0, K2=0.25, A2g1=0.0, A10g1=0.3, A13g1=0.0, k_chain=True, nL=None, k_full=4):
-    """A1 = 2.0 everywhere; D*, A9, A2, A10, A10P, A13 scored at A1 * exp(L); A15 = A1 * exp(-K1); G15 = A15 * exp(K2). Each L is a scalar (all conditions) or a length-40 array."""
+def make_store(P1g1=0.3, P1g32k2=0.05, A9g1=0.2, K1=0.0, K2=0.25, A2g1=0.0, A10g1=0.3, A13g1=0.0, k_chain=True, nL=None, k_full=4, R1g1=0.5, P1g4=0.05):
+    """A1 = 2.0 everywhere; D*, A9, A2, A10, A10P, A13, R1 scored at A1 * exp(L); A15 = A1 * exp(-K1); G15 = A15 * exp(K2). Each L is a scalar (all conditions) or a length-40 array.
+    Cells: g1 = (8, 2); the P3 reference (32, 2) with D* at A1 * exp(P1g32k2) (D034 AD1); g4 = (32, full) with D* at A1 * exp(P1g4) (an estimated cell; the K chain lives here). R1g1: persistence at g1."""
     vec = lambda v: np.full(40, v, float) if np.isscalar(v) else np.asarray(v, float)
     t = {}
-    for cell, Ld, L9 in (((8, "2"), P1g1, A9g1), ((32, "full"), P1g4, 0.0)):
+    for cell, Ld, L9 in (((8, "2"), P1g1, A9g1), ((32, "2"), P1g32k2, 0.0), ((32, "full"), P1g4, 0.0)):
         a1 = {c: 2.0 for c in CONDS}
         tab = {"A1": a1, "D*": {c: 2.0 * np.exp(v) for c, v in zip(CONDS, vec(Ld))}, "A9": {c: 2.0 * np.exp(v) for c, v in zip(CONDS, vec(L9))}}
         if cell == (8, "2"):
@@ -40,6 +41,9 @@ def make_store(P1g1=0.3, P1g4=0.05, A9g1=0.2, K1=0.0, K2=0.25, A2g1=0.0, A10g1=0
             tab["A10"] = {c: 2.0 * np.exp(v) for c, v in zip(CONDS, vec(A10g1))}
             tab["A10P"] = {c: 2.0 * np.exp(v) for c, v in zip(CONDS, vec(A10g1))}
             tab["A13"] = {c: 2.0 * np.exp(v) for c, v in zip(CONDS, vec(A13g1))}
+            tab["R1"] = {c: 2.0 * np.exp(v) for c, v in zip(CONDS, vec(R1g1))}
+        elif cell == (32, "2"):
+            tab["A2"], tab["A10"], tab["A10P"], tab["A13"] = dict(a1), dict(a1), dict(a1), dict(a1)
         else:
             tab["A2"] = dict(a1)
             tab["A10"] = {c: 2.0 * np.exp(v) for c, v in zip(CONDS, vec(-0.3))}
@@ -93,10 +97,11 @@ def test_ties_with_the_margin_are_not_positive_and_n_is_not_reduced():
 def test_strong_everything_gives_P_plus_K_plus_title_T1_and_the_sentence():
     out = v4.run_v4(make_store())
     pr = out["primary"]
-    assert pr["rejected"] == {k: True for k in gt.NODES} and pr["tiers"] == {"P1": "S", "P2": True, "P3": True, "K1": True, "K2": "S"}
+    assert pr["rejected"] == {k: True for k in gt.NODES} and pr["tiers"] == {"P1": "S", "P2": True, "P3": True, "K1": True, "K2": "S", "R1_g1": True}
+    assert "R1g1" not in gt.NODES and pr["nodes"]["R1g1"]["level"] == 0.025 and pr["nodes"]["R1g1"]["crit_positives"] == 30      # D034 AD2: outside the graph
     o = out["outcome"]
-    assert (o["P"], o["K"], o["M1"], o["M2"], o["title_id"], o["extent_clause"]) == ("P+", "K+", False, False, "T1", "e1") and not o["gate_G"]
-    assert o["title"].startswith("Physics-informed neural networks with readable Kolmogorov-Arnold stress laws")
+    assert (o["P"], o["K"], o["M1"], o["M2"], o["M3"], o["title_id"], o["extent_clause"]) == ("P+", "K+", False, False, False, "T1", "e1") and not o["gate_G"]
+    assert o["title"].startswith("Physics-informed neural networks with closed-form Kolmogorov-Arnold stress laws")
     s = o["abstract_sentence"]
     assert s.startswith("With eight cycling conditions and two check-ups per held-out cell, the physics-informed network's typical (median) held-out-condition error was 25.9 % lower")
     assert "(95 % interval [25.9, 25.9]; n = 40)" in s and "most of the advantage came from the physics law, since the same network without it was 22.1 % worse" in s
@@ -146,7 +151,7 @@ def test_K_equals_with_K1_pass_and_K1_fail_clauses():
     o = v4.run_v4(make_store(K2=0.0))["outcome"]
     assert o["K"] == "K=" and o["title_id"] == "T2" and "but was not shown more accurate than an equally simplified additive law" in o["abstract_sentence"]
     o2 = v4.run_v4(make_store(K1=-0.5, K2=0.0))["outcome"]
-    assert o2["K"] == "K=" and "was not shown to stay within 10 % of the full network, so no readable-law claim is made" in o2["abstract_sentence"]
+    assert o2["K"] == "K=" and "was not shown to stay within 10 % of the full network, so no closed-form-law claim is made" in o2["abstract_sentence"]
 
 
 def test_chain_K_struck_puts_P_at_the_full_level():
@@ -267,7 +272,7 @@ def test_M2_modifier_gives_T9_and_M1_replaces_the_phrase_in_T1_to_T3():
     assert out2["outcome"]["title_id"] == "T9b" and out2["outcome"]["K"] == "K-"
     out3 = v4.run_v4(make_store(A10g1=0.3, A2g1=-0.3))                                    # A2 better than A1 at g1: M1, no M2
     o3 = out3["outcome"]
-    assert o3["M1"] and not o3["M2"] and o3["title"].startswith("Physics-constrained neural ageing models with readable Kolmogorov-Arnold stress laws") and o3["q_h_required_in_abstract"]
+    assert o3["M1"] and not o3["M2"] and o3["title"].startswith("Physics-constrained neural ageing models with closed-form Kolmogorov-Arnold stress laws") and o3["q_h_required_in_abstract"]
     q = out3["qualifier_sentences"]
     assert q["QH_g1"].startswith("the hard ODE with the same law had a median condition error") and "% lower than the soft-residual network" in q["QH_g1"]
 
@@ -304,7 +309,7 @@ def test_most_test_and_the_e1_prime_branch():
 
 
 def test_extent_clauses_e2_e3():
-    o2 = v4.run_v4(make_store(P1g1=0.3, P1g4=0.3))["outcome"]                            # P3 fails: the advantage is not larger at g1
+    o2 = v4.run_v4(make_store(P1g1=0.3, P1g32k2=0.3))["outcome"]                            # P3 fails: the advantage is not larger at g1
     assert o2["extent_clause"] == "e2" and "a dependence of the advantage on the number of cycling conditions was not shown" in o2["abstract_sentence"]
     o3 = v4.run_v4(make_store(A9g1=0.0))["outcome"]
     assert o3["extent_clause"] == "e3" and "a gain attributable to the physics law within the same network was not shown" in o3["abstract_sentence"]
@@ -354,21 +359,43 @@ def _as_judge(t):
     return _norm(t)
 
 
+D033_AMEND = _norm(open(os.path.join(ROOT, "debates", "D033_signoff", "01_judge.md"), encoding="utf8").read())           # AD2, AD4, AD5 (D034, approved by Shlok)
+AD5_TITLES = ("T1", "T4", "T7")                                                                                      # "readable" -> "closed-form"
+
+
+def _pre_d034(title):
+    """a title string with the D034 amendments undone: the D016 (or D030) wording it was amended from"""
+    return title.replace("closed-form", "readable").replace("Closed-form", "Readable").replace(v4.T9_WITH, v4.T9_WHEN)
+
+
 def test_titles_extent_clauses_and_templates_are_the_approved_wording():
+    # the amendments themselves, in the D033 judge file (AUTHOR DECISIONS AD4, AD5, AD2); every other word of an amended title must be the D016 / D030 wording
+    for phrase in ('"readable" becomes "closed-form" in T1, T4 and T7', '"no readable-law claim" becomes "no closed-form-law claim"',
+                   '"when cycling tests are few" becomes "with few cycling tests" unless P3 is S',
+                   '"; the physics-informed network was not shown more accurate than carrying the last check-up forward (interval)"'):
+        assert _norm(phrase) in D033_AMEND, phrase
     for (P, K), (tid, title) in v4.TITLES.items():
-        if tid in ("T5", "T6"):
-            assert _norm(title) in D030_AMEND and _norm(title) not in JUDGE, (P, K, tid)      # the D030 wording, not the D016 question form
+        if tid in AD5_TITLES:
+            assert "closed-form" in title.lower() and "readable" not in title.lower(), tid
         else:
-            assert _norm(title) in JUDGE, (P, K, tid)
-    for tid, title in (v4.T9A, v4.T9B):
-        assert _norm(title) in JUDGE
+            assert "readable" not in title.lower() and "closed-form" not in title.lower(), tid                       # T2, T3, T5, T6, T8 carry neither word
+        if tid in ("T5", "T6"):
+            assert _norm(_pre_d034(title)) in D030_AMEND and _norm(title) not in JUDGE, (P, K, tid)      # the D030 wording, not the D016 question form
+        else:
+            assert _norm(_pre_d034(title)) in JUDGE, (P, K, tid)
+    for (tid, title), (tid2, title2) in ((v4.T9A, v4.T9A_NOP3), (v4.T9B, v4.T9B_NOP3)):
+        assert tid == tid2 and _norm(title) in JUDGE and "when cycling tests are few" in title                       # P3 is S: the D016 wording
+        assert "pay with few cycling tests:" in title2 and "when" not in title2 and _norm(_pre_d034(title2)) in JUDGE and _norm(title2) not in JUDGE   # P3 not S: AD4
     for const in (v4.E1, v4.E2, v4.E3):
         assert _as_judge(const) in JUDGE
     assert v4.LEAD_IN in JUDGE and _norm(v4.Q_H_NONE) in JUDGE and v4.A10_NAME in JUDGE and v4.QT_NAME in JUDGE
     assert _as_judge(v4.KCLAUSE_KPLUS) in JUDGE and _as_judge(v4.KCLAUSE_KMINUS).replace("while ", "while ", 1) in JUDGE
     # K= clause: the judge writes it as 'and a closed-form stress law extracted from its Kolmogorov-Arnold network [K1 pass: ... / K1 fail: ...]'
     assert "and a closed-form stress law extracted from its Kolmogorov-Arnold network" in JUDGE
-    assert _as_judge(v4.KCLAUSE_KEQ_PASS).split("network ", 1)[1] in JUDGE and _as_judge(v4.KCLAUSE_KEQ_FAIL).split("network ", 1)[1].rstrip() in JUDGE
+    assert _as_judge(v4.KCLAUSE_KEQ_PASS).split("network ", 1)[1] in JUDGE
+    assert "closed-form-law" in v4.KCLAUSE_KEQ_FAIL and "readable" not in v4.KCLAUSE_KEQ_FAIL                           # AD5
+    assert _as_judge(v4.KCLAUSE_KEQ_FAIL).replace("closed-form-law", "readable-law").split("network ", 1)[1].rstrip() in JUDGE
+    assert _as_judge(v4.M3_SENTENCE) in D033_AMEND                                                                       # AD2: the added clause, "(interval)" = the 95 % interval of A1 against R1 at g1
     assert _as_judge(v4.T9_TAIL).lstrip("; ") in JUDGE.replace("; the", "; the")
     for k, t in v4.Q_TEMPLATES.items():
         assert _as_judge(t).replace("(interval; n = 40)", "(interval; n = 40)") in JUDGE
@@ -380,10 +407,22 @@ def test_titles_extent_clauses_and_templates_are_the_approved_wording():
 
 
 def test_prereg_v4_section_11_still_contains_the_same_titles():
+    """section 11 carries the titles. The text of rev. 16 (designer) carries the D034 wording; until it lands, rev. 15 carries the wording the amendments were made from (the check is then
+    run on `_pre_d034`). A section 11 that carries SOME but not all of the amended strings fails."""
     p = open(os.path.join(ROOT, "runs", "prereg", "PREREG_v4.md"), encoding="utf8").read()
     pn = _norm(p)
-    for (P, K), (tid, title) in v4.TITLES.items():
-        assert _norm(title) in pn
+    t9_when = [v4.T9A[1], v4.T9B[1]]                                                     # the P3-S wording; rev. 16 writes the "with" form and states the swap
+    all_titles = [t for _, t in v4.TITLES.values()] + [v4.T9A_NOP3[1], v4.T9B_NOP3[1]]
+    amended = [t for t in all_titles if _pre_d034(t) != t]
+    present = [t for t in amended if _norm(t) in pn]
+    if not present:                                                                      # rev. 15: pre-D034 wording
+        for t in all_titles + t9_when:
+            assert _norm(_pre_d034(t)) in pn, t
+    else:                                                                                # rev. 16: every title as it is; T9 "when" forms by the stated swap
+        for t in all_titles:
+            assert _norm(t) in pn, t
+        assert _norm('("when cycling tests are few" in place of "with few cycling tests" if P3 is S)') in pn
+        assert all(_norm(w.replace(v4.T9_WHEN, v4.T9_WITH)) in pn for w in t9_when)
 
 
 # ------------------------------------------------------------------------------------------------ item (f) guard
@@ -435,7 +474,7 @@ def test_store_from_runs_resolves_dstar_and_ag_per_fold_and_run_stats_v4_end_to_
     for fold, conds in enumerate((CONDS[:20], CONDS[20:])):
         sc = {}
         for kl in ("0", "2", "full"):
-            base = {"A1": {c: 2.0 for c in conds}, "A9": {c: 2.0 * 1.2 for c in conds}, "A11": {c: 2.0 * (1.3 if fold == 0 else 1.5) for c in conds},
+            base = {"A1": {c: 2.0 for c in conds}, "R1": {c: 2.0 * 1.6 for c in conds}, "A9":{c: 2.0 * 1.2 for c in conds}, "A11": {c: 2.0 * (1.3 if fold == 0 else 1.5) for c in conds},
                     "A12": {c: 2.0 * (1.1 if fold == 0 else 1.6) for c in conds}, "A4": {c: 2.0 * 1.05 for c in conds}}
             sc[kl] = base
         dirs.append(_fake_run(tmp, f"f{fold}_m8", 8, fold, ["0", "2", "full"], sc, {"D*": {"arm": "A12" if fold == 0 else "A9"}, "AG": {"arm": "A4"}}))

@@ -188,7 +188,7 @@ def test_rows_recompute_at_the_primary_levels_and_equal_the_primary_when_the_sto
     for k in ("P1", "P2", "P3", "K1", "K2"):
         assert t[k] == out["primary"]["tiers"][k]
     assert set(t) >= {"QA10_g1", "QA10_g4", "QH_g1", "QH_g4", "QT_g1"}
-    assert set(R.row_tiers(out, store, rule, cells="g1")) == {"P1", "P2", "most"}                  # row (iv) covers the g1 contrasts of A1 and the D* candidates only
+    assert set(R.row_tiers(out, store, rule, cells="g1")) == {"P1", "P2", "most", "R1_g1"}                  # row (iv) covers the g1 contrasts of A1 and the D* candidates only
     weak = make_store(P1g1=0.01, A9g1=0.01)                                                  # same arms, weaker evidence
     t2 = R.row_tiers(out, weak, rule)
     assert t2["P1"] == "N" and t2["P2"] is False

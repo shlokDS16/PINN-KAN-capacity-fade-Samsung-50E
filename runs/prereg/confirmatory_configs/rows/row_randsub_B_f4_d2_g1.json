@@ -13,14 +13,15 @@
   "A1",
   "A9",
   "A11",
-  "A12"
+  "A12",
+  "R1"
  ],
  "window": {
   "k_cycling": 4,
   "k_storage": 2
  },
  "steps_scale": 1.0,
- "n_trials": 20,
+ "n_trials": 40,
  "backbone": "tournament",
  "throughput": "zyk",
  "zyk_table_sha256": "dfc379a6544f0fc5e6465be95e9f005f823f68ecba31d89ccad10270ce64295d",

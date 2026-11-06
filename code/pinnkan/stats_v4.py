@@ -27,6 +27,7 @@ from .stats_step import bca_mean_ci
 LOG_S, LOG_N = float(np.log(1.02)), float(-np.log(1.10))
 TIER_ORDER = ["reverse S", "none", "N", "S"]            # lowest first (PREREG_v4 9.5 scale)
 G1, G4 = (8, "2"), (32, "full")
+G32K2 = (32, "2")             # D034 AD1: the P3 reference cell, D_c = L_c(g1) - L_c(32, 2) (same window, forecast set and caps at both cells); g4 stays an estimated cell
 # D033 F1 / D1: the defaults ARE the registered configuration (PREREG_v4 9.4: w = 0.78, levels 0.0195 / 0.0055, counts 30 / 32; D019: clause e1' approved by the author). The same values are pinned
 # in runs/prereg/stats_config.json (guard.PIN_FILES); once FROZEN exists, `effective_config` refuses any cfg that differs from that file.
 DEFAULT_CONFIG = {"sign_rule": "betabin", "rho_s0": gt.RHO_S0, "graph_w": gt.W_ALT, "alpha": 0.025, "e1_prime_approved": True, "sensitivity_rhos": list(gt.RHO_GRID),
@@ -40,6 +41,10 @@ class SignRuleNotSetError(RuntimeError):
 
 class ChainKMissingError(RuntimeError):
     """the K-chain arms (A15, G15, A1 at g4) are missing but the config does not say that chain K is struck: P would silently be tested at the full level (review I3)"""
+
+
+class R1MissingError(RuntimeError):
+    """modifier M3 (A1 against R1 persistence at g1) cannot be evaluated because R1 or A1 is missing at g1, and the outcome is P+: the title and sentence are never assembled without it (D034 AD2)"""
 
 
 class IncompleteStoreError(RuntimeError):
@@ -247,7 +252,7 @@ class Store:
                     issues.append(f"cell {key}: A1 has {n1} conditions, expected {n_expected}")
                 need = ["A1", "A9", "D*", "AG", "A2", "A10", "A10P"]
                 if (m, k) == (8, "2") or (m, k) == (8, "full") and self.k_full == 2:
-                    need += ["A13"]
+                    need += ["A13", "R1"]                              # R1 at g1: modifier M3 (D034 AD2)
                 if k_chain and m == 32 and k == "full":
                     need += ["A15", "G15"]
                 for a in need:
@@ -326,6 +331,14 @@ def slot_level(res, names, i):
 
 
 # ------------------------------------------------------------------------------------------------ primary analysis
+def p3_contrast(store):
+    """(conditions, D) with D_c = L_c(g1) - L_c(32, 2) on the conditions scored at both cells; L_c = ln(S_D* / S_A1) (D034 AD1). The same function serves the primary analysis and every row."""
+    c1, L1, _ = store.L("A1", "D*", G1)
+    c4, L4, _ = store.L("A1", "D*", G32K2)
+    common = sorted(set(c1) & set(c4))
+    return common, np.array([L1[c1.index(c)] - L4[c4.index(c)] for c in common])
+
+
 def primary_nodes(store, rule):
     """-> (nodes dict keyed P1N..K2S plus the reverse tests, L arrays); a node whose arms are absent is None (p = 1: never rejected)"""
     out, Ls = {}, {}
@@ -341,13 +354,14 @@ def primary_nodes(store, rule):
         _, L2, _ = store.L("A1", "A9", G1)
         Ls["P2"] = L2
         out["P2"] = node(rule, L2, LOG_S, "P2")
-    if "P1" in Ls and "P2" in Ls and have(("A1", G4), ("D*", G4)):
-        c1, L1, _ = store.L("A1", "D*", G1)
-        c4, L4, _ = store.L("A1", "D*", G4)
-        common = sorted(set(c1) & set(c4))
-        D = np.array([L1[c1.index(c)] - L4[c4.index(c)] for c in common])
+    if "P1" in Ls and "P2" in Ls and have(("A1", G32K2), ("D*", G32K2)):
+        D = p3_contrast(store)[1]                                    # D034 AD1: D_c = L_c(g1) - L_c(32, 2)
         Ls["P3"] = D
         out["P3"] = node(rule, D, 0.0, "P3")
+    if have(("A1", G1), ("R1", G1)):                                 # D034 AD2: modifier M3 = P+ and A1 not better than R1 (persistence) at g1; tested outside the graph, margin 0
+        _, LR, _ = store.L("A1", "R1", G1)                           # L = ln(S_R1 / S_A1): L > 0 favours A1
+        Ls["R1_g1"] = LR
+        out["R1g1"] = node(rule, LR, 0.0, "R1-g1")
     if have_k(("A15", G4), ("A1", G4)):
         _, LK1, _ = kv.L("A15", "A1", G4)
         Ls["K1"] = LK1
@@ -391,6 +405,9 @@ def primary_analysis(store, rule, cfg):
         if nm in nodes:
             nodes[nm].update(rejected=bool(nodes[nm]["p"] <= a * (1 + gt.TOL)), level=a, crit_positives=rule.crit(nodes[nm]["n"], a))
             rev[nm] = nodes[nm]["rejected"]
+    if "R1g1" in nodes:                                 # modifier M3 (D034 AD2): outside the graph, one-sided 0.025, no alpha added (both M3 and P1S must hold for a P+ title)
+        nodes["R1g1"].update(rejected=bool(nodes["R1g1"]["p"] <= a * (1 + gt.TOL)), level=a, crit_positives=rule.crit(nodes["R1g1"]["n"], a),
+                             status="outside the graph; M3 = P+ and this test not rejected (A1 not shown better than persistence at g1)")
     if "K1_S_unadjusted" in nodes:
         nodes["K1_S_unadjusted"].update(rejected=bool(nodes["K1_S_unadjusted"]["p"] <= a * (1 + gt.TOL)), level=a, status="unadjusted, descriptive (GAP-8)")
     tiers = {}
@@ -398,6 +415,8 @@ def primary_analysis(store, rule, cfg):
         tiers["P1"] = "reverse S" if rev.get("P1rev") else ("S" if rej["P1S"] else ("N" if rej["P1N"] else "none"))
     tiers["P2"] = bool(rej.get("P2", False))
     tiers["P3"] = bool(rej.get("P3", False))
+    if "R1g1" in nodes:
+        tiers["R1_g1"] = bool(nodes["R1g1"]["rejected"])      # True = A1 shown better than persistence at g1 (M3 absent); downgrade rows can only turn it False
     if "K1" in nodes:
         tiers["K1"] = bool(rej["K1"])
     if "K2N" in nodes:
@@ -532,6 +551,8 @@ def dependence_sensitivity(store, rule, cfg):
         per[str(rho)] = pa["tiers"]
     sentences = {}
     for name, t in base["tiers"].items():
+        if name == "R1_g1":                                   # modifier M3 (D034 AD2): its tier per rho is in tiers_by_rho; the fixed D018 2.3 (i) sentence covers the gated tiers only
+            continue
         if t in ("S", "N") or t is True:
             ok = [rho for rho in cfg["sensitivity_rhos"] if _tier_ge(per[str(rho)].get(name), t)]
             holds = max(ok) if ok else None
@@ -824,18 +845,23 @@ E1P = "the same network without the physics law was {Y} % worse, and the advanta
 E2 = "the same network without the physics law was {Y} % worse; a dependence of the advantage on the number of cycling conditions was not shown"
 E3 = "a gain attributable to the physics law within the same network was not shown"
 TITLES = {
-    ("P+", "K+"): ("T1", "Physics-informed neural networks with readable Kolmogorov-Arnold stress laws forecast lithium-ion capacity fade from few cycling tests and early check-ups"),
+    ("P+", "K+"): ("T1", "Physics-informed neural networks with closed-form Kolmogorov-Arnold stress laws forecast lithium-ion capacity fade from few cycling tests and early check-ups"),
     ("P+", "K="): ("T2", "Physics-informed neural networks with Kolmogorov-Arnold stress functions forecast lithium-ion capacity fade from few cycling tests and early check-ups"),
     ("P+", "K-"): ("T3", "Physics-informed neural networks forecast lithium-ion capacity fade from few cycling tests and early check-ups"),
-    ("P0", "K+"): ("T4", "Readable Kolmogorov-Arnold stress laws for lithium-ion capacity fade, with learning curves of physics-informed and data-driven forecasts from few cycling tests"),
+    ("P0", "K+"): ("T4", "Closed-form Kolmogorov-Arnold stress laws for lithium-ion capacity fade, with learning curves of physics-informed and data-driven forecasts from few cycling tests"),
     ("P0", "K="): ("T5", "Physics-informed and data-driven forecasts of lithium-ion capacity fade against the number of cycling tests and check-ups: learning curves with Kolmogorov-Arnold stress functions"),
     ("P0", "K-"): ("T6", "Physics-informed and data-driven forecasts of lithium-ion capacity fade against the number of cycling tests and check-ups: learning curves on a designed ageing dataset"),
-    ("P-", "K+"): ("T7", "A physics prior does not help lithium-ion fade forecasts from few cycling tests but yields readable Kolmogorov-Arnold stress laws"),
+    ("P-", "K+"): ("T7", "A physics prior does not help lithium-ion fade forecasts from few cycling tests but yields closed-form Kolmogorov-Arnold stress laws"),
     ("P-", "K="): ("T8", "When a physics prior does not help: learning curves of physics-informed and data-driven forecasts of lithium-ion capacity fade from few cycling tests"),
     ("P-", "K-"): ("T8", "When a physics prior does not help: learning curves of physics-informed and data-driven forecasts of lithium-ion capacity fade from few cycling tests"),
 }
+# D034 AD4: "when cycling tests are few" (an advantage that is larger with few tests) is printed only when P3 is S; otherwise the title says "with few cycling tests". Same ids, two wordings.
 T9A = ("T9a", "Physics priors pay when cycling tests are few: semi-empirical, physics-informed Kolmogorov-Arnold and data-driven forecasts of lithium-ion capacity fade")
 T9B = ("T9b", "Physics priors pay when cycling tests are few: semi-empirical, physics-informed and data-driven forecasts of lithium-ion capacity fade")
+T9_WHEN, T9_WITH = "pay when cycling tests are few:", "pay with few cycling tests:"
+T9A_NOP3 = (T9A[0], T9A[1].replace(T9_WHEN, T9_WITH))
+T9B_NOP3 = (T9B[0], T9B[1].replace(T9_WHEN, T9_WITH))
+M3_SENTENCE = "; the physics-informed network was not shown more accurate than carrying the last check-up forward ({iv})"        # D034 AD2 (D033 judge, AUTHOR DECISIONS); iv = the 95 % interval of A1 against R1 at g1
 M1_OLD, M1_NEW = "Physics-informed neural networks", "Physics-constrained neural ageing models"
 Q_TEMPLATES = {
     "S": "{A} had a median condition error {X} % lower than {B} ({interval}; n = {n})",
@@ -851,7 +877,7 @@ KCLAUSE_KPLUS = ("and a closed-form stress law extracted from its Kolmogorov-Arn
                  "than an equally simplified additive law ({iv})")
 KCLAUSE_KEQ_PASS = ("and a closed-form stress law extracted from its Kolmogorov-Arnold network predicted held-out conditions no more than 10 % worse than the full network, but was not shown more "
                     "accurate than an equally simplified additive law ({iv})")
-KCLAUSE_KEQ_FAIL = ("and a closed-form stress law extracted from its Kolmogorov-Arnold network was not shown to stay within 10 % of the full network, so no readable-law claim is made")
+KCLAUSE_KEQ_FAIL = ("and a closed-form stress law extracted from its Kolmogorov-Arnold network was not shown to stay within 10 % of the full network, so no closed-form-law claim is made")
 KCLAUSE_KMINUS = "while an equally simplified additive stress law predicted held-out conditions {Z} % more accurately than the law extracted from its Kolmogorov-Arnold network ({iv})"
 T9_TAIL = "; the dataset authors' semi-empirical model was {W} % more accurate still at this cell ({iv})"
 
@@ -899,18 +925,25 @@ def assemble_outcome(tiers, numbers, cfg=None, gate=None, most=None):
     P, K = state_P(tiers), state_K(tiers)
     M1 = tiers.get("QH_g1") == "reverse S"
     M2 = P == "P+" and tiers.get("QA10_g1") == "reverse S"
-    tid, title = TITLES[(P, K)]
-    if M2 and P == "P+":
-        tid, title = T9B if K == "K-" else T9A
-    elif M1 and tid in ("T1", "T2", "T3"):
-        title = title.replace(M1_OLD, M1_NEW)
+    if P == "P+" and "R1_g1" not in tiers:
+        raise R1MissingError("modifier M3 cannot be evaluated (R1 or A1 missing at g1): a P+ outcome is never assembled without it (D034 AD2)")
+    M3 = P == "P+" and not tiers["R1_g1"]               # D034 AD2: P+ and A1 not shown better than R1 (persistence) at g1; outside the graph, no alpha
+    p3_s = bool(tiers.get("P3"))
+    if M3:                                              # T1-T3 and T9a/T9b fall to the K column's T4/T5/T6; the sentence adds the M3 clause. M1/M2 title edits do not apply to those titles.
+        tid, title = TITLES[("P0", K)]
+    else:
+        tid, title = TITLES[(P, K)]
+        if M2 and P == "P+":
+            tid, title = (T9B if p3_s else T9B_NOP3) if K == "K-" else (T9A if p3_s else T9A_NOP3)       # D034 AD4: "when ... few" only if P3 is S
+        elif M1 and tid in ("T1", "T2", "T3"):
+            title = title.replace(M1_OLD, M1_NEW)
     ext = extent_clause(tiers, most, c["e1_prime_approved"])
-    sent = _sentence(P, K, tiers, numbers, ext, M2)
-    return {"gate_G": False, "P": P, "K": K, "M1": M1, "M2": M2, "extent_clause": ext, "title_id": tid, "title": title, "abstract_sentence": sent,
+    sent = _sentence(P, K, tiers, numbers, ext, M2, M3)
+    return {"gate_G": False, "P": P, "K": K, "M1": M1, "M2": M2, "M3": M3, "extent_clause": ext, "title_id": tid, "title": title, "abstract_sentence": sent,
             "q_h_required_in_abstract": bool(M1), "tiers_used": tiers}
 
 
-def _sentence(P, K, tiers, num, ext, M2):
+def _sentence(P, K, tiers, num, ext, M2, M3=False):
     X, Y, Z, W = num.get("X"), num.get("Y"), num.get("Z"), num.get("W")
     ivP = ivs(*num["interval_P1"]) if num.get("interval_P1") else "95 % interval"
     ivK = ivs(*num["interval_K2"]) if num.get("interval_K2") else "95 % interval"
@@ -936,6 +969,9 @@ def _sentence(P, K, tiers, num, ext, M2):
     sentence = f"{LEAD_IN} {head}, {kc}"
     if M2:
         sentence += T9_TAIL.format(W=fmt1(W) if W is not None else "?", iv=ivW)
+    if M3:
+        ivR = ivs(*num["interval_R1"]) if num.get("interval_R1") else "95 % interval"
+        sentence += M3_SENTENCE.format(iv=ivR)
     return sentence + "."
 
 
@@ -1050,8 +1086,15 @@ def primary_numbers(store, rule, tiers, sec=None, sources=None):
             if t == "S":
                 _need_sign(med > 0, "K2 tier S")
             num["Z"], num["interval_K2"] = pct_reduction(med), (pct_reduction(lo), pct_reduction(hi))
+    if store.has("R1", *G1) and store.has("A1", *G1):          # D034 AD2: the interval of the M3 clause = A1 against persistence at g1, from the analysis that set the R1 tier (D033 F2)
+        src = _source(sources, "R1_g1")
+        med, lo, hi, _ = _stat(src, store, rule, "A1", "R1", G1, "R1_g1")
+        used["R1_g1"] = src["kind"]
+        num["interval_R1"] = (pct_reduction(lo), pct_reduction(hi))
+        if tiers.get("P1") == "S" and tiers.get("R1_g1") is False:
+            _need_sign(lo <= 0, "M3 (A1 not shown better than persistence at g1: the lower end of the interval must not be above zero)")
     forms = [f for f in A10_FORMS if store.has(f, *G1)]
-    if sec is not None:                          # review I1: [W] only from the forms that are reverse S (the clause is printed iff M2); a form that is not reverse S can have a negative effect
+    if sec is not None:                       # review I1: [W] only from the forms that are reverse S (the clause is printed iff M2); a form that is not reverse S can have a negative effect
         src = _source(sources, "QA10_g1")
         rf = _a10_reverse_forms(sec, src)
         forms = [f for f in forms if rf is None or f in rf]

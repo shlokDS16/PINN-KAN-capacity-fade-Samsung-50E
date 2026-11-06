@@ -10,11 +10,11 @@ GROUPS (directory under runs/prereg/confirmatory_configs/; MANIFEST.json lists e
                   Test B grid  folds 0-4 x m in {8, 16, 32}, k = "grid" (cells k in {0, 2, "full"}): 15. Arms by m (7.1): every m: A1 A2 A4 A9 A10 A10P A11 A12 A12R R1 R2; m = 8 adds A13 (g1) and
                   A15 G15 (g1, descriptive); m = 32 adds A5 (m = 32 only), A13 (g4, descriptive) and A15 G15 (g4, confirmatory).
                   Test C fold 0 (full training, m not set): A1 A9 A10 A10P A11 A12.   S2 folds 0-4: A1 A9 A10 A10P.   NC-2 Test B folds 0-4 at m = 32, permute_stress: A1.
-  rows          the four automatic-downgrade rows (9.8 rule 2) that need a re-run, cells g1 = (m 8, k 2) and g4 = (m 32, k full) only, k named explicitly:
-                  (ii) lab-and-stage indicator, Test B folds 0-4 at g1 and g4, arms of every gated and secondary contrast at the cell (g1: A1 A2 A9 A10 A10P A11 A12 A13; g4: A1 A2 A9 A10 A10P A11 A12
-                       A15 G15; stats_rows.row_tiers reads exactly these), and Test C (the Test C abstract rule 9.8 rule 3);
+  rows          the four automatic-downgrade rows (9.8 rule 2) that need a re-run, cells g1 = (m 8, k 2) and, at m = 32, k in {2, full} (the cell (32, 2) recomputes P3 = L(g1) - L(32, 2), D034 AD1; rev. 16), k named explicitly:
+                  (ii) lab-and-stage indicator, Test B folds 0-4 at g1 and g4, arms of every gated and secondary contrast at the cell (g1: A1 A2 A9 A10 A10P A11 A12 A13 R1; g4: A1 A2 A9 A10 A10P A11 A12
+                       A15 G15; stats_rows.row_tiers reads exactly these; R1 at g1 recomputes modifier M3), and Test C (the Test C abstract rule 9.8 rule 3);
                   (iii) retain-every-check-up (retain_all), the same arms and cells as (ii);
-                  (iv) random subset at g1 only: 3 seeded random nested subsets (subset_draw 0-2) in place of max-min, A1 and the D* candidates (A9 A11 A12), 5 folds.
+                  (iv) random subset at g1 only: 3 seeded random nested subsets (subset_draw 0-2) in place of max-min, A1 and the D* candidates (A9 A11 A12) and R1, 5 folds.
   sensitivity   9.9 rows with a re-run (reported, no consequence) at g1 and g4, 5 folds. The arm list of these rows is not fixed by the PREREG: A1 A9 A11 A12 A10 A10P (P1, P2, D*, Q-A10) is an
                 assumption of this script, except where the row names its arms. (i): include_at, include_storage_0406, min_fc_points 3, oracle_throughput, backbone self_limiting,
                 score_blinded_cells (all at g1 and g4), windows k_full - 1 = 3 and k_full + 2 = 6 (g4 only); (k) clip 10 / 50 and warm-up 0.2 / 0.6 for P2 (arms A1 A9; warm-up acts on A1 only);
@@ -26,7 +26,7 @@ GROUPS (directory under runs/prereg/confirmatory_configs/; MANIFEST.json lists e
 Struck by the judge (D028; no config): first-CU reference row, forecast-failure row 3.3(8), separate h_cal/h_cyc for A2, A14, SNL replication; the ISU fallback grid lapsed.
 
 Every Samsung config: dataset samsung, throughput zyk with zyk_table_sha256 (FB-5 met: ZYK-logged throughput applies to every cycling cell; the table is git-ignored, so its hash is pinned), mode confirmatory, steps_scale 1, no overwrite,
-window {k_cycling 4, k_storage 2} (FB-6), n_trials 20 (FB-8 may change it: edit N_TRIALS and regenerate), backbone tournament (7), inversion_config_sha256 (D023), and for A15 / G15
+window {k_cycling 4, k_storage 2} (FB-6), n_trials 40 (D035; the FB-8 Partial plan may change it: edit N_TRIALS and regenerate), backbone tournament (7), inversion_config_sha256 (D023), and for A15 / G15
 `extraction_audit_sha256` and `calibration_rule_sha256`. The five item (f) configs are the g1 config (m = 8, k grid) of the same fold with only run_id, mode = inner, arms = A1 A9 A11 A12,
 diagnostics = false and refit_timing = false changed (D026 02_judge.md). Seeds, the MC seed root and the sampler seeds are fixed in code. No data is read here."""
 import argparse
@@ -46,7 +46,7 @@ ITEM_F_DIR = os.path.join(ROOT, "runs", "item_f", "configs")
 RULE_FILE = os.path.join(ROOT, "debates", "D022_datasets_kan", "calibration_rule_v2.md")
 ZYK_TABLE = os.path.join(ROOT, zyk.ZYK_TABLE_REL)           # git-ignored; its hash is pinned in every Samsung config (D028 C1)
 WINDOW = {"k_cycling": 4, "k_storage": 2}                  # FB-6 counts; every Samsung grid config carries them
-N_TRIALS = 20                                              # FB-8 timing run (runs/freeze_shakedown/RESULT.md): 20 unless the freeze-commit timing run changes it
+N_TRIALS = 40                                              # D035: 40 trials for every tuned arm in every config (inner folds unchanged); the FB-8 Partial plan (N = 10, 2 inner folds, equal for all arms) still applies at the timing run: edit and regenerate
 BACKBONE = "tournament"                                    # PREREG_v4 7: the state factor is chosen once per (outer fold, m)
 THROUGHPUT = "zyk"                                         # FB-5 met: ZYK-logged throughput for every cycling cell
 COMMON = ["A1", "A2", "A4", "A9", "A10", "A10P", "A11", "A12", "A12R", "R1", "R2"]
@@ -54,9 +54,10 @@ ARMS_BY_M = {8: COMMON + ["A13", "A15", "G15"], 16: list(COMMON), 32: COMMON + [
 ITEM_F_ARMS = ["A1", "A9", "A11", "A12"]
 ITEM_F_DIFFERENCES = {"run_id", "mode", "arms", "diagnostics", "refit_timing"}
 CELLS = {"g1": {"m": 8, "k": [2]}, "g4": {"m": 32, "k": ["full"]}}
-ROW_ARMS = {"g1": ["A1", "A2", "A9", "A10", "A10P", "A11", "A12", "A13"], "g4": ["A1", "A2", "A9", "A10", "A10P", "A11", "A12", "A15", "G15"]}
+ROW_ARMS = {"g1": ["A1", "A2", "A9", "A10", "A10P", "A11", "A12", "A13", "R1"], "g4": ["A1", "A2", "A9", "A10", "A10P", "A11", "A12", "A15", "G15"]}        # R1 at g1: modifier M3 under the row (D034 AD2; PREREG 9.8 rules 2, 5)
+ROW_K = {"g1": [2], "g4": [2, "full"]}                     # rows (ii), (iii): at m = 32 also the cell (32, 2), so P3 = L(g1) - L(32, 2) (AD1) is recomputed under each row (PREREG 9.8 rule 2, rev. 16)
 SENS_ARMS = ["A1", "A9", "A11", "A12", "A10", "A10P"]
-RANDSUB_ARMS = ["A1", "A9", "A11", "A12"]
+RANDSUB_ARMS = ["A1", "A9", "A11", "A12", "R1"]            # R1 is scored in each row run (PREREG 9.8 rule 5)
 TPE_ARMS = ["A1", "A9", "A11", "A12"]
 GROUP_DIRS = {"primary": "", "rows": "rows", "sensitivity": "sensitivity", "exploratory": "exploratory", "replication": "replication"}
 
@@ -106,7 +107,7 @@ def row_configs():
         for cell in ("g1", "g4"):
             for tag, key in (("labind", "lab_indicator"), ("retain", "retain_all")):
                 rid = f"row_{tag}_B_f{f}_{cell}"
-                out[rid + ".json"] = cell_config(rid, f, ROW_ARMS[cell], cell, **{key: True})
+                out[rid + ".json"] = make_config(rid, "B", f, ROW_ARMS[cell], m=CELLS[cell]["m"], k=list(ROW_K[cell]), **{key: True})
         for d in range(3):
             rid = f"row_randsub_B_f{f}_d{d}_g1"
             out[rid + ".json"] = cell_config(rid, f, RANDSUB_ARMS, "g1", subset="random", subset_draw=d)

@@ -119,7 +119,7 @@ def _grid_runs(tmp, skip=None, extra=None, design="R2", seed_files=True, comp_co
             json.dump({"D*": {"arm": "A9", "complete": comp_complete}, "AG": {"arm": "A4", "complete": True}}, open(os.path.join(d, "comparators.json"), "w"))
             for kl in labels:
                 suf = "" if kl == "full" else f"_k{kl}"
-                sc = {a: {c: 2.0 * (1.0 + 0.05 * i) for c in conds} for i, a in enumerate(["A1", "A9", "A4", "A2", "A10", "A10P", "A13", "A15", "G15"])}
+                sc = {a: {c: 2.0 * (1.0 + 0.05 * i) for c in conds} for i, a in enumerate(["A1", "A9", "A4", "A2", "A10", "A10P", "A13", "A15", "G15", "R1"])}
                 if skip and (m, kl, f) == skip[:3]:
                     del sc[skip[3]]
                 json.dump(sc, open(os.path.join(d, f"condition_scores{suf}.json"), "w"))

@@ -52,7 +52,7 @@ def _tier3(rule, L, level_N, level_S, level_rev):
 def row_tiers(out, store, rule, cells="g1g4"):
     """tiers of every gated / secondary contrast the row covers, at the primary final levels. cells 'g1' restricts to the g1 contrasts (row (iv): P1, P2 only)."""
     lv, sec = primary_levels(out)
-    G1, G4 = v4.G1, v4.G4
+    G1, G4, G32K2 = v4.G1, v4.G4, v4.G32K2
     t = {}
     has = lambda a, c: store.has(a, *c)
     rev = out["config"]["alpha"]
@@ -65,14 +65,13 @@ def row_tiers(out, store, rule, cells="g1g4"):
     md = v4.most_d(store)
     if md is not None and "P2" in lv:                    # review I2: the GAP-1 'most' test is recomputed under every row (binary pass/fail at 0.025)
         t["most"] = _positives_reach(rule, md[3], 0.0, rev)
+    if has("A1", G1) and has("R1", G1) and "R1g1" in lv:     # D034 AD2: modifier M3, A1 against persistence at g1 (margin 0, outside the graph, level = alpha); a row can only turn it False
+        _, L, _ = store.L("A1", "R1", G1)
+        t["R1_g1"] = _positives_reach(rule, L, 0.0, lv["R1g1"])
     if cells == "g1":
         return t
-    if "P3" in lv and has("A1", G1) and has("A1", G4) and has("D*", G1) and has("D*", G4):
-        c1, L1, _ = store.L("A1", "D*", G1)
-        c4, L4, _ = store.L("A1", "D*", G4)
-        common = sorted(set(c1) & set(c4))
-        D = np.array([L1[c1.index(c)] - L4[c4.index(c)] for c in common])
-        t["P3"] = _positives_reach(rule, D, 0.0, lv["P3"])
+    if "P3" in lv and has("A1", G1) and has("D*", G1) and has("A1", G32K2) and has("D*", G32K2):       # D034 AD1: D_c = L_c(g1) - L_c(32, 2); a row without the (32, 2) cell does not cover P3
+        t["P3"] = _positives_reach(rule, v4.p3_contrast(store)[1], 0.0, lv["P3"])
     kv = store.seed_view()                                                     # K chain: per-seed scores (D020 C1 item 4)
     if "K1" in lv and kv.has("A15", *G4) and kv.has("A1", *G4):
         _, L, _ = kv.L("A15", "A1", G4)
@@ -140,7 +139,7 @@ def lab_stratified_bounds(L, labs, levels, label, B=B_BOOT):
 def lab_stratified_tiers(out, store, B=B_BOOT):
     """row (i): tier of each contrast from the lab-post-stratified weighted median against the margins, lower bound at the contrast's final primary level"""
     lv, sec = primary_levels(out)
-    G1, G4 = v4.G1, v4.G4
+    G1, G4, G32K2 = v4.G1, v4.G4, v4.G32K2
     has = lambda a, c: store.has(a, *c)
     rev = out["config"]["alpha"]
     labs_of = lambda conds: [store.lab.get(c, "") for c in conds]
@@ -171,11 +170,11 @@ def lab_stratified_tiers(out, store, B=B_BOOT):
     md = v4.most_d(store)
     if md is not None and "P2" in lv:
         t["most"] = binary("most", md[3], md[0], rev, 0.0)
-    if "P3" in lv and all(has(a, g) for a in ("A1", "D*") for g in (G1, G4)):
-        c1, L1, _ = store.L("A1", "D*", G1)
-        c4, L4, _ = store.L("A1", "D*", G4)
-        common = sorted(set(c1) & set(c4))
-        D = np.array([L1[c1.index(c)] - L4[c4.index(c)] for c in common])
+    if has("A1", G1) and has("R1", G1) and "R1g1" in lv:                       # D034 AD2: modifier M3; level = alpha, so the bounds at alpha also serve the bracket of the M3 clause (D033 F2)
+        c, L, _ = store.L("A1", "R1", G1)
+        t["R1_g1"] = binary("R1_g1", L, c, lv["R1g1"], 0.0)
+    if "P3" in lv and all(has(a, g) for a in ("A1", "D*") for g in (G1, G32K2)):       # D034 AD1: D_c = L_c(g1) - L_c(32, 2)
+        common, D = v4.p3_contrast(store)
         t["P3"] = binary("P3", D, common, lv["P3"], 0.0)
     kv = store.seed_view()                                                     # K chain: per-seed scores
     if "K1" in lv and kv.has("A15", *G4) and kv.has("A1", *G4):

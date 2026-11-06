@@ -15,7 +15,7 @@
   "A12"
  ],
  "steps_scale": 1.0,
- "n_trials": 20,
+ "n_trials": 40,
  "backbone": "tournament",
  "inversion_config_sha256": "3e902beacf3bf26f927a3043ac555f39fe5f4279f063e19936bf9dacb890abc2"
 }

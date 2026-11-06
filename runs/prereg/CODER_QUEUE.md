@@ -17,3 +17,7 @@
 7. N5: the physval check sits only on the v3 `run_stats` path; attach it to the R2 confirmatory CLI path (`run_stats_v4`).
 8. N6: designer: PREREG 11a item 6 text gets the T carve-out the code already applies (text tightening only; section 11 untouched).
 9. 17.2 C26 row wording: "fixed" -> per-finding status as in 09_redteam_fallback_recheck.md round 3 (designer, final-text pass).
+
+## Before the candidate freeze commit (lead, 2026-11-06 11:00)
+10. Untracked run folders under `runs/prereg/stats_ruling/negctl/` (nc_s31_*, nc_s32_*): not git-ignored. Move them to
+    `runs/stats_ruling_negctl/` (or ignore them) so `verify_freeze(untracked_under=...)` and the clean-tree check cannot trip.

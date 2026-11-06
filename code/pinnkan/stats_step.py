@@ -491,6 +491,32 @@ def run_stats(analysis_dir, runs_by_test, negative_run=None, h7_run=None, stress
     return out
 
 
+def _pp_margins(out, store, run_dirs, strict, folds):
+    """PREREG_v4 9.2 (descriptive beside every tier): pooled pp margins per contrast and grid cell from the runs' margins_inputs.json (margins.pooled_margins) -> (record, summary). Every estimated
+    row gets `pp_margin` and `tier_pp` (the BCa lower bound of the mean pp gain against delta_S and -delta_N); the named contrasts (P1, P2, K1, K2, secondary) get theirs in `named_tier_pp`. Runs without
+    margins_inputs.json (fake grids, development) give status 'not available'; some with and some without raises."""
+    if not mg.has_inputs(run_dirs):
+        return None, {"status": "not available: no margins_inputs.json in the runs"}
+    rec = mg.pooled_margins(run_dirs, folds=folds, strict=strict)
+    for r in out.get("estimated", {}).get("rows", []):
+        row = rec["contrasts"].get(f"{r['target']} vs {r['comparator']}", {}).get(mg.cell_label(r["cell"]))
+        if row is not None:
+            r["pp_margin"] = {k: row[k] for k in ("E_pp", "delta_S_pp", "delta_N_pp")}
+            r["tier_pp"] = mg.tier_pp(r["mean_pp_ci"][0], row["delta_S_pp"], row["delta_N_pp"]) if "mean_pp_ci" in r else None
+    named = {}
+    for name, nm in rec["named"].items():
+        t, c, cell, row = nm["target"], nm["comparator"], tuple(nm["cell"]), nm["margin"]
+        st_ = store.seed_view() if name in ("K1", "K2") else store
+        if row is None or not (st_.has(t, *cell) and st_.has(c, *cell)):
+            continue
+        _, a, b = st_.pair(t, c, cell)
+        d = b - a
+        lo, hi = bca_mean_ci(d, label=f"B|{name}|g{cell[0]}-{cell[1]}|BCa_mean_pp_margin") if len(d) >= 3 else (float(d.mean()), float(d.mean()))
+        named[name] = {"target": t, "comparator": c, "cell": list(cell), "n": int(len(d)), "mean_pp": float(d.mean()), "mean_pp_ci": [lo, hi], "E_pp": row["E_pp"], "delta_S_pp": row["delta_S_pp"],
+                       "delta_N_pp": row["delta_N_pp"], "tier_pp": mg.tier_pp(lo, row["delta_S_pp"], row["delta_N_pp"])}
+    return rec, {"status": "formed", "sha256": rec["sha256"], "file": "margins.json", "named_tier_pp": named}
+
+
 def write_checked_json(path, obj, where):
     """fail closed (red-team A4, N5): no generated sentence of `obj` may contain a banned claim. On a violation nothing is written to `path`; the offending paths and patterns are recorded in
     `<path>.WORDING_VIOLATION.json` (a diagnostic, itself written without the offending text) and BannedWordingError is raised."""
@@ -569,6 +595,7 @@ def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, r
     if "outcome" in out:
         out["outcome"]["provisional"] = prov["provisional"]
     out["item_f"] = item_f
+    pp_record, out["margins_pp"] = _pp_margins(out, store, run_dirs, strict, folds)               # PREREG_v4 9.2: pp margins per contrast and grid cell, descriptive beside every tier
     if audit_dir is None:                                                  # D022b: the law is printed in closed form, no edge family is named; the descriptive stability table is added when the runs hold extracted laws
         out["edge_wording"] = {"printed": False, "reason": "descriptive reporting only: the extracted laws are printed in closed form without named edge families (D022b)"}
         if any(os.path.exists(os.path.join(d, "extracted_laws.json")) for d in run_dirs):
@@ -586,5 +613,7 @@ def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, r
     out["gate_G"] = gate_
     os.makedirs(analysis_dir, exist_ok=True)
     write_checked_json(os.path.join(analysis_dir, "controls.json"), controls, "controls")          # controls.json (with the Gate G diagnostic) is written first: a wording failure of the contrasts never hides a tripped gate (C26 N1, N5)
+    if pp_record is not None:
+        write_checked_json(os.path.join(analysis_dir, "margins.json"), pp_record, "margins")
     write_checked_json(os.path.join(analysis_dir, "contrasts_v4_B.json"), out, "contrasts_v4_B")
     return out

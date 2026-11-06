@@ -692,3 +692,16 @@ Row format:
 - **Evidence:** Shlok's reply "Accept all six" (2026-11-06); D033 judge; red-team and statistician rev. 15 reports; Codex turn 11.
 - **Proposer / opponent / judge:** red team + statistician (findings) / Codex turn 11 / D033 judge; approved by Shlok.
 - **Re-open if:** the P3 re-simulation shows the AD1 contrast breaks the FWER guard (statistician), or Shlok changes an answer before FROZEN.
+
+### D035 Tuning budget raised to N = 40 trials for every arm (Shlok, 2026-11-06, status: accepted)
+- **Decision:** every tuned arm (A1, A2, A4, A9, A10/A10P where tuned, A11, A12, A13, A15, G15 and every comparator) uses
+  n_trials = 40 in every confirmatory, row, sensitivity and item (f) config. Inner folds unchanged (3 at m = 32; 2 at m in {8, 16},
+  D020). The equal-for-all Partial plan trigger (median hard-ODE fit > 30 s or PINN fit > 90 s -> N = 10, 2 inner folds) still
+  applies to every arm alike at the FB-8 timing run. The "N = 40 if every neural fit < 20 s" branch is superseded.
+- **Why:** the shake-down timings (A1 about 23-26 s) put the study just over the 20 s line; doubling the search for all arms is
+  symmetric, raises the chance that every model reaches its best tuned form, and is fixed before any Samsung score.
+- **Cost:** about twice the CPU of the tuning stage (PREREG 16: about 16 -> about 32 CPU-h expected for the grid; the ceiling
+  doubles too); 3 single-thread processes.
+- **Alternatives:** N = 20 (rule as written); N = 40 only for the PINN arms (rejected: asymmetric).
+- **Evidence:** runs/freeze_shakedown/RESULT.md; Shlok "Go with your recommended option" (2026-11-06).
+- **Proposer / judge:** lead / Shlok (budget choice, symmetric; no test, margin or outcome rule changes).

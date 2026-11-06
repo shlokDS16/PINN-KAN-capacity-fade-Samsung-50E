@@ -586,3 +586,22 @@ Row format:
 - **Evidence:** debates/D010_topic/04_judge.md, 05_novelty_reaudit.md; debates/D015_redteam_v3/01_redteam.md finding F12.6.
 - **Proposer / opponent / judge:** lead (record-only; no ruling).
 - **Re-open if:** never (bookkeeping only).
+
+### D028 Confirmatory config set rulings: ZYK throughput, arm lists, strike list (2026-11-06, status: accepted; gate auditor checks at the freeze)
+- **Decision:** (a) `throughput: zyk` in every Samsung config is correct (FB-5 ruled validation rejects analytic throughput);
+  the git-ignored ZYK table gets `zyk_table_sha256` pinned in every Samsung config and checked at load; FB-8 timing runs a
+  pinned primary config. (b) Override checks in `validate_config` accepted. (c) Downgrade-row arm lists, 9.9 descriptive arms
+  (A1 A9 A11 A12 A10 A10P at g1/g4), Test A and S3 (= S2 arms, both A10 forms) confirmed; ISU "full-data analogue" = unthinned
+  training side at W = 4 weeks (not m = 32). (d) Struck: first-CU row, forecast-failure row 3.3(8) (superseded by the D025
+  cap), 9.9 (n), A14 leftovers, SNL replication; ISU fallback lapsed (Samsung parsed 2026-11-05); built: 9.9 (p) `tpe_seed`
+  and 9.9 (t) `a10_drop_soc100_storage`. PREREG rev. 13 items T1-T6; coder items C1-C5.
+- **Alternatives and why they lost:** analytic throughput (fails FB-5 as written); ISU g4 analogue at m = 32 (thins ISU, the
+  PREREG says full data, impossible on SNL); keeping unrunnable rows as written (the guard refuses unpinned confirmatory runs);
+  building the first-CU and h_cal/h_cyc rows (not small, not specified); choosing an SNL scarce window now (new design choice
+  on non-blind data).
+- **Evidence:** runs/samsung_pipeline_full/fb5_validation.json (`ruled`), RESULT.md C4; runs/prereg/CODER_BATCH_REPORT.md
+  (C14b); PREREG_v4 3.3(8), 3.4, 4.1, 5, 7.1, 9.8, 9.9, 15; runs/splits/isu_testB.json (63 conditions); debates/D028_config_rulings/01_judge.md.
+- **Proposer / opponent / judge:** coder (C14b, 7438718) / reviewer (debates/D027_coder_batch_review.md) / judge
+  (debates/D028_config_rulings/01_judge.md).
+- **Re-open if:** the ZYK table is rebuilt after the pin; the FB-8 timing run makes the descriptive rows displace any
+  "never dropped" item; or Shlok wants a struck row back before FROZEN.

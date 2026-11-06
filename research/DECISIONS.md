@@ -752,3 +752,14 @@ Row format:
 - **Consequence:** code/ moves off 92db4cb, so FB-8 to FB-10 and the suite are repeated at the new candidate commit; the
   92db4cb outputs are kept under `runs/freeze_runs/at_92db4cb/`.
 - **Proposer / validator:** coder (gaps) / statistician; lead (procedure).
+
+### D039 Freeze-commit runs repeated at 39b14aa; frozen commit = this record commit (lead, record-only; 2026-11-06)
+- **Decision:** FB-8, FB-8b, FB-9, FB-10, the full suite and the no-regression comparison were repeated at candidate commit
+  39b14aa (the code of D038): timing trigger not reached (median A1 26.6 s, A2 4.7 s; N = 40 stands); convergence share 1.0 for A1
+  and A9 at m 8 and 32 in every fold (748 cells each, 0 non-converged, 0 non-finite latents); `nc1_full` passed at m 8, 16, 32;
+  smoke rc 0; 45 of 45 test files (857 tests); `contrasts_v4_B.json`, `controls.json`, `physval_11a.json` identical to 052eefd
+  after the D038 keys are stripped. PREREG_v4 rev. 21 records them. The frozen commit is the commit holding this row; its code/
+  tree equals 39b14aa byte for byte. D036's run record (92db4cb) is superseded; its outputs are kept in runs/freeze_runs/at_92db4cb/.
+- **Evidence:** runs/freeze_runs/logs/{queue,suite}.log; runs/fb8_timing_samsung_B_f*_m*/timings.json; runs/freeze_runs/fb8b/;
+  runs/fb9_nc1_full_synth_m{8,16,32}/nc1_full.json; runs/fb10_smoke_{isu,snl}_B0; runs/freeze_runs/head_comparison.out.
+- **Proposer / judge:** lead (record-only); the gate auditor re-checks before FROZEN.

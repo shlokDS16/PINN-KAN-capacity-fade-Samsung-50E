@@ -340,6 +340,7 @@ def _norm(s):
 
 
 JUDGE = _norm(open(os.path.join(ROOT, "debates", "D016_roles", "02_judge.md"), encoding="utf8").read())
+D030_AMEND = _norm(open(os.path.join(ROOT, "debates", "D029_novelty_scope", "01_judge.md"), encoding="utf8").read())   # T5/T6 replaced (D030, approved by Shlok)
 
 
 def _as_judge(t):
@@ -350,7 +351,10 @@ def _as_judge(t):
 
 def test_titles_extent_clauses_and_templates_are_the_approved_wording():
     for (P, K), (tid, title) in v4.TITLES.items():
-        assert _norm(title) in JUDGE, (P, K, tid)
+        if tid in ("T5", "T6"):
+            assert _norm(title) in D030_AMEND and _norm(title) not in JUDGE, (P, K, tid)      # the D030 wording, not the D016 question form
+        else:
+            assert _norm(title) in JUDGE, (P, K, tid)
     for tid, title in (v4.T9A, v4.T9B):
         assert _norm(title) in JUDGE
     for const in (v4.E1, v4.E2, v4.E3):

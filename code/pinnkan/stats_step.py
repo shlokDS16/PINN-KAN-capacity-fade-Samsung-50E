@@ -536,16 +536,46 @@ class RegisteredControlError(RuntimeError):
 REGISTERED = {"G3_nc2": "NC-2", "G3_pc2": "PC-2", "G3_pc3": "PC-3", "G3_controls": "NC-2/PC-2/PC-3 record"}
 
 
-def _stats_gaps_v4(analysis_dir, out, store, rule, c, run_dirs, controls, negative_runs, test_c_runs, s2_runs, strict, descriptive=True):
+def _decision_row_exists(root, row_id):
+    """is `row_id` a row of research/DECISIONS.md of `root` that makes the random-subset row (9.9 (o)) descriptive? (red team n-2: a line holding the id as a whole token and both "9.9 (o)" and "descriptive")"""
+    import re
+    p = os.path.join(root, "research", "DECISIONS.md")
+    if not (row_id and os.path.isfile(p)):
+        return False
+    tok = re.compile(r"(?<![A-Za-z0-9])" + re.escape(str(row_id)) + r"(?![A-Za-z0-9])")
+    return any(tok.search(l) and "9.9 (o)" in l and "descriptive" in l for l in open(p, encoding="utf8").read().splitlines())
+
+
+def _keep_stopped_record(analysis_dir):
+    """copy controls.json and STATS_GAPS_ERRORS.json to analysis_dir/stopped_<n>/ with a SHA256.json (red team M-3 (b)) -> the directory"""
+    import shutil
+    from . import guard
+    n = 1
+    while os.path.exists(os.path.join(analysis_dir, f"stopped_{n}")):
+        n += 1
+    d = os.path.join(analysis_dir, f"stopped_{n}")
+    os.makedirs(d)
+    sha = {}
+    for name in ("controls.json", "STATS_GAPS_ERRORS.json"):
+        src = os.path.join(analysis_dir, name)
+        if os.path.exists(src):
+            shutil.copy2(src, os.path.join(d, name))
+            sha[name] = guard.sha256_file(os.path.join(d, name))
+    write_json(os.path.join(d, "SHA256.json"), sha)
+    return d
+
+
+def _stats_gaps_v4(analysis_dir, out, store, rule, c, run_dirs, controls, negative_runs, test_c_runs, s2_runs, strict, descriptive=True, require=False):
     """G1-G8 of STATS_GAPS_REPORT.md (stats_gaps). REGISTERED controls (G3: NC-2, PC-2, PC-3; section 10) always run: a failure to compute is recorded in the returned controls and returned as
     `reg_err` (the caller stops a strict run after controls.json is written); an input that is missing marks the outcome provisional (`status.registered_controls_not_evaluated`). DESCRIPTIVE gaps
     (G1, G2, G4, G6, G7, G8; switched off by descriptive=False) are isolated: an exception or a banned sentence is written to STATS_GAPS_ERRORS.json with a warning, the record is left out.
+    `require` (a strict run at the FROZEN commit; red team M-2): every absence of a registered input (NC-2 runs, PC-2 files, PC-3 conditions) is a failure to compute, not a label.
     -> (controls with negative.nc2 and the reported checks PC-2 / PC-3, reg_err {control: message})"""
     import warnings
     from . import stats_gaps as sg
     from . import stats_v4
     from .extraction_audit import check_generated_sentences
-    status, errors = {}, {}
+    status, errors, rescore = {}, {}, {}
 
     def gap(name, fn, check=True):
         try:
@@ -554,6 +584,10 @@ def _stats_gaps_v4(analysis_dir, out, store, rule, c, run_dirs, controls, negati
                 check_generated_sentences(res, name)
             status[name] = "not available" if res is None else "formed"
             return res
+        except sg.NeedsRescoreError as e:                               # red team n-4: the cure needs a scored configuration to be run again: recorded as failed, the step continues
+            status[name] = "failed (needs a scored configuration to be run again)"
+            rescore[name] = str(e)
+            return None
         except Exception as e:  # noqa: BLE001
             status[name] = "ERROR (see STATS_GAPS_ERRORS.json)"
             errors[name] = f"{type(e).__name__}: {e}"
@@ -568,18 +602,24 @@ def _stats_gaps_v4(analysis_dir, out, store, rule, c, run_dirs, controls, negati
             for d in dirs:
                 cf = _load(os.path.join(d, "config.json"))
                 if cf.get("test", "B") != "B" or not cf.get("permute_stress"):
-                    raise ValueError(f"NC-2 needs permute_stress runs of Test B: {d}")
+                    raise sg.NeedsRescoreError(f"NC-2 needs permute_stress runs of Test B: {d}")
             return sg.nc2_v4(store, stats_v4.Store.from_runs(dirs, strict=strict), rule, sg.NC2_ALPHA)
         nc2 = gap("G3_nc2", _nc2)
         if "G3_nc2" in errors:
             nc2 = failed("G3_nc2")
+        elif "G3_nc2" in rescore:
+            nc2 = sg.rescore_record("NC-2", rescore["G3_nc2"])
+    elif require:
+        errors["G3_nc2"] = "no negative_runs given (registered: conf_samsung_B_f*_m32_nc2)"
+        status["G3_nc2"] = "ERROR (see STATS_GAPS_ERRORS.json)"
+        nc2 = failed("G3_nc2")
     else:
         status["G3_nc2"] = "not run (no negative_runs given)"
         reg_missing["NC-2"] = "no negative_runs given"
-    pc2 = gap("G3_pc2", lambda: sg.pc2_v4(run_dirs))
-    pc3 = gap("G3_pc3", lambda: sg.pc3_v4(store, rule, sg.NC2_ALPHA))
+    pc2 = gap("G3_pc2", lambda: sg.pc2_v4(run_dirs, require=require))
+    pc3 = gap("G3_pc3", lambda: sg.pc3_v4(store, rule, sg.NC2_ALPHA, require=require))
     pc2 = failed("G3_pc2") if "G3_pc2" in errors else pc2
-    pc3 = failed("G3_pc3") if "G3_pc3" in errors else pc3
+    pc3 = failed("G3_pc3") if "G3_pc3" in errors else (sg.rescore_record("PC-3", rescore["G3_pc3"]) if "G3_pc3" in rescore else pc3)
     for nm, rec, key in (("PC-2", pc2, "G3_pc2"), ("PC-3", pc3, "G3_pc3")):
         if key not in errors and rec.get("passed") is None:
             reg_missing[nm] = rec.get("status", "not evaluated")
@@ -588,6 +628,8 @@ def _stats_gaps_v4(analysis_dir, out, store, rule, c, run_dirs, controls, negati
         ctl = copy.deepcopy(controls)
         ctl["registered_controls_error"] = errors.get("G3_controls", "unknown")
     reg_err = {REGISTERED[k]: v for k, v in errors.items() if k in REGISTERED}
+    if rescore:                                                             # listed, with the fixed fail sentence in controls.json; neither a stop nor a provisional label
+        out["status"]["registered_controls_failed_needs_rescore"] = {REGISTERED[k]: v for k, v in rescore.items()}
     if reg_err or reg_missing:                                              # a label only: no tier, state, title, count or margin changes
         rec = {**reg_missing, **{k: f"ERROR: {v}" for k, v in reg_err.items()}}
         out["status"]["registered_controls_not_evaluated"] = rec
@@ -702,8 +744,9 @@ def main(argv=None):
 
 # --------------------------------------------------------------------------------------------------- Design R2 (PREREG_v4): see stats_v4.py
 def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, row_runs=None, h7_run=None, item_f_sha256=None, strict=True, n_expected=None, folds=range(5), audit_dir=None, audit_thresholds_pin=None, calibration_sha256=None, frozen_commit=None, licences=False, ledger_root=None, physval=True,
-                 root=None, test_c_runs=None, test_c_lab_indicator_runs=None, s2_runs=None, negative_runs=None, gaps=True):
-    """Design R2 statistics from grid runs, through the downgrade rows (stats_rows.run_v4_full). `negative_runs`: the permute_stress runs of NC-2 (g4, one per outer fold, configs
+                 root=None, test_c_runs=None, test_c_lab_indicator_runs=None, s2_runs=None, negative_runs=None, gaps=True, random_subset_struck=None, require_registered=None):
+    """Design R2 statistics from grid runs, through the downgrade rows (stats_rows.run_v4_full). `random_subset_struck`: the id of the DECISIONS row that made the random-subset row (9.9 (o)) descriptive under stop rule 5 (5); `require_registered` (default: strict and FROZEN) makes every absence
+    of a registered control input a failure to compute (red team M-2). `negative_runs`: the permute_stress runs of NC-2 (g4, one per outer fold, configs
     `*_m32_nc2.json`); `gaps=False` switches off the additive inputs of the display items G1-G8 (stats_gaps; the confirmatory outputs are identical with or without them). The item (f) dependence file must exist, match its hash (and `item_f_sha256` if given) and
     pre-date every outer score file (D018 2.3 (ii)); otherwise ItemFError. strict (default): every run must say design R2 and the grid must be complete (folds, cells, n, arms, selectors,
     both A10 forms; Store.check_complete). `row_runs`: {'lab_indicator': [dirs], 'retain_all': [dirs], 'random_subset': [[dirs of draw 0], [draw 1], [draw 2]]} (the re-runs of the
@@ -717,6 +760,10 @@ def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, r
     if not physval and strict:
         raise ValueError("physval = False is refused in a strict run: physval_11a.json (PREREG_v4 11a) is part of the registered analysis (--no-physval needs --lenient)")
     root = root or guard._DEFAULT_ROOT
+    frozen = guard.is_frozen(root)
+    if not strict and frozen and any(_load(os.path.join(d, "config.json")).get("dataset") == "samsung" for d in run_dirs):
+        raise ValueError("lenient is refused on Samsung runs after FROZEN (red team M-3): the confirmatory statistics step runs in strict mode")
+    require = (bool(strict) and frozen) if require_registered is None else bool(require_registered)
     cfg, cfg_pin = stats_v4.effective_config(cfg, root)                     # D033 F1: first, before anything is read
     n_derived = blinding.expected_n(root, "B")
     if n_expected is None:
@@ -728,6 +775,12 @@ def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, r
     if ledger_root is None and guard.is_frozen():                          # D026: once a FROZEN exists in this tree the ledger check cannot be skipped by omission
         ledger_root = guard._DEFAULT_ROOT
     item_f = stats_v4.require_item_f(item_f_dir, run_dirs, item_f_sha256, ledger_root=ledger_root)      # D026: with ledger_root, every Samsung ledger row must carry the file's hash
+    if random_subset_struck is not None and not _decision_row_exists(root, random_subset_struck):
+        raise RegisteredControlError(f"random_subset_struck={random_subset_struck!r} does not name a row of research/DECISIONS.md that makes 9.9 (o) descriptive (a line with the id, '9.9 (o)' and 'descriptive')")
+    if strict and frozen:                                                  # red team M-1: a confirmatory output is never formed without the registered rows and the G0 run
+        absent = [k for k in ("lab_indicator", "retain_all") if not (row_runs or {}).get(k)] + ([] if (row_runs or {}).get("random_subset") or _decision_row_exists(root, random_subset_struck) else ["random_subset"]) + ([] if h7_run else ["h7_run"])
+        if absent:
+            raise RegisteredControlError(f"strict run at the FROZEN commit without {absent}: the downgrade rows (9.8 rule 2) and the G0 pipeline check (PC-1) are registered inputs; random_subset only with random_subset_struck=<DECISIONS row id>")
     rule, c = stats_v4.resolve_config(cfg)
     store = stats_v4.Store.from_runs(run_dirs, strict=strict)
     if strict:
@@ -741,6 +794,20 @@ def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, r
                                  random_subset=[mk(d) for d in row_runs["random_subset"]] if row_runs.get("random_subset") else None, gate=gate_)
     prov = {"rows_not_run": out["downgrade"]["rows_not_run"], "gate_not_evaluated": list(gate_.get("not_evaluated", [])) if isinstance(gate_, dict) else []}
     prov["provisional"] = bool(prov["rows_not_run"] or prov["gate_not_evaluated"])
+    struck = random_subset_struck if (random_subset_struck is not None and not row_runs.get("random_subset")) else None
+    if struck is not None and "random_subset" in prov["rows_not_run"]:     # red team n-2 (stop rule 5 (5)): a struck row is descriptive, not missing
+        prov["rows_not_run"] = [r_ for r_ in prov["rows_not_run"] if r_ != "random_subset"]
+        prov["rows_struck"] = {"random_subset": struck}
+        prov["provisional"] = bool(prov["rows_not_run"] or prov["gate_not_evaluated"])
+        out["downgrade"]["rows_struck"] = {"random_subset": struck}
+        if "outcome" in out:
+            out["outcome"]["provisional_downgrade_rows_incomplete"] = bool(prov["rows_not_run"])
+    prov["require_registered"], prov["frozen"] = bool(require), bool(frozen)           # red team n-3
+    prov["strict"] = bool(strict)                                          # red team M-3: the output records its mode and the commit (a lenient output is never a result)
+    try:
+        prov["head"] = guard._git(root, "rev-parse", "HEAD") or None
+    except Exception:  # noqa: BLE001
+        prov["head"] = None
     out["status"] = prov
     out["config_pin"] = {**cfg_pin, "config_sha256": out["config_sha256"], "n_expected": n_expected, "n_expected_source": "40 - n_conditions_dropped['B'] of runs/prereg/blinding_exclusions.json"}
     tc = _test_c_s2(mk, strict, test_c_runs, test_c_lab_indicator_runs, s2_runs)
@@ -771,13 +838,15 @@ def run_stats_v4(analysis_dir, run_dirs, cfg=None, item_f_dir=None, gate=None, r
         out["edge_wording"] = stats_v4.edge_level_wording(run_dirs, audit_dir, audit_thresholds_pin, calibration_sha256, fc, licences=True)         # raises AuditGuardError without the pins, a valid record from the FROZEN commit
     out["gate_G"] = gate_
     os.makedirs(analysis_dir, exist_ok=True)
-    controls, reg_err = _stats_gaps_v4(analysis_dir, out, store, rule, c, run_dirs, controls, negative_runs, test_c_runs, s2_runs, strict, descriptive=gaps)       # G1-G8 (STATS_GAPS_REPORT.md); G3 always runs
+    controls, reg_err = _stats_gaps_v4(analysis_dir, out, store, rule, c, run_dirs, controls, negative_runs, test_c_runs, s2_runs, strict, descriptive=gaps, require=require)       # G1-G8 (STATS_GAPS_REPORT.md); G3 always runs
     if gate is None:                                                       # F4: contrasts_v4_B.json carries the same reported checks as controls.json; the gate rule and its fields are unchanged
         for k_ in ("tripped", "reasons", "not_evaluated", "rule"):
             assert controls["gate_G"][k_] == out["gate_G"][k_], k_
         out["gate_G"] = {**out["gate_G"], "reported_checks": controls["gate_G"]["reported_checks"]}
     write_checked_json(os.path.join(analysis_dir, "controls.json"), controls, "controls")          # controls.json (with the Gate G diagnostic) is written first: a wording failure of the contrasts never hides a tripped gate (C26 N1, N5)
     if reg_err and strict:                                                 # a registered control (NC-2, PC-2, PC-3) failed to compute: stop before the contrasts are written
+        stopped = _keep_stopped_record(analysis_dir)                       # red team M-3: the stopped record is kept with its sha256 (a re-run overwrites controls.json)
+        reg_err = {**reg_err, "stopped_record": stopped}
         raise RegisteredControlError(f"registered control(s) failed to compute: {reg_err}; controls.json records it, contrasts_v4_B.json is not written (re-run after the fix; this is not a re-score)")
     if physval:                                                            # N5: physval_11a.json (PREREG 11a items 1, 2, 4, 5) on the R2 path, through the same fail-closed wording check
         out["physval"] = _physval_v4(analysis_dir, run_dirs)

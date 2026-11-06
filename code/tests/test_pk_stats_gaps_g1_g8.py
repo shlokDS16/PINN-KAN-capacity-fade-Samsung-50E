@@ -173,6 +173,11 @@ def strip_contrasts(o):
     o.pop("candidates_vs_a1", None)
     o.pop("stats_gaps", None)
     st = o["status"]
+    st.pop("strict", None)                                                                  # M-3: the output records its mode and the commit
+    st.pop("head", None)
+    st.pop("require_registered", None)                                                      # n-3
+    st.pop("frozen", None)
+    st.pop("registered_controls_failed_needs_rescore", None)                                # n-4: a record, no flag
     if st.pop("registered_controls_not_evaluated", None) is not None:                      # F1: a label; the other flags decide what the provisional flag was
         st["provisional"] = bool(st["rows_not_run"] or st["gate_not_evaluated"] or st.get("test_c_lab_indicator_row_not_run"))
         if "outcome" in o:
@@ -348,21 +353,30 @@ def _bad_negative(grid, name):
     return bad
 
 
-def test_f1_a_registered_control_that_fails_to_compute_stops_a_strict_run_after_controls_json(grid, runs_with_and_without):
+def _boom(monkeypatch):
+    """a code / compute error in NC-2 (not an input-integrity error)"""
+    def raiser(*a, **k):
+        raise RuntimeError("boom")
+    monkeypatch.setattr(sg, "nc2_v4", raiser)
+
+
+def test_f1_a_registered_control_that_fails_to_compute_stops_a_strict_run_after_controls_json(grid, runs_with_and_without, monkeypatch):
     tmp = grid["tmp"]
-    bad = _bad_negative(grid, "badnc2")
+    bad = grid["neg"]
+    _boom(monkeypatch)
     with pytest.warns(UserWarning, match="G3_nc2"):
         with pytest.raises(ss.RegisteredControlError, match="NC-2"):
             ss.run_stats_v4(os.path.join(tmp, "an_bad"), grid["dirs"], item_f_dir=grid["fdir"], item_f_sha256=grid["sha"], negative_runs=bad)
     ctl = json.load(open(os.path.join(tmp, "an_bad", "controls.json")))
-    assert ctl["negative"]["nc2"]["passed"] is None and ctl["negative"]["nc2"]["status"].startswith("not evaluated: ERROR") and "permute_stress" in json.load(open(os.path.join(tmp, "an_bad", "STATS_GAPS_ERRORS.json")))["G3_nc2"]
+    assert ctl["negative"]["nc2"]["passed"] is None and ctl["negative"]["nc2"]["status"].startswith("not evaluated: ERROR") and "boom" in json.load(open(os.path.join(tmp, "an_bad", "STATS_GAPS_ERRORS.json")))["G3_nc2"]
     assert not os.path.exists(os.path.join(tmp, "an_bad", "contrasts_v4_B.json"))
     assert ctl["gate_G"]["tripped"] is False                                              # the failure of an interpretive control is not a gate input
 
 
-def test_f1_lenient_records_the_failure_and_marks_the_outcome_provisional(grid):
+def test_f1_lenient_records_the_failure_and_marks_the_outcome_provisional(grid, monkeypatch):
     tmp = grid["tmp"]
-    bad = _bad_negative(grid, "badnc2b")
+    bad = grid["neg"]
+    _boom(monkeypatch)
     with pytest.warns(UserWarning, match="G3_nc2"):
         out = ss.run_stats_v4(os.path.join(tmp, "an_bad_len"), grid["dirs"], item_f_dir=grid["fdir"], item_f_sha256=grid["sha"], negative_runs=bad, strict=False)
     assert out["status"]["provisional"] is True and out["outcome"]["provisional"] is True and out["status"]["registered_controls_not_evaluated"]["NC-2"].startswith("ERROR")
@@ -469,9 +483,24 @@ def test_pc2_monotone_in_temperature_inside_the_storage_hull_only(tmp_path):
     assert sg.pc2_v4([])["passed"] is None
 
 
-def test_pc2_hull_with_two_temperatures_only_and_collinear_points_fall_back_to_the_bounding_box(tmp_path):
-    r = sg.pc2_v4([_sf_dir(str(tmp_path), "line", _rate(), [[10.0, 50.0], [23.0, 50.0], [45.0, 50.0]])])          # collinear: no convex hull in the plane
-    assert r["passed"] is True and r["soc_evaluated"] == [50.0] and r["hull"].startswith("bounding box")
+def test_m2_pc2_collinear_storage_points_have_no_hull_and_no_bounding_box_substitute(tmp_path):
+    """red team m-2: points that do not span the plane raise (a failure to compute); there is no bounding-box fallback"""
+    with pytest.raises(ValueError, match="storage points do not span"):
+        sg.pc2_v4([_sf_dir(str(tmp_path), "line", _rate(), [[10.0, 50.0], [23.0, 50.0], [45.0, 50.0]])])
+    with pytest.raises(ValueError, match="storage points do not span"):
+        sg._inside_hull([[10.0, 20.0], [23.0, 20.0]], (23.0, 20.0))
+
+
+def test_m3_the_pc2_grid_of_t1_is_asserted(tmp_path):
+    """red team m-3: T = 10, 23, 45 C and SOC = 0, 5, ..., 100 % (PREREG_v4 10, T1)"""
+    hull = [[T, s_] for T in T_GRID for s_ in (20.0, 80.0)]
+    d = _sf_dir(str(tmp_path), "grid", _rate(), hull)
+    sf = json.load(open(os.path.join(d, "stress_functions.json")))
+    sf["storage_rate"]["T_C"] = [10, 23, 50]
+    _dump(sf, os.path.join(d, "stress_functions.json"))
+    with pytest.raises(ValueError, match="grid differs from PREREG_v4 10"):
+        sg.pc2_v4([d])
+    assert sg.PC2_T_GRID == [10.0, 23.0, 45.0] and sg.PC2_SOC_GRID == [float(x) for x in range(0, 101, 5)]
 
 
 def test_the_reported_checks_never_trip_or_clear_the_gate():
@@ -732,3 +761,205 @@ def test_f2a_pc2_does_not_drop_a_fold_or_fall_back_to_the_whole_grid(tmp_path):
     assert sg.pc2_v4(nohull)["passed"] is None and "storage_hull.json missing" in sg.pc2_v4(nohull)["status"]
     empty = [_sf_dir(str(tmp_path), f"e{i}", _rate(), []) for i in range(2)]
     assert sg.pc2_v4(empty)["passed"] is None and "no storage point" in sg.pc2_v4(empty)["status"]
+
+
+# ------------------------------------------------------------------------------------------------ red team rev. 20: M-1, M-2, M-3, m-2, m-3, m-4
+def test_m2_require_makes_every_absence_but_the_data_reason_a_failure_to_compute(tmp_path):
+    hull = [[T, s_] for T in T_GRID for s_ in (20.0, 80.0)]
+    ok = [_sf_dir(str(tmp_path), f"ok{i}", _rate(), hull) for i in range(2)]
+    assert sg.pc2_v4(ok, require=True)["passed"] is True
+    os.remove(os.path.join(ok[1], "storage_hull.json"))
+    with pytest.raises(ValueError, match="storage_hull.json missing"):
+        sg.pc2_v4(ok, require=True)
+    os.remove(os.path.join(ok[1], "stress_functions.json"))
+    with pytest.raises(ValueError, match="stress_functions.json in 1 of 2 g4 runs"):
+        sg.pc2_v4(ok, require=True)
+    assert sg.pc2_v4(ok)["passed"] is None                                              # development default: a label
+    st = make_store()
+    st.tables[G4]["R1"] = {c: 2.0 * np.exp(0.3) for c in CONDS[:39]}
+    with pytest.raises(ValueError, match="R1 scores 39 and A1 40"):
+        sg.pc3_v4(st, RULE, require=True)
+    with pytest.raises(ValueError, match="R1 or A1 is not scored at g4"):
+        sg.pc3_v4(make_store(), RULE, require=True)
+    # the data reason stays 'not evaluated' even when required: only one temperature inside the hull at every SOC
+    one_t = [_sf_dir(str(tmp_path), "onet", _rate(), [[10.0, 20.0], [10.0, 80.0], [11.0, 50.0]])]
+    r = sg.pc2_v4(one_t, require=True)
+    assert r["passed"] is None and r["status"].startswith("not evaluated: no SOC level has two temperatures")
+
+
+def test_m2_a_strict_confirmatory_run_without_negative_runs_or_with_a_missing_pc2_input_stops(grid):
+    tmp = grid["tmp"]
+    with pytest.warns(UserWarning, match="G3_nc2"):
+        with pytest.raises(ss.RegisteredControlError, match="NC-2"):
+            ss.run_stats_v4(os.path.join(tmp, "an_nonc2"), grid["dirs"], item_f_dir=grid["fdir"], item_f_sha256=grid["sha"], require_registered=True)
+    ctl = json.load(open(os.path.join(tmp, "an_nonc2", "controls.json")))
+    assert ctl["negative"]["nc2"]["status"].startswith("not evaluated: ERROR no negative_runs given") and not os.path.exists(os.path.join(tmp, "an_nonc2", "contrasts_v4_B.json"))
+    # the same input absent in lenient / development mode stays a provisional label
+    out = ss.run_stats_v4(os.path.join(tmp, "an_nonc2_dev"), grid["dirs"], item_f_dir=grid["fdir"], item_f_sha256=grid["sha"], gaps=False)
+    assert out["status"]["registered_controls_not_evaluated"]["NC-2"] == "no negative_runs given"
+
+
+def test_m3_the_stop_keeps_the_stopped_record_with_its_sha256_and_the_output_records_mode_and_head(grid, runs_with_and_without, monkeypatch):
+    import hashlib
+    st = runs_with_and_without["new"]["status"]
+    assert st["strict"] is True and "head" in st and (st["head"] is None or len(st["head"]) == 40)
+    tmp = grid["tmp"]
+    bad = grid["neg"]
+    _boom(monkeypatch)
+    for k in (1, 2):                                                                          # a second stop does not overwrite the first record
+        with pytest.warns(UserWarning):
+            with pytest.raises(ss.RegisteredControlError, match="stopped_record"):
+                ss.run_stats_v4(os.path.join(tmp, "an_stop"), grid["dirs"], item_f_dir=grid["fdir"], item_f_sha256=grid["sha"], negative_runs=bad)
+        d = os.path.join(tmp, "an_stop", f"stopped_{k}")
+        sha = json.load(open(os.path.join(d, "SHA256.json")))
+        assert set(sha) == {"controls.json", "STATS_GAPS_ERRORS.json"}
+        for name, h in sha.items():
+            assert hashlib.sha256(open(os.path.join(d, name), "rb").read()).hexdigest() == h
+
+
+def test_m3_lenient_is_refused_on_samsung_runs_after_frozen(tmp_path, monkeypatch):
+    from pinnkan import guard
+    d = tmp_path / "s"
+    d.mkdir()
+    _dump({"m": 32, "fold": 0, "dataset": "samsung"}, d / "config.json")
+    monkeypatch.setattr(guard, "is_frozen", lambda root=None: True)
+    with pytest.raises(ValueError, match="lenient is refused on Samsung runs after FROZEN"):
+        ss.run_stats_v4(str(tmp_path / "an"), [str(d)], item_f_dir=str(tmp_path), strict=False, root=str(tmp_path))
+    monkeypatch.setattr(guard, "is_frozen", lambda root=None: False)                          # before FROZEN lenient stays available (it fails later for other reasons, not this one)
+    with pytest.raises(Exception) as e:
+        ss.run_stats_v4(str(tmp_path / "an"), [str(d)], item_f_dir=str(tmp_path), strict=False, root=str(tmp_path))
+    assert "lenient is refused" not in str(e.value)
+
+
+def test_m1_a_strict_run_at_the_frozen_commit_needs_the_rows_and_the_g0_run(tmp_path, monkeypatch):
+    from pinnkan import guard
+    monkeypatch.setattr(guard, "is_frozen", lambda root=None: True)
+    from pinnkan import blinding                                                           # the earlier guards (pinned configuration, n, item (f)) are covered by their own tests: stubbed here
+    monkeypatch.setattr(v4, "effective_config", lambda cfg, root: (cfg, {}))
+    monkeypatch.setattr(blinding, "expected_n", lambda root, test: 40)
+    monkeypatch.setattr(v4, "require_item_f", lambda *a, **k: {})
+    root = tmp_path / "root"
+    (root / "research").mkdir(parents=True)
+    kw = dict(item_f_dir=str(tmp_path), root=str(root))
+    rows = {"lab_indicator": ["x"], "retain_all": ["x"]}
+    with pytest.raises(ss.RegisteredControlError, match=r"\['lab_indicator', 'retain_all', 'random_subset', 'h7_run'\]"):
+        ss.run_stats_v4(str(tmp_path / "an"), [], **kw)
+    with pytest.raises(ss.RegisteredControlError, match=r"\['random_subset', 'h7_run'\]"):
+        ss.run_stats_v4(str(tmp_path / "an"), [], row_runs=rows, **kw)
+    with pytest.raises(ss.RegisteredControlError, match="does not name a row"):                 # an unknown row id is no exception
+        ss.run_stats_v4(str(tmp_path / "an"), [], row_runs=rows, h7_run="h", random_subset_struck="D999", **kw)
+    (root / "research" / "DECISIONS.md").write_text("| D001 | an unrelated row |\n| D998 | 9.9 (o) random-subset row dropped |\n| D999 | 9.9 (o) random-subset row made descriptive (stop rule 5 (5)) |\n")
+    for bad_id in ("D001", "D998"):                                                           # n-2: the row must name 9.9 (o) and 'descriptive'
+        with pytest.raises(ss.RegisteredControlError, match="does not name a row"):
+            ss.run_stats_v4(str(tmp_path / "an"), [], row_runs=rows, h7_run="h", random_subset_struck=bad_id, **kw)
+    with pytest.raises(Exception) as e:                                                       # the M-1 check passes; the next step (no runs) fails for another reason
+        ss.run_stats_v4(str(tmp_path / "an"), [], row_runs=rows, h7_run="h", random_subset_struck="D999", **kw)
+    assert not isinstance(e.value, ss.RegisteredControlError)
+    with pytest.raises(ss.RegisteredControlError, match="does not name a row"):                 # D99 is not D999
+        ss.run_stats_v4(str(tmp_path / "an"), [], row_runs=rows, h7_run="h", random_subset_struck="D99", **kw)
+
+
+def test_m4_physval_flags_the_selected_soc_levels_outside_the_hull_and_fig6_marks_them(grid, runs_with_and_without):
+    pv = json.load(open(os.path.join(runs_with_and_without["an_new"], "physval_11a.json")))
+    ar = pv["arrhenius_ln_rate"]
+    assert ar["soc_selected"] == [5, 50, 80, 100] and ar["soc_selected_in_pc2_evaluation"] == [False, True, True, False] and "supports no monotonicity statement" in ar["outside_hull_note"]
+    src = open(os.path.join(ROOT, "code", "figures", "fig6_storage.py"), encoding="utf8").read()
+    assert "soc_selected_in_pc2_evaluation" in src and "outside hull" in src and "dashed: SOC outside the storage hull, not in PC-2" in src
+    no_hull = [d for d in grid["dirs"] if d.endswith("_m32")]
+    import shutil
+    t = grid["tmp"] + "/nohullphys"
+    os.makedirs(t)
+    cp = []
+    for d in no_hull:
+        c = os.path.join(t, os.path.basename(d))
+        shutil.copytree(d, c)
+        os.remove(os.path.join(c, "storage_hull.json"))
+        cp.append(c)
+    assert physval.figure_inputs(cp)["arrhenius_ln_rate"]["soc_selected_in_pc2_evaluation"] is None
+
+
+# ------------------------------------------------------------------------------------------------ red team n-2, n-3, n-4
+def _ok_gate():
+    return {"tripped": False, "reasons": [], "not_evaluated": [], "rule": "PREREG_v4 gate G: NC-1 trips or PC-1 fails; PC-2 and PC-3 are reported checks, not gate inputs; NC-2 is not a gate"}
+
+
+def test_n2_a_validly_struck_random_subset_row_is_recorded_as_struck_not_as_not_run(grid, tmp_path):
+    root = tmp_path / "root"
+    (root / "research").mkdir(parents=True)
+    (root / "research" / "DECISIONS.md").write_text("| D777 | 9.9 (o) random-subset row made descriptive under stop rule 5 (5) |\n")
+    kw = dict(item_f_dir=grid["fdir"], item_f_sha256=grid["sha"], negative_runs=grid["neg"], gate=_ok_gate(), root=str(root), row_runs={"lab_indicator": grid["dirs"], "retain_all": grid["dirs"]})
+    open_ = ss.run_stats_v4(os.path.join(grid["tmp"], "an_nostruck"), grid["dirs"], **kw)
+    assert open_["status"]["rows_not_run"] == ["random_subset"] and open_["status"]["provisional"] is True and open_["outcome"]["provisional"] is True
+    st = ss.run_stats_v4(os.path.join(grid["tmp"], "an_struck"), grid["dirs"], random_subset_struck="D777", **kw)
+    s_ = st["status"]
+    assert s_["rows_not_run"] == [] and s_["rows_struck"] == {"random_subset": "D777"} and s_["provisional"] is False and st["outcome"]["provisional"] is False
+    assert st["outcome"]["provisional_downgrade_rows_incomplete"] is False and st["downgrade"]["rows_struck"] == {"random_subset": "D777"}
+    assert s_["require_registered"] is False and s_["frozen"] is False                          # n-3: the effective values are recorded beside strict and head
+    assert open_["status"]["require_registered"] is False and open_["status"]["strict"] is True
+    with pytest.raises(ss.RegisteredControlError, match="does not name a row"):                  # refused whenever given, FROZEN or not
+        ss.run_stats_v4(os.path.join(grid["tmp"], "an_badstruck"), grid["dirs"], random_subset_struck="D001", **kw)
+
+
+def test_n3_require_registered_and_frozen_are_recorded(grid):
+    out = ss.run_stats_v4(os.path.join(grid["tmp"], "an_req"), grid["dirs"], item_f_dir=grid["fdir"], item_f_sha256=grid["sha"], negative_runs=grid["neg"], require_registered=True)
+    assert out["status"]["require_registered"] is True and out["status"]["frozen"] is False and out["status"]["strict"] is True
+    assert out["status"]["registered_controls_failed_needs_rescore"] if "registered_controls_failed_needs_rescore" in out["status"] else True
+
+
+def _check_rescore(out, an, name):
+    ctl = json.load(open(os.path.join(an, "controls.json")))
+    assert os.path.exists(os.path.join(an, "contrasts_v4_B.json")) and not os.path.exists(os.path.join(an, "STATS_GAPS_ERRORS.json"))
+    assert name in out["status"]["registered_controls_failed_needs_rescore"]
+    assert name not in out["status"].get("registered_controls_not_evaluated", {})                 # failed, not 'not evaluated': not provisional for that reason
+    return ctl
+
+
+def test_n4_an_nc2_input_integrity_error_is_recorded_as_failed_and_the_step_continues(grid):
+    tmp = grid["tmp"]
+    ref = ss.run_stats_v4(os.path.join(tmp, "an_n4ref"), grid["dirs"], item_f_dir=grid["fdir"], item_f_sha256=grid["sha"], negative_runs=grid["neg"])
+    kw = dict(item_f_dir=grid["fdir"], item_f_sha256=grid["sha"], require_registered=True)
+    cases = {}
+    cases["not a permute_stress run"] = _bad_negative(grid, "n4a")
+    cases["unequal condition sets"] = make_negative(tmp + "/n4b", grid["dirs"], drop_cond=True) if os.makedirs(tmp + "/n4b") is None else None
+    c_ = make_negative(tmp + "/n4c", grid["dirs"]) if os.makedirs(tmp + "/n4c") is None else None
+    cases["other folds"] = c_[:4]
+    for label, neg in cases.items():
+        an = os.path.join(tmp, "an_n4_" + label.split()[0])
+        out = ss.run_stats_v4(an, grid["dirs"], negative_runs=neg, **kw)                      # no RegisteredControlError
+        ctl = _check_rescore(out, an, "NC-2")
+        nc2 = ctl["negative"]["nc2"]
+        assert nc2["passed"] is False and nc2["failed_needs_rescore"] is True and nc2["fail_sentence"] == "stress dependence was not shown necessary for the accuracy" and nc2["reason"], label
+        assert ctl["gate_G"]["tripped"] is False and out["outcome"]["provisional"] == ref["outcome"]["provisional"]
+        assert {k: v for k, v in out["effective_tiers"].items()} == ref["effective_tiers"] and out["outcome"].get("title_id") == ref["outcome"].get("title_id")
+
+
+def test_n4_a_pc3_unequal_condition_set_is_recorded_as_failed_when_required_and_a_compute_error_still_stops(grid, tmp_path, monkeypatch):
+    import shutil
+    st = make_store()
+    st.tables[G4]["R1"] = {c: 2.0 * np.exp(0.3) for c in CONDS[:39]}
+    with pytest.raises(sg.NeedsRescoreError, match="R1 scores 39 and A1 40"):
+        sg.pc3_v4(st, RULE, require=True)
+    assert sg.pc3_v4(st, RULE)["passed"] is None                                                 # development default: the label
+    tmp = grid["tmp"] + "/n4pc3"
+    os.makedirs(tmp)
+    dirs = []
+    for d in grid["dirs"]:
+        t = os.path.join(tmp, os.path.basename(d))
+        shutil.copytree(d, t)
+        dirs.append(t)
+    f0 = dirs[2]
+    assert f0.endswith("f0_m32")
+    sc = json.load(open(os.path.join(f0, "condition_scores.json")))
+    sc["R1"].pop(next(iter(sc["R1"])))
+    _dump(sc, os.path.join(f0, "condition_scores.json"))
+    an = os.path.join(tmp, "an")
+    out = ss.run_stats_v4(an, dirs, item_f_dir=grid["fdir"], item_f_sha256=grid["sha"], negative_runs=grid["neg"], require_registered=True)
+    ctl = _check_rescore(out, an, "PC-3")
+    p3 = ctl["positive"]["PC3_detail"]
+    assert p3["passed"] is False and p3["failed_needs_rescore"] and p3["fail_sentence"].startswith("At g4 the network's median condition error was not shown lower") and ctl["positive"]["P3_passed"] is False
+    assert ctl["gate_G"]["reported_checks"]["PC-3_A1_beats_persistence"] is False and out["gate_G"]["reported_checks"] == ctl["gate_G"]["reported_checks"]
+    # a code / compute error is not an integrity error: it still stops
+    _boom(monkeypatch)
+    with pytest.warns(UserWarning):
+        with pytest.raises(ss.RegisteredControlError):
+            ss.run_stats_v4(os.path.join(tmp, "an_boom"), dirs, item_f_dir=grid["fdir"], item_f_sha256=grid["sha"], negative_runs=grid["neg"], require_registered=True)

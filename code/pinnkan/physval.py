@@ -228,6 +228,21 @@ def physval_11a(run_dirs, published=None, meta_csv=None, strict=False):
 
 
 # ------------------------------------------------------------------------------------------------ G5: curves behind Figs. 5 and 6 (items 1-3, 5)
+def _selected_soc_in_pc2_evaluation(run_dirs, T_C, sel):
+    """per selected SOC level: does it have at least two of the storage temperatures inside the convex hull of the training storage cells (the levels PC-2 evaluates)? None without storage_hull.json
+    in every run or when the points do not span the plane"""
+    from .stats_gaps import _inside_hull, _storage_points
+    if not all(os.path.exists(os.path.join(d, "storage_hull.json")) for d in run_dirs):
+        return None
+    pts = _storage_points(run_dirs)
+    if not pts:
+        return None
+    try:
+        return [bool(sum(_inside_hull(pts, (t, s_))[0] for t in T_C) >= 2) for s_ in sel]
+    except ValueError:
+        return None
+
+
 def figure_inputs(run_dirs, M=None, strict=False):
     """-> dict of the NEW keys of physval_11a.json (nothing existing is changed):
       a_of_soc                     calendar loss after 500 d at 25 C, a(SOC), pp, envelope over the fold x seed members (item 1)
@@ -249,6 +264,10 @@ def figure_inputs(run_dirs, M=None, strict=False):
             T_C=T_C, inv_T_1000_per_K=[1000.0 / (t + 273.15) for t in T_C], soc_selected=sel, ln_rate=_env(L), n_members=int(L.shape[0]),
             share_members_increasing_in_T=[float(np.mean([bool(np.all(np.diff(L[m_, k][order]) > 0)) for m_ in range(L.shape[0])])) for k in range(L.shape[1])],
             definition="ln of the initial storage rate (pp per 500 d) of the fitted A1 calendar law at the selected SOC (%) against 1000 / T; envelope = min / max over the fold x seed members")
+        flags = _selected_soc_in_pc2_evaluation(run_dirs, T_C, sel)
+        out["arrhenius_ln_rate"]["soc_selected_in_pc2_evaluation"] = flags            # red team m-4: Fig. 6 marks the SOC levels outside the storage hull (not part of PC-2)
+        out["arrhenius_ln_rate"]["outside_hull_note"] = ("a share or line at an SOC level flagged False lies outside the training storage hull: PC-2 excludes that level and it supports no monotonicity statement"
+                                                         if flags is not None else "storage_hull.json not in every run: the SOC levels cannot be flagged")
     else:
         out["arrhenius_ln_rate"] = dict(status="not available: no arrhenius_ln_rate members in stress_functions.json")
     ov = {}

@@ -28,6 +28,21 @@ from . import stats_v4 as v4
 
 G1_, G4_ = v4.G1, v4.G4
 CANDIDATES = ("A11", "A12", "A4", "A5")
+class NeedsRescoreError(ValueError):
+    """an input-integrity error of a registered control whose cure needs a scored configuration to be run again (stop rule 6): the control is recorded as failed with its fixed sentence and the step
+    continues (PREREG_v4 10: "NC-2 never stops the study"). Any other exception is a code / compute error and stops a strict run."""
+
+
+FAIL_SENTENCES = {"NC-2": "stress dependence was not shown necessary for the accuracy",
+                  "PC-3": "At g4 the network's median condition error was not shown lower than carrying the last check-up forward (a reported check outside the family-wise count)"}
+
+
+def rescore_record(name, reason):
+    """the record of a registered control that failed because its inputs cannot be repaired without re-running a scored configuration"""
+    return {"status": "failed: the inputs cannot be repaired without re-running a scored configuration (stop rule 6)", "passed": False, "failed_needs_rescore": True, "reason": reason,
+            "fail_sentence": FAIL_SENTENCES[name], "gating": False}
+
+
 NC2_ALPHA = 0.025            # section 10 / 9.3: NC-2 and PC-3 are tested at 0.025 whatever the graph alpha is
 NC2_WORDING = "the accuracy of the learned law depends on the stress dependence it learns"
 
@@ -139,13 +154,13 @@ def nc2_v4(real_store, neg_store, rule, alpha=NC2_ALPHA):
     (the rule of the P chain: ties and L = 0 not positive, n not reduced; 30 of 40 at 0.025). Descriptive rows: L(A9/A1) under real and permuted stress and the scores of A1, A9, R1, R2 under
     permutation (an arm that the permuted runs did not fit is None)."""
     if not (real_store.has("A1", *G4_) and neg_store.has("A1", *G4_)):
-        raise ValueError("NC-2 needs A1 at g4 in the real and in the permuted runs")
+        raise NeedsRescoreError("NC-2 needs A1 at g4 in the real and in the permuted runs")
     R, P = real_store.scores("A1", *G4_), neg_store.scores("A1", *G4_)
     if set(R) != set(P):
-        raise ValueError("NC-2 pairs the same held-out conditions: the real and the permuted run score different condition sets")
+        raise NeedsRescoreError("NC-2 pairs the same held-out conditions: the real and the permuted run score different condition sets")
     fr, fn = real_store.notes.get("cell_folds", {}).get(real_store.key(*G4_)), neg_store.notes.get("cell_folds", {}).get(neg_store.key(*G4_))
     if fr is not None and fn is not None and set(fr) != set(fn):
-        raise ValueError(f"NC-2: the permuted runs cover the outer folds {sorted(fn)}, the real g4 runs {sorted(fr)}")
+        raise NeedsRescoreError(f"NC-2: the permuted runs cover the outer folds {sorted(fn)}, the real g4 runs {sorted(fr)}")
     conds = sorted(R)
     L = np.array([np.log(P[c] / R[c]) for c in conds])
     pos, n, p = rule.test(L, 0.0)
@@ -169,13 +184,23 @@ def nc2_v4(real_store, neg_store, rule, alpha=NC2_ALPHA):
                 L_by_cond={c: float(v) for c, v in zip(conds, L)}, descriptive=desc, gating=False, interpretive=True)
 
 
-def pc3_v4(store, rule, alpha=NC2_ALPHA):
-    """PC-3 (reported, not a gate; PREREG_v4 10): A1 beats R1 (persistence) at g4 with margin 0 (the M3 machinery of g1 at g4: L = ln(S_R1 / S_A1), fixed design-effect sign test at `alpha`)"""
+def _absent(require, msg):
+    """a registered input is absent: with `require` (strict run at the FROZEN commit, PREREG_v4 10 as amended: every absence except the data reason is a failure to compute) raise, else the record says so"""
+    if require:
+        raise ValueError(msg)
+    return dict(status="not evaluated: " + msg, passed=None, gating=False)
+
+
+def pc3_v4(store, rule, alpha=NC2_ALPHA, require=False):
+    """PC-3 (reported, not a gate; PREREG_v4 10): A1 beats R1 (persistence) at g4 with margin 0 (the M3 machinery of g1 at g4: L = ln(S_R1 / S_A1), fixed design-effect sign test at `alpha`).
+    R1 and A1 must score the same conditions (n is never reduced); with `require`, an absence raises ValueError (a failure to compute)."""
     if not (store.has("A1", *G4_) and store.has("R1", *G4_)):
-        return dict(status="not evaluated: R1 or A1 is not scored at g4", passed=None, gating=False)
+        return _absent(require, "R1 or A1 is not scored at g4")
     a1, r1 = store.scores("A1", *G4_), store.scores("R1", *G4_)
     if set(a1) != set(r1):                                  # store.L would intersect the condition sets and reduce n silently (9.3: n is not reduced)
-        return dict(status=f"not evaluated: R1 scores {len(r1)} and A1 {len(a1)} conditions at g4 (n would be reduced)", passed=None, gating=False)
+        if require:
+            raise NeedsRescoreError(f"R1 scores {len(r1)} and A1 {len(a1)} conditions at g4 (n would be reduced)")
+        return _absent(require, f"R1 scores {len(r1)} and A1 {len(a1)} conditions at g4 (n would be reduced)")
     _, L, _ = store.L("A1", "R1", G4_)
     pos, n, p = rule.test(L, 0.0)
     pl, nl, pp_ = v4.PLAIN.test(L, 0.0)
@@ -195,34 +220,40 @@ def _storage_points(dirs):
 
 
 def _inside_hull(points, q):
-    """is the point q = (T, SOC) inside (or on) the convex hull of `points`? Delaunay when the points span the plane, else the bounding box of the points (recorded by the caller)"""
+    """is the point q = (T, SOC) inside (or on) the convex hull of `points`? No substitute rule (T1): points that do not span the plane raise ValueError (a failure to compute)"""
     pts = np.asarray(points, float)
     try:
         from scipy.spatial import Delaunay
         return bool(Delaunay(pts).find_simplex(np.asarray(q, float), tol=1e-9) >= 0), "convex hull"
-    except Exception:  # noqa: BLE001  (Qhull error for collinear or too few points)
-        lo, hi = pts.min(0) - 1e-9, pts.max(0) + 1e-9
-        return bool(np.all(np.asarray(q) >= lo) and np.all(np.asarray(q) <= hi)), "bounding box (the storage points do not span the plane)"
+    except Exception as e:  # noqa: BLE001  (Qhull error for collinear or too few points)
+        raise ValueError("storage points do not span (T, SOC): PC-2 hull undefined") from e
 
 
-def pc2_v4(run_dirs):
+PC2_T_GRID, PC2_SOC_GRID = [10.0, 23.0, 45.0], [float(x) for x in np.arange(0, 101, 5.0)]          # PREREG_v4 10 (T1)
+
+
+def pc2_v4(run_dirs, require=False):
     """PC-2 (reported, not a gate; PREREG_v4 10 and 11a item 3): the fitted calendar rate of A1 increases strictly with temperature at every SOC inside the storage hull. Evaluated on every
     fold x seed member of the g4 (m = 32) runs and on the mean curve; `passed` = every member at every evaluated SOC (the most conservative reading). The hull is the convex hull of the
-    training storage cells pooled over the folds (storage_hull.json). No substitute rule: if any g4 run lacks stress_functions.json or storage_hull.json, PC-2 is not evaluated (None)."""
+    training storage cells pooled over the folds (storage_hull.json). No substitute rule: if any g4 run lacks stress_functions.json or storage_hull.json, PC-2 is not evaluated (None), or with
+    `require` (strict run at the FROZEN commit) ValueError: a failure to compute. Only "no SOC level with two storage temperatures inside the hull" stays `not evaluated` (the data reason).
+    The grid is asserted: T = 10, 23, 45 C and SOC = 0, 5, ..., 100 % (T1)."""
     from . import physval
     all32 = _g4_dirs(run_dirs)
     dirs = _g4_dirs(run_dirs, "stress_functions.json")
     if not dirs or len(dirs) != len(all32):
-        return dict(status=f"not evaluated: stress_functions.json in {len(dirs)} of {len(all32)} g4 runs", passed=None, gating=False)
+        return _absent(require, f"stress_functions.json in {len(dirs)} of {len(all32)} g4 runs")
     if not all(os.path.exists(os.path.join(d, "storage_hull.json")) for d in dirs):
-        return dict(status="not evaluated: storage_hull.json missing in a g4 run (no substitute rule)", passed=None, gating=False)
+        return _absent(require, "storage_hull.json missing in a g4 run (no substitute rule)")
     M = physval.merge_stress_functions(dirs)
     T = np.array(M["T_C"], float)
     order = np.argsort(T)
     T, rate, soc = T[order], np.asarray(M["rate"], float)[:, order, :], np.asarray(M["soc"], float)
+    if T.tolist() != PC2_T_GRID or soc.tolist() != PC2_SOC_GRID:
+        raise ValueError("PC-2 grid differs from PREREG_v4 10 (T1)")
     pts = _storage_points(dirs)
     if not pts:
-        return dict(status="not evaluated: storage_hull.json holds no storage point", passed=None, gating=False)
+        return _absent(require, "storage_hull.json holds no storage point")
     method = None
     evaluated, excluded, bad = [], [], []
     mean_curve = rate.mean(0)

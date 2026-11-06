@@ -68,3 +68,9 @@ annotations), colour-blind safe (Okabe-Ito, cividis for temperature; method iden
 - Open for the post-results pass: figure inputs the run writer does not yet produce (window.csv,
   stress_functions.json, residual_map.npz, superposition.csv, contrasts_<test>.json, reference.json,
   controls.json, H7 summary.json) must be added to the run writer / statistics step before the confirmatory run.
+
+## Caption rules added at the freeze (lead, 2026-11-06; red team rev. 20 m-4, D038)
+- **Fig. 6:** the caption states that SOC levels drawn dashed and labelled "outside hull" lie outside the convex hull of the
+  training storage conditions and are excluded from PC-2 (PREREG_v4 section 10, T1); the PC-2 sentence in the text is one of
+  the fixed sentences of section 10, including the temperature-laboratory aliasing clause (10 C all SIE, 45 C all HM).
+- **Table 2:** PC-3 is labelled "reported check outside the family-wise count" (9.11), never as covered by the FWER.

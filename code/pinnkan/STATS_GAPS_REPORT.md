@@ -24,6 +24,36 @@ re-shown on it.
 * Tests for each statistician defect: `test_f2b_pc3_with_one_missing_r1_condition...` (the n = 39 case), `test_f2a_pc2_does_not_drop_a_fold_or_fall_back_to_the_whole_grid` (missing `stress_functions.json` in a fold, missing `storage_hull.json`, none anywhere, empty hull),
   `test_f1_*` (strict stops, lenient provisional, missing inputs provisional, `gaps=False` keeps G3, a fold without stress functions in the run), `test_f3_*`, `test_f4_*`, `test_f5_*`.
 
+## Red team rev. 20 code fixes (research/audits/SIGN_redteam_rev20.md), applied 2026-11-06 on HEAD c702e1a
+
+* **M-1** (`stats_step.run_stats_v4`, right after the config pin, n and item (f) / ledger guards, before any store is read): if `strict` and `guard.is_frozen(root)`, `RegisteredControlError` is raised when `row_runs` lacks `lab_indicator`, `retain_all` or `random_subset`, or `h7_run` is absent. The random-subset
+  exception needs `random_subset_struck=<id>` and that id as a whole token in `research/DECISIONS.md` of `root` (`_decision_row_exists`). Test `test_m1_*`.
+* **M-2:** `stats_gaps.pc2_v4(run_dirs, require)` and `pc3_v4(..., require)`: with `require`, a g4 run without `stress_functions.json` or `storage_hull.json`, an empty hull, R1 or A1 not scored at g4, or R1 and A1 on different conditions
+  raise ValueError (a failure to compute). "Not evaluated" is kept only for the data reason (no SOC level with two storage temperatures inside the hull). `_stats_gaps_v4(..., require)`: a missing `negative_runs`
+  becomes `errors["G3_nc2"]` and a failed NC-2 record. Tests `test_m2_*`; the F1/F2 tests that expected a label now run with the development default and are kept.
+  **Ruling needed (deviation):** `require` defaults to `strict and FROZEN` (`run_stats_v4(require_registered=None)`), not to `strict` alone, as M-1 and M-3 are also FROZEN-gated. With `strict` alone, ~20 existing development tests
+  (fake grids with no stress functions, no R1 at g4, no permuted runs) would stop, and the red team's rejection condition is about confirmatory outputs. Before FROZEN the old behaviour stays: a provisional label, now also with
+  `status.strict` and `status.head`. Flipping the default to `strict` is one line (`require = bool(strict)`); the tests pass `require_registered=True`.
+* **M-3:** (a) `run_stats_v4` refuses `strict=False` on Samsung runs when FROZEN (ValueError). (b) `out["status"]["strict"]` and `["head"]` (git HEAD of `root`, None if unavailable). (c) before `RegisteredControlError` at the stop, `controls.json`
+  and `STATS_GAPS_ERRORS.json` are copied to `analysis_dir/stopped_<n>/` with `SHA256.json` (a second stop makes `stopped_2`; the path is in the error message). Tests `test_m3_*`.
+* **m-2:** `_inside_hull` raises `ValueError("storage points do not span (T, SOC): PC-2 hull undefined")`; no bounding box (the old test now expects the raise). **m-3:** `pc2_v4` raises if T != [10, 23, 45] or SOC != 0, 5, ..., 100 (`PC2_T_GRID`, `PC2_SOC_GRID`).
+  **m-4:** `physval_11a.json arrhenius_ln_rate.soc_selected_in_pc2_evaluation` (per selected SOC: True/False, None without hulls) and `outside_hull_note`; `figures/fig6_storage.py` draws the levels outside the hull dashed, labels them
+  "outside hull" and prints "dashed: SOC outside the storage hull, not in PC-2" (the caption must say that PC-2 excludes them). m-1 and m-5 are text only.
+* Strip list of `head_comparison.py` / the test: `status.strict`, `status.head` added. Result against 052eefd after these fixes: contrasts_v4_B.json 131143 characters IDENTICAL, controls.json IDENTICAL, physval_11a.json IDENTICAL.
+
+## Red team minors n-2, n-3, n-4 (re-sign of rev. 20), applied 2026-11-06
+
+* **n-2:** `random_subset_struck=<id>` must name a line of `research/DECISIONS.md` that holds the id as a whole token, "9.9 (o)" and "descriptive" (`_decision_row_exists`); otherwise `RegisteredControlError` whenever the parameter is given. When it is valid and no
+  random-subset runs are supplied, the row is dropped from `status.rows_not_run`, recorded as `status.rows_struck = {"random_subset": id}` (and `downgrade.rows_struck`), and `outcome.provisional_downgrade_rows_incomplete` follows the remaining rows,
+  so the struck row no longer makes the outcome provisional. Test `test_n2_*`.
+* **n-3:** `status.require_registered` (effective value) and `status.frozen` are written beside `strict` and `head`. Test `test_n3_*` and `test_n2_*`.
+* **n-4:** `stats_gaps.NeedsRescoreError` (a ValueError) marks the input-integrity errors whose cure needs a scored configuration to be run again: NC-2 without A1 at g4, unequal condition sets, other outer folds, and a negative run that is not a
+  permute_stress run of Test B; PC-3 with R1 and A1 on different conditions (when required). The control is then recorded in controls.json as `{"passed": False, "failed_needs_rescore": True, "reason", "fail_sentence"}` (`stats_gaps.rescore_record`;
+  fixed sentences: NC-2 "stress dependence was not shown necessary for the accuracy", PC-3 the fixed PC-3 sentence with "not shown lower"), listed in `status.registered_controls_failed_needs_rescore`, reported checks follow (PC-3 False), the step
+  continues, no `RegisteredControlError`, no provisional label for that reason, no change to any tier or title (compared against a normal run in the test). Any other exception (code / compute error) still stops. PC-2 input absences stay failures to compute
+  (they can be cured without a re-score). Tests `test_n4_*`; the F1 / M-3 tests now use a patched `nc2_v4` raising RuntimeError for the stop. Ruling: the PC-3 "R1 or A1 not scored at g4" absence stays a stop (only the unequal-set case is classed as needing a re-score).
+* Strip list: `status.require_registered`, `status.frozen`, `status.registered_controls_failed_needs_rescore` added. `head_comparison.py --base 052eefd`: contrasts_v4_B.json 131143 characters, controls.json, physval_11a.json IDENTICAL.
+
 ## No-regression rule (how it is held and checked)
 
 * Every new quantity is computed AFTER every confirmatory quantity of `run_stats_v4` is formed and is added under new keys or new files only; `status.provisional` / `outcome.provisional` can only become True through F1.
@@ -85,4 +115,4 @@ Fig. 5 (`law_summary.json`, the new `physval_11a.json` keys), Fig. 7 (reads a ru
 
 ## Tests
 
-`tests/test_pk_stats_gaps_g1_g8.py`: 39 tests (about 40 s, CPU, one thread). Whole suite, one process per file: after F1-F6: 45 files, 857 tests, all passed (test_figures_read_only failed twice in one pass while the figure coder was editing code/figures, and passed on re-run, 20; test_n2_n5_wording pinned the old physval default and was updated to F3) (`for t in code/tests/test_*.py; do .venv/Scripts/python.exe -P -m pytest $t -q -p no:cacheprovider </dev/null | tail -1; done`, CUDA_VISIBLE_DEVICES="", OMP_NUM_THREADS=1).
+`tests/test_pk_stats_gaps_g1_g8.py`: 50 tests (about 40 s, CPU, one thread). Whole suite, one process per file (after the rev. 20 fixes): 45 files, 868 tests, all pass after n-2 to n-4 (earlier: two files, test_pk_d026_item_f and test_pk_d033_coder, first failed because the M-1 check ran before the pin / ledger guards they test; moved after them and re-run: 37 and 39 passed; the 46 tests of the gap file pass).

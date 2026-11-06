@@ -763,3 +763,15 @@ Row format:
 - **Evidence:** runs/freeze_runs/logs/{queue,suite}.log; runs/fb8_timing_samsung_B_f*_m*/timings.json; runs/freeze_runs/fb8b/;
   runs/fb9_nc1_full_synth_m{8,16,32}/nc1_full.json; runs/fb10_smoke_{isu,snl}_B0; runs/freeze_runs/head_comparison.out.
 - **Proposer / judge:** lead (record-only); the gate auditor re-checks before FROZEN.
+
+### D040 Red-team rev. 20 findings applied (lead; red team SIGNED; 2026-11-06)
+- **Decision:** the red team's M-1 to M-3, m-1 to m-5 and n-1 to n-4 (research/audits/SIGN_redteam_rev20.md) are applied to
+  PREREG_v4 section 10 and 9.11 (rev. 22) and to the statistics code (provisional defined and refused for titles; not-evaluable
+  only for the named data reason; strict confirmatory step at the FROZEN or fix commit, lenient refused on Samsung after FROZEN;
+  stopped records kept with sha256; failed-and-continue when the cure needs a re-scored configuration; PC-2 hull without fallback
+  and grid asserted; fixed PC-2/PC-3 sentences; PC-3 outside the family-wise count). The required-input refusals are gated on
+  FROZEN (accepted by the red team: no Samsung score exists before FROZEN). No gate, tier, title, weight or margin changed.
+- **Evidence:** SIGN_redteam_rev20.md (Re-sign: SIGNED); code/pinnkan/STATS_GAPS_REPORT.md; 868 tests; head_comparison IDENTICAL.
+- **Consequence:** code/ moves off 39b14aa; FB-8 to FB-10 and the suite repeat at the new candidate commit (39b14aa outputs kept in
+  runs/freeze_runs/at_39b14aa/).
+- **Proposer / validator:** red team (findings) / red team re-sign; lead (text and procedure); coder (code).

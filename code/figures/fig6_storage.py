@@ -5,7 +5,8 @@ b  paired condition RMSE, PINN-KAN against the dataset authors' model (A10), S2;
 c  calendar share of the predicted fade of cycled cells (A1 filled, A2 open), one point per scored cell from superposition.csv; the number of cells with a physically
    impossible split is the physval_11a item 4 count
 d  Arrhenius check of the calendar KAN: ln rate against 1000/T at four SOC, envelope of the run-writer stress_functions.json (merged over the grid runs); the PC-2 verdict is
-   read from controls.json (printed only when the statistics step evaluated it)
+   read from controls.json (printed only when the statistics step evaluated it); SOC levels outside the training storage hull (`soc_selected_in_pc2_evaluation` False) are drawn dashed and labelled
+   "outside hull" (the caption must say that PC-2 excludes them)
 e  Q-T: training with against without the storage cells (A1 against A13 at g1): the median error reduction with the interval of the statistics step
    (secondary.tests.QT_g1.median_interval), the mean paired pp difference (BCa), the tier and the fixed sentence (qualifier_sentences.QT_g1)
 Inputs: --run-s2, --runs (grid runs), --stats, --physval, --controls. READ-ONLY.
@@ -112,9 +113,11 @@ def main():
     arr = PV["arrhenius_ln_rate"]
     xk = np.array(arr["inv_T_1000_per_K"])
     cols, mks = [ps.BLUE, ps.GREEN, ps.ORANGE, ps.VERM], ["o", "s", "^", "D"]
+    flags = arr.get("soc_selected_in_pc2_evaluation")                       # red team m-4: SOC levels outside the training storage hull are marked (dashed, not part of PC-2)
     for i, soc in enumerate(arr["soc_selected"]):
-        D.fill_between(xk, arr["ln_rate"]["lo"][i], arr["ln_rate"]["hi"][i], color=cols[i], alpha=0.25, lw=0)
-        D.plot(xk, arr["ln_rate"]["mean"][i], color=cols[i], marker=mks[i], ms=4, lw=1.2, label=f"SOC {soc:g} %")
+        inside = True if flags is None else bool(flags[i])
+        D.fill_between(xk, arr["ln_rate"]["lo"][i], arr["ln_rate"]["hi"][i], color=cols[i], alpha=0.25 if inside else 0.10, lw=0)
+        D.plot(xk, arr["ln_rate"]["mean"][i], color=cols[i], marker=mks[i], ms=4, lw=1.2, ls="-" if inside else (0, (3, 2)), label=f"SOC {soc:g} %" + ("" if inside else " (outside hull)"))
     D.set_xlabel("1000 / T (K$^{-1}$)")
     D.set_ylabel("ln rate (pp / 500 d)")
     sec = D.secondary_xaxis("top", functions=(lambda x: 1000 / x - 273.15, lambda t: 1000 / (t + 273.15)))
@@ -122,6 +125,8 @@ def main():
     sec.set_xlabel("Temperature (°C)", fontsize=8, labelpad=2)
     D.legend(loc="upper right", fontsize=7.5, handletextpad=0.3, borderaxespad=0.1, labelspacing=0.25)
     pc2 = CT.get("gate_G", {}).get("reported_checks", {}).get("PC-2_calendar_rate_monotone_in_T")
+    if flags is not None and not all(flags):
+        D.text(0.03, 0.13, "dashed: SOC outside the storage hull, not in PC-2", transform=D.transAxes, fontsize=7, color="#444444")
     D.text(0.03, 0.04, "PC-2: " + ("not evaluated by the statistics step" if pc2 is None else ("met" if pc2 else "not met")), transform=D.transAxes, fontsize=7, color="#444444")
 
     E = ax[4]

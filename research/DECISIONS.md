@@ -705,3 +705,20 @@ Row format:
 - **Alternatives:** N = 20 (rule as written); N = 40 only for the PINN arms (rejected: asymmetric).
 - **Evidence:** runs/freeze_shakedown/RESULT.md; Shlok "Go with your recommended option" (2026-11-06).
 - **Proposer / judge:** lead / Shlok (budget choice, symmetric; no test, margin or outcome rule changes).
+
+### D036 Freeze-commit runs recorded; freeze order (lead, record-only and procedural; 2026-11-06)
+- **Decision:** the freeze-commit runs at candidate commit 92db4cb close FB-8, FB-9, FB-10 and the C27 convergence item:
+  FB-8 timing trigger not reached (N = 40 stands, no Partial plan); FB-8b convergence share 1.0 for A1 and A9 at m 8 and 32,
+  every fold; `nc1_full` passed at m 8, 16, 32; smoke return code 0; 43 of 43 test files passed. PREREG_v4 rev. 18 records them
+  and sets the status line to FROZEN (section 18 step 3). The frozen commit is the commit that contains this row; its code/ tree
+  equals 92db4cb byte for byte, and runs/prereg differs only in PREREG_v4.md outside section 11. Order: this commit, then the
+  gate-auditor freeze audit on it (`research/audits/GATE_freeze_audit.md`, untracked), then the lead writes FROZEN (untracked)
+  and runs `verify_freeze`; HEAD then stays put until the confirmatory runs end (D031).
+- **Why FB-8b:** timing mode fits only and runs no inversion, so FB-8 could not log the convergence share that the section 7
+  "Dry run and fallbacks" paragraph and C27 ask for. `runs/freeze_runs/fb8b_convergence.py` uses the training side only, the
+  tuning inner folds and window, default hyperparameters and the production `predict`, and writes counts only.
+- **Alternatives:** a code change in timing mode (moves code/ off the commit the FB runs used, so every FB run repeats);
+  logging the share in the item (f) runs after FROZEN (too late: the fallbacks of section 7 must be decided before the freeze).
+- **Evidence:** runs/freeze_runs/logs/queue.log and suite.log; runs/fb8_timing_samsung_B_f*_m*/timings.json;
+  runs/freeze_runs/fb8b/fb8b_f{0-4}.json; runs/fb9_nc1_full_synth_m{8,16,32}/nc1_full.json; runs/fb10_smoke_{isu,snl}_B0.
+- **Proposer / judge:** lead (record-only; no rule, test, margin, weight or title changes). The gate auditor checks it.

@@ -151,8 +151,8 @@ class NotBuiltError(RuntimeError):
 LAW_OVERRIDE_ARMS = {"tau": {"A2"}, "Y0": {"A2"}, "gamma": {"A2"}, "delta_scope": {"A1"}}   # rows (m) and (l): the arms the prereg names
 
 
-def run(cfg_in, root=None, runs_dir=None):
-    cfg = {**DEFAULTS, **cfg_in}
+def _check_overrides(cfg):
+    """forecast_failure (not built) and the sensitivity-row law_overrides (arms allowed per override); -> the non-empty overrides"""
     if cfg["forecast_failure"]:
         raise NotBuiltError("forecast_failure (PREREG 3.3(8)): the rule scores cells whose record ends inside the window 'as forecast failures (retention carried forward "
                             "from the last observation)', but the text gives no forecast times for a cell without post-window check-ups, so the scored set is undefined. "
@@ -166,6 +166,13 @@ def run(cfg_in, root=None, runs_dir=None):
         extra = set(cfg["arms"]) - allowed
         if extra:
             raise ConfigError(f"law_overrides {sorted(lo)} are sensitivity rows of the arm(s) {sorted(set.union(*[LAW_OVERRIDE_ARMS[k] for k in lo]))} only; remove {sorted(extra)}")
+    return lo
+
+
+def run(cfg_in, root=None, runs_dir=None):
+    cfg = {**DEFAULTS, **cfg_in}
+    lo = _check_overrides(cfg)
+    if lo:
         with law.overrides(Y0=lo.get("Y0"), gamma=lo.get("gamma"), tau=lo.get("tau"), delta_scope=lo.get("delta_scope")):
             return _run(cfg_in, root, runs_dir)
     return _run(cfg_in, root, runs_dir)
@@ -176,6 +183,7 @@ def validate_config(cfg_in, root=None):
     and the derived inner_k filled in). `_run` calls it first; the confirmatory config set is checked through it (code/tests/test_c14_confirmatory_configs.py)."""
     cfg = {**DEFAULTS, **cfg_in}
     ds, mode_ = cfg["dataset"], cfg["mode"]
+    _check_overrides(cfg)
     if cfg["permute_stress"] and cfg["test"] != "B":
         raise ConfigError("permute_stress (NC-2) is defined on Test B only, not on Test C (NEGCONTROL_RULING section 3)")
     if cfg["mc_seed_root"] != negcontrol.MC_SEED_ROOT:

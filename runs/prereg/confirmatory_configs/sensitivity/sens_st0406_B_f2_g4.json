@@ -1,0 +1,30 @@
+{
+ "run_id": "sens_st0406_B_f2_g4",
+ "dataset": "samsung",
+ "test": "B",
+ "fold": 2,
+ "mode": "confirmatory",
+ "m": 32,
+ "subset": "maxmin",
+ "k": [
+  "full"
+ ],
+ "arms": [
+  "A1",
+  "A9",
+  "A10",
+  "A10P",
+  "A11",
+  "A12"
+ ],
+ "window": {
+  "k_cycling": 4,
+  "k_storage": 2
+ },
+ "steps_scale": 1.0,
+ "n_trials": 20,
+ "backbone": "tournament",
+ "throughput": "zyk",
+ "inversion_config_sha256": "3e902beacf3bf26f927a3043ac555f39fe5f4279f063e19936bf9dacb890abc2",
+ "include_storage_0406": true
+}

@@ -1,0 +1,23 @@
+{
+ "run_id": "repl_isu_B_f1_g1",
+ "dataset": "isu",
+ "test": "B",
+ "fold": 1,
+ "mode": "confirmatory",
+ "m": 8,
+ "subset": "maxmin",
+ "k": [
+  2
+ ],
+ "arms": [
+  "A1",
+  "A9",
+  "A10",
+  "A11",
+  "A12"
+ ],
+ "steps_scale": 1.0,
+ "n_trials": 20,
+ "backbone": "tournament",
+ "inversion_config_sha256": "3e902beacf3bf26f927a3043ac555f39fe5f4279f063e19936bf9dacb890abc2"
+}

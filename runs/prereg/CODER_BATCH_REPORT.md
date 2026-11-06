@@ -27,7 +27,32 @@ New test files: `test_c26_recheck.py` (30), `test_c12_margins.py` (12), `test_c1
 
 ## Decisions for the lead (not done or judgement calls)
 1. **Backbone.** The old item (f) configs said `self_limiting`; PREREG 7 and rev. 2 say a tournament per (outer fold, m) and D026 requires item (f) to equal the g1 config, so the whole set uses `tournament`. The old item (f) config hashes change; they were not pinned yet. Check against FB-8 timing (the shake-down used `self_limiting`).
-2. **Not in the config set (each needs a pinned config hash before the freeze, `guard.check_config_frozen`):** the downgrade-row re-runs (lab-indicator, retain-every-check-up, random-subset), other sensitivity rows, Test A, S3, ISU/SNL replication. Their arm lists were not specified one-per-fold in the PREREG, so I did not invent them.
+2. **Superseded by C14b below:** the downgrade rows, sensitivity rows, Test A, S3 and ISU replication now have configs; the rows the code cannot run are listed under "needs a strike decision".
 3. S2 uses A10 and A10P both (PREREG 7.1 text says "A10"); Test C uses A1 A9 A10 A10P A11 A12 (D* needs A11, A12). A12R (descriptive row) is on the Test B grid. N = 20 is the shake-down value; if the freeze-commit timing run changes it, edit `N_TRIALS` in the script and regenerate.
 4. Pinned hashes are of working-copy bytes; git reports "LF will be replaced by CRLF" on this machine (autocrlf). A checkout that converts line endings would change the sha256 of every pinned file (`extraction_audit.json`, configs, splits); freeze and run from the same working copy, or set `core.autocrlf=false`/add `.gitattributes` (not done).
 5. The red team still has to re-sign 7.3 item 6; `PREFREEZE_STATUS.md` rows C12, C13, C14 were not edited by me (only C26).
+
+
+## C14b (review D027, 2026-11-06): C1 fix and the remaining run configurations
+
+**C1 fixed.** The 15 Test B grid configs now carry `"k": "grid"` (item (f) configs inherit it; Test C, S2 and NC-2 keep k unset, i.e. the single primary window). The test `test_c14_confirmatory_configs.py` checks `k == "grid"` on all 15 and, without loading data, that the runner's `_score_windows` yields the cells `["0", "2", "full"]` for each (the same window rule as `run._run`).
+**One further fix found while doing it:** PREREG FB-5 is met with "ZYK-logged throughput applies to every cycling cell", but the configs left `throughput` at its default `analytic`. Every Samsung config now carries `"throughput": "zyk"` (no fallback flag: interval-level gaps are handled inside `zyk.py`, a cell without any table entry raises). Please confirm.
+**Also:** the `law_overrides` and `forecast_failure` checks moved from `run()` into `validate_config` (via `_check_overrides`), so the config test covers them.
+
+**Groups now generated (all hashed in `MANIFEST.json`, 261 configs incl. item (f); all pass `validate_config`; generator `code/prereg/make_confirmatory_configs.py`, `--check` to verify).**
+- `rows/` (36): (ii) lab-and-stage indicator, Test B folds 0-4 at g1 (m 8, k [2]) and g4 (m 32, k ["full"]) with the arms of every gated and secondary contrast at the cell (g1: A1 A2 A9 A10 A10P A11 A12 A13; g4: A1 A2 A9 A10 A10P A11 A12 A15 G15), plus Test C; (iii) retain-every-check-up, same arms and cells; (iv) random subset at g1, draws 0-2, A1 A9 A11 A12, 5 folds.
+- `sensitivity/` (180), 9.9 rows with a re-run, at g1 and g4 x 5 folds: (i) include_at, include_storage_0406, min_fc_points 3, oracle_throughput, backbone self_limiting, score_blinded_cells, windows k_full-1 = 3 and k_full+2 = 6 (g4 only); (k) clip 10 / 50 and warm-up 0.2 / 0.6 (A1, A9); (l) delta scope total (A1); (m) A2-only Y0 {0.5, 2}, gamma {0.15, 0.6}, TAU {0.075, 0.3}, one change at a time. **Assumption:** the PREREG gives no arm list for these rows except where named; I used A1 A9 A11 A12 A10 A10P (P1, P2, D*, Q-A10) and cells g1/g4.
+- `exploratory/` (4): Test A folds 0-2 (A1 A2 A9); S3 (PREREG names no arms: **assumed** the S2 arms A1 A9 A10 A10P).
+- `replication/` (10): optional ISU descriptive replication, Test B folds 0-4 at the scarce analogue (m 8, W = 2 weeks, k [2]) and the g4 analogue (m 32, W = full = 4 weeks), A1 A9 A11 A12 A10. **Assumption:** "full-data analogue" read as the grid's g4 analogue (m = 32), not unthinned training.
+Rows (a)-(e), (j), (q), (s), (v), (vi) of 9.9 are statistics-step or diagnostics outputs of the primary runs and need no config; (r) is item (f).
+
+### needs a strike decision (code cannot run it as written; nothing struck by me)
+1. **9.9 (i) first-CU reference row.** The reference (ET_T23 or first check-up) is fixed once from the presence of ET rows (`data._load_samsung`, `et_all`); there is no config key to force the first-CU reference.
+2. **9.9 (i) forecast-failure rule 3.3(8).** `forecast_failure` raises `NotBuiltError`: the text gives no forecast times for cells whose record ends inside the window, so the scored set is undefined.
+3. **9.9 (n) "separate h_cal and h_cyc" for A2.** Not built: the law has one backbone h for both terms (README "Decisions made while building" 122).
+4. **9.9 (p) second TPE search seed on P1 and P2.** The sampler seed is the outer-fold index, fixed in `tuning.py`; no config key.
+5. **9.9 (t) A10 without the SOC = 100 % storage cells.** `semi.py` has no exclusion option (M5 in its header says so).
+6. **A14** (Section 15 step 6, Test A / A14 / S3 group). `run.py` refuses A14 under Design R2 (`OUT_OF_SCOPE_ARMS`; PREREG 7.1 does not list it).
+7. **SNL replication (3.4 (ii)).** PREREG fixes the scarce window analogue only for ISU (2 weeks, [D]); SNL's window is unit-different and no scarce analogue is stated.
+8. **ISU fallback grid (3.4 (i), m x W in {0, 2, 4})** applies only if Samsung is not parsed by 07 Nov 09:00; not generated (conditional, and past/near its date); EXT-PL and EXT-NA run from their own card.
+Not config-pinned by design: synthetic runs (G0, NC-1; no pin needed), timing and pilot runs (not confirmatory mode).

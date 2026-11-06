@@ -6,6 +6,7 @@
  "mode": "inner",
  "m": 8,
  "subset": "maxmin",
+ "k": "grid",
  "arms": [
   "A1",
   "A9",
@@ -19,6 +20,7 @@
  "steps_scale": 1.0,
  "n_trials": 20,
  "backbone": "tournament",
+ "throughput": "zyk",
  "inversion_config_sha256": "3e902beacf3bf26f927a3043ac555f39fe5f4279f063e19936bf9dacb890abc2",
  "extraction_audit_sha256": "4815023af8dd9bd5512b056e1664f5a13c55f952e424737176c035466b7dca51",
  "calibration_rule_sha256": "342cf64e735c27ea550a2a80d917f7d18a62c6b5d1d9244437b89f6633dfabbc",

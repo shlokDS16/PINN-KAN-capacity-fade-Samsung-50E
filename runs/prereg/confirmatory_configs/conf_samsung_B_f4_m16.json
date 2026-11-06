@@ -6,6 +6,7 @@
  "mode": "confirmatory",
  "m": 16,
  "subset": "maxmin",
+ "k": "grid",
  "arms": [
   "A1",
   "A2",
@@ -26,5 +27,6 @@
  "steps_scale": 1.0,
  "n_trials": 20,
  "backbone": "tournament",
+ "throughput": "zyk",
  "inversion_config_sha256": "3e902beacf3bf26f927a3043ac555f39fe5f4279f063e19936bf9dacb890abc2"
 }

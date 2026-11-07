@@ -305,6 +305,65 @@ def extend_controls(controls, nc2=None, pc2=None, pc3=None):
     return out
 
 
+# ------------------------------------------------------------------------------------------------ row (u): the descriptive C-rate ablation
+CRATE_COMPONENTS = ["C_ch", "C_dch"]
+# the three fixed sentences, copied verbatim from PREREG_v4 9.9 (u) (a test reads the prereg and compares); [x] = exp(median L), [a, b] = exp of the interval
+CRATE_SENTENCES = {"raised": 'Setting both C-rate inputs to their training median raised the median condition error at g4 (median ratio [x], interval [a, b]), which is consistent with the learned C-rate dependence contributing to accuracy; the C-rate inputs may also carry laboratory and stage identity.',
+                   "lowered": 'Setting both C-rate inputs to their training median lowered the median condition error at g4 (median ratio [x], interval [a, b]); the learned C-rate dependence did not help accuracy at this cell; the C-rate inputs may also carry laboratory and stage identity.',
+                   "not clearly raised": 'Setting both C-rate inputs to their training median did not clearly raise the median condition error at g4 (the interval includes a ratio of 1; median ratio [x], interval [a, b]); the learned C-rate dependence is not shown to contribute to accuracy; the C-rate inputs may also carry laboratory and stage identity.'}
+
+
+def check_crate_runs(dirs, root=None):
+    """red team m-1: the runs of the C-rate ablation are exactly the five pinned configurations: each run's canonical config hash (the recorded `config_sha256`, and the hash recomputed from its
+    `config_input` when present) equals the MANIFEST hash of crate_ablation/conf_samsung_B_f{fold}_m32_crate.json, and the folds are 0-4 exactly once. Any mismatch raises ValueError (a stop, not
+    a pairing mismatch between correctly pinned runs)."""
+    from . import guard
+    from .run import DEFAULTS
+    root = root or guard._DEFAULT_ROOT
+    man = _load(os.path.join(root, "runs", "prereg", "confirmatory_configs", "MANIFEST.json"))
+    pinned = {r["run_id"]: r["config_sha256"] for r in man["files"] if r["group"] == "crate_ablation"}
+    folds = []
+    for d in dirs:
+        cfg = _cfg(d)
+        rid = f"conf_samsung_B_f{cfg.get('fold')}_m32_crate"
+        h = cfg.get("config_sha256")
+        if "config_input" in cfg and guard.canonical_config_hash({**DEFAULTS, **cfg["config_input"]}) != h:
+            raise ValueError(f"C-rate ablation run {d}: the recorded config hash does not match its config_input")
+        if rid not in pinned or h != pinned[rid]:
+            raise ValueError(f"C-rate ablation run {d} is not the pinned configuration {rid} (config hash {str(h)[:12]} against {str(pinned.get(rid))[:12]})")
+        folds.append(int(cfg["fold"]))
+    if sorted(folds) != [0, 1, 2, 3, 4]:
+        raise ValueError(f"the C-rate ablation needs the five pinned runs of folds 0-4 exactly once, got folds {sorted(folds)}")
+
+
+def crate_row(real_store, crate_store, rule):
+    """PREREG_v4 9.9 (u), descriptive: L_c = ln(S_A1crate,c / S_A1,c) at g4 on the Test B conditions (ensemble endpoint), A1crate = A1 fitted with C_ch and C_dch neutralised (every cycling cell
+    carries the training median; config key neutralise_stress). Same pairing checks as NC-2 (equal condition sets and outer folds, else NeedsRescoreError). Reported: n, the median of L with the
+    UNADJUSTED 95 % fallback order-statistic interval of 9.7 (design-effect rank 11, [L(11), L(30)] at n = 40, coverage 1 - 2 x 0.0194; `rule.interval(L, 0.05)`, the interval of the abstract numbers and of
+    the descriptive rows, not the simultaneous 1 - 0.05/9 interval: one cell), the mean paired pp difference (A1crate minus A1) with its BCa interval, and the share of conditions with L_c > 0. The
+    sentence is one of the three fixed sentences of 9.9 (u), chosen ONLY by the interval (lower bound > 0 -> raised; upper bound < 0 -> lowered; else not clearly raised) and filled with
+    exp(median L) and exp of the interval. No p-value, no tier, outside every family and the graph, never touches a title."""
+    if not (real_store.has("A1", *G4_) and crate_store.has("A1", *G4_)):
+        raise NeedsRescoreError("the C-rate ablation needs A1 at g4 in the real and in the neutralised runs")
+    R, C = real_store.scores("A1", *G4_), crate_store.scores("A1", *G4_)
+    if set(R) != set(C):
+        raise NeedsRescoreError("the C-rate ablation pairs the same held-out conditions: the real and the neutralised run score different condition sets")
+    fr, fc = real_store.notes.get("cell_folds", {}).get(real_store.key(*G4_)), crate_store.notes.get("cell_folds", {}).get(crate_store.key(*G4_))
+    if fr is not None and fc is not None and set(fr) != set(fc):
+        raise NeedsRescoreError(f"the C-rate ablation: the neutralised runs cover the outer folds {sorted(fc)}, the real g4 runs {sorted(fr)}")
+    pair = v4.Store({G4_: {"A1": dict(R), "A1_crate": dict(C)}}, real_store.lab, real_store.fold, real_store.k_full)
+    e = v4.entry(pair, "A1 with C_ch and C_dch neutralised vs A1", "A1", "A1_crate", G4_, rule, bca_label="B|crate_ablation|g32-full|BCa_mean_pp")
+    lo_, hi_ = e["median_ci"]
+    key = "raised" if lo_ > 0 else ("lowered" if hi_ < 0 else "not clearly raised")          # chosen only by the interval (9.9 (u))
+    full = CRATE_SENTENCES[key].replace("[x]", f"{np.exp(e['median_L']):.2f}").replace("[a, b]", f"[{np.exp(lo_):.2f}, {np.exp(hi_):.2f}]")
+    return dict(status="computed", cell=list(G4_), n=e["n"], median_L=e["median_L"], median_ci=e["median_ci"], interval_rank=e["interval_rank"], interval_coverage=e["interval_coverage"],
+                interval_is_range=e["interval_is_range"], interval_type="unadjusted 95 % fallback order-statistic interval of the median (design-effect rank; PREREG_v4 9.7)",
+                rel_reduction_pct=e["rel_reduction_pct"], mean_pp_difference=e["mean_pp"], mean_pp_ci=e.get("mean_pp_ci"), n_L_positive=e["n_wins"], share_L_positive=e["n_wins"] / e["n"],
+                sentence_key=key, sentence_full=full, components=list(CRATE_COMPONENTS),
+                rule="L = ln(S_A1 neutralised / S_A1) > 0: the full model is better. Sentence: lower bound of the interval > 0 -> raised; upper bound < 0 -> lowered; else not clearly raised (9.9 (u)). No p-value, no tier, outside every family",
+                gating=False)
+
+
 # ------------------------------------------------------------------------------------------------ G7, G8
 def qt_interval(store, rule):
     """G7: Q-T (A13) beside the existing secondary test: the median log ratio L = ln(S_A13 / S_A1) at g1 with the unadjusted fallback 95 % order-statistic interval of the rule (the interval type of

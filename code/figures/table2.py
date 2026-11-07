@@ -78,6 +78,20 @@ def main():
         r = f"{np.exp(e['median_L']):.2f} [{np.exp(e['median_ci'][0]):.2f}, {np.exp(e['median_ci'][1]):.2f}]" + ("$^{\\dagger}$" if e.get("interval_is_range") else "")
         L.append(f"{cand} & candidate learner or additive law & g4 & {d} & {r} &  \\\\")
         rows.append([cand, "candidate (descriptive, unadjusted interval)", "g4", d.replace("$", ""), r.replace("$", "").replace("\\dagger", "+"), ""])
+    ca = S.get("crate_ablation") or {}
+    if ca.get("status") == "computed":                                   # row (u): descriptive, unadjusted 95 % interval, no tier
+        L.append("\\midrule")
+        L.append("\\multicolumn{6}{l}{\\emph{C-rate ablation at g4 (descriptive, unadjusted 95\\% interval, no tier)}} \\\\")
+        ci = ca.get("mean_pp_ci")
+        d = f"{mn(ca['mean_pp_difference'])} [{mn(ci[0])}, {mn(ci[1])}]" if ci else mn(ca["mean_pp_difference"])
+        r = f"{np.exp(ca['median_L']):.2f} [{np.exp(ca['median_ci'][0]):.2f}, {np.exp(ca['median_ci'][1]):.2f}]" + ("$^{\\dagger}$" if ca.get("interval_is_range") else "")
+        L.append(f"A1 without $C_{{\\mathrm{{ch}}}}$, $C_{{\\mathrm{{dch}}}}$ & neutralised to the training median; {ca['n_L_positive']}/{ca['n']} better with them & g4 & {d} & {r} &  \\\\")
+        rows.append(["A1 C-rate neutralised", "C_ch and C_dch set to the training median (descriptive)", "g4", d.replace("$", ""), r.replace("$", "").replace("\\dagger", "+"), ca["sentence_key"]])
+    elif ca:                                                             # row (u) was not computed: printed as such, no substitute
+        reason = ca.get("reason") or ca.get("status", "not run")
+        L.append("\\midrule")
+        L.append(f"A1 C-rate neutralised & \\multicolumn{{5}}{{l}}{{{tex('not computed: ' + reason)}}} \\\\")
+        rows.append(["A1 C-rate neutralised", "not computed: " + reason, "g4", "", "", ""])
     L += ["\\bottomrule", "\\end{tabular}", "\\par\\bigskip",
           "\\begin{tabular}{>{\\raggedright\\arraybackslash}p{4.4cm} >{\\raggedright\\arraybackslash}p{5.6cm} >{\\raggedright\\arraybackslash}p{4.6cm}}", "\\toprule",
           "\\multicolumn{3}{l}{\\textbf{B. Controls, Q-T and the outcome reached}} \\\\", "\\midrule", "Item & Record & Result \\\\", "\\midrule"]
@@ -99,6 +113,10 @@ def main():
         mi = qt.get("median_interval")
         iv = f"; median ratio {np.exp(mi['median_L']):.2f} [{np.exp(mi['median_ci'][0]):.2f}, {np.exp(mi['median_ci'][1]):.2f}] (unadjusted 95 % interval)" if mi else ""
         B.append(("Q-T (A13 against A1, g1)", S.get("qualifier_sentences", {}).get("QT_g1", "") + iv + (f"; mean {mn(mv['mean_pp'])} pp" if mv else ""), "tier " + pdt.tier_text(qt["tier"])))
+    if ca.get("status") == "computed":
+        B.append(("C-rate ablation (9.9 (u), g4)", ca["sentence_full"] + f" Share of conditions better with the C-rate inputs: {ca['share_L_positive']:.2f}.", "descriptive"))
+    elif ca:
+        B.append(("C-rate ablation (9.9 (u), g4)", ca.get("status", "not run"), "not evaluated"))
     oc = S.get("outcome", {})
     if oc and not oc.get("gate_G"):
         B.append(("Outcome table", f"states {oc['P']} / {oc['K']}, extent {oc['extent_clause']}, title {oc['title_id']}: {oc['title']}" + (" (provisional: rows or controls not run)" if oc.get("provisional") else ""), f"M1 {oc['M1']}, M2 {oc['M2']}, M3 {oc['M3']}"))

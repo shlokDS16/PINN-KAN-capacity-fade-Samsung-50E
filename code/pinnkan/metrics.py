@@ -167,6 +167,57 @@ def log_ratio(s_comp, s_pinn):
     return {c: float(np.log(s_comp[c] / s_pinn[c])) for c in conds}
 
 
+NEUTRALISE_ALIASES = {"C_ch": "c_ch", "C_dch": "c_dch"}          # config names (PREREG_v4 9.9 (u)) -> spec.stress_names
+
+
+def resolve_neutralise(names, spec):
+    """config component names -> indices into the raw stress vector; unknown, repeated or empty names raise ValueError"""
+    if not isinstance(names, (list, tuple)) or not names:
+        raise ValueError("neutralise_stress must be a non-empty list of stress component names")
+    idx = []
+    for n in names:
+        key = NEUTRALISE_ALIASES.get(n, n)
+        if not isinstance(key, str) or key not in spec.stress_names:
+            raise ValueError(f"unknown stress component {n!r} in neutralise_stress; allowed {sorted(NEUTRALISE_ALIASES) + list(spec.stress_names)}")
+        idx.append(spec.stress_names.index(key))
+    if len(set(idx)) != len(idx):
+        raise ValueError(f"neutralise_stress names a component twice: {list(names)}")
+    return idx
+
+
+def neutralise_stress(train, test, spec, names):
+    """C-rate ablation (PREREG_v4 9.9 (u)): for each named stress component, the value of EVERY cycling cell of the training set AND of the test set is replaced by the median of that component over
+    the distinct TRAINING cycling conditions of this fold (training side only; one value per fold and component). Only the stress vector changes: the cell's own logged throughput (`efc`), times,
+    retention, forecast set, window and QC stay as they are (as permute_stress). Storage cells carry 0 for the cycling inputs and the law's cycling term never acts on them: they are left as they are.
+    -> (train', test' or None, record)"""
+    import copy
+    idx = resolve_neutralise(names, spec)
+    raw_of = {}
+    for c in train:
+        if c.kind == "cycling":
+            raw_of.setdefault(c.cond, c.raw)
+    if not raw_of:
+        raise ValueError("neutralise_stress needs cycling conditions on the training side")
+    med = {i: float(np.median([r[i] for r in raw_of.values()])) for i in idx}
+
+    def apply(cells):
+        out = []
+        for c in cells:
+            if c.kind != "cycling":
+                out.append(c)
+                continue
+            n = copy.copy(c)
+            n.raw = np.array(c.raw, float).copy()
+            for i, v in med.items():
+                n.raw[i] = v
+            n.meta = {**c.meta, "stress_neutralised": [spec.stress_names[i] for i in idx]}
+            out.append(n)
+        return out
+    rec = {"components": [spec.stress_names[i] for i in idx], "requested": list(names), "value": {spec.stress_names[i]: v for i, v in med.items()}, "n_training_conditions": len(raw_of),
+           "rule": "median over the distinct training cycling conditions of this fold; applied to the cycling cells of the training and the test set; throughput, times, retention, windows and QC untouched"}
+    return apply(train), (None if test is None else apply(test)), rec
+
+
 def permute_stress(cells, spec, seed):
     """Negative control (prereg 10; D033 F8): ONLY the stress vectors are permuted among the CYCLING conditions of this set (a derangement whenever there is more than one condition).
     Each cell keeps its own logged throughput (`efc`), check-up times, retention, forecast set and window, so the control moves the stress dependence the law learns and nothing else;

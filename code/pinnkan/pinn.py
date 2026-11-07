@@ -37,8 +37,17 @@ class Collocation:
 
 
 def _hull_sample(X, n, seed):
-    """n points of a Latin-hypercube sample of the bounding box of X that lie inside the convex hull of X (fallback: the box)."""
+    """n points of a Latin-hypercube sample of the bounding box of X that lie inside the convex hull of X (fallback: the box).
+    A constant column of X (span <= 1e-9, e.g. a neutralised stress input, PREREG_v4 9.9 (u)) is not sampled: the hull and the sample are formed on the non-constant columns and the constant
+    columns are set to their value exactly (the points of the neutralised collocation set carry the neutral value, not a joggled or random one). Without a constant column the original code runs."""
     lo, hi = X.min(0), X.max(0)
+    const = (hi - lo) <= 1e-9
+    if const.any():
+        free = ~const
+        P = np.tile(lo, (n, 1))
+        if free.any():
+            P[:, free] = _hull_sample(X[:, free], n, seed) if free.sum() >= 2 else lo[free] + qmc.LatinHypercube(d=int(free.sum()), seed=seed + 99).random(n) * (hi - lo)[free]
+        return P
     span = np.where(hi - lo > 1e-9, hi - lo, 1.0)
     pts = []
     try:

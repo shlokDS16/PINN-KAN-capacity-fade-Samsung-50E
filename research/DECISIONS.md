@@ -775,3 +775,24 @@ Row format:
 - **Consequence:** code/ moves off 39b14aa; FB-8 to FB-10 and the suite repeat at the new candidate commit (39b14aa outputs kept in
   runs/freeze_runs/at_39b14aa/).
 - **Proposer / validator:** red team (findings) / red team re-sign; lead (text and procedure); coder (code).
+
+### D041 Preregistered descriptive C-rate ablation row 9.9 (s) (Shlok, 2026-11-06, status: accepted)
+- **Decision:** add row (s) to 9.9: A1 re-tuned at g4 (m = 32, k_full; N = 40; folds 0-4; five seeds; ensemble endpoint) with the
+  charge and discharge C-rate inputs (C_ch, C_dch) of every training and test cell set to the fold's training-condition median
+  (each cell keeps its own throughput, times, retention and window). Reported: L_c = ln(S_A1crate,c / S_A1,c) on the Test B
+  conditions, median L with its exact interval, mean pp difference (BCa), share of L_c > 0, and one fixed sentence chosen only by
+  whether the interval excludes 0. Descriptive: no test, no tier, outside every family, changes no title; required in the strict
+  confirmatory statistics step (cannot be dropped after outcomes are seen). It answers Stroebl et al. (JES 142, 119552, Table 1:
+  removing the C-rate terms left their cycle model unchanged on this cell) with data; the Discussion rule A8 stays.
+- **Why:** the exemplar study (notes/exemplars/deep/stroebl2025.md, BLUEPRINT_v2.md gap 1) found it the most predictable
+  reviewer question with no analysis behind it.
+- **Alternatives:** wording only (A8, rejected by Shlok); a tested row with alpha (adds a family member; rejected as unnecessary
+  for a descriptive question); leave-one-factor-out for every stress input (more runs; C-rate is the only factor contested).
+- **Evidence:** Shlok's reply "Yes, add it" (2026-11-06); notes/exemplars/BLUEPRINT_v2.md.
+- **Cost:** 5 confirmatory runs (about 3 CPU-h); code, configs and pins before the freeze; statistician and red-team scoped signs.
+- **Proposer / judge:** lead / Shlok; validators statistician and red team.
+- **Correction to D041 (lead, same day; rows are append-only):** the cost is about 4-5 CPU-h, not about 3 CPU-h: 3N + 5 = 125
+  A1 fits per fold at N = 40 at the FB-8 median A1 fit time (an upper estimate; inner-fold fits are cheaper).
+- **Correction to D041 (lead; red team rows m-2):** the row is labelled (u) of 9.9, not (s) (9.9 already has an (s)); its
+  sentences are three (raised / lowered / not raised), each with the laboratory-and-stage caveat, and the Stroebl sentence says it
+  neither confirms nor contradicts their in-sample finding (research/audits/SIGN_redteam_rows.md).

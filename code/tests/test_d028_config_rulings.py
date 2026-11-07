@@ -35,7 +35,7 @@ def _samsung_zyk_configs():
 def test_every_samsung_zyk_config_carries_the_on_disk_table_hash_and_item_f_inherits_it():
     h = data.sha256_file(TABLE)
     cfgs = _samsung_zyk_configs()
-    assert len(cfgs) == 26 + 36 + 195 + 4 + 5 and all(c["zyk_table_sha256"] == h for c in cfgs)
+    assert len(cfgs) == 26 + 36 + 195 + 4 + 5 + 5 and all(c["zyk_table_sha256"] == h for c in cfgs)
     assert all(c["zyk_table_sha256"] == h for c in _load_dir(ITEM_F).values())
     assert all("zyk_table_sha256" not in c for c in _all()["replication"].values())              # ISU has no ZYK table
 

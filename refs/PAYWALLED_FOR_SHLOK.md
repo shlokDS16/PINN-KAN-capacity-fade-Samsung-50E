@@ -83,3 +83,14 @@ Script requests to ScienceDirect return HTTP 403, so even the CC-BY ones need a 
 5. **KA-CRNN, Koenig and Deng, JES 158, 121853** (published version, for Highlights and final figure numbering; arXiv v2 already read): https://doi.org/10.1016/j.est.2026.121853
 6. Optional, published versions of already-read arXiv papers (Highlights, graphical abstract): PINEAPPLE 10.1016/j.est.2026.120944 ; CDUA 10.1016/j.est.2026.124592 .
 7. Optional, same dataset, other venue: Cui, Stroebl, Uppaluri, Lam et al., J. Electrochem. Soc. 2025, https://doi.org/10.1149/1945-7111/adde16 (calendar aging models, extrapolation); Li et al., Applied Energy 2025, https://doi.org/10.1016/j.apenergy.2025.125703 (capacity-fade model coupled with ML, cites the Samsung dataset).
+
+## 2026-11-06 exemplar study (notes/exemplars/JES_TOP_LIST.md picks; save PDFs to C:\Users\Shlok\Downloads, any name)
+1. Schuster et al. 2015, Nonlinear aging characteristics ... https://doi.org/10.1016/j.est.2015.05.003
+2. Naumann et al. 2018, Calendar aging of a commercial LiFePO4/graphite cell: https://doi.org/10.1016/j.est.2018.01.019
+3. Keil and Jossen 2016, Charging protocols ... cycle life: https://doi.org/10.1016/j.est.2016.02.005
+4. Olmos et al. 2021, Cycling degradation ... chemistry influenced stress factors: https://doi.org/10.1016/j.est.2021.102765
+5. Najera et al. 2023, Semi-empirical ageing model for LFP and NMC: https://doi.org/10.1016/j.est.2023.108016
+6. Zhang et al. 2026, Time series PINN framework for SOH: https://doi.org/10.1016/j.est.2025.119549
+7. Li et al. 2024, SOH via improved equivalent circuit model (EIS): https://doi.org/10.1016/j.est.2024.111167
+8. Wang et al. 2024, Open access dataset, code library and benchmarking DL for SOH: https://doi.org/10.1016/j.est.2023.109884
+9. Liu et al. 2025, Physics-guided TL-LSTM, early-stage degradation trajectory: https://doi.org/10.1016/j.est.2024.114736

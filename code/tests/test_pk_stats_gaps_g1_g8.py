@@ -172,6 +172,7 @@ def strip_contrasts(o):
     o["secondary"]["tests"]["QT_g1"].pop("median_interval", None)
     o.pop("candidates_vs_a1", None)
     o.pop("stats_gaps", None)
+    o.pop("crate_ablation", None)                                                           # PREREG 9.9 (u)
     st = o["status"]
     st.pop("strict", None)                                                                  # M-3: the output records its mode and the commit
     st.pop("head", None)
@@ -842,9 +843,9 @@ def test_m1_a_strict_run_at_the_frozen_commit_needs_the_rows_and_the_g0_run(tmp_
     (root / "research").mkdir(parents=True)
     kw = dict(item_f_dir=str(tmp_path), root=str(root))
     rows = {"lab_indicator": ["x"], "retain_all": ["x"]}
-    with pytest.raises(ss.RegisteredControlError, match=r"\['lab_indicator', 'retain_all', 'random_subset', 'h7_run'\]"):
+    with pytest.raises(ss.RegisteredControlError, match=r"\['lab_indicator', 'retain_all', 'random_subset', 'h7_run', 'crate_runs'\]"):
         ss.run_stats_v4(str(tmp_path / "an"), [], **kw)
-    with pytest.raises(ss.RegisteredControlError, match=r"\['random_subset', 'h7_run'\]"):
+    with pytest.raises(ss.RegisteredControlError, match=r"\['random_subset', 'h7_run', 'crate_runs'\]"):
         ss.run_stats_v4(str(tmp_path / "an"), [], row_runs=rows, **kw)
     with pytest.raises(ss.RegisteredControlError, match="does not name a row"):                 # an unknown row id is no exception
         ss.run_stats_v4(str(tmp_path / "an"), [], row_runs=rows, h7_run="h", random_subset_struck="D999", **kw)
@@ -852,8 +853,10 @@ def test_m1_a_strict_run_at_the_frozen_commit_needs_the_rows_and_the_g0_run(tmp_
     for bad_id in ("D001", "D998"):                                                           # n-2: the row must name 9.9 (o) and 'descriptive'
         with pytest.raises(ss.RegisteredControlError, match="does not name a row"):
             ss.run_stats_v4(str(tmp_path / "an"), [], row_runs=rows, h7_run="h", random_subset_struck=bad_id, **kw)
-    with pytest.raises(Exception) as e:                                                       # the M-1 check passes; the next step (no runs) fails for another reason
+    with pytest.raises(ss.RegisteredControlError, match=r"\['crate_runs'\]"):                   # the C-rate ablation runs (9.9 (u)) are required too
         ss.run_stats_v4(str(tmp_path / "an"), [], row_runs=rows, h7_run="h", random_subset_struck="D999", **kw)
+    with pytest.raises(Exception) as e:                                                       # the M-1 check passes; the next step (no runs) fails for another reason
+        ss.run_stats_v4(str(tmp_path / "an"), [], row_runs=rows, h7_run="h", random_subset_struck="D999", crate_runs=["c"], **kw)
     assert not isinstance(e.value, ss.RegisteredControlError)
     with pytest.raises(ss.RegisteredControlError, match="does not name a row"):                 # D99 is not D999
         ss.run_stats_v4(str(tmp_path / "an"), [], row_runs=rows, h7_run="h", random_subset_struck="D99", **kw)

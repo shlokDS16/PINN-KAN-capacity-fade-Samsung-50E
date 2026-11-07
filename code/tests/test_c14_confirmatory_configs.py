@@ -60,7 +60,7 @@ def test_every_config_passes_the_runner_validation_without_loading_data():
         if cfg["dataset"] == "samsung":
             assert cfg["window"] in ({"k_cycling": 4, "k_storage": 2}, {"k_cycling": 3, "k_storage": 2}, {"k_cycling": 6, "k_storage": 2}) and cfg["throughput"] == "zyk", c["run_id"]
         n += 1
-    assert n == 26 + 36 + 195 + 4 + 10 + 5
+    assert n == 26 + 36 + 195 + 4 + 10 + 5 + 5          # + the five crate_ablation configs (9.9 (u))
 
 
 def test_validation_is_not_vacuous():
@@ -181,12 +181,12 @@ def test_config_hashes_are_distinct_and_match_the_manifest():
     conf, item_f = _flat(), _load_dir(ITEM_F)
     allc = list(conf.values()) + list(item_f.values())
     hashes = [guard.canonical_config_hash({**run.DEFAULTS, **c}) for c in allc]
-    assert len(set(hashes)) == len(hashes) == 276 and len({c["run_id"] for c in allc}) == 276
+    assert len(set(hashes)) == len(hashes) == 281 and len({c["run_id"] for c in allc}) == 281
     man = json.load(open(os.path.join(CONF, "MANIFEST.json")))
     by_id = {r["run_id"]: r for r in man["files"]}
     for c in allc:
         assert by_id[c["run_id"]]["config_sha256"] == guard.canonical_config_hash({**run.DEFAULTS, **c})
-    assert man["n_trials"] == 40 and man["counts"] == {"primary": 26, "rows": 36, "sensitivity": 195, "exploratory": 4, "replication": 10, "item_f": 5}
+    assert man["n_trials"] == 40 and man["counts"] == {"primary": 26, "rows": 36, "sensitivity": 195, "exploratory": 4, "replication": 10, "crate_ablation": 5, "item_f": 5}
 
 
 def test_item_f_configs_are_the_g1_config_with_only_the_d026_differences():

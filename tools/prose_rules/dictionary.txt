@@ -1,0 +1,54 @@
+# Extra words for LanguageTool, one per line: technical terms and proper names that appear in the paper.
+# Lines starting with # are comments. Add a word only if it is correct; a typo belongs in the draft, not here.
+# Model and method names
+PIKAN
+PGKAN
+PI-EKAN
+SOH-KPINN
+SOH-KLSTM
+KA-CRNN
+PiDDM
+BatLiNet
+PINN
+KANs
+LightGBM
+Levenberg-Marquardt
+Kolmogorov
+Verhulst
+Parzen
+tanh
+estimand
+identifiability
+untruncated
+overbars
+# Datasets, venues, services, tools
+Crossref
+DataCite
+OpenAlex
+OpenReview
+Zenodo
+ICLR
+JES
+Sandia
+XJTU
+EOLC
+CUDA
+numpy
+DOIs
+Eq
+Eqs
+# Author and cited-author names
+Stroebl
+Lucu
+Severson
+Jia
+Navidi
+Kuzhiyil
+Guo
+Holm
+Preger
+Muehlbauer
+Yohannes
+Hallinger
+Bonferroni
+Bonferroni-based

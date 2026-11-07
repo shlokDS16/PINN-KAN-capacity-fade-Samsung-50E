@@ -188,6 +188,13 @@ def validate_config(cfg_in, root=None):
     _check_overrides(cfg)
     if cfg["permute_stress"] and cfg["test"] != "B":
         raise ConfigError("permute_stress (NC-2) is defined on Test B only, not on Test C (NEGCONTROL_RULING section 3)")
+    if cfg.get("neutralise_stress"):                       # 9.9 (u): absent key = [] (not in DEFAULTS, so no existing config hash changes)
+        if cfg["permute_stress"]:
+            raise ConfigError("neutralise_stress (the C-rate ablation row) cannot be combined with permute_stress (NC-2)")
+        try:
+            metrics.resolve_neutralise(cfg["neutralise_stress"], SPECS[ds])
+        except ValueError as e:
+            raise ConfigError(str(e)) from e
     if cfg["mc_seed_root"] != negcontrol.MC_SEED_ROOT:
         raise ConfigError("mc_seed_root is fixed by the NEGCONTROL ruling (20261105)")
     if cfg["endpoint"] not in ("ensemble", "per_seed"):
@@ -356,6 +363,10 @@ def _run(cfg_in, root=None, runs_dir=None):
         train = metrics.permute_stress(train, spec, cfg["fold"])
         if D["test"] is not None:
             D["test"] = metrics.permute_stress(D["test"], spec, cfg["fold"] + 1000)
+    if cfg.get("neutralise_stress"):                       # C-rate ablation row (9.9 (u)): after the data build, before any window, tuning or fit; recorded in split.json
+        train, D["test"], neut = metrics.neutralise_stress(train, D["test"], spec, cfg["neutralise_stress"])
+        D["split"]["neutralise_stress"] = neut             # recorded in split.json and in its own file (the manifest is the list of input files)
+        _json(os.path.join(run_dir, "neutralise_stress.json"), neut)
     _json(os.path.join(run_dir, "split.json"), D["split"])
     _json(os.path.join(run_dir, "manifest.json"), D["manifest"])
     if D.get("subset"):

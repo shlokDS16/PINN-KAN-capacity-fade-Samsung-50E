@@ -796,3 +796,21 @@ Row format:
 - **Correction to D041 (lead; red team rows m-2):** the row is labelled (u) of 9.9, not (s) (9.9 already has an (s)); its
   sentences are three (raised / lowered / not raised), each with the laboratory-and-stage caveat, and the Stroebl sentence says it
   neither confirms nor contradicts their in-sample finding (research/audits/SIGN_redteam_rows.md).
+
+### D042 Freeze-commit runs repeated at d13a8c6; 7.3 item 6 count corrected; frozen commit = this record commit (lead, record-only; 2026-11-07)
+- **Decision:** FB-8, FB-8b, FB-9, FB-10, the full suite and the no-regression comparison were repeated at candidate commit
+  d13a8c6 (the code of D040 and D041; row 9.9 (u) signed by the statistician and the red team): timing trigger not reached (median
+  A1 31.5 s, maximum 48.7 s; A2 5.4 s, maximum 10.6 s; other sessions shared the CPU during the runs; N = 40 stands); convergence
+  share 1.0 for A1 and A9 at m 8 and 32 in every fold (748 cells each, 0 non-converged, 0 non-finite latents); `nc1_full` passed at
+  m 8, 16, 32 (45,760 / 35,380 / 49,220 rows, maximum absolute difference 0.0, 0 non-finite); smoke rc 0; 46 of 46 test files
+  (888 tests); `contrasts_v4_B.json`, `controls.json`, `physval_11a.json` identical to 052eefd. PREREG_v4 rev. 24 records them.
+  The frozen commit is the commit holding this row; its code/ tree equals d13a8c6 byte for byte. D039's record (39b14aa) is
+  superseded; the 39b14aa and partial a46d7b8 outputs are kept in runs/freeze_runs/at_39b14aa/ and at_a46d7b8/.
+- **Correction (7.3 item 6):** the judge's reason "45 C is HM in 12 of 15" is replaced by the count from the cell metadata
+  (data/processed/samsung_cells.csv, type z, T_C 45): 17 cycling conditions, 14 HM only, 2 mixed HM/SIE, 1 SIE only. The item
+  stays struck; it feeds no test, state or title. Found by the manuscript writer (branch writing, WRITING_REPORT_2026-11-07.md).
+- **Note on cost:** the slower A1 fit time (31.5 s against 26.6 s at 39b14aa) raises the section 16 CPU estimates by up to about
+  a fifth if the confirmatory runs share the CPU in the same way; no rule depends on it.
+- **Evidence:** runs/freeze_runs/logs/{queue,suite}.log; runs/fb8_timing_samsung_B_f*_m*/timings.json; runs/freeze_runs/fb8b/;
+  runs/fb9_nc1_full_synth_m{8,16,32}/nc1_full.json; runs/fb10_smoke_{isu,snl}_B0; runs/freeze_runs/head_comparison.out.
+- **Proposer / judge:** lead (record-only); the gate auditor re-checks before FROZEN.

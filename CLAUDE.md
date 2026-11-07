@@ -3,6 +3,9 @@
 Started 2026-11-04 by Claude Code for Shlok Kumar Goenka (VIT Vellore). Lead session: Opus.
 
 ## Every session
+0. Run `graph-memory brief` (it prints `PROJECT.md` first), then read `research/PROJECT_CONTEXT.md`: target journal
+   (Journal of Energy Storage), state, plan, workstreams and rules. Every brief to a sub-session or agent points to it.
+   Obsidian mirror: `Projects/PINN KAN battery paper/knowledge/HUB.md` (rebuilt by `graph-memory sync`).
 1. Read `research/progress.md` (RESUME block) and `research/DECISIONS.md`. Nothing else up front.
 2. Every agent brief points to `research/CONTRACT.md` (the shared spec). Agents write report files,
    reply in at most 5 lines.

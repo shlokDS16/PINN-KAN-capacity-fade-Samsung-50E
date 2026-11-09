@@ -304,6 +304,10 @@ def _load_samsung(root, retain_all=False, throughput="analytic", include_at=Fals
         df = df[~(m | mc)]
     if not retain_all:
         df = df[df["qc_pass"].astype(str).str.lower().isin(["true", "1"])]
+    else:
+        # D044: the retain-every-check-up row keeps every DATED check-up. A row with no start date has no elapsed time and cannot be
+        # placed on the time axis (3 rows, flag no_start_date, all qc_pass false, so this is a no-op whenever retain_all is false).
+        df = df[df["elapsed_days"].notna()]
     if not include_at:
         df = df[df["kind"] != "AT"]
     if not et_all:

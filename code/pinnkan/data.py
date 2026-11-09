@@ -305,9 +305,10 @@ def _load_samsung(root, retain_all=False, throughput="analytic", include_at=Fals
     if not retain_all:
         df = df[df["qc_pass"].astype(str).str.lower().isin(["true", "1"])]
     else:
-        # D044: the retain-every-check-up row keeps every DATED check-up. A row with no start date has no elapsed time and cannot be
-        # placed on the time axis (3 rows, flag no_start_date, all qc_pass false, so this is a no-op whenever retain_all is false).
-        df = df[df["elapsed_days"].notna()]
+        # D044: the retain-every-check-up row keeps every check-up that has a start date and a measured capacity. A row with no start
+        # date cannot be placed on the time axis (3 rows, no_start_date); a row with no capacity is not a measurement (3 rows,
+        # step22_missing). All 6 are qc_pass false, so this is a no-op whenever retain_all is false.
+        df = df[df["elapsed_days"].notna() & df["q_mean_ah"].notna()]
     if not include_at:
         df = df[df["kind"] != "AT"]
     if not et_all:

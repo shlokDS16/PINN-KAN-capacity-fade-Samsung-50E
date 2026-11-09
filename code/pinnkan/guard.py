@@ -212,7 +212,7 @@ def require_item_f_record(root=None, runs_dir=None):
         sha = sha256_file(pf)
         if rec.get("sha256") != sha:
             raise TestFoldAccessError("the item (f) dependence file differs from the hash in its record")
-        if rec.get("frozen_commit") != fz["commit"]:
+        if rec.get("frozen_commit") not in [fz["commit"], *(fz.get("predecessor_commits") or [])]:   # D044: a re-pinned FROZEN lists the commit the record was written at
             raise TestFoldAccessError("the item (f) record's frozen_commit is not the FROZEN commit")
         runs = rec.get("runs") or []
         if sorted(r.get("fold") for r in runs) != ITEM_F_FOLDS or sorted(rec.get("folds") or []) != ITEM_F_FOLDS:

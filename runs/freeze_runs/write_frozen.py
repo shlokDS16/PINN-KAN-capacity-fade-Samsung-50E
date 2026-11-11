@@ -1,7 +1,9 @@
 """Write runs/prereg/FROZEN (untracked) at the record commit and verify it. Lead's freeze step (PREREG_v4 section 18; D031).
 
-Usage: .venv/Scripts/python.exe -P runs/freeze_runs/write_frozen.py [--dry]
+Usage: .venv/Scripts/python.exe -P runs/freeze_runs/write_frozen.py [--dry] [--predecessor <40-hex commit>]
 --dry builds and checks the payload but writes nothing.
+--predecessor (D044 re-pin): adds predecessor_commits = [<commit>] so the item (f) record written at that commit stays valid
+(guard.require_item_f_record); the commit must be an ancestor of HEAD. Archive the old FROZEN first.
 Refuses when FROZEN already exists, when code/ or runs/prereg/ has tracked changes, or when a pinned config hash
 differs from MANIFEST.json.
 """
@@ -20,7 +22,7 @@ def git(*a):
     return subprocess.run(["git", "-C", ROOT, *a], capture_output=True, text=True, check=True).stdout.strip()
 
 
-def main(dry):
+def main(dry, predecessor=None):
     if guard.is_frozen(ROOT):
         sys.exit("FROZEN already exists; refusing to overwrite")
     dirty = git("status", "--porcelain", "--untracked-files=no", "--", "code", "runs/prereg")
@@ -38,8 +40,15 @@ def main(dry):
     assert len(set(d["config_sha256s"])) == len(d["config_sha256s"]) == 276, len(d["config_sha256s"])
     assert not d["pins_missing"], d["pins_missing"]
     assert d["commit"] == git("rev-parse", "HEAD")
+    if predecessor:
+        full = git("rev-parse", "--verify", predecessor + "^{commit}")
+        assert len(predecessor) == 40 and full == predecessor, "give the full 40-hex predecessor commit"
+        assert full != d["commit"], "the predecessor is HEAD itself"
+        subprocess.run(["git", "-C", ROOT, "merge-base", "--is-ancestor", full, "HEAD"], check=True)   # raises if not an ancestor
+        d["predecessor_commits"] = [full]
     summary = {"commit": d["commit"], "prereg_sha256": d["prereg_sha256"], "splits": sorted(d["splits"]), "n_configs": len(d["config_sha256s"]),
-               "n_item_f": len(d["item_f_config_sha256s"]), "pins": sorted(d["pins"])}
+               "n_item_f": len(d["item_f_config_sha256s"]), "pins": sorted(d["pins"]),
+               "predecessor_commits": d.get("predecessor_commits", [])}
     print(json.dumps(summary, indent=1))
     if dry:
         print("dry run: nothing written")
@@ -52,4 +61,5 @@ def main(dry):
 
 
 if __name__ == "__main__":
-    main("--dry" in sys.argv[1:])
+    a = sys.argv[1:]
+    main("--dry" in a, a[a.index("--predecessor") + 1] if "--predecessor" in a else None)

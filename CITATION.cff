@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this record, please cite it as below."
+title: "Code, preregistration and run outputs for: Physics-informed and data-driven forecasts of lithium-ion capacity fade against the number of cycling tests and check-ups: learning curves with Kolmogorov-Arnold stress functions"
+type: dataset
+version: 1.0.0
+doi: 10.5281/zenodo.24153388
+date-released: 2026-11-12
+license: CC-BY-4.0
+authors:
+  - family-names: Goenka
+    given-names: Shlok
+    orcid: "https://orcid.org/0009-0002-8581-5657"
+    affiliation: "Vellore Institute of Technology, Vellore, India"
+  - family-names: Vairavasundaram
+    given-names: Subramaniyaswamy
+    orcid: "https://orcid.org/0000-0001-5328-7672"
+    affiliation: "Vellore Institute of Technology, Vellore, India"
+  - family-names: "G N"
+    given-names: Balaji
+    orcid: "https://orcid.org/0000-0002-5346-0989"
+    affiliation: "Vellore Institute of Technology, Vellore, India"

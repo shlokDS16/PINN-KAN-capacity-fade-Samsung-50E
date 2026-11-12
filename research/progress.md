@@ -1,5 +1,20 @@
 # Progress
 
+## RESUME (updated 2026-11-12 12:45 by the lead; read this first, after research/PROJECT_CONTEXT.md)
+- **Manuscript FINAL (JES), submission package built:** writing worktree `paper/submission/` (manuscript .docx/.pdf, 67 pages,
+  docx-PDF parity verified; highlights, cover letter, statements, graphical abstract, figures Figure_1-6, D1, D2; checklist;
+  SHA256SUMS). Writing branch commit 8d88aac. Outcome P0/K=, title T5 (unchanged). Body 5,993 words, abstract 250, 10 display items.
+- **Checks done:** acceptance-risk panel (red team, battery-domain reviewer, Codex session 01a1cde1-894c-7840-a8e9-8eea99cd1f9e,
+  three rounds), fix rounds, final number audit (research/audits/GATE_manuscript_numbers_2026-11-12.md), research-writer prose
+  loop (LanguageTool with n-grams at C:\Users\Shlok\tools\lt-ngrams + Vale), production page-by-page review of PDF and docx.
+- **Deposits:** GitHub private repo shlokDS16/PINN-KAN-capacity-fade-Samsung-50E (main up to 4e339b0, tag v1.0-frozen = c6a89b6);
+  Zenodo package release/zenodo_v1.0.0/ (DOI 10.5281/zenodo.24153388 reserved by Shlok; he uploads and publishes; ZENODO_FORM.md).
+- **Open for Shlok:** processor and memory (App. B.3); funding grant number and sponsor-role sentence; keywords; preprint status;
+  never rejected by JES; suggested reviewers (optional); co-authors confirm CRediT and competing interests; publish Zenodo before
+  submitting; decide whether the AI declaration should be widened (actual use broader than "language and grammar"); venue choice
+  (lead's estimates: JES roughly 25-40 %, Energy and AI 40-55 %, Sci Rep / PLOS ONE 60-75 %; judgement, not data).
+- **Before the repo goes public:** remove publisher PDFs under refs/ from the history.
+
 ## RESUME (updated 2026-11-12 06:50 by the lead; read this first, after research/PROJECT_CONTEXT.md)
 - **Confirmatory statistics DONE** (06:15, strict, frozen at c6a89b6, not provisional). Outcome from the table: gate G not
   tripped; P0, K=; title T5. Validated: statistician (research/audits/SIGN_statistician_frozen_stats.md) and gate auditor

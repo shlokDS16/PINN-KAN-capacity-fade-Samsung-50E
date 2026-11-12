@@ -11,3 +11,38 @@ refs/fulltext/
 
 # per-run directories of the negative-control ruling (summaries are committed; NEGCONTROL_RULING.md)
 runs/prereg/stats_ruling/negctl/nc_*/
+
+# Kept local, not published (cleanup before the repository went public, 2026-11-12)
+/refs/
+/paper/
+/CLAUDE.md
+/.claude/
+/PROJECT.md
+/status/
+/research/CONTRACT.md
+/research/HANDOFF_*.md
+/research/PROJECT_CONTEXT.md
+/research/TOKEN_PLAN.md
+/research/progress.md
+/tools/prose_rules/
+/tools/prose_check.py
+/tools/PROSE_CHECK_README.md
+/tools/keep_awake_while.py
+/tools/vault_knowledge.py
+/tools/ft_receiver.py
+/notes/*
+!/notes/papers/
+/notes/papers/*
+!/notes/papers/samsung50e_dataset_paper.md
+/debates/*
+!/debates/D010_topic/
+/debates/D010_topic/*
+!/debates/D010_topic/pilot_scratch/
+!/debates/D021_cap/
+/debates/D021_cap/*
+!/debates/D021_cap/study_rule.md
+!/debates/D022_datasets_kan/
+/debates/D022_datasets_kan/*
+!/debates/D022_datasets_kan/kan_study_rule.md
+!/debates/D022_datasets_kan/calibration_rule.md
+!/debates/D022_datasets_kan/calibration_rule_v2.md

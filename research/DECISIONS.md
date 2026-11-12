@@ -954,3 +954,10 @@ Row format:
   any conformal method.
 - **Where:** main checkout runs/post_review/<exp-id>/ only, from a detached worktree at c6a89b6 validated against the frozen predictions
   first; code/ and runs/prereg/ untouched. CPU only, at most 16 workers.
+
+## D049 (2026-11-12): abstract in words, no result numbers (corresponding author's request, JES guide)
+
+- **Request:** Prof. Vairavasundaram (corresponding author, via Shlok): revise the abstract to the journal's requirements; quantitative values are not required in the abstract (exemplar: Ma et al., IEEE TIE 2026, doi 10.1109/TIE.2026.3679777, abstract without numbers).
+- **Check:** JES guide for authors (read 2026-11-12): concise, factual, at most 250 words; purpose, basic procedures, main findings with statistical significance where applicable, principal conclusions; no number required.
+- **Decision:** the abstract states every item PREREG_v4 9.8 (rules 1 and 3) and section 11 place there (claim P/K, semi-empirical and storage qualifiers, mean-versus-median additions for P1, P2, K2, Test C rows A10 and D*) in words with its direction and statistical status; 248 words. The intervals and counts move to Section 6 (the verbatim outcome-table claim sentence stays in 6.2). Logged as a reporting deviation in Appendix D.10. No tier, state, title or number changes.
+- **Files:** writing worktree paper/front/02_abstract_keywords.md; paper/draft/D_appendix_evaluation_details.md (D.10, "Abstract reporting").

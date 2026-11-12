@@ -933,3 +933,24 @@ Row format:
   exploratory subgroup section.
 - **Shlok asked whether title T1 can be reached:** the lead answered no: the outcome table fixes T5 (P1 22/40 positives against 30
   needed); any change of model, cell or test after scoring would break stop rule 7.
+
+### D048 Post-hoc exploratory analyses for the teacher's review (lead, 2026-11-12, decided before any new score is read)
+- **Trigger:** review by Shlok's teacher (writing worktree paper/review/TEACHER_REVIEW_2026-11-12.md). Shlok: "fix all of which you can".
+- **Plans (frozen by this entry, before any new score):** paper/review/EXP_PLAN_2026-11-12.md (ML expert, Opus),
+  STATS_PLAN_2026-11-12.md (statistician), RELATED_WORK_2026-11-12.md (literature), with the amendments of Codex
+  (CODEX_TEACHER_2026-11-12.md, session 01a1cde1-894c-7840-a8e9-8eea99cd1f9e).
+- **Status of every result:** POST-HOC, EXPLORATORY, never in title, abstract claim sentence, highlights or outcome table; it
+  changes no confirmatory decision (P0, K=, M1-M3 false, NC-2 FAIL, T5). Every variant run is reported, favourable or not.
+- **Run:** (1) horizon and final-check-up errors from stored predictions; (2) A1 with lambda fixed at 1e-2, 1e-1, 1, 10 (other
+  hyperparameters as tuned at lambda's frozen choice; stated as not the best attainable under stronger enforcement) plus gradient-norm
+  balancing and annealing as new exploratory models; (3) z_c prior weight 10, 100, 1e4 for A1 and A9 with a law readout, read as
+  sensitivity of the window-inference channel, not as a clean flexibility ablation; (4) descriptive seed-spread coverage, rank
+  histogram and spread-skill (appendix; optimisation spread, not predictive uncertainty); (5) extraction cap 3 and the untruncated
+  ceiling (no change to K1/K2); (6) discrete h-scale grid with an inner-fold choice (not a learned h); (7) NC-2 over 10 permutation
+  draws, reported as a distribution only, frozen NC-2 FAIL kept, no pass-share rule; (8) the SNL Test B replication only if its split
+  is verified outcome-blind and its preregistration status is resolved; (9) rho sweep over a stated range (no single like-for-like
+  value claimed until validated).
+- **Not run (decided now, not after results):** re-tuning at higher lambda (15 h); pairwise symbolic terms; spline or gradient-learned h;
+  any conformal method.
+- **Where:** main checkout runs/post_review/<exp-id>/ only, from a detached worktree at c6a89b6 validated against the frozen predictions
+  first; code/ and runs/prereg/ untouched. CPU only, at most 16 workers.

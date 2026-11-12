@@ -1,0 +1,207 @@
+[
+ {
+  "lam_final": 0.16140658565099475,
+  "train_data_mse": 0.0021135557908564806,
+  "train_res_msq": 0.008429386653006077,
+  "res_share": 0.39162744732217686,
+  "law_cond_scores": {
+   "T45|SOCmax0.8|DoD0.6|Cch0.24|Cdch2": 0.8625761135593565,
+   "T23|SOCmax0.69|DoD0.2|Cch1|Cdch0.5": 0.20919039529373198,
+   "T23|SOCmax0.4|DoD0.05|Cch0.8|Cdch0.6": 0.31882860202316643,
+   "T35|SOCmax0.5|DoD0.1|Cch1|Cdch0.4": 0.5462831340619382,
+   "T35|SOCmax0.35|DoD0.05|Cch0.2|Cdch1": 0.28160197972670775,
+   "T45|SOCmax0.8|DoD0.35|Cch0.8|Cdch0.4": 1.404643849936444,
+   "T45|SOCmax0.6|DoD0.15|Cch0.4|Cdch1.3": 0.6703558037914932,
+   "T45|SOCmax0.6|DoD0.15|Cch0.9|Cdch1.9": 1.572618901836436
+  },
+  "F_minus_law_rms_pp": 0.5809005829845806,
+  "F_minus_law_mean_abs_pp": 0.40996354324595313,
+  "heldout_abs_R_median": 0.014176726341247559,
+  "heldout_abs_R_mean": 0.022402917966246605,
+  "heldout_rel_R_median": 0.013313557021319866,
+  "heldout_rel_R_mean": 0.019891301169991493,
+  "delta_sd_over_tau": 0.8204959630966187,
+  "z_rms_heldout": 0.22137883305549622,
+  "seed": 0,
+  "inversion_nonconverged": 0,
+  "inversion_calls_cells": 58,
+  "lam_traj_first_mid_last": [
+   [
+    0,
+    0.0025612458678635347
+   ],
+   [
+    1000,
+    0.0746808446147995
+   ],
+   [
+    1990,
+    0.16140658565099475
+   ]
+  ]
+ },
+ {
+  "lam_final": 0.07858886012962701,
+  "train_data_mse": 0.0016948379343375564,
+  "train_res_msq": 0.01022245828062296,
+  "res_share": 0.32157888090642783,
+  "law_cond_scores": {
+   "T45|SOCmax0.8|DoD0.6|Cch0.24|Cdch2": 1.2088891187839474,
+   "T23|SOCmax0.69|DoD0.2|Cch1|Cdch0.5": 0.23308369084143785,
+   "T23|SOCmax0.4|DoD0.05|Cch0.8|Cdch0.6": 0.31051084869796614,
+   "T35|SOCmax0.5|DoD0.1|Cch1|Cdch0.4": 0.4848014974902892,
+   "T35|SOCmax0.35|DoD0.05|Cch0.2|Cdch1": 0.15296805637510769,
+   "T45|SOCmax0.8|DoD0.35|Cch0.8|Cdch0.4": 1.243327211454605,
+   "T45|SOCmax0.6|DoD0.15|Cch0.4|Cdch1.3": 0.649962479165235,
+   "T45|SOCmax0.6|DoD0.15|Cch0.9|Cdch1.9": 1.3156401071375112
+  },
+  "F_minus_law_rms_pp": 0.6435251228920493,
+  "F_minus_law_mean_abs_pp": 0.47241216525435437,
+  "heldout_abs_R_median": 0.027576565742492676,
+  "heldout_abs_R_mean": 0.047590360045433044,
+  "heldout_rel_R_median": 0.026354538276791573,
+  "heldout_rel_R_mean": 0.038294654339551926,
+  "delta_sd_over_tau": 0.7294275164604187,
+  "z_rms_heldout": 0.18500620126724243,
+  "seed": 1,
+  "inversion_nonconverged": 0,
+  "inversion_calls_cells": 58,
+  "lam_traj_first_mid_last": [
+   [
+    0,
+    0.0025986435180417613
+   ],
+   [
+    1000,
+    0.06391694064193032
+   ],
+   [
+    1990,
+    0.07858886012962701
+   ]
+  ]
+ },
+ {
+  "lam_final": 0.05215530195952549,
+  "train_data_mse": 0.0015417863614857197,
+  "train_res_msq": 0.01113208755850792,
+  "res_share": 0.2735590998469576,
+  "law_cond_scores": {
+   "T45|SOCmax0.8|DoD0.6|Cch0.24|Cdch2": 1.3277024634443437,
+   "T23|SOCmax0.69|DoD0.2|Cch1|Cdch0.5": 0.28721735468258264,
+   "T23|SOCmax0.4|DoD0.05|Cch0.8|Cdch0.6": 0.3419261253726477,
+   "T35|SOCmax0.5|DoD0.1|Cch1|Cdch0.4": 0.49253789304125717,
+   "T35|SOCmax0.35|DoD0.05|Cch0.2|Cdch1": 0.19248792967098058,
+   "T45|SOCmax0.8|DoD0.35|Cch0.8|Cdch0.4": 1.3547284116914273,
+   "T45|SOCmax0.6|DoD0.15|Cch0.4|Cdch1.3": 0.6355570148720798,
+   "T45|SOCmax0.6|DoD0.15|Cch0.9|Cdch1.9": 1.488202290133438
+  },
+  "F_minus_law_rms_pp": 0.775950615241492,
+  "F_minus_law_mean_abs_pp": 0.5737412397173189,
+  "heldout_abs_R_median": 0.043070435523986816,
+  "heldout_abs_R_mean": 0.07030435651540756,
+  "heldout_rel_R_median": 0.04468545690178871,
+  "heldout_rel_R_mean": 0.05589749291539192,
+  "delta_sd_over_tau": 0.5909327268600464,
+  "z_rms_heldout": 0.1807863861322403,
+  "seed": 2,
+  "inversion_nonconverged": 0,
+  "inversion_calls_cells": 58,
+  "lam_traj_first_mid_last": [
+   [
+    0,
+    0.002616018796106559
+   ],
+   [
+    1000,
+    0.06320084843696566
+   ],
+   [
+    1990,
+    0.05215530195952549
+   ]
+  ]
+ },
+ {
+  "lam_final": 0.0650717624800607,
+  "train_data_mse": 0.0016207373701035976,
+  "train_res_msq": 0.02464395947754383,
+  "res_share": 0.49734653153233765,
+  "law_cond_scores": {
+   "T45|SOCmax0.8|DoD0.6|Cch0.24|Cdch2": 1.1813666993025034,
+   "T23|SOCmax0.69|DoD0.2|Cch1|Cdch0.5": 0.3709602347494841,
+   "T23|SOCmax0.4|DoD0.05|Cch0.8|Cdch0.6": 0.2811575804364066,
+   "T35|SOCmax0.5|DoD0.1|Cch1|Cdch0.4": 0.489703435295391,
+   "T35|SOCmax0.35|DoD0.05|Cch0.2|Cdch1": 0.2671921091568547,
+   "T45|SOCmax0.8|DoD0.35|Cch0.8|Cdch0.4": 1.4641085863765513,
+   "T45|SOCmax0.6|DoD0.15|Cch0.4|Cdch1.3": 0.7276846240683318,
+   "T45|SOCmax0.6|DoD0.15|Cch0.9|Cdch1.9": 1.8052776772130534
+  },
+  "F_minus_law_rms_pp": 0.7711115511505356,
+  "F_minus_law_mean_abs_pp": 0.5548951239694674,
+  "heldout_abs_R_median": 0.03701639175415039,
+  "heldout_abs_R_mean": 0.0690687745809555,
+  "heldout_rel_R_median": 0.03667217493057251,
+  "heldout_rel_R_mean": 0.05278220400214195,
+  "delta_sd_over_tau": 0.6291255950927734,
+  "z_rms_heldout": 0.19290348887443542,
+  "seed": 3,
+  "inversion_nonconverged": 0,
+  "inversion_calls_cells": 58,
+  "lam_traj_first_mid_last": [
+   [
+    0,
+    0.0027321171834377915
+   ],
+   [
+    1000,
+    0.06095524797263375
+   ],
+   [
+    1990,
+    0.0650717624800607
+   ]
+  ]
+ },
+ {
+  "lam_final": 0.11189202518706098,
+  "train_data_mse": 0.0021361408289521933,
+  "train_res_msq": 0.02069571428000927,
+  "res_share": 0.5201652699322924,
+  "law_cond_scores": {
+   "T45|SOCmax0.8|DoD0.6|Cch0.24|Cdch2": 1.3557680719954543,
+   "T23|SOCmax0.69|DoD0.2|Cch1|Cdch0.5": 0.6046132860362654,
+   "T23|SOCmax0.4|DoD0.05|Cch0.8|Cdch0.6": 0.3607421793356635,
+   "T35|SOCmax0.5|DoD0.1|Cch1|Cdch0.4": 0.42135543779224016,
+   "T35|SOCmax0.35|DoD0.05|Cch0.2|Cdch1": 0.31107987665699094,
+   "T45|SOCmax0.8|DoD0.35|Cch0.8|Cdch0.4": 1.3540616383457973,
+   "T45|SOCmax0.6|DoD0.15|Cch0.4|Cdch1.3": 0.5804319849991008,
+   "T45|SOCmax0.6|DoD0.15|Cch0.9|Cdch1.9": 1.1593555367404937
+  },
+  "F_minus_law_rms_pp": 0.5376294711518754,
+  "F_minus_law_mean_abs_pp": 0.4083769098811205,
+  "heldout_abs_R_median": 0.020312368869781494,
+  "heldout_abs_R_mean": 0.04006388410925865,
+  "heldout_rel_R_median": 0.02136598341166973,
+  "heldout_rel_R_mean": 0.03090314194560051,
+  "delta_sd_over_tau": 0.7210433483123779,
+  "z_rms_heldout": 0.21818193793296814,
+  "seed": 4,
+  "inversion_nonconverged": 0,
+  "inversion_calls_cells": 58,
+  "lam_traj_first_mid_last": [
+   [
+    0,
+    0.003169587567238466
+   ],
+   [
+    1000,
+    0.08843837295940993
+   ],
+   [
+    1990,
+    0.11189202518706098
+   ]
+  ]
+ }
+]

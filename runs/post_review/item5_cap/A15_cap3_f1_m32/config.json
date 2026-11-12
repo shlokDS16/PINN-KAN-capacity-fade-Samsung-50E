@@ -1,0 +1,28 @@
+{
+ "exp": "item5_cap",
+ "variant": "A15_cap3",
+ "fold": 1,
+ "m": 32,
+ "arm": "A15",
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "scored_k": [
+  "full"
+ ],
+ "backbone_ctx": "self_limiting",
+ "hp_used": null,
+ "variable": {
+  "variant": "A15_cap3",
+  "cap": 3,
+  "untruncated": false,
+  "other_hyperparameters": "as tuned at cap 2",
+  "endpoint_files": "ensemble condition_scores.json; per-seed condition_scores_seed_k*.json"
+ },
+ "frozen_source_run": "C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\runs\\conf_samsung_B_f1_m32",
+ "role": "POST-HOC EXPLORATORY (D048)"
+}

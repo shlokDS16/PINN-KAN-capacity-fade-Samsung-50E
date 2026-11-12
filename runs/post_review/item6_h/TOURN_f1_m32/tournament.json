@@ -1,0 +1,91 @@
+{
+ "fold": 1,
+ "m": 32,
+ "inner_k": 3,
+ "order_simplest_first": [
+  "const",
+  "sl4",
+  "sl2",
+  "sl1",
+  "sl0.5",
+  "acc0.15",
+  "acc0.3",
+  "acc0.6"
+ ],
+ "table": {
+  "const": {
+   "mean_pp": 1.6516766185822,
+   "se_pp": 0.38531741822023235,
+   "n_conditions": 32
+  },
+  "sl4": {
+   "mean_pp": 1.354970935118759,
+   "se_pp": 0.2555114165383274,
+   "n_conditions": 32
+  },
+  "sl2": {
+   "mean_pp": 1.1859960585357818,
+   "se_pp": 0.207729751012199,
+   "n_conditions": 32
+  },
+  "sl1": {
+   "mean_pp": 1.0439711620521517,
+   "se_pp": 0.16754698050642278,
+   "n_conditions": 32
+  },
+  "sl0.5": {
+   "mean_pp": 0.8750947584945599,
+   "se_pp": 0.14960079516314068,
+   "n_conditions": 32
+  },
+  "acc0.15": {
+   "mean_pp": 4.312094334316586,
+   "se_pp": 2.7188310722739093,
+   "n_conditions": 32
+  },
+  "acc0.3": {
+   "mean_pp": 3.2463551245574997,
+   "se_pp": 1.4228476520205502,
+   "n_conditions": 32
+  },
+  "acc0.6": {
+   "mean_pp": 5.609132152877045,
+   "se_pp": 2.8194223866519676,
+   "n_conditions": 32
+  }
+ },
+ "best": "sl0.5",
+ "chosen": "sl0.5",
+ "rule": "simplest member (order above) whose inner-CV mean is within one SE of the best member's mean; training conditions only; A2 at TOURNAMENT_HP",
+ "frozen_tournament_choice": "self_limiting",
+ "frozen_members_reproduced": {
+  "const": {
+   "frozen_mean_pp": 1.6516766185822,
+   "harness_mean_pp": 1.6516766185822,
+   "abs_diff": 0.0
+  },
+  "sl1": {
+   "frozen_mean_pp": 1.0439711620521517,
+   "harness_mean_pp": 1.0439711620521517,
+   "abs_diff": 0.0
+  },
+  "acc0.3": {
+   "frozen_mean_pp": 3.2463551245574997,
+   "harness_mean_pp": 3.2463551245574997,
+   "abs_diff": 0.0
+  }
+ },
+ "last_checkup_y_distribution": {
+  "n_cells": 26,
+  "y_s_last_checkup_quantiles_0_25_50_75_100": [
+   0.09770846952225187,
+   0.48803445738441614,
+   0.6320217861371341,
+   0.7943119231905746,
+   0.9920489879438776
+  ],
+  "y_s_unit": "spec.y_scale (= 10.0) x (1 - retention); Y0 = 1 in these units",
+  "share_y_s_above_0.5": 0.7307692307692307,
+  "share_y_s_above_1": 0.0
+ }
+}

@@ -1,0 +1,8 @@
+A1 0 8 0.0
+A1x 0 8 0.0
+A2 0 8 0.0
+A9 0 8 0.0
+A9x 0 8 0.0
+A15 0 8 0.0
+G15 0 8 0.0
+{"A1": true, "A1x": true, "A2": true, "A9": true, "A9x": true, "A15": true, "G15": true}

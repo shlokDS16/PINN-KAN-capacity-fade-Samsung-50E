@@ -1,0 +1,26 @@
+{
+ "exp": "item3_zc",
+ "variant": "Z1_w100",
+ "fold": 4,
+ "m": 8,
+ "arm": "A1",
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "scored_k": [
+  "2"
+ ],
+ "backbone_ctx": "self_limiting",
+ "hp_used": null,
+ "variable": {
+  "z_prior_weight_train_and_inversion": 100.0,
+  "lam_res": 0.001,
+  "other_hyperparameters": "as tuned"
+ },
+ "frozen_source_run": "C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\runs\\conf_samsung_B_f4_m8",
+ "role": "POST-HOC EXPLORATORY (D048)"
+}

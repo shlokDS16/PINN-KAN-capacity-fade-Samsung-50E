@@ -1,0 +1,22 @@
+{
+ "chosen": "self_limiting",
+ "best": "self_limiting",
+ "table": {
+  "constant": {
+   "mean_pp": 3.5926223477323678,
+   "se_pp": 0.4826078158834911,
+   "n_conditions": 32
+  },
+  "self_limiting": {
+   "mean_pp": 2.8547495285264715,
+   "se_pp": 0.36252089488138434,
+   "n_conditions": 32
+  },
+  "accelerating": {
+   "mean_pp": 5.503337974231041,
+   "se_pp": 1.4120171792983451,
+   "n_conditions": 32
+  }
+ },
+ "rule": "simplest backbone within one SE of the best (constant < self_limiting < accelerating)"
+}

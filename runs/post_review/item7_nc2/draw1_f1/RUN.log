@@ -1,0 +1,8 @@
+[18:39:22] tournament chosen constant
+[20:29:45] tuned A1 inner-CV 1.009 pp, best {'h': 6, 'grid': 12, 'l2': 1e-05, 'sparsity': 0.01, 'lam_res': 0.001, 'placement': 'whole_axis'}, tuning 6747 s
+[20:30:47] seed 0: fit 61.4 s
+[20:31:44] seed 1: fit 56.5 s
+[20:32:39] seed 2: fit 54.3 s
+[20:33:37] seed 3: fit 57.7 s
+[20:34:31] seed 4: fit 53.5 s
+[20:34:31] done in 7033 s

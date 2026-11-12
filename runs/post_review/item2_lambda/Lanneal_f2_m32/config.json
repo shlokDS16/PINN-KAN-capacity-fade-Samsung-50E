@@ -1,0 +1,26 @@
+{
+ "exp": "item2_lambda",
+ "variant": "Lanneal",
+ "fold": 2,
+ "m": 32,
+ "arm": "A1",
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "scored_k": [
+  "full"
+ ],
+ "backbone_ctx": "self_limiting",
+ "hp_used": null,
+ "variable": {
+  "schedule": "anneal",
+  "lam": "log-linear 1e-3 -> 1 over all steps",
+  "other_hyperparameters": "as tuned"
+ },
+ "frozen_source_run": "C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\runs\\conf_samsung_B_f2_m32",
+ "role": "POST-HOC EXPLORATORY (D048)"
+}

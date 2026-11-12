@@ -1,0 +1,8 @@
+[17:30:57] tournament chosen self_limiting
+[18:59:14] tuned A1 inner-CV 0.746 pp, best {'h': 1, 'grid': 3, 'l2': 0.01, 'sparsity': 0.01, 'lam_res': 0.001, 'placement': 'whole_axis'}, tuning 5329 s
+[19:00:15] seed 0: fit 60.1 s
+[19:01:30] seed 1: fit 74.3 s
+[19:02:38] seed 2: fit 67.2 s
+[19:03:44] seed 3: fit 66.2 s
+[19:05:00] seed 4: fit 74.4 s
+[19:05:00] done in 5675 s

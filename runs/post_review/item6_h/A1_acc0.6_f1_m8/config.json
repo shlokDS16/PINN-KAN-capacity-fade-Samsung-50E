@@ -1,0 +1,29 @@
+{
+ "exp": "item6_h",
+ "variant": "A1_acc0.6",
+ "fold": 1,
+ "m": 8,
+ "arm": "A1",
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "scored_k": [
+  "2"
+ ],
+ "backbone_ctx": "constant",
+ "hp_used": null,
+ "variable": {
+  "member": "acc0.6",
+  "backbone": "accelerating",
+  "overrides": {
+   "gamma": 0.6
+  },
+  "hyperparameters": "A1 as tuned (tuning_A1.json)"
+ },
+ "frozen_source_run": "C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\runs\\conf_samsung_B_f1_m8",
+ "role": "POST-HOC EXPLORATORY (D048)"
+}

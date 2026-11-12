@@ -1,0 +1,4 @@
+@echo off
+"C:\Users\Shlok\Downloads\PINN KAN battery paper\.venv\Scripts\python.exe" -P "C:\Users\Shlok\Downloads\PINN KAN battery paper\runs\post_review\_harness\run_exp.py" item3_zc 11 < NUL > "C:\Users\Shlok\Downloads\PINN KAN battery paper\runs\post_review\_harness\item3.log" 2>&1
+"C:\Users\Shlok\Downloads\PINN KAN battery paper\.venv\Scripts\python.exe" -P "C:\Users\Shlok\Downloads\PINN KAN battery paper\runs\post_review\_harness\run_exp.py" item5_cap 11 < NUL > "C:\Users\Shlok\Downloads\PINN KAN battery paper\runs\post_review\_harness\item5.log" 2>&1
+"C:\Users\Shlok\Downloads\PINN KAN battery paper\.venv\Scripts\python.exe" -P "C:\Users\Shlok\Downloads\PINN KAN battery paper\runs\post_review\_harness\run_exp.py" item6_h 11 < NUL > "C:\Users\Shlok\Downloads\PINN KAN battery paper\runs\post_review\_harness\item6.log" 2>&1

@@ -1,0 +1,26 @@
+{
+ "exp": "item2_lambda",
+ "variant": "L0",
+ "fold": 4,
+ "m": 8,
+ "arm": "A1",
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "scored_k": [
+  "2"
+ ],
+ "backbone_ctx": "self_limiting",
+ "hp_used": null,
+ "variable": {
+  "lam_res": 0.001,
+  "schedule": "frozen",
+  "role": "reference rerun"
+ },
+ "frozen_source_run": "C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\runs\\conf_samsung_B_f4_m8",
+ "role": "POST-HOC EXPLORATORY (D048)"
+}

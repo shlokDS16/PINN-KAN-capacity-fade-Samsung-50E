@@ -1,0 +1,171 @@
+[
+ {
+  "n_coefs": 21,
+  "train_bic": -16280.515983338633,
+  "refit_diverged": false,
+  "parent_train_data_mse": 0.0004487421247176826,
+  "train_data_mse_after_refit": 0.0003052740648854524,
+  "family_counts": {
+   "exponential": 3,
+   "quadratic": 4
+  },
+  "n_quadratic_edges": 4,
+  "n_hinge_edges": 0,
+  "input_family_labels": {
+   "T_C": [
+    "exponential"
+   ],
+   "soc_mid": [
+    "quadratic"
+   ],
+   "dod": [
+    "exponential"
+   ],
+   "c_ch": [
+    "exponential"
+   ],
+   "c_dch": [
+    "quadratic"
+   ]
+  },
+  "cap": 3,
+  "untruncated": false,
+  "seed": 0
+ },
+ {
+  "n_coefs": 21,
+  "train_bic": -16259.411002489474,
+  "refit_diverged": false,
+  "parent_train_data_mse": 0.0004417095042299479,
+  "train_data_mse_after_refit": 0.0003084596828557551,
+  "family_counts": {
+   "exponential": 4,
+   "quadratic": 3
+  },
+  "n_quadratic_edges": 3,
+  "n_hinge_edges": 0,
+  "input_family_labels": {
+   "T_C": [
+    "exponential"
+   ],
+   "soc_mid": [
+    "quadratic"
+   ],
+   "dod": [
+    "exponential"
+   ],
+   "c_ch": [
+    "exponential"
+   ],
+   "c_dch": [
+    "quadratic"
+   ]
+  },
+  "cap": 3,
+  "untruncated": false,
+  "seed": 1
+ },
+ {
+  "n_coefs": 20,
+  "train_bic": -15824.48566662615,
+  "refit_diverged": false,
+  "parent_train_data_mse": 0.000490018050186336,
+  "train_data_mse_after_refit": 0.00038347358349710703,
+  "family_counts": {
+   "arrhenius": 1,
+   "log": 1,
+   "exponential": 3,
+   "quadratic": 2
+  },
+  "n_quadratic_edges": 2,
+  "n_hinge_edges": 0,
+  "input_family_labels": {
+   "T_C": [
+    "arrhenius"
+   ],
+   "soc_mid": [
+    "log"
+   ],
+   "dod": [
+    "exponential"
+   ],
+   "c_ch": [
+    "exponential"
+   ],
+   "c_dch": [
+    "exponential"
+   ]
+  },
+  "cap": 3,
+  "untruncated": false,
+  "seed": 2
+ },
+ {
+  "n_coefs": 20,
+  "train_bic": -16083.391155853233,
+  "refit_diverged": false,
+  "parent_train_data_mse": 0.0004922437947243452,
+  "train_data_mse_after_refit": 0.0003376194217707962,
+  "family_counts": {
+   "linear": 1,
+   "quadratic": 3,
+   "power": 1,
+   "exponential": 2
+  },
+  "n_quadratic_edges": 3,
+  "n_hinge_edges": 0,
+  "input_family_labels": {
+   "T_C": [
+    "linear"
+   ],
+   "soc_mid": [
+    "quadratic"
+   ],
+   "dod": [
+    "power"
+   ],
+   "c_ch": [
+    "exponential"
+   ],
+   "c_dch": [
+    "exponential"
+   ]
+  },
+  "cap": 3,
+  "untruncated": false,
+  "seed": 3
+ },
+ {
+  "n_coefs": 21,
+  "train_bic": -16059.125241672984,
+  "refit_diverged": false,
+  "parent_train_data_mse": 0.0004886648966930807,
+  "train_data_mse_after_refit": 0.00034039560705423355,
+  "family_counts": {
+   "quadratic": 5,
+   "exponential": 2
+  },
+  "n_quadratic_edges": 5,
+  "n_hinge_edges": 0,
+  "input_family_labels": {
+   "T_C": [
+    "quadratic"
+   ],
+   "soc_mid": [
+    "quadratic"
+   ],
+   "dod": [
+    "exponential"
+   ],
+   "c_ch": [
+    "exponential"
+   ],
+   "c_dch": [
+    "quadratic"
+   ]
+  },
+  "cap": 3,
+  "untruncated": false,
+  "seed": 4
+ }
+]

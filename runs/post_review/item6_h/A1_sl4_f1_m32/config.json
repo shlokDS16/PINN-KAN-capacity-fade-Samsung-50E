@@ -1,0 +1,29 @@
+{
+ "exp": "item6_h",
+ "variant": "A1_sl4",
+ "fold": 1,
+ "m": 32,
+ "arm": "A1",
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "scored_k": [
+  "full"
+ ],
+ "backbone_ctx": "self_limiting",
+ "hp_used": null,
+ "variable": {
+  "member": "sl4",
+  "backbone": "self_limiting",
+  "overrides": {
+   "Y0": 4.0
+  },
+  "hyperparameters": "A1 as tuned (tuning_A1.json)"
+ },
+ "frozen_source_run": "C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\runs\\conf_samsung_B_f1_m32",
+ "role": "POST-HOC EXPLORATORY (D048)"
+}

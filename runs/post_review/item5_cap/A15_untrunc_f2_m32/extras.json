@@ -1,0 +1,162 @@
+[
+ {
+  "n_coefs": 90,
+  "train_bic": -15860.65633568476,
+  "refit_diverged": false,
+  "parent_train_data_mse": 0.0004734089889097959,
+  "train_data_mse_after_refit": 0.00028980322531424463,
+  "family_counts": {
+   "spline": 14
+  },
+  "n_quadratic_edges": 0,
+  "n_hinge_edges": 0,
+  "input_family_labels": {
+   "T_C": [
+    "spline"
+   ],
+   "soc_mid": [
+    "spline"
+   ],
+   "dod": [
+    "spline"
+   ],
+   "c_ch": [
+    "spline"
+   ],
+   "c_dch": [
+    "spline"
+   ]
+  },
+  "cap": 3,
+  "untruncated": true,
+  "seed": 0
+ },
+ {
+  "n_coefs": 90,
+  "train_bic": -15577.96782047524,
+  "refit_diverged": false,
+  "parent_train_data_mse": 0.0004182449774816632,
+  "train_data_mse_after_refit": 0.00033303649979643524,
+  "family_counts": {
+   "spline": 14
+  },
+  "n_quadratic_edges": 0,
+  "n_hinge_edges": 0,
+  "input_family_labels": {
+   "T_C": [
+    "spline"
+   ],
+   "soc_mid": [
+    "spline"
+   ],
+   "dod": [
+    "spline"
+   ],
+   "c_ch": [
+    "spline"
+   ],
+   "c_dch": [
+    "spline"
+   ]
+  },
+  "cap": 3,
+  "untruncated": true,
+  "seed": 1
+ },
+ {
+  "n_coefs": 90,
+  "train_bic": -15862.277859394328,
+  "refit_diverged": false,
+  "parent_train_data_mse": 0.00047736740089021623,
+  "train_data_mse_after_refit": 0.0002895721700042486,
+  "family_counts": {
+   "spline": 14
+  },
+  "n_quadratic_edges": 0,
+  "n_hinge_edges": 0,
+  "input_family_labels": {
+   "T_C": [
+    "spline"
+   ],
+   "soc_mid": [
+    "spline"
+   ],
+   "dod": [
+    "spline"
+   ],
+   "c_ch": [
+    "spline"
+   ],
+   "c_dch": [
+    "spline"
+   ]
+  },
+  "cap": 3,
+  "untruncated": true,
+  "seed": 2
+ },
+ {
+  "n_coefs": 90,
+  "train_bic": -15725.414199183588,
+  "refit_diverged": false,
+  "parent_train_data_mse": 0.00042078542173840106,
+  "train_data_mse_after_refit": 0.00030973763205111027,
+  "family_counts": {
+   "spline": 14
+  },
+  "n_quadratic_edges": 0,
+  "n_hinge_edges": 0,
+  "input_family_labels": {
+   "T_C": [
+    "spline"
+   ],
+   "soc_mid": [
+    "spline"
+   ],
+   "dod": [
+    "spline"
+   ],
+   "c_ch": [
+    "spline"
+   ],
+   "c_dch": [
+    "spline"
+   ]
+  },
+  "cap": 3,
+  "untruncated": true,
+  "seed": 3
+ },
+ {
+  "n_coefs": 90,
+  "train_bic": -15817.027491912782,
+  "refit_diverged": false,
+  "parent_train_data_mse": 0.0004030499258078635,
+  "train_data_mse_after_refit": 0.00029608971090056,
+  "family_counts": {
+   "spline": 14
+  },
+  "n_quadratic_edges": 0,
+  "n_hinge_edges": 0,
+  "input_family_labels": {
+   "T_C": [
+    "spline"
+   ],
+   "soc_mid": [
+    "spline"
+   ],
+   "dod": [
+    "spline"
+   ],
+   "c_ch": [
+    "spline"
+   ],
+   "c_dch": [
+    "spline"
+   ]
+  },
+  "cap": 3,
+  "untruncated": true,
+  "seed": 4
+ }
+]

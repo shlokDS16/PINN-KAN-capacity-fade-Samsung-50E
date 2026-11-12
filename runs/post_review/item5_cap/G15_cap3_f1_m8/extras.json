@@ -1,0 +1,178 @@
+[
+ {
+  "n_coefs": 20,
+  "train_bic": NaN,
+  "refit_diverged": true,
+  "parent_train_data_mse": 0.0006681720842607319,
+  "train_data_mse_after_refit": NaN,
+  "family_counts": {
+   "hinge": 3,
+   "quadratic": 2,
+   "linear": 1,
+   "power": 1
+  },
+  "n_quadratic_edges": 2,
+  "n_hinge_edges": 3,
+  "input_family_labels": {
+   "T_C": [
+    "hinge"
+   ],
+   "soc_mid": [
+    "quadratic"
+   ],
+   "dod": [
+    "linear"
+   ],
+   "c_ch": [
+    "hinge"
+   ],
+   "c_dch": [
+    "power"
+   ]
+  },
+  "cap": 3,
+  "untruncated": false,
+  "predict_failure": "_LinAlgError",
+  "seed": 0
+ },
+ {
+  "n_coefs": 21,
+  "train_bic": NaN,
+  "refit_diverged": true,
+  "parent_train_data_mse": 0.0006831809296272695,
+  "train_data_mse_after_refit": NaN,
+  "family_counts": {
+   "exponential": 4,
+   "quadratic": 2,
+   "hinge": 1
+  },
+  "n_quadratic_edges": 2,
+  "n_hinge_edges": 1,
+  "input_family_labels": {
+   "T_C": [
+    "exponential"
+   ],
+   "soc_mid": [
+    "exponential"
+   ],
+   "dod": [
+    "exponential"
+   ],
+   "c_ch": [
+    "exponential"
+   ],
+   "c_dch": [
+    "quadratic"
+   ]
+  },
+  "cap": 3,
+  "untruncated": false,
+  "predict_failure": "_LinAlgError",
+  "seed": 1
+ },
+ {
+  "n_coefs": 21,
+  "train_bic": -7178.923100842639,
+  "refit_diverged": false,
+  "parent_train_data_mse": 0.0007142049726098776,
+  "train_data_mse_after_refit": 0.000560277490876615,
+  "family_counts": {
+   "quadratic": 5,
+   "power": 1,
+   "exponential": 1
+  },
+  "n_quadratic_edges": 5,
+  "n_hinge_edges": 0,
+  "input_family_labels": {
+   "T_C": [
+    "quadratic"
+   ],
+   "soc_mid": [
+    "quadratic"
+   ],
+   "dod": [
+    "power"
+   ],
+   "c_ch": [
+    "exponential"
+   ],
+   "c_dch": [
+    "quadratic"
+   ]
+  },
+  "cap": 3,
+  "untruncated": false,
+  "predict_failure": null,
+  "seed": 2
+ },
+ {
+  "n_coefs": 21,
+  "train_bic": NaN,
+  "refit_diverged": true,
+  "parent_train_data_mse": 0.0006828903569839895,
+  "train_data_mse_after_refit": NaN,
+  "family_counts": {
+   "exponential": 1,
+   "quadratic": 4,
+   "hinge": 2
+  },
+  "n_quadratic_edges": 4,
+  "n_hinge_edges": 2,
+  "input_family_labels": {
+   "T_C": [
+    "exponential"
+   ],
+   "soc_mid": [
+    "quadratic"
+   ],
+   "dod": [
+    "hinge"
+   ],
+   "c_ch": [
+    "quadratic"
+   ],
+   "c_dch": [
+    "quadratic"
+   ]
+  },
+  "cap": 3,
+  "untruncated": false,
+  "predict_failure": "_LinAlgError",
+  "seed": 3
+ },
+ {
+  "n_coefs": 20,
+  "train_bic": -7732.870501141153,
+  "refit_diverged": false,
+  "parent_train_data_mse": 0.0006601251079700887,
+  "train_data_mse_after_refit": 0.0003206043620593846,
+  "family_counts": {
+   "quadratic": 3,
+   "exponential": 3,
+   "log": 1
+  },
+  "n_quadratic_edges": 3,
+  "n_hinge_edges": 0,
+  "input_family_labels": {
+   "T_C": [
+    "quadratic"
+   ],
+   "soc_mid": [
+    "exponential"
+   ],
+   "dod": [
+    "exponential"
+   ],
+   "c_ch": [
+    "exponential"
+   ],
+   "c_dch": [
+    "log"
+   ]
+  },
+  "cap": 3,
+  "untruncated": false,
+  "predict_failure": null,
+  "seed": 4
+ }
+]

@@ -1,0 +1,23 @@
+{
+ "arm": "A1",
+ "endpoint": "ensemble",
+ "fit_seconds": [
+  19.5248920917511,
+  19.253024578094482,
+  18.297388315200806,
+  18.394386291503906,
+  17.323017358779907
+ ],
+ "wall_seconds": 2272.6330001354218,
+ "primary_pp_ens": 1.0503096816597957,
+ "tuning_inner_cv_pp": 0.868677607889472,
+ "best_hp": {
+  "h": 8,
+  "grid": 12,
+  "l2": 0.01,
+  "sparsity": 0.01,
+  "lam_res": 0.001,
+  "placement": "record_end"
+ },
+ "backbone": "self_limiting"
+}

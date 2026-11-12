@@ -1,0 +1,12 @@
+item7_nc2: 10 jobs, 5 workers
+[   6380s] draw9 f3: ok (6361 s)
+[   6387s] draw9 f0: ok (6368 s)
+[   6390s] draw9 f1: ok (6371 s)
+[   6418s] draw9 f4: ok (6399 s)
+[   6453s] draw9 f2: ok (6434 s)
+[   9792s] draw10 f4: ok (3339 s)
+[   9803s] draw10 f2: ok (3413 s)
+[   9832s] draw10 f1: ok (3445 s)
+[   9847s] draw10 f3: ok (3428 s)
+[   9853s] draw10 f0: ok (3473 s)
+done

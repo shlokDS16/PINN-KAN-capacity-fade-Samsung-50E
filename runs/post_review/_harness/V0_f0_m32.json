@@ -1,0 +1,78 @@
+{
+ "fold": 0,
+ "m": 32,
+ "seed": 0,
+ "tolerance": 1e-09,
+ "arms": {
+  "A1": {
+   "max_abs_diff": 0.0,
+   "per_k": {
+    "0": 0.0,
+    "2": 0.0,
+    "full": 0.0
+   },
+   "n_cells_checked": 96,
+   "pass": true
+  },
+  "A1x": {
+   "max_abs_diff": 0.0,
+   "per_k": {
+    "0": 0.0,
+    "2": 0.0,
+    "full": 0.0
+   },
+   "n_cells_checked": 96,
+   "pass": true
+  },
+  "A2": {
+   "max_abs_diff": 0.0,
+   "per_k": {
+    "0": 0.0,
+    "2": 0.0,
+    "full": 0.0
+   },
+   "n_cells_checked": 96,
+   "pass": true
+  },
+  "A9": {
+   "max_abs_diff": 0.0,
+   "per_k": {
+    "0": 0.0,
+    "2": 0.0,
+    "full": 0.0
+   },
+   "n_cells_checked": 96,
+   "pass": true
+  },
+  "A9x": {
+   "max_abs_diff": 0.0,
+   "per_k": {
+    "0": 0.0,
+    "2": 0.0,
+    "full": 0.0
+   },
+   "n_cells_checked": 96,
+   "pass": true
+  },
+  "A15": {
+   "max_abs_diff": 0.0,
+   "per_k": {
+    "0": 0.0,
+    "2": 0.0,
+    "full": 0.0
+   },
+   "n_cells_checked": 96,
+   "pass": true
+  },
+  "G15": {
+   "max_abs_diff": 0.0,
+   "per_k": {
+    "0": 0.0,
+    "2": 0.0,
+    "full": 0.0
+   },
+   "n_cells_checked": 96,
+   "pass": true
+  }
+ }
+}

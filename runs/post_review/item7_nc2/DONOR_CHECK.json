@@ -1,0 +1,66 @@
+{
+ "rule": "permute_draw(draw 0) must equal the frozen metrics.permute_stress for the same cells and seed: the same donor of every cycling condition and the same raw stress vectors",
+ "folds": {
+  "0": {
+   "train": {
+    "identical_to_frozen": true,
+    "n_cells": 180,
+    "draw1_cells_with_different_stress_vector": 114
+   },
+   "test": {
+    "identical_to_frozen": true,
+    "n_cells": 32,
+    "draw1_cells_with_different_stress_vector": 12
+   }
+  },
+  "1": {
+   "train": {
+    "identical_to_frozen": true,
+    "n_cells": 186,
+    "draw1_cells_with_different_stress_vector": 117
+   },
+   "test": {
+    "identical_to_frozen": true,
+    "n_cells": 26,
+    "draw1_cells_with_different_stress_vector": 20
+   }
+  },
+  "2": {
+   "train": {
+    "identical_to_frozen": true,
+    "n_cells": 183,
+    "draw1_cells_with_different_stress_vector": 111
+   },
+   "test": {
+    "identical_to_frozen": true,
+    "n_cells": 28,
+    "draw1_cells_with_different_stress_vector": 19
+   }
+  },
+  "3": {
+   "train": {
+    "identical_to_frozen": true,
+    "n_cells": 186,
+    "draw1_cells_with_different_stress_vector": 117
+   },
+   "test": {
+    "identical_to_frozen": true,
+    "n_cells": 27,
+    "draw1_cells_with_different_stress_vector": 24
+   }
+  },
+  "4": {
+   "train": {
+    "identical_to_frozen": true,
+    "n_cells": 183,
+    "draw1_cells_with_different_stress_vector": 117
+   },
+   "test": {
+    "identical_to_frozen": true,
+    "n_cells": 30,
+    "draw1_cells_with_different_stress_vector": 21
+   }
+  }
+ },
+ "all_identical": true
+}

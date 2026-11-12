@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "C:\Users\Shlok\Downloads\PINN KAN battery paper\runs\post_review\_harness\run_exp.py", line 26, in work
+    H.run_job(exp, variant, f, m, **kw)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shlok\Downloads\PINN KAN battery paper\runs\post_review\_harness\harness.py", line 399, in run_job
+    preds = arm.predict(KC[k]["wc"])
+  File "C:\Users\Shlok\Downloads\PINN KAN battery paper\runs\post_review\_harness\extraction_variants.py", line 48, in predict
+    return self.arm.predict(wcells)
+           ~~~~~~~~~~~~~~~~^^^^^^^^
+  File "C:\Users\Shlok\Downloads\PINN KAN battery paper-frozen\code\pinnkan\arms.py", line 209, in predict
+    preds, _ = predict_pinn(self.model, self.spec, wcells, float(self.hp.get("lam_res", 1.0)), self.seed)
+               ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shlok\Downloads\PINN KAN battery paper-frozen\code\pinnkan\pinn.py", line 213, in predict_pinn
+    z, delta = invert_pinn(m, bw, lam, seed, z_weight=z_weight)
+               ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Shlok\Downloads\PINN KAN battery paper-frozen\code\pinnkan\pinn.py", line 206, in invert_pinn
+    res = inversion.solve(prob, "pinn")
+  File "C:\Users\Shlok\Downloads\PINN KAN battery paper-frozen\code\pinnkan\inversion.py", line 250, in solve
+    res = invert_latents(prob["fun"], start, config, cap)
+  File "C:\Users\Shlok\Downloads\PINN KAN battery paper-frozen\code\pinnkan\inversion.py", line 98, in invert_latents
+    ev = torch.linalg.eigvalsh(H)
+torch._C._LinAlgError: linalg.eigh: (Batch element 0): The algorithm failed to converge because the input matrix is ill-conditioned or has too many repeated eigenvalues (error code: 1).

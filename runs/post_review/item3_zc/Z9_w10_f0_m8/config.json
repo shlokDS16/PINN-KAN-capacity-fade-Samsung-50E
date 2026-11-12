@@ -1,0 +1,25 @@
+{
+ "exp": "item3_zc",
+ "variant": "Z9_w10",
+ "fold": 0,
+ "m": 8,
+ "arm": "A9",
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "scored_k": [
+  "2"
+ ],
+ "backbone_ctx": "constant",
+ "hp_used": null,
+ "variable": {
+  "z_prior_weight_train_and_inversion": 10.0,
+  "other_hyperparameters": "as tuned"
+ },
+ "frozen_source_run": "C:\\Users\\Shlok\\Downloads\\PINN KAN battery paper\\runs\\conf_samsung_B_f0_m8",
+ "role": "POST-HOC EXPLORATORY (D048)"
+}

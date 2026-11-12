@@ -1,0 +1,159 @@
+{
+ "note": "Figure content for a figure maker; numbers from stored frozen JSON. Colour rule: kind gating / reported / design / result / terminal.",
+ "nodes": [
+  {
+   "id": "N1",
+   "label": "Data and splits",
+   "kind": "design",
+   "lines": [
+    "40 cycling conditions; five outer folds of 8 held-out conditions; contrasts paired by condition",
+    "history m = 8, 16, 32 conditions; check-ups used k = 0, 2, full",
+    "confirmatory cells g1 = (m 8, k 2) and g4 = (m 32, k full)",
+    "endpoint: median over held-out conditions of the condition RMSE",
+    "contrast L_c = ln(S_comparator / S_target)"
+   ]
+  },
+  {
+   "id": "N2",
+   "label": "Gate G",
+   "kind": "gating",
+   "lines": [
+    "NC-1 label invariance (15 runs checked, maximum difference 0.0)",
+    "PC-1 synthetic recovery",
+    "fail: no title, no claim; pass: continue",
+    "result: gate tripped = False"
+   ]
+  },
+  {
+   "id": "N3",
+   "label": "Controls reported beside the tests (never change a tier)",
+   "kind": "reported",
+   "lines": [
+    "NC-2 permuted stress: 28 of 40, p = 0.0539, needed 30, not passed (interpretive)",
+    "PC-2 calendar rate monotone in temperature: True",
+    "PC-3 PINN-KAN against persistence at g4: 39 of 40, passed = True"
+   ]
+  },
+  {
+   "id": "N4",
+   "label": "Test",
+   "kind": "gating",
+   "lines": [
+    "sign test with a fixed design effect (assumed average pairwise sign correlation 0.03; design effect 2.17)",
+    "margins on the log-ratio scale: tier N -0.0953 (10.0 %), tier S +0.0198 (2.0 %)",
+    "30 of 40 conditions needed at level 0.025"
+   ]
+  },
+  {
+   "id": "N5",
+   "label": "Graph, one-sided family-wise level 0.025",
+   "kind": "gating",
+   "lines": [
+    "chain P: P1 (tier N, then S) -> P2 -> P3; chain K: K1 (tier N) -> K2 (tier N, then S)",
+    "joined by P3 -> K1 and K2S -> P1N; a level passes on only after a rejection",
+    "initial local levels: P1N 0.0195, K1 0.0055 (weight on P1N 0.78)",
+    "second graph for five qualifiers: initial level 0.005 each, family-wise 0.025"
+   ]
+  },
+  {
+   "id": "N6",
+   "label": "Outputs",
+   "kind": "gating",
+   "lines": [
+    "states P and K; modifiers M1 to M3; title from one closed table fixed before scoring",
+    "reverse-direction tests and persistence comparisons sit outside the graph (reported)"
+   ]
+  },
+  {
+   "id": "N7",
+   "label": "Reading",
+   "kind": "reported",
+   "lines": [
+    "tier none = not shown, not equal",
+    "descriptive numbers carry no tier"
+   ]
+  },
+  {
+   "id": "N8",
+   "label": "Outcome reached",
+   "kind": "result",
+   "lines": [
+    "gate passed",
+    "P1: 22 of 40 positive, 30 needed",
+    "K1: 20 of 40 positive, 32 needed",
+    "states P0 and K=; M1, M2, M3 all false; title T5"
+   ]
+  },
+  {
+   "id": "N_stop",
+   "label": "Stop: no title, no claim",
+   "kind": "terminal",
+   "lines": [
+    "reached only if the gate fails"
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "src": "N1",
+   "dst": "N2",
+   "label": "",
+   "style": "solid"
+  },
+  {
+   "src": "N2",
+   "dst": "N4",
+   "label": "pass",
+   "style": "solid"
+  },
+  {
+   "src": "N2",
+   "dst": "N_stop",
+   "label": "fail",
+   "style": "dashed"
+  },
+  {
+   "src": "N1",
+   "dst": "N3",
+   "label": "same cells",
+   "style": "dashed"
+  },
+  {
+   "src": "N4",
+   "dst": "N5",
+   "label": "p-values",
+   "style": "solid"
+  },
+  {
+   "src": "N5",
+   "dst": "N6",
+   "label": "rejections",
+   "style": "solid"
+  },
+  {
+   "src": "N3",
+   "dst": "N6",
+   "label": "reported only",
+   "style": "dashed"
+  },
+  {
+   "src": "N6",
+   "dst": "N7",
+   "label": "",
+   "style": "solid"
+  },
+  {
+   "src": "N6",
+   "dst": "N8",
+   "label": "",
+   "style": "solid"
+  }
+ ],
+ "practitioner_paragraph": "How to read the results. Three questions are answered in order. First, the checks for leaked labels and for failed synthetic recovery did not trip. Second, P1 asks whether PINN-KAN is no more than 10 % worse than the best tuned learner at g1: 22 of 40 held-out conditions agreed, 30 were needed, so the comparison is undecided, which is not a finding of equality. Third, K1 asks the same of the extracted law against PINN-KAN at g4: 20 of 40, 32 needed. Persistence was beaten in 40 of 40 conditions at g1.",
+ "practitioner_paragraph_word_count": 93,
+ "sources": {
+  "contrasts": "runs/stats_frozen/analysis/contrasts_v4_B.json",
+  "controls": "runs/stats_frozen/analysis/controls.json",
+  "critical_count_at_0.025": "t2_rho_sweep.json sweep[0.03].crit_levels"
+ }
+}

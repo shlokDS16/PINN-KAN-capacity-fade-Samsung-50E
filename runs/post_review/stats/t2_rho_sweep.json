@@ -1,0 +1,5024 @@
+{
+ "note": "POST-HOC, EXPLORATORY. Decisions recomputed from stored positive counts with the frozen beta-binomial tail and frozen graph test (graph_test.py sha256 below, imported read-only). The frozen decisions (rho = 0.03) are unchanged.",
+ "frozen_graph_test_sha256": "6285f7d1b7c5dfddf8f10d80d6c2512c3b8a37aa796eac99a755f407d4cc6c23",
+ "graph_w": 0.78,
+ "alpha": 0.025,
+ "n_conditions": 40,
+ "stored_positive_counts": {
+  "primary_nodes": {
+   "P1N": 22,
+   "P1S": 19,
+   "P2": 18,
+   "P3": 20,
+   "K1": 20,
+   "K2N": 29,
+   "K2S": 19
+  },
+  "secondary_node_positives": {
+   "QA10_g1": {
+    "N": 28,
+    "S": 27
+   },
+   "QA10_g4": {
+    "N": 27,
+    "S": 26
+   },
+   "QH_g1": {
+    "N": 31,
+    "S": 29
+   },
+   "QH_g4": {
+    "N": 28,
+    "S": 27
+   },
+   "QT_g1": {
+    "N": 32,
+    "S": 27
+   }
+  },
+  "secondary_reverse_positives": {
+   "QA10_g1": {
+    "A10": 12,
+    "A10P": 12
+   },
+   "QA10_g4": {
+    "A10": 14,
+    "A10P": 10
+   },
+   "QH_g1": {
+    "A2": 10
+   },
+   "QH_g4": {
+    "A2": 13
+   },
+   "QT_g1": {
+    "A13": 10
+   }
+  },
+  "outside_graph": {
+   "P1_rev (outside graph, level 0.025)": 20,
+   "K2_rev (outside graph, level 0.025)": 16,
+   "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": 40,
+   "K1 tier S, unadjusted (level 0.025, descriptive)": 14,
+   "NC-2 permuted stress (level 0.025, interpretive)": 28,
+   "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": 39
+  }
+ },
+ "validation_at_rho_0p03": {
+  "rho": 0.03,
+  "checks": [
+   {
+    "what": "primary p P1N",
+    "stored": 0.37651914230265754,
+    "recomputed": 0.37651914230265754,
+    "abs_diff": 0.0
+   },
+   {
+    "what": "primary p P1S",
+    "stored": 0.6234808576973424,
+    "recomputed": 0.6234808576973424,
+    "abs_diff": 0.0
+   },
+   {
+    "what": "primary p P2",
+    "stored": 0.7002816087884025,
+    "recomputed": 0.7002816087884025,
+    "abs_diff": 0.0
+   },
+   {
+    "what": "primary p P3",
+    "stored": 0.5417316513200312,
+    "recomputed": 0.5417316513200312,
+    "abs_diff": 0.0
+   },
+   {
+    "what": "primary p K1",
+    "stored": 0.5417316513200312,
+    "recomputed": 0.5417316513200312,
+    "abs_diff": 0.0
+   },
+   {
+    "what": "primary p K2N",
+    "stored": 0.03325605767896236,
+    "recomputed": 0.03325605767896236,
+    "abs_diff": 0.0
+   },
+   {
+    "what": "primary p K2S",
+    "stored": 0.6234808576973424,
+    "recomputed": 0.6234808576973424,
+    "abs_diff": 0.0
+   },
+   {
+    "what": "p P1_rev (outside graph, level 0.025)",
+    "stored": 0.5417316513200312,
+    "recomputed": 0.5417316513200312,
+    "abs_diff": 0.0
+   },
+   {
+    "what": "p K2_rev (outside graph, level 0.025)",
+    "stored": 0.8291017555710277,
+    "recomputed": 0.8291017555710277,
+    "abs_diff": 0.0
+   },
+   {
+    "what": "p R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)",
+    "stored": 8.837750889901969e-08,
+    "recomputed": 8.837750889901969e-08,
+    "abs_diff": 0.0
+   },
+   {
+    "what": "p K1 tier S, unadjusted (level 0.025, descriptive)",
+    "stored": 0.9170428559369846,
+    "recomputed": 0.9170428559369846,
+    "abs_diff": 0.0
+   },
+   {
+    "what": "p NC-2 permuted stress (level 0.025, interpretive)",
+    "stored": 0.05391830707457983,
+    "recomputed": 0.05391830707457983,
+    "abs_diff": 0.0
+   },
+   {
+    "what": "p PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)",
+    "stored": 1.1243434742409893e-06,
+    "recomputed": 1.1243434742409893e-06,
+    "abs_diff": 0.0
+   },
+   {
+    "what": "secondary pN QA10_g1",
+    "stored": 0.05391830707457983,
+    "recomputed": 0.05391830707457983,
+    "abs_diff": 0.0
+   },
+   {
+    "what": "secondary pS QA10_g1",
+    "stored": 0.08295714406301567,
+    "recomputed": 0.08295714406301567,
+    "abs_diff": 0.0
+   },
+   {
+    "what": "secondary pN QA10_g4",
+    "stored": 0.08295714406301567,
+    "recomputed": 0.08295714406301567,
+    "abs_diff": 0.0
+   },
+   {
+    "what": "secondary pS QA10_g4",
+    "stored": 0.1216947230495647,
+    "recomputed": 0.1216947230495647,
+    "abs_diff": 0.0
+   },
+   {
+    "what": "secondary pN QH_g1",
+    "stored": 0.010558401079888056,
+    "recomputed": 0.010558401079888056,
+    "abs_diff": 0.0
+   },
+   {
+    "what": "secondary pS QH_g1",
+    "stored": 0.03325605767896236,
+    "recomputed": 0.03325605767896236,
+    "abs_diff": 0.0
+   },
+   {
+    "what": "secondary pN QH_g4",
+    "stored": 0.05391830707457983,
+    "recomputed": 0.05391830707457983,
+    "abs_diff": 0.0
+   },
+   {
+    "what": "secondary pS QH_g4",
+    "stored": 0.08295714406301567,
+    "recomputed": 0.08295714406301567,
+    "abs_diff": 0.0
+   },
+   {
+    "what": "secondary pN QT_g1",
+    "stored": 0.005352435243800333,
+    "recomputed": 0.005352435243800333,
+    "abs_diff": 0.0
+   },
+   {
+    "what": "secondary pS QT_g1",
+    "stored": 0.08295714406301567,
+    "recomputed": 0.08295714406301567,
+    "abs_diff": 0.0
+   }
+  ],
+  "graph_decision_matches_stored": true,
+  "secondary_decision_matches_stored": true,
+  "critical_counts": {
+   "P1N (level 0.0195)": {
+    "stored": 30,
+    "recomputed": 30
+   },
+   "P1_rev (0.025)": {
+    "stored": 30,
+    "recomputed": 30
+   },
+   "K1 (0.0055)": {
+    "stored": 32,
+    "recomputed": 32
+   },
+   "secondary slot (0.005)": {
+    "stored": 33,
+    "recomputed": 33
+   }
+  },
+  "all_reproduced": true
+ },
+ "item_f_from_frozen_json": {
+  "rho_fold": 0.09677419354838708,
+  "rho_fold_upper": 0.43589925198661605,
+  "rho_lab": -0.039901318739258555,
+  "rho_lab_upper": 0.5039935037016375,
+  "avg_pairwise_frozen_code": 0.007444168734491314,
+  "avg_pairwise_upper_frozen_code": 0.2667892435326771,
+  "ratio_avg_pairwise_to_rho_fold": 0.07692307692307693,
+  "ratio_if_60_over_780": 0.07692307692307693,
+  "n_observations": 40,
+  "groups": "inner fold within outer fold; majority laboratory"
+ },
+ "swept_range": [
+  0.0,
+  0.5
+ ],
+ "sweep": {
+  "0.0": {
+   "p_nodes": {
+    "P1N": 0.3179140013144206,
+    "P1S": 0.6820859986855794,
+    "P2": 0.7852047460783069,
+    "P3": 0.5626853438097896,
+    "K1": 0.5626853438097896,
+    "K2N": 0.003213288047845708,
+    "K2S": 0.6820859986855794
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [
+    "N3",
+    "N5",
+    "S3"
+   ],
+   "sec_p": {
+    "N1": 0.008294501687487355,
+    "N2": 0.01923865414210013,
+    "N3": 0.00033977412749663927,
+    "N4": 0.008294501687487355,
+    "N5": 9.108291487791575e-05,
+    "S1": 0.01923865414210013,
+    "S2": 0.0403452338759962,
+    "S3": 0.003213288047845708,
+    "S4": 0.01923865414210013,
+    "S5": 0.01923865414210013
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5626853438097896,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.923070027918584,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 9.094947017729282e-13,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.9807613458578999,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.008294501687487355,
+     "rejected": true,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 3.728928277269006e-11,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.00625,
+     "p": 0.9967867119521543,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.00625,
+     "p": 0.9967867119521543,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.00625,
+     "p": 0.9807613458578999,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.00625,
+     "p": 0.9996602258725034,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9996602258725034,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.00625,
+     "p": 0.9917054983125126,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.00625,
+     "p": 0.9996602258725034,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 27,
+    "0.025": 27,
+    "0.0055": 29,
+    "0.005": 29
+   },
+   "label": "independence (binomial)",
+   "design_effect": 1.0
+  },
+  "0.007444168734491314": {
+   "p_nodes": {
+    "P1N": 0.3391472002888857,
+    "P1S": 0.6608527997111142,
+    "P2": 0.7555506886439785,
+    "P3": 0.5549549003001119,
+    "K1": 0.5549549003001119,
+    "K2N": 0.008254439537418239,
+    "K2S": 0.6608527997111142
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [
+    "N3",
+    "N5"
+   ],
+   "sec_p": {
+    "N1": 0.017626606084795084,
+    "N2": 0.034580144695545025,
+    "N3": 0.0013646647784580066,
+    "N4": 0.017626606084795084,
+    "N5": 0.00047336950639003067,
+    "S1": 0.034580144695545025,
+    "S2": 0.06268939049594631,
+    "S3": 0.008254439537418239,
+    "S4": 0.034580144695545025,
+    "S5": 0.034580144695545025
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5549549003001119,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.8944346399098392,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 8.633522150771294e-11,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.965419855304455,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.017626606084795084,
+     "rejected": true,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 2.2651420734374746e-09,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.9917455604625817,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.9917455604625817,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.965419855304455,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9986353352215419,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9986353352215419,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.9823733939152048,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9986353352215419,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 28,
+    "0.025": 28,
+    "0.0055": 30,
+    "0.005": 30
+   },
+   "label": "frozen-code conversion of the within-fold estimate (60/780); NOT validated as a like-for-like estimate",
+   "design_effect": 1.2903225806451613
+  },
+  "0.01": {
+   "p_nodes": {
+    "P1N": 0.3449724761408606,
+    "P1S": 0.6550275238591394,
+    "P2": 0.7471810202025064,
+    "P3": 0.5528640732657036,
+    "K1": 0.5528640732657036,
+    "K2N": 0.010475827552494172,
+    "K2S": 0.6550275238591394
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [
+    "N3",
+    "N5"
+   ],
+   "sec_p": {
+    "N1": 0.021332235946101574,
+    "N2": 0.04013036088707017,
+    "N3": 0.0019374077240621082,
+    "N4": 0.021332235946101574,
+    "N5": 0.0007170435818728686,
+    "S1": 0.04013036088707017,
+    "S2": 0.07014155846311751,
+    "S3": 0.010475827552494172,
+    "S4": 0.04013036088707017,
+    "S5": 0.04013036088707017
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5528640732657036,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.8855197505319129,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 2.747202483299716e-10,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.9598696391129299,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.021332235946101574,
+     "rejected": true,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 6.421003770288274e-09,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.9895241724475058,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.9895241724475058,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.9598696391129299,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9980625922759379,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9980625922759379,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.9786677640538984,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9980625922759379,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 29,
+    "0.025": 28,
+    "0.0055": 30,
+    "0.005": 30
+   },
+   "label": "",
+   "design_effect": 1.3900000000000001
+  },
+  "0.02": {
+   "p_nodes": {
+    "P1N": 0.36316986820373354,
+    "P1S": 0.6368301317962665,
+    "P2": 0.7204362682207189,
+    "P3": 0.5464059125286395,
+    "K1": 0.5464059125286395,
+    "K2N": 0.02094994539027796,
+    "K2S": 0.6368301317962665
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [
+    "N5"
+   ],
+   "sec_p": {
+    "N1": 0.03718953353095728,
+    "N2": 0.06197946494212116,
+    "N3": 0.005361559350221137,
+    "N4": 0.03718953353095728,
+    "N5": 0.002396145388254351,
+    "S1": 0.06197946494212116,
+    "S2": 0.09748131155287415,
+    "S3": 0.02094994539027796,
+    "S4": 0.06197946494212116,
+    "S5": 0.06197946494212116
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5464059125286395,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.8546569396829999,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 8.409030725212365e-09,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.938020535057879,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.03718953353095728,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 1.38186197822978e-07,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.9790500546097222,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.9790500546097222,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.938020535057879,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.994638440649779,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.994638440649779,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.9628104664690429,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.994638440649779,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 30,
+    "0.025": 29,
+    "0.0055": 31,
+    "0.005": 32
+   },
+   "label": "",
+   "design_effect": 1.78
+  },
+  "0.03": {
+   "p_nodes": {
+    "P1N": 0.37651914230265754,
+    "P1S": 0.6234808576973424,
+    "P2": 0.7002816087884025,
+    "P3": 0.5417316513200312,
+    "K1": 0.5417316513200312,
+    "K2N": 0.03325605767896236,
+    "K2S": 0.6234808576973424
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.05391830707457983,
+    "N2": 0.08295714406301567,
+    "N3": 0.010558401079888056,
+    "N4": 0.05391830707457983,
+    "N5": 0.005352435243800333,
+    "S1": 0.08295714406301567,
+    "S2": 0.1216947230495647,
+    "S3": 0.03325605767896236,
+    "S4": 0.08295714406301567,
+    "S5": 0.08295714406301567
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5417316513200312,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.8291017555710277,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 8.837750889901969e-08,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.9170428559369846,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.05391830707457983,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 1.1243434742409893e-06,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.966743942321038,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.966743942321038,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.9170428559369846,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9894415989201122,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9894415989201122,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.9460816929254205,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9894415989201122,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 30,
+    "0.025": 30,
+    "0.0055": 32,
+    "0.005": 33
+   },
+   "label": "frozen assumption (reproduction check)",
+   "design_effect": 2.17
+  },
+  "0.04": {
+   "p_nodes": {
+    "P1N": 0.3868754849388938,
+    "P1S": 0.6131245150611059,
+    "P2": 0.6843619103559306,
+    "P3": 0.5381377831718179,
+    "K1": 0.5381377831718179,
+    "K2N": 0.04640384095382799,
+    "K2S": 0.6131245150611059
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.07051359922446576,
+    "N2": 0.1024697285299255,
+    "N3": 0.017197417141721724,
+    "N4": 0.07051359922446576,
+    "N5": 0.009548337765826727,
+    "S1": 0.1024697285299255,
+    "S2": 0.14301556928403406,
+    "S3": 0.04640384095382799,
+    "S4": 0.1024697285299255,
+    "S5": 0.1024697285299255
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5381377831718179,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.8075988661217719,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 5.066952530391796e-07,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.8975302714700744,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.07051359922446576,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 5.275591752231638e-06,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.9535961590461719,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.9535961590461719,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.8975302714700744,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9828025828582782,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9828025828582782,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.9294864007755342,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9828025828582782,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 31,
+    "0.025": 31,
+    "0.0055": 33,
+    "0.005": 33
+   },
+   "label": "",
+   "design_effect": 2.56
+  },
+  "0.05": {
+   "p_nodes": {
+    "P1N": 0.3952304948023738,
+    "P1S": 0.6047695051976261,
+    "P2": 0.6713521582822821,
+    "P3": 0.535256985583795,
+    "K1": 0.535256985583795,
+    "K2N": 0.05977771941473908,
+    "K2S": 0.6047695051976261
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.08650341257517064,
+    "N2": 0.12041040368703473,
+    "N3": 0.0249030845537769,
+    "N4": 0.08650341257517064,
+    "N5": 0.014816343896220467,
+    "S1": 0.12041040368703473,
+    "S2": 0.16185607189721019,
+    "S3": 0.05977771941473908,
+    "S4": 0.12041040368703473,
+    "S5": 0.12041040368703473
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.535256985583795,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.7892100087280686,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 1.9790437011203816e-06,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.8795895963129653,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.08650341257517064,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 1.7484953111960643e-05,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.940222280585261,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.940222280585261,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.8795895963129653,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9750969154462231,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9750969154462231,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.9134965874248295,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9750969154462231,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 32,
+    "0.025": 31,
+    "0.0055": 34,
+    "0.005": 34
+   },
+   "label": "top of the frozen grid",
+   "design_effect": 2.95
+  },
+  "0.06": {
+   "p_nodes": {
+    "P1N": 0.4021687831681734,
+    "P1S": 0.5978312168318265,
+    "P2": 0.6604432914164816,
+    "P3": 0.5328761896539519,
+    "K1": 0.5328761896539519,
+    "K2N": 0.07301729372448622,
+    "K2S": 0.5978312168318265
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.10169097502930537,
+    "N2": 0.1368550184991817,
+    "N3": 0.033345870076000546,
+    "N4": 0.10169097502930537,
+    "N5": 0.02095078721015889,
+    "S1": 0.1368550184991817,
+    "S2": 0.1786138667436687,
+    "S3": 0.07301729372448622,
+    "S4": 0.1368550184991817,
+    "S5": 0.1368550184991817
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5328761896539519,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.7732539379532083,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 5.950905960717649e-06,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.8631449815008184,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.10169097502930537,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 4.5764796374060234e-05,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.9269827062755139,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.9269827062755139,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.8631449815008184,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9666541299239995,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9666541299239995,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.8983090249706949,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9666541299239995,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 33,
+    "0.025": 32,
+    "0.0055": 35,
+    "0.005": 35
+   },
+   "label": "",
+   "design_effect": 3.34
+  },
+  "0.07": {
+   "p_nodes": {
+    "P1N": 0.40806039059644794,
+    "P1S": 0.591939609403552,
+    "P2": 0.6511099204703374,
+    "P3": 0.5308621361277608,
+    "K1": 0.5308621361277608,
+    "K2N": 0.08592102094603254,
+    "K2S": 0.591939609403552
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.11601803043899907,
+    "N2": 0.1519397918916527,
+    "N3": 0.04226401099937165,
+    "N4": 0.11601803043899907,
+    "N5": 0.02775362417464943,
+    "S1": 0.1519397918916527,
+    "S2": 0.1936276754155583,
+    "S3": 0.08592102094603254,
+    "S4": 0.1519397918916527,
+    "S5": 0.1519397918916527
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5308621361277608,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.7592327073085006,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 1.4831210285963502e-05,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.8480602081083474,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.11601803043899907,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.00010117252838265305,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.9140789790539675,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.9140789790539675,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.8480602081083474,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9577359890006282,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9577359890006282,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.8839819695610011,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9577359890006282,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 33,
+    "0.025": 33,
+    "0.0055": 35,
+    "0.005": 36
+   },
+   "label": "",
+   "design_effect": 3.7300000000000004
+  },
+  "0.08": {
+   "p_nodes": {
+    "P1N": 0.4131525310094522,
+    "P1S": 0.5868474689905478,
+    "P2": 0.6429941176139244,
+    "P3": 0.5291266152655831,
+    "K1": 0.5291266152655831,
+    "K2N": 0.09838337033738495,
+    "K2S": 0.5868474689905478
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.12949452519896332,
+    "N2": 0.16581218571852774,
+    "N3": 0.05145930366358011,
+    "N4": 0.12949452519896332,
+    "N5": 0.03505241013397127,
+    "S1": 0.16581218571852774,
+    "S2": 0.20717510053974092,
+    "S3": 0.09838337033738495,
+    "S4": 0.16581218571852774,
+    "S5": 0.16581218571852774
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5291266152655831,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.7467764295183766,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 3.212886168651491e-05,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.8341878142814726,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.12949452519896332,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.00019726044130435828,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.9016166296626154,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.9016166296626154,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.8341878142814726,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9485406963364201,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9485406963364201,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.8705054748010371,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9485406963364201,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 34,
+    "0.025": 33,
+    "0.0055": 36,
+    "0.005": 36
+   },
+   "label": "",
+   "design_effect": 4.12
+  },
+  "0.09": {
+   "p_nodes": {
+    "P1N": 0.41761752589322426,
+    "P1S": 0.5823824741067758,
+    "P2": 0.6358425061886087,
+    "P3": 0.5276085886946862,
+    "K1": 0.5276085886946862,
+    "K2N": 0.11035614843945303,
+    "K2S": 0.5823824741067758
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.14216245060927624,
+    "N2": 0.1786118538157544,
+    "N3": 0.060785615963349936,
+    "N4": 0.14216245060927624,
+    "N5": 0.04270449673371899,
+    "S1": 0.1786118538157544,
+    "S2": 0.21948120126487897,
+    "S3": 0.11035614843945303,
+    "S4": 0.1786118538157544,
+    "S5": 0.1786118538157544
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5276085886946862,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.7356053248532604,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 6.248064121531405e-05,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.8213881461842459,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.14216245060927624,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.0003492770271216656,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.8896438515605473,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.8896438515605473,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.8213881461842459,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9392143840366501,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9392143840366501,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.8578375493907242,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9392143840366501,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 34,
+    "0.025": 34,
+    "0.0055": 37,
+    "0.005": 37
+   },
+   "label": "",
+   "design_effect": 4.51
+  },
+  "0.09677419354838708": {
+   "p_nodes": {
+    "P1N": 0.42035035227905404,
+    "P1S": 0.5796496477209458,
+    "P2": 0.6314497609056599,
+    "P3": 0.5266811109305621,
+    "K1": 0.5266811109305621,
+    "K2N": 0.11818042720988232,
+    "K2S": 0.5796496477209458
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.15031241151511596,
+    "N2": 0.18673733299473286,
+    "N3": 0.06712286917006138,
+    "N4": 0.15031241151511596,
+    "N5": 0.04802974800739373,
+    "S1": 0.18673733299473286,
+    "S2": 0.2272063257255803,
+    "S3": 0.11818042720988232,
+    "S4": 0.18673733299473286,
+    "S5": 0.18673733299473286
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5266811109305621,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.7286567054233972,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 9.330821342644027e-05,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.8132626670052673,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.15031241151511596,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.0004921830189134993,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.8818195727901179,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.8818195727901179,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.8132626670052673,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9328771308299386,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9328771308299386,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.8496875884848843,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9328771308299386,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 35,
+    "0.025": 34,
+    "0.0055": 37,
+    "0.005": 37
+   },
+   "label": "within-fold intra-group estimate applied to ALL pairs (over-states; labelled so)",
+   "design_effect": 4.774193548387096
+  },
+  "0.1": {
+   "p_nodes": {
+    "P1N": 0.42157968606236734,
+    "P1S": 0.5784203139376329,
+    "P2": 0.6294700022160435,
+    "P3": 0.5262642856655733,
+    "K1": 0.5262642856655733,
+    "K2N": 0.12182507502258398,
+    "K2S": 0.5784203139376329
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.15407718292359218,
+    "N2": 0.1904641764529348,
+    "N3": 0.07013708559678825,
+    "N4": 0.15407718292359218,
+    "N5": 0.05059527125057739,
+    "S1": 0.1904641764529348,
+    "S2": 0.23072847257146878,
+    "S3": 0.12182507502258398,
+    "S4": 0.1904641764529348,
+    "S5": 0.1904641764529348
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5262642856655733,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.7255040100657858,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.00011158523363256192,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.8095358235470655,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.15407718292359218,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.0005733172348707386,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.8781749249774163,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.8781749249774163,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.8095358235470655,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9298629144032119,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9298629144032119,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.8459228170764083,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9298629144032119,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 35,
+    "0.025": 34,
+    "0.0055": 37,
+    "0.005": 37
+   },
+   "label": "",
+   "design_effect": 4.9
+  },
+  "0.11": {
+   "p_nodes": {
+    "P1N": 0.42513126414567165,
+    "P1S": 0.5748687358543286,
+    "P2": 0.6237378239457692,
+    "P3": 0.5250613836778395,
+    "K1": 0.5250613836778395,
+    "K2N": 0.13279561662673076,
+    "K2S": 0.5748687358543286
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.16529789092084907,
+    "N2": 0.20147904635761643,
+    "N3": 0.07943814067380056,
+    "N4": 0.16529789092084907,
+    "N5": 0.05863429078384951,
+    "S1": 0.20147904635761643,
+    "S2": 0.24106562500439388,
+    "S3": 0.13279561662673076,
+    "S4": 0.20147904635761643,
+    "S5": 0.20147904635761643
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5250613836778395,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.7163039457006627,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.00018606964231820733,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.7985209536423838,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.16529789092084907,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.0008855500294911837,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.8672043833732695,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.8672043833732695,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.7985209536423838,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9205618593261996,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9205618593261996,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.8347021090791513,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9205618593261996,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 35,
+    "0.025": 35,
+    "0.0055": 38,
+    "0.005": 38
+   },
+   "label": "",
+   "design_effect": 5.29
+  },
+  "0.12": {
+   "p_nodes": {
+    "P1N": 0.428342369741839,
+    "P1S": 0.5716576302581612,
+    "P2": 0.6185395788503925,
+    "P3": 0.5239754208080257,
+    "K1": 0.5239754208080257,
+    "K2N": 0.14328439452239958,
+    "K2S": 0.5716576302581612
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.17588270639380946,
+    "N2": 0.211751751897802,
+    "N3": 0.08863567626469143,
+    "N4": 0.17588270639380946,
+    "N5": 0.06675105575794771,
+    "S1": 0.211751751897802,
+    "S2": 0.25061468241978463,
+    "S3": 0.14328439452239958,
+    "S4": 0.211751751897802,
+    "S5": 0.211751751897802
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5239754208080257,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.7078712724179737,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.00029331543732067077,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.7882482481021983,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.17588270639380946,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.0013015872531104808,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.8567156054776006,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.8567156054776006,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.7882482481021983,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9113643237353086,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9113643237353086,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.8241172936061909,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9113643237353086,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 36,
+    "0.025": 35,
+    "0.0055": 38,
+    "0.005": 38
+   },
+   "label": "",
+   "design_effect": 5.68
+  },
+  "0.13": {
+   "p_nodes": {
+    "P1N": 0.4312673747924704,
+    "P1S": 0.5687326252075298,
+    "P2": 0.6137921416547887,
+    "P3": 0.522987493768183,
+    "K1": 0.522987493768183,
+    "K2N": 0.1533139608530168,
+    "K2S": 0.5687326252075298
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.1858864212869862,
+    "N2": 0.22136458526946667,
+    "N3": 0.09769313102541338,
+    "N4": 0.1858864212869862,
+    "N5": 0.07489113251446583,
+    "S1": 0.22136458526946667,
+    "S2": 0.2594765429271117,
+    "S3": 0.1533139608530168,
+    "S4": 0.22136458526946667,
+    "S5": 0.22136458526946667
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.522987493768183,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.7000982363136344,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.00044126817582626314,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.7786354147305335,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.1858864212869862,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.0018360122738057085,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.8466860391469835,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.8466860391469835,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.7786354147305335,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9023068689745868,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9023068689745868,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.8141135787130142,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.9023068689745868,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 36,
+    "0.025": 36,
+    "0.0055": 38,
+    "0.005": 38
+   },
+   "label": "",
+   "design_effect": 6.07
+  },
+  "0.14": {
+   "p_nodes": {
+    "P1N": 0.4339491893064161,
+    "P1S": 0.5660508106935839,
+    "P2": 0.6094294885602415,
+    "P3": 0.5220827302071549,
+    "K1": 0.5220827302071549,
+    "K2N": 0.1629096252961309,
+    "K2S": 0.5660508106935839
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.19535952859246813,
+    "N2": 0.23038858554016667,
+    "N3": 0.10658607674366366,
+    "N4": 0.19535952859246813,
+    "N5": 0.08301285398636286,
+    "S1": 0.23038858554016667,
+    "S2": 0.26773528981487216,
+    "S3": 0.1629096252961309,
+    "S4": 0.23038858554016667,
+    "S5": 0.23038858554016667
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5220827302071549,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.6928970392159972,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.0006382474396306325,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.7696114144598334,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.19535952859246813,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.00250205999678628,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.8370903747038692,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.8370903747038692,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.7696114144598334,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8934139232563362,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8934139232563362,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.804640471407532,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8934139232563362,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 37,
+    "0.025": 36,
+    "0.0055": 39,
+    "0.005": 39
+   },
+   "label": "",
+   "design_effect": 6.460000000000001
+  },
+  "0.15": {
+   "p_nodes": {
+    "P1N": 0.43642219691651324,
+    "P1S": 0.5635778030834869,
+    "P2": 0.605398418387428,
+    "P3": 0.5212492450835468,
+    "K1": 0.5212492450835468,
+    "K2N": 0.17209754040298297,
+    "K2S": 0.5635778030834869
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.20434797149065528,
+    "N2": 0.2388851757323735,
+    "N3": 0.11529895935392498,
+    "N4": 0.20434797149065528,
+    "N5": 0.09108461777564832,
+    "S1": 0.2388851757323735,
+    "S2": 0.2754615295226325,
+    "S3": 0.17209754040298297,
+    "S4": 0.2388851757323735,
+    "S5": 0.2388851757323735
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5212492450835468,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.6861953546876587,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.0008927691783106149,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.7611148242676268,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.20434797149065528,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.0033114267131759893,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.8279024595970174,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.8279024595970174,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.7611148242676268,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8847010406460751,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8847010406460751,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.7956520285093451,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8847010406460751,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 37,
+    "0.025": 36,
+    "0.0055": 39,
+    "0.005": 39
+   },
+   "label": "grid point",
+   "design_effect": 6.85
+  },
+  "0.16": {
+   "p_nodes": {
+    "P1N": 0.43871432017531836,
+    "P1S": 0.5612856798246817,
+    "P2": 0.6016555140680495,
+    "P3": 0.5204774096204426,
+    "K1": 0.5204774096204426,
+    "K2N": 0.18090356511427652,
+    "K2S": 0.5612856798246817
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.21289325544563842,
+    "N2": 0.24690760972202294,
+    "N3": 0.12382269758010167,
+    "N4": 0.21289325544563842,
+    "N5": 0.09908271933649383,
+    "S1": 0.24690760972202294,
+    "S2": 0.2827149851689345,
+    "S3": 0.18090356511427652,
+    "S4": 0.24690760972202294,
+    "S5": 0.24690760972202294
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5204774096204426,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.6799330075021306,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.0012133872615433272,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.7530923902779773,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.21289325544563842,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.004274183957328266,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.8190964348857237,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.8190964348857237,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.7530923902779773,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8761773024198983,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8761773024198983,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.7871067445543619,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8761773024198983,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 37,
+    "0.025": 37,
+    "0.0055": 39,
+    "0.005": 39
+   },
+   "label": "",
+   "design_effect": 7.24
+  },
+  "0.17": {
+   "p_nodes": {
+    "P1N": 0.4408485050543803,
+    "P1S": 0.5591514949456201,
+    "P2": 0.5981649407468589,
+    "P3": 0.5197593278518516,
+    "K1": 0.5197593278518516,
+    "K2N": 0.18935261174557866,
+    "K2S": 0.5591514949456201
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.22103273465713177,
+    "N2": 0.2545022136233979,
+    "N3": 0.13215291396062165,
+    "N4": 0.22103273465713177,
+    "N5": 0.10698963447412439,
+    "S1": 0.2545022136233979,
+    "S2": 0.2895465232959363,
+    "S3": 0.18935261174557866,
+    "S4": 0.2545022136233979,
+    "S5": 0.2545022136233979
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5197593278518516,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.6740594790777207,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.0016085575378765422,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.7454977863766026,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.22103273465713177,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.005398771182837516,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.8106473882544218,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.8106473882544218,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.7454977863766026,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8678470860393787,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8678470860393787,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.7789672653428689,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8678470860393787,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 38,
+    "0.025": 37,
+    "0.0055": 39,
+    "0.005": 40
+   },
+   "label": "",
+   "design_effect": 7.630000000000001
+  },
+  "0.18": {
+   "p_nodes": {
+    "P1N": 0.44284380838960685,
+    "P1S": 0.5571561916103933,
+    "P2": 0.5948968211663773,
+    "P3": 0.5190884544750403,
+    "K1": 0.5190884544750403,
+    "K2N": 0.19746829382337167,
+    "K2S": 0.5571561916103933
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.22879997015527923,
+    "N2": 0.26170943488807763,
+    "N3": 0.1402886303782806,
+    "N4": 0.22879997015527923,
+    "N5": 0.11479266661636499,
+    "S1": 0.26170943488807763,
+    "S2": 0.2959997486182247,
+    "S3": 0.19746829382337167,
+    "S4": 0.26170943488807763,
+    "S5": 0.26170943488807763
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5190884544750403,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.66853200834087,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.002086525179211204,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.7382905651119227,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.22879997015527923,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.006692045090255953,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.8025317061766287,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.8025317061766287,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.7382905651119227,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8597113696217196,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8597113696217196,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.7712000298447212,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8597113696217196,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 38,
+    "0.025": 37,
+    "0.0055": 40,
+    "0.005": 40
+   },
+   "label": "",
+   "design_effect": 8.02
+  },
+  "0.19": {
+   "p_nodes": {
+    "P1N": 0.44471620803274925,
+    "P1S": 0.5552837919672509,
+    "P2": 0.5918260175445031,
+    "P3": 0.5184593110101134,
+    "K1": 0.5184593110101134,
+    "K2N": 0.20527276057562557,
+    "K2S": 0.5552837919672509
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.23622510443033973,
+    "N2": 0.2685647223998672,
+    "N3": 0.1482313046560572,
+    "N4": 0.23622510443033973,
+    "N5": 0.12248288475000736,
+    "S1": 0.2685647223998672,
+    "S2": 0.30211226810191927,
+    "S3": 0.20527276057562557,
+    "S4": 0.2685647223998672,
+    "S5": 0.2685647223998672
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5184593110101134,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.6633141280571943,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.002655234457701454,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.731435277600133,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.23622510443033973,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.008159367306679412,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7947272394243746,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7947272394243746,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.731435277600133,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8517686953439428,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8517686953439428,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.7637748955696606,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8517686953439428,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 38,
+    "0.025": 38,
+    "0.0055": 40,
+    "0.005": 40
+   },
+   "label": "",
+   "design_effect": 8.41
+  },
+  "0.2": {
+   "p_nodes": {
+    "P1N": 0.4464792156227213,
+    "P1S": 0.5535207843772789,
+    "P2": 0.5889312049266674,
+    "P3": 0.5178672716959729,
+    "K1": 0.5178672716959729,
+    "K2N": 0.21278664613888734,
+    "K2S": 0.5535207843772789
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.2433352240499155,
+    "N2": 0.27509926262053347,
+    "N3": 0.15598411798071518,
+    "N4": 0.2433352240499155,
+    "N5": 0.13005429057612877,
+    "S1": 0.27509926262053347,
+    "S2": 0.30791670042946273,
+    "S3": 0.21278664613888734,
+    "S4": 0.27509926262053347,
+    "S5": 0.27509926262053347
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5178672716959729,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.6583745239445747,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.0033222591362126502,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.7249007373794668,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.2433352240499155,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.009804715987359115,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7872133538611129,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7872133538611129,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.7249007373794668,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8440158820192849,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8440158820192849,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.7566647759500849,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8440158820192849,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 38,
+    "0.025": 38,
+    "0.0055": 40,
+    "0.005": 40
+   },
+   "label": "grid point",
+   "design_effect": 8.8
+  },
+  "0.21": {
+   "p_nodes": {
+    "P1N": 0.44814434643489104,
+    "P1S": 0.551855653565109,
+    "P2": 0.5861941569858672,
+    "P3": 0.5173083997264915,
+    "K1": 0.5173083997264915,
+    "K2N": 0.22002908792914594,
+    "K2S": 0.551855653565109
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.2501546965431159,
+    "N2": 0.2813405951425468,
+    "N3": 0.16355144728085272,
+    "N4": 0.2501546965431159,
+    "N5": 0.13750316543299,
+    "S1": 0.2813405951425468,
+    "S2": 0.3134414880829761,
+    "S3": 0.22002908792914594,
+    "S4": 0.2813405951425468,
+    "S5": 0.2813405951425468
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5173083997264915,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.653686136046169,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.0040947511621095235,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.7186594048574535,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.2501546965431159,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.011630810377174254,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7799709120708543,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7799709120708543,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.7186594048574535,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8364485527191473,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8364485527191473,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.7498453034568845,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8364485527191473,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 39,
+    "0.025": 38,
+    "0.0055": 40,
+    "0.005": 40
+   },
+   "label": "",
+   "design_effect": 9.19
+  },
+  "0.22": {
+   "p_nodes": {
+    "P1N": 0.44972148412864604,
+    "P1S": 0.5502785158713541,
+    "P2": 0.5835991889818171,
+    "P3": 0.5167793204025941,
+    "K1": 0.5167793204025941,
+    "K2N": 0.22701778526044417,
+    "K2S": 0.5502785158713541
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.25670547604389965,
+    "N2": 0.2873131280802145,
+    "N3": 0.1709384744177545,
+    "N4": 0.25670547604389965,
+    "N5": 0.14482755784894746,
+    "S1": 0.2873131280802145,
+    "S2": 0.3187115553211149,
+    "S3": 0.22701778526044417,
+    "S4": 0.2873131280802145,
+    "S5": 0.2873131280802145
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5167793204025941,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.6492254440487318,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.004979405182986911,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.7126868719197859,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.25670547604389965,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.013639240283833355,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7729822147395562,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7729822147395562,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.7126868719197859,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8290615255822458,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8290615255822458,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.7432945239561008,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8290615255822458,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 39,
+    "0.025": 39,
+    "0.0055": 40,
+    "0.005": 40
+   },
+   "label": "",
+   "design_effect": 9.58
+  },
+  "0.23": {
+   "p_nodes": {
+    "P1N": 0.4512191671125838,
+    "P1S": 0.5487808328874166,
+    "P2": 0.5811327185578243,
+    "P3": 0.5162771217455784,
+    "K1": 0.5162771217455784,
+    "K2N": 0.233769079873992,
+    "K2S": 0.5487808328874166
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.2630073766445578,
+    "N2": 0.2930385705982055,
+    "N3": 0.17815089691342684,
+    "N4": 0.2630073766445578,
+    "N5": 0.15202688103985892,
+    "S1": 0.2930385705982055,
+    "S2": 0.32374884496725653,
+    "S3": 0.233769079873992,
+    "S4": 0.2930385705982055,
+    "S5": 0.2930385705982055
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5162771217455784,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.6449718937818757,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.005982436436418934,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.706961429401795,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.2630073766445578,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.015830594760400635,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7662309201260084,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7662309201260084,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.706961429401795,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8218491030865734,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8218491030865734,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.7369926233554427,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8218491030865734,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 39,
+    "0.025": 39,
+    "0.0055": 41,
+    "0.005": 41
+   },
+   "label": "",
+   "design_effect": 9.97
+  },
+  "0.24": {
+   "p_nodes": {
+    "P1N": 0.45264481570050386,
+    "P1S": 0.5473551842994964,
+    "P2": 0.5787829159883084,
+    "P3": 0.5157992758063606,
+    "K1": 0.5157992758063606,
+    "K2N": 0.2402980468135295,
+    "K2S": 0.5473551842994964
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.26907831473257204,
+    "N2": 0.2985362969668198,
+    "N3": 0.18519471427769427,
+    "N4": 0.26907831473257204,
+    "N5": 0.1591015964112533,
+    "S1": 0.2985362969668198,
+    "S2": 0.32857275921473056,
+    "S3": 0.2402980468135295,
+    "S4": 0.2985362969668198,
+    "S5": 0.2985362969668198
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5157992758063606,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.6409074331678515,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.007109569721021799,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.7014637030331805,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.26907831473257204,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.018204586123437467,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7597019531864708,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7597019531864708,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.7014637030331805,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8148052857223058,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8148052857223058,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.7309216852674284,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8148052857223058,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 39,
+    "0.025": 39,
+    "0.0055": 41,
+    "0.005": 41
+   },
+   "label": "",
+   "design_effect": 10.36
+  },
+  "0.25": {
+   "p_nodes": {
+    "P1N": 0.4540049140136444,
+    "P1S": 0.5459950859863558,
+    "P2": 0.5765394231009234,
+    "P3": 0.515343575759106,
+    "K1": 0.515343575759106,
+    "K2N": 0.24661858844051382,
+    "K2S": 0.5459950859863558
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.27493452269474183,
+    "N2": 0.3038236539986506,
+    "N3": 0.1920760707870139,
+    "N4": 0.27493452269474183,
+    "N5": 0.16605296442866857,
+    "S1": 0.3038236539986506,
+    "S2": 0.3332005238830149,
+    "S3": 0.24661858844051382,
+    "S4": 0.3038236539986506,
+    "S5": 0.3038236539986506
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.515343575759106,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.637016133819126,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.008366037375942763,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.6961763460013498,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.27493452269474183,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.020760166821783554,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7533814115594866,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7533814115594866,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.6961763460013498,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8079239292129863,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8079239292129863,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.7250654773052586,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8079239292129863,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 40,
+    "0.025": 39,
+    "0.0055": 41,
+    "0.005": 41
+   },
+   "label": "",
+   "design_effect": 10.75
+  },
+  "0.26": {
+   "p_nodes": {
+    "P1N": 0.4553051569202448,
+    "P1S": 0.5446948430797552,
+    "P2": 0.5743931254750209,
+    "P3": 0.5149080851659346,
+    "K1": 0.5149080851659346,
+    "K2N": 0.2527435271945093,
+    "K2S": 0.5446948430797552
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.28059073680373836,
+    "N2": 0.3089162215858116,
+    "N3": 0.1988011405225488,
+    "N4": 0.28059073680373836,
+    "N5": 0.17288284835320672,
+    "S1": 0.3089162215858116,
+    "S2": 0.33764749121298954,
+    "S3": 0.2527435271945093,
+    "S4": 0.3089162215858116,
+    "S5": 0.3089162215858116
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5149080851659346,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.6332838802442678,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.009756584442352395,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.6910837784141884,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.28059073680373836,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.02349563770085028,
+     "rejected": true,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7472564728054908,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7472564728054908,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.6910837784141884,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8011988594774512,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8011988594774512,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.7194092631962619,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.8011988594774512,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 40,
+    "0.025": 39,
+    "0.0055": 41,
+    "0.005": 41
+   },
+   "label": "",
+   "design_effect": 11.14
+  },
+  "0.2667892435326771": {
+   "p_nodes": {
+    "P1N": 0.45615639183978485,
+    "P1S": 0.5438436081602153,
+    "P2": 0.5729872075995395,
+    "P3": 0.5146230607888383,
+    "K1": 0.5146230607888383,
+    "K2N": 0.2567964764316295,
+    "K2S": 0.5438436081602153
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.2843237677738008,
+    "N2": 0.3122698730612055,
+    "N3": 0.20328100051104972,
+    "N4": 0.2843237677738008,
+    "N5": 0.177451747165902,
+    "S1": 0.3122698730612055,
+    "S2": 0.3405706517169151,
+    "S3": 0.2567964764316295,
+    "S4": 0.3122698730612055,
+    "S5": 0.3122698730612055
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5146230607888383,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.6308341586761977,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.010779268194511261,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.6877301269387948,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.2843237677738008,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.02545421434914798,
+     "rejected": false,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7432035235683708,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7432035235683708,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.6877301269387948,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.7967189994889504,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.7967189994889504,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.7156762322261996,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.7967189994889504,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 40,
+    "0.025": 40,
+    "0.0055": 41,
+    "0.005": 41
+   },
+   "label": "frozen-code conversion of the within-fold upper limit; rests mainly on a 3-laboratory term",
+   "design_effect": 11.404780497774405
+  },
+  "0.27": {
+   "p_nodes": {
+    "P1N": 0.45655056969312524,
+    "P1S": 0.5434494303068751,
+    "P2": 0.5723359663706568,
+    "P3": 0.5144910967218077,
+    "K1": 0.5144910967218077,
+    "K2N": 0.25868469451884135,
+    "K2S": 0.5434494303068751
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.2860603621622512,
+    "N2": 0.31382803429133493,
+    "N3": 0.20537604410478022,
+    "N4": 0.2860603621622512,
+    "N5": 0.17959355954695755,
+    "S1": 0.31382803429133493,
+    "S2": 0.34192739299629055,
+    "S3": 0.25868469451884135,
+    "S4": 0.31382803429133493,
+    "S5": 0.31382803429133493
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5144910967218077,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.629698112858635,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.011285479429525892,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.6861719657086655,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.2860603621622512,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.02640874695325938,
+     "rejected": false,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7413153054811591,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7413153054811591,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.6861719657086655,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.7946239558952201,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.7946239558952201,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.7139396378377493,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.7946239558952201,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 40,
+    "0.025": 40,
+    "0.0055": 41,
+    "0.005": 41
+   },
+   "label": "",
+   "design_effect": 11.530000000000001
+  },
+  "0.28": {
+   "p_nodes": {
+    "P1N": 0.45774560618166804,
+    "P1S": 0.5422543938183325,
+    "P2": 0.5703607936375233,
+    "P3": 0.5140910984529489,
+    "K1": 0.5140910984529489,
+    "K2N": 0.2644530145388163,
+    "K2S": 0.5422543938183325
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.29135561744592414,
+    "N2": 0.31857177050346425,
+    "N3": 0.21180678923212484,
+    "N4": 0.29135561744592414,
+    "N5": 0.1861877355369748,
+    "S1": 0.31857177050346425,
+    "S2": 0.3460525533214737,
+    "S3": 0.2644530145388163,
+    "S4": 0.31857177050346425,
+    "S5": 0.31857177050346425
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5140910984529489,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.6262476141424024,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.012956529345146165,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.6814282294965365,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.29135561744592414,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.0294967795729921,
+     "rejected": false,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7355469854611844,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7355469854611844,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.6814282294965365,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.7881932107678756,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.7881932107678756,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.7086443825540767,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.7881932107678756,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 40,
+    "0.025": 40,
+    "0.0055": 41,
+    "0.005": 41
+   },
+   "label": "",
+   "design_effect": 11.920000000000002
+  },
+  "0.29": {
+   "p_nodes": {
+    "P1N": 0.45889422991780165,
+    "P1S": 0.5411057700821988,
+    "P2": 0.5684612329052064,
+    "P3": 0.5137067458264158,
+    "K1": 0.5137067458264158,
+    "K2N": 0.2700585818250715,
+    "K2S": 0.5411057700821988
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.2964876619606082,
+    "N2": 0.32315891448590184,
+    "N3": 0.2180992291043864,
+    "N4": 0.2964876619606082,
+    "N5": 0.19266824394991983,
+    "S1": 0.32315891448590184,
+    "S2": 0.3500340682903403,
+    "S3": 0.2700585818250715,
+    "S4": 0.32315891448590184,
+    "S5": 0.32315891448590184
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5137067458264158,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.6229223296477573,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.014773097866679845,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.6768410855140987,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.2964876619606082,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.0327566374900706,
+     "rejected": false,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7299414181749291,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7299414181749291,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.6768410855140987,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.7819007708956139,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.7819007708956139,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.7035123380393924,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.7819007708956139,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 40,
+    "0.025": 40,
+    "0.0055": 41,
+    "0.005": 41
+   },
+   "label": "",
+   "design_effect": 12.309999999999999
+  },
+  "0.3": {
+   "p_nodes": {
+    "P1N": 0.4599999815581887,
+    "P1S": 0.5400000184418117,
+    "P2": 0.5666315818792496,
+    "P3": 0.513336838585572,
+    "K1": 0.513336838585572,
+    "K2N": 0.27551073304391915,
+    "K2S": 0.5400000184418117
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.3014667072697818,
+    "N2": 0.3275998957029212,
+    "N3": 0.22425903427674454,
+    "N4": 0.3014667072697818,
+    "N5": 0.1990381069201403,
+    "S1": 0.3275998957029212,
+    "S2": 0.353881958566223,
+    "S3": 0.27551073304391915,
+    "S4": 0.3275998957029212,
+    "S5": 0.3275998957029212
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.513336838585572,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.6197132173426633,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.01673812572440404,
+     "rejected": true,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.6724001042970792,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.3014667072697818,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.03618491079839964,
+     "rejected": false,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7244892669560813,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.7244892669560813,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.6724001042970792,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.7757409657232558,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.7757409657232558,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.6985332927302187,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.7757409657232558,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 40,
+    "0.025": 40,
+    "0.0055": 41,
+    "0.005": 41
+   },
+   "label": "grid point",
+   "design_effect": 12.7
+  },
+  "0.43589925198661605": {
+   "p_nodes": {
+    "P1N": 0.47201362688778714,
+    "P1S": 0.5279863731122131,
+    "P2": 0.5466974422166647,
+    "P3": 0.5093234738988752,
+    "K1": 0.5093234738988752,
+    "K2N": 0.3379987368399511,
+    "K2S": 0.5279863731122131
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.35778651351854573,
+    "N2": 0.3772828132211699,
+    "N3": 0.2972973399572306,
+    "N4": 0.35778651351854573,
+    "N5": 0.27622562072346185,
+    "S1": 0.3772828132211699,
+    "S2": 0.3965393254370834,
+    "S3": 0.3379987368399511,
+    "S4": 0.3772828132211699,
+    "S5": 0.3772828132211699
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5093234738988752,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.5843984967892183,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.058939541762632566,
+     "rejected": false,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.6227171867788305,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.35778651351854573,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.0974161144104505,
+     "rejected": false,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.6620012631600493,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.6620012631600493,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.6227171867788305,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.7027026600427696,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.7027026600427696,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.6422134864814547,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.7027026600427696,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 41,
+    "0.025": 41,
+    "0.0055": 41,
+    "0.005": 41
+   },
+   "label": "within-fold upper limit applied to ALL pairs (over-states; labelled so)",
+   "design_effect": 18.000070827478027
+  },
+  "0.5": {
+   "p_nodes": {
+    "P1N": 0.4764040945643271,
+    "P1S": 0.5235959054356736,
+    "P2": 0.539390904988612,
+    "P3": 0.5078589046571034,
+    "K1": 0.5078589046571034,
+    "K2N": 0.36214760019776526,
+    "K2S": 0.5235959054356736
+   },
+   "graph_rejected": [],
+   "graph_final_levels": {
+    "P1N": 0.019500000000000003,
+    "P1S": 0.0,
+    "P2": 0.0,
+    "P3": 0.0,
+    "K1": 0.0055,
+    "K2N": 0.0,
+    "K2S": 0.0
+   },
+   "sec_rejected": [],
+   "sec_p": {
+    "N1": 0.37925638573663595,
+    "N2": 0.3960062457047608,
+    "N3": 0.3265287869717991,
+    "N4": 0.37925638573663595,
+    "N5": 0.3078104122228136,
+    "S1": 0.3960062457047608,
+    "S2": 0.41246264451441456,
+    "S3": 0.36214760019776526,
+    "S4": 0.3960062457047608,
+    "S5": 0.3960062457047608
+   },
+   "tests": {
+    "P1_rev (outside graph, level 0.025)": {
+     "positives": 20,
+     "level": 0.025,
+     "p": 0.5078589046571034,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "K2_rev (outside graph, level 0.025)": {
+     "positives": 16,
+     "level": 0.025,
+     "p": 0.5713175846326725,
+     "rejected": false,
+     "role": "unfavourable direction"
+    },
+    "R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": {
+     "positives": 40,
+     "level": 0.025,
+     "p": 0.08892787877390856,
+     "rejected": false,
+     "role": "reported, feeds modifier M3"
+    },
+    "K1 tier S, unadjusted (level 0.025, descriptive)": {
+     "positives": 14,
+     "level": 0.025,
+     "p": 0.6039937542952398,
+     "rejected": false,
+     "role": "descriptive"
+    },
+    "NC-2 permuted stress (level 0.025, interpretive)": {
+     "positives": 28,
+     "level": 0.025,
+     "p": 0.37925638573663595,
+     "rejected": false,
+     "role": "reported check"
+    },
+    "PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": {
+     "positives": 39,
+     "level": 0.025,
+     "p": 0.13395465283664632,
+     "rejected": false,
+     "role": "reported check"
+    }
+   },
+   "secondary_reverse": {
+    "QA10_g1:A10:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.6378523998022353,
+     "rejected": false
+    },
+    "QA10_g1:A10P:revS": {
+     "positives": 12,
+     "level": 0.005000000000000001,
+     "p": 0.6378523998022353,
+     "rejected": false
+    },
+    "QA10_g4:A10:revS": {
+     "positives": 14,
+     "level": 0.005000000000000001,
+     "p": 0.6039937542952398,
+     "rejected": false
+    },
+    "QA10_g4:A10P:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.6734712130282013,
+     "rejected": false
+    },
+    "QH_g1:A2:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.6734712130282013,
+     "rejected": false
+    },
+    "QH_g4:A2:revS": {
+     "positives": 13,
+     "level": 0.005000000000000001,
+     "p": 0.6207436142633647,
+     "rejected": false
+    },
+    "QT_g1:A13:revS": {
+     "positives": 10,
+     "level": 0.005000000000000001,
+     "p": 0.6734712130282013,
+     "rejected": false
+    }
+   },
+   "crit_levels": {
+    "0.0195": 41,
+    "0.025": 41,
+    "0.0055": 41,
+    "0.005": 41
+   },
+   "label": "end of swept range",
+   "design_effect": 20.5
+  }
+ },
+ "fine_grid": {
+  "step": 0.001,
+  "range": [
+   0.0,
+   0.5
+  ],
+  "decisions_at_rho_0": {
+   "graph:P1N": false,
+   "graph:P1S": false,
+   "graph:P2": false,
+   "graph:P3": false,
+   "graph:K1": false,
+   "graph:K2N": false,
+   "graph:K2S": false,
+   "sec:N1": false,
+   "sec:N2": false,
+   "sec:N3": true,
+   "sec:N4": false,
+   "sec:N5": true,
+   "sec:S1": false,
+   "sec:S2": false,
+   "sec:S3": true,
+   "sec:S4": false,
+   "sec:S5": false,
+   "test:P1_rev (outside graph, level 0.025)": false,
+   "test:K2_rev (outside graph, level 0.025)": false,
+   "test:R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": true,
+   "test:K1 tier S, unadjusted (level 0.025, descriptive)": false,
+   "test:NC-2 permuted stress (level 0.025, interpretive)": true,
+   "test:PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": true,
+   "rev:QA10_g1:A10:revS": false,
+   "rev:QA10_g1:A10P:revS": false,
+   "rev:QA10_g4:A10:revS": false,
+   "rev:QA10_g4:A10P:revS": false,
+   "rev:QH_g1:A2:revS": false,
+   "rev:QH_g4:A2:revS": false,
+   "rev:QT_g1:A13:revS": false
+  },
+  "decision_changes_along_increasing_rho": {
+   "sec:S3": [
+    {
+     "rho_step_to": 0.004,
+     "from": true,
+     "to": false
+    }
+   ],
+   "test:NC-2 permuted stress (level 0.025, interpretive)": [
+    {
+     "rho_step_to": 0.013,
+     "from": true,
+     "to": false
+    }
+   ],
+   "sec:N3": [
+    {
+     "rho_step_to": 0.02,
+     "from": true,
+     "to": false
+    }
+   ],
+   "sec:N5": [
+    {
+     "rho_step_to": 0.03,
+     "from": true,
+     "to": false
+    }
+   ],
+   "test:PC-3 PINN-KAN vs persistence at g4 (level 0.025, reported check)": [
+    {
+     "rho_step_to": 0.266,
+     "from": true,
+     "to": false
+    }
+   ],
+   "test:R1 at g1: PINN-KAN vs persistence (outside graph, level 0.025)": [
+    {
+     "rho_step_to": 0.336,
+     "from": true,
+     "to": false
+    }
+   ]
+  }
+ }
+}

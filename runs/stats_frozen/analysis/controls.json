@@ -1,0 +1,195 @@
+{
+ "negative": {
+  "nc1": {
+   "runs_checked": 15,
+   "passed": true,
+   "max_abs_diff": 0.0,
+   "n_rows": 792020,
+   "gating": true
+  },
+  "nc2": {
+   "test": "B",
+   "cell": [
+    32,
+    "full"
+   ],
+   "n": 40,
+   "k_positive": 28,
+   "median_L": 0.4720583059463772,
+   "rel_increase_median": 0.6032908623924162,
+   "median_ci95": [
+    -0.04720487751067792,
+    1.1147314054593986
+   ],
+   "interval_rank": 11,
+   "p_one_sided": 0.05391830707457983,
+   "crit_positives": 30,
+   "alpha": 0.025,
+   "passed": false,
+   "sign_rule": "sign test with a fixed design effect (assumed average pairwise sign correlation at most 0.03); assumption-based, not exact and not distribution-free",
+   "plain_exact_descriptive": {
+    "positives": 28,
+    "n": 40,
+    "p": 0.008294501687487355,
+    "label": "independent-conditions row (descriptive)"
+   },
+   "wording": "the accuracy of the learned law depends on the stress dependence it learns",
+   "wording_rule": "a pass permits the Discussion sentence (section 10), a fail removes it; no tier, no state and no title depends on NC-2",
+   "L_by_cond": {
+    "T23|SOCmax0.25|DoD0.05|Cch0.4|Cdch0.3": 0.9538494493258289,
+    "T23|SOCmax0.36|DoD0.05|Cch0.8|Cdch1.7": 1.5976470738518893,
+    "T23|SOCmax0.4|DoD0.05|Cch0.8|Cdch0.6": 1.5250120633669892,
+    "T23|SOCmax0.65|DoD0.35|Cch0.4|Cdch1.5": 0.49125230466586634,
+    "T23|SOCmax0.69|DoD0.2|Cch1|Cdch0.5": -0.04720487751067792,
+    "T23|SOCmax0.7|DoD0.3|Cch0.6|Cdch1.1": 0.4528643072268881,
+    "T23|SOCmax0.8|DoD0.15|Cch0.9|Cdch2": 1.082790314401307,
+    "T23|SOCmax0.8|DoD0.25|Cch0.2|Cdch1.4": -0.08977288183254685,
+    "T23|SOCmax0.8|DoD0.5|Cch0.8|Cdch0.3": 0.01668632352519188,
+    "T23|SOCmax0.8|DoD0.6|Cch0.5|Cdch1": 0.1221875666736932,
+    "T35|SOCmax0.35|DoD0.05|Cch0.2|Cdch1": 0.88067649859564,
+    "T35|SOCmax0.35|DoD0.15|Cch0.9|Cdch0.9": 1.1284725670928326,
+    "T35|SOCmax0.55|DoD0.25|Cch0.4|Cdch1.4": -1.3261546297804345,
+    "T35|SOCmax0.55|DoD0.3|Cch0.8|Cdch0.5": 0.12112653644934805,
+    "T35|SOCmax0.5|DoD0.1|Cch1|Cdch0.4": 0.11182356263155521,
+    "T35|SOCmax0.5|DoD0.25|Cch0.4|Cdch0.7": 0.5214203818203079,
+    "T35|SOCmax0.63|DoD0.4|Cch0.5|Cdch0.2": -0.5069279400868913,
+    "T35|SOCmax0.74|DoD0.15|Cch0.5|Cdch1.3": -0.15000895529155966,
+    "T35|SOCmax0.7|DoD0.05|Cch0.3|Cdch1.2": -0.3191628233179998,
+    "T35|SOCmax0.7|DoD0.5|Cch0.7|Cdch1.7": 1.1147314054593986,
+    "T35|SOCmax0.8|DoD0.15|Cch0.5|Cdch0.8": -0.4016634500840324,
+    "T35|SOCmax0.8|DoD0.1|Cch0.7|Cdch0.8": 0.25826699930902114,
+    "T35|SOCmax0.8|DoD0.5|Cch0.9|Cdch1.1": -0.00704017710744171,
+    "T45|SOCmax0.3|DoD0.1|Cch0.8|Cdch0.9": 1.2325398574014965,
+    "T45|SOCmax0.41|DoD0.05|Cch1|Cdch1": 1.1854135365575735,
+    "T45|SOCmax0.45|DoD0.05|Cch1|Cdch1.8": 0.7443553512937721,
+    "T45|SOCmax0.47|DoD0.15|Cch0.7|Cdch1.9": 1.1581148625381594,
+    "T45|SOCmax0.52|DoD0.05|Cch0.3|Cdch0.7": -0.5496097521331353,
+    "T45|SOCmax0.65|DoD0.45|Cch0.5|Cdch1.4": 2.74359657861819,
+    "T45|SOCmax0.6|DoD0.15|Cch0.4|Cdch1.3": 1.056491264777339,
+    "T45|SOCmax0.6|DoD0.15|Cch0.9|Cdch1.9": 0.5266544762371126,
+    "T45|SOCmax0.75|DoD0.4|Cch0.7|Cdch0.2": 0.37951145962385013,
+    "T45|SOCmax0.7|DoD0.2|Cch0.2|Cdch0.9": 0.43078441171602844,
+    "T45|SOCmax0.8|DoD0.05|Cch0.9|Cdch1.6": -1.7892494172173419,
+    "T45|SOCmax0.8|DoD0.35|Cch0.8|Cdch0.4": 1.9356711918062148,
+    "T45|SOCmax0.8|DoD0.6|Cch0.24|Cdch2": 1.4467914746925836,
+    "T45|SOCmax0.8|DoD0.6|Cch0.2|Cdch0.44": -2.115400206308666,
+    "T45|SOCmax0.8|DoD0.6|Cch0.8|Cdch0.6": 1.4693439920755962,
+    "T45|SOCmax0.8|DoD0.6|Cch1|Cdch0.26": 0.5494077234820179,
+    "T45|SOCmax0.8|DoD0.6|Cch1|Cdch2": -0.160125680970009
+   },
+   "descriptive": {
+    "scores_mean_pp": {
+     "real": {
+      "A1": 0.6690172601848683,
+      "A9": 0.8914174005197942,
+      "R1": 2.9057816322802967,
+      "R2": 3.3151338295603026
+     },
+     "permuted": {
+      "A1": 0.9847440270301613,
+      "A9": null,
+      "R1": null,
+      "R2": null
+     }
+    },
+    "L_A9_over_A1_real": {
+     "n": 40,
+     "median": 0.1535466512558435,
+     "mean": 0.31777986969872174
+    },
+    "L_A9_over_A1_permuted": null
+   },
+   "gating": false,
+   "interpretive": true
+  }
+ },
+ "positive": {
+  "P1_G0_nrmse_leq_0p15": true,
+  "P1_full": {
+   "passed": null,
+   "reason": "A11/A12 are not in this H7 run: use arms_by_gen='batch' (G0 needs the learners)"
+  },
+  "P1_passed": null,
+  "P2_monotone_in_T": true,
+  "PC2_detail": {
+   "status": "evaluated",
+   "passed": true,
+   "mean_curve_increasing": true,
+   "n_members": 25,
+   "n_folds": 5,
+   "soc_evaluated": [
+    5.0,
+    10.0,
+    15.0,
+    20.0,
+    25.0,
+    30.0,
+    35.0,
+    40.0,
+    45.0,
+    50.0,
+    55.0,
+    60.0,
+    65.0,
+    70.0,
+    75.0,
+    80.0,
+    85.0,
+    90.0,
+    95.0,
+    100.0
+   ],
+   "soc_excluded_outside_hull": [
+    0.0
+   ],
+   "members_failing": 0,
+   "first_violations": [],
+   "T_C": [
+    10.0,
+    23.0,
+    45.0
+   ],
+   "hull": "convex hull",
+   "rule": "strictly increasing in T between neighbouring storage temperatures at every SOC with at least two temperatures inside the training storage hull; every fold x seed member must pass",
+   "gating": false
+  },
+  "P3_passed": true,
+  "P3_A1_beats_R1_median_L": 1.901805721453342,
+  "PC3_detail": {
+   "status": "evaluated",
+   "cell": [
+    32,
+    "full"
+   ],
+   "n": 40,
+   "positives": 39,
+   "p": 1.1243434742409893e-06,
+   "crit_positives": 30,
+   "alpha": 0.025,
+   "passed": true,
+   "median_L": 1.901805721453342,
+   "median_ci95": [
+    1.3307929193970003,
+    2.240611007728433
+   ],
+   "plain_exact_descriptive": {
+    "positives": 39,
+    "n": 40,
+    "p": 3.728928277269006e-11
+   },
+   "sign_rule": "sign test with a fixed design effect (assumed average pairwise sign correlation at most 0.03); assumption-based, not exact and not distribution-free",
+   "gating": false,
+   "rule": "A1 beats persistence at g4 with margin 0 (L = ln(S_R1 / S_A1) > 0); reported, never a gate input"
+  }
+ },
+ "gate_G": {
+  "tripped": false,
+  "reasons": [],
+  "not_evaluated": [],
+  "reported_checks": {
+   "PC-2_calendar_rate_monotone_in_T": true,
+   "PC-3_A1_beats_persistence": true
+  },
+  "rule": "PREREG_v4 gate G: NC-1 trips or PC-1 fails; PC-2 and PC-3 are reported checks, not gate inputs; NC-2 is not a gate"
+ }
+}

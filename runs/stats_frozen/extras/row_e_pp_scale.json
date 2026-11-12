@@ -1,0 +1,161 @@
+{
+ "definition": "PREREG 9.9 (e) / 9.2: pp-scale row. mean paired pp difference (comparator - target) with the BCa 95 % interval of the frozen step (estimated rows) against the pp margins delta_S = 0.02 E and delta_N = 0.10 E of margins.json (stats_ext 'tier_pp' rule: S if the BCa lower bound > delta_S, N if > -delta_N, else none); descriptive, sets no tier",
+ "rows": {
+  "A1 vs D* m8_k2": {
+   "n": 40,
+   "mean_pp_diff": 0.13588788802209772,
+   "mean_pp_bca95": [
+    -0.04260891161167363,
+    0.4342573613159905
+   ],
+   "E_pp": 0.9856142736352755,
+   "delta_S_pp": 0.01971228547270551,
+   "delta_N_pp": 0.09856142736352756,
+   "pp_scale_tier_it_would_reach": "N"
+  },
+  "A1 vs A9 m8_k2": {
+   "n": 40,
+   "mean_pp_diff": 0.23046020745232937,
+   "mean_pp_bca95": [
+    -0.011627939123959442,
+    0.5961879352428969
+   ],
+   "E_pp": 1.55215119645164,
+   "delta_S_pp": 0.031043023929032798,
+   "delta_N_pp": 0.155215119645164,
+   "pp_scale_tier_it_would_reach": "N"
+  },
+  "A1 vs A10 m8_k2": {
+   "n": 40,
+   "mean_pp_diff": 0.41650414032100197,
+   "mean_pp_bca95": [
+    0.19673145217080296,
+    0.708854469427907
+   ],
+   "E_pp": 5.257822457359959,
+   "delta_S_pp": 0.10515644914719918,
+   "delta_N_pp": 0.5257822457359959,
+   "pp_scale_tier_it_would_reach": "S"
+  },
+  "A1 vs A10P m8_k2": {
+   "n": 40,
+   "mean_pp_diff": 0.5192738889070496,
+   "mean_pp_bca95": [
+    0.2516895789665,
+    0.9169711392592059
+   ],
+   "E_pp": 28.341595144343636,
+   "delta_S_pp": 0.5668319028868727,
+   "delta_N_pp": 2.8341595144343636,
+   "pp_scale_tier_it_would_reach": "N"
+  },
+  "A1 vs A10 m32_kfull": {
+   "n": 40,
+   "mean_pp_diff": 0.085612856636922,
+   "mean_pp_bca95": [
+    -0.1564270555959701,
+    0.25388847541933873
+   ],
+   "E_pp": 0.8363110023253505,
+   "delta_S_pp": 0.01672622004650701,
+   "delta_N_pp": 0.08363110023253506,
+   "pp_scale_tier_it_would_reach": "none"
+  },
+  "A1 vs A10P m32_kfull": {
+   "n": 40,
+   "mean_pp_diff": 0.26747034541301634,
+   "mean_pp_bca95": [
+    -0.006142392328291775,
+    0.4933863213604182
+   ],
+   "E_pp": 1.0834482356304136,
+   "delta_S_pp": 0.021668964712608273,
+   "delta_N_pp": 0.10834482356304137,
+   "pp_scale_tier_it_would_reach": "N"
+  },
+  "A1 vs A2 m8_k2": {
+   "n": 40,
+   "mean_pp_diff": 0.48353781215682756,
+   "mean_pp_bca95": [
+    0.28546647101934897,
+    0.7857302390447382
+   ],
+   "E_pp": 1.5395399491087989,
+   "delta_S_pp": 0.030790798982175977,
+   "delta_N_pp": 0.1539539949108799,
+   "pp_scale_tier_it_would_reach": "S"
+  },
+  "A1 vs A2 m32_kfull": {
+   "n": 40,
+   "mean_pp_diff": 0.3081815920838186,
+   "mean_pp_bca95": [
+    0.15699249226882994,
+    0.5018892117994316
+   ],
+   "E_pp": 0.8761856430134568,
+   "delta_S_pp": 0.017523712860269137,
+   "delta_N_pp": 0.08761856430134568,
+   "pp_scale_tier_it_would_reach": "S"
+  },
+  "A1 vs A13 m8_k2": {
+   "n": 40,
+   "mean_pp_diff": 0.3497872848503903,
+   "mean_pp_bca95": [
+    0.20264652997423177,
+    0.5258712897448737
+   ],
+   "E_pp": 1.1472306614926602,
+   "delta_S_pp": 0.022944613229853205,
+   "delta_N_pp": 0.11472306614926603,
+   "pp_scale_tier_it_would_reach": "S"
+  },
+  "A1 vs D* m32_kfull": {
+   "n": 40,
+   "mean_pp_diff": 0.05181471436652707,
+   "mean_pp_bca95": [
+    -0.2645028239807034,
+    0.27563615706261363
+   ],
+   "E_pp": 0.5757168580644334,
+   "delta_S_pp": 0.011514337161288668,
+   "delta_N_pp": 0.05757168580644334,
+   "pp_scale_tier_it_would_reach": "none"
+  },
+  "A1 vs A9 m32_kfull": {
+   "n": 40,
+   "mean_pp_diff": 0.22240014033492583,
+   "mean_pp_bca95": [
+    0.09445138925198814,
+    0.40099464455271
+   ],
+   "E_pp": 0.70427863958326,
+   "delta_S_pp": 0.0140855727916652,
+   "delta_N_pp": 0.070427863958326,
+   "pp_scale_tier_it_would_reach": "S"
+  },
+  "A15 vs A1 m32_kfull (K1; per-seed endpoints)": {
+   "n": 40,
+   "mean_pp_diff": -0.07622144733056474,
+   "mean_pp_bca95": [
+    -0.1942084214051913,
+    0.010559857462108127
+   ],
+   "E_pp": 0.5850153900919101,
+   "delta_S_pp": 0.011700307801838202,
+   "delta_N_pp": 0.05850153900919101,
+   "pp_scale_tier_it_would_reach": "none"
+  },
+  "A15 vs G15 m32_kfull (K2; per-seed endpoints)": {
+   "n": 40,
+   "mean_pp_diff": -0.06387694302844736,
+   "mean_pp_bca95": [
+    -0.20068880716288318,
+    0.02272694842147268
+   ],
+   "E_pp": 0.6498972662225053,
+   "delta_S_pp": 0.012997945324450106,
+   "delta_N_pp": 0.06498972662225054,
+   "pp_scale_tier_it_would_reach": "none"
+  }
+ }
+}

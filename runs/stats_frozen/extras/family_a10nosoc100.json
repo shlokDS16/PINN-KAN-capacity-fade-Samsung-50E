@@ -1,0 +1,232 @@
+{
+ "family": "a10nosoc100",
+ "registered_row": "9.9 (t)",
+ "what_changes": "A10, A10P refitted without SOC = 100 % storage cells",
+ "mode": "within",
+ "cells": [
+  "g1",
+  "g4"
+ ],
+ "not_run": [],
+ "rows": [
+  {
+   "contrast": "A1 vs A10 (g1)",
+   "tier_key": "QA10_g1",
+   "cell": [
+    8,
+    "2"
+   ],
+   "row": {
+    "n": 40,
+    "median_L": 0.2732677869900723,
+    "median_L_ci95": [
+     -0.02030951949392801,
+     0.8524501772057127
+    ],
+    "pct_reduction": 23.91109958313331,
+    "pct_reduction_ci95": [
+     -2.0517161103094095,
+     57.363102845746894
+    ],
+    "positives": 29,
+    "mean_pp_diff": 0.4152430192544351,
+    "interval_rank": 11,
+    "interval_is_range": false,
+    "interval_coverage": 0.9612881609602757
+   },
+   "primary": {
+    "n": 40,
+    "median_L": 0.2568266881363849,
+    "median_L_ci95": [
+     -0.06489105305245012,
+     0.8395421604337528
+    ],
+    "pct_reduction": 22.649774073266016,
+    "pct_reduction_ci95": [
+     -6.704276699899436,
+     56.809177715827595
+    ],
+    "positives": 28,
+    "mean_pp_diff": 0.41650414032100197,
+    "interval_rank": 11,
+    "interval_is_range": false,
+    "interval_coverage": 0.9612881609602757
+   },
+   "primary_tier": "none",
+   "row_tier_would_reach": "none",
+   "changes_tier": false
+  },
+  {
+   "contrast": "A1 vs A10P (g1)",
+   "tier_key": "QA10_g1",
+   "cell": [
+    8,
+    "2"
+   ],
+   "row": {
+    "n": 40,
+    "median_L": 0.3389793242549613,
+    "median_L_ci95": [
+     -0.09218831198477995,
+     0.7105298114827187
+    ],
+    "pct_reduction": 28.750281965305703,
+    "pct_reduction_ci95": [
+     -9.657130015704386,
+     50.86162122901321
+    ],
+    "positives": 28,
+    "mean_pp_diff": 0.4530490167754988,
+    "interval_rank": 11,
+    "interval_is_range": false,
+    "interval_coverage": 0.9612881609602757
+   },
+   "primary": {
+    "n": 40,
+    "median_L": 0.35503889625937135,
+    "median_L_ci95": [
+     -0.16179413882619315,
+     0.7700731977128383
+    ],
+    "pct_reduction": 29.88538292851365,
+    "pct_reduction_ci95": [
+     -17.561820226556524,
+     53.70208219460268
+    ],
+    "positives": 28,
+    "mean_pp_diff": 0.5192738889070496,
+    "interval_rank": 11,
+    "interval_is_range": false,
+    "interval_coverage": 0.9612881609602757
+   },
+   "primary_tier": "none",
+   "row_tier_would_reach": "none",
+   "changes_tier": false
+  },
+  {
+   "contrast": "A1 vs A10 (g4)",
+   "tier_key": "QA10_g4",
+   "cell": [
+    32,
+    "full"
+   ],
+   "row": {
+    "n": 40,
+    "median_L": 0.3154471763160497,
+    "median_L_ci95": [
+     -0.3300363996105705,
+     0.9754593429730577
+    ],
+    "pct_reduction": 27.053739707538703,
+    "pct_reduction_ci95": [
+     -39.10187600834525,
+     62.2980867307003
+    ],
+    "positives": 26,
+    "mean_pp_diff": 0.10313475233550454,
+    "interval_rank": 11,
+    "interval_is_range": false,
+    "interval_coverage": 0.9612881609602757
+   },
+   "primary": {
+    "n": 40,
+    "median_L": 0.30314006965124474,
+    "median_L_ci95": [
+     -0.3536637592792938,
+     1.023088625262221
+    ],
+    "pct_reduction": 26.150435170221886,
+    "pct_reduction_ci95": [
+     -42.42762062999896,
+     64.05170842711513
+    ],
+    "positives": 26,
+    "mean_pp_diff": 0.085612856636922,
+    "interval_rank": 11,
+    "interval_is_range": false,
+    "interval_coverage": 0.9612881609602757
+   },
+   "primary_tier": "none",
+   "row_tier_would_reach": "none",
+   "changes_tier": false
+  },
+  {
+   "contrast": "A1 vs A10P (g4)",
+   "tier_key": "QA10_g4",
+   "cell": [
+    32,
+    "full"
+   ],
+   "row": {
+    "n": 40,
+    "median_L": 0.5104399088489575,
+    "median_L_ci95": [
+     -0.04040382977548941,
+     1.0389860853926545
+    ],
+    "pct_reduction": 39.97685264112418,
+    "pct_reduction_ci95": [
+     -4.123116945200578,
+     64.61867634349876
+    ],
+    "positives": 28,
+    "mean_pp_diff": 0.26945347744425907,
+    "interval_rank": 11,
+    "interval_is_range": false,
+    "interval_coverage": 0.9612881609602757
+   },
+   "primary": {
+    "n": 40,
+    "median_L": 0.5340059021553115,
+    "median_L_ci95": [
+     0.006951472712463438,
+     1.0010719142543119
+    ],
+    "pct_reduction": 41.37482077921209,
+    "pct_reduction_ci95": [
+     0.6927367114837435,
+     63.25146827741426
+    ],
+    "positives": 30,
+    "mean_pp_diff": 0.26747034541301634,
+    "interval_rank": 11,
+    "interval_is_range": false,
+    "interval_coverage": 0.9612881609602757
+   },
+   "primary_tier": "none",
+   "row_tier_would_reach": "none",
+   "changes_tier": false
+  }
+ ],
+ "dstar_dropped_incomplete_candidates": false,
+ "folds_per_cell": {
+  "8|2": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "32|full": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ]
+ },
+ "scores_bit_identical_to_primary": {
+  "8|2|A1": true,
+  "8|2|A10": false,
+  "8|2|A10P": false,
+  "32|full|A1": true,
+  "32|full|A10": false,
+  "32|full|A10P": false
+ },
+ "no_op_row": null,
+ "row_tiers_all_keys_computed": {
+  "QA10_g1": "none",
+  "QA10_g4": "none"
+ },
+ "status": "computed"
+}

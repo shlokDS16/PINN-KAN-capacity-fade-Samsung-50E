@@ -1,0 +1,9 @@
+{
+ "SUMMARY.md": "cbc475c7ba83f6c163857b5ddf5a4b776e0c733a4a16b069386917cce8c7ec32",
+ "descriptive_post.json": "014ffb2f6b10fc54aad34d4e261c637b20381ebba34d9fc87d9160a4b7d87ea7",
+ "descriptive_post.py": "b434df85026707acdbcc39651517ef91262cb9de4f67046950728fea3b934072",
+ "descriptive_post_addon.py": "66d68b44831c911ab9fbfc433de4482456644c404ca89b17b9ab7849cdfa3dc6",
+ "descriptive_post_tables.json": "0fee0347c769b93b9ad9c428355e4f5777a06936ca7511534f7c9c5616262567",
+ "descriptive_post_tables.py": "dee78838fe730e357dbf0a293ba5c32aad049e859c6c8c54038bea7844ab9102",
+ "make_summary.py": "8ebe315f920fcbf939aad8fe27824254039597789f5f5dcde520df0589198be8"
+}

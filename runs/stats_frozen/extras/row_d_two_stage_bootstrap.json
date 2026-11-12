@@ -1,0 +1,227 @@
+{
+ "definition": "PREREG 9.9 (d): two-stage bootstrap (conditions, then scored cells inside each sampled condition; weights = scored cells), stats_ext.two_stage_bootstrap, B = 10000, percentile 95 %. The point value uses cell_scores (mean-over-seeds cell RMSE), not the ensemble-endpoint condition scores of the primary, so median_L can differ from the primary median. K1/K2 (per-seed endpoints) are not computed: cell_scores holds no per-seed cell scores. Descriptive.",
+ "contrasts": {
+  "P1: A1 vs D* g1": {
+   "label": "extras|P1: A1 vs D* g1|two_stage",
+   "B": 10000,
+   "n_conditions": 40,
+   "cells_per_condition_median": 3.0,
+   "median_L": -0.023260242313275472,
+   "median_L_ci95": [
+    -0.25097164675975714,
+    0.2548444256074119
+   ],
+   "weighted_log_ratio": 0.1764231176802289,
+   "weighted_log_ratio_ci95": [
+    -0.0767664208636849,
+    0.4157651827729098
+   ],
+   "median_L_primary_store": -0.023260242313275472,
+   "pct_reduction_point_cell_scores": -2.3532871452478954,
+   "pct_reduction_ci95": [
+    -28.527364214221727,
+    22.49629354971522
+   ]
+  },
+  "P2: A1 vs A9 g1": {
+   "label": "extras|P2: A1 vs A9 g1|two_stage",
+   "B": 10000,
+   "n_conditions": 40,
+   "cells_per_condition_median": 3.0,
+   "median_L": -0.10197250166003305,
+   "median_L_ci95": [
+    -0.2705962555552318,
+    0.10869852742189326
+   ],
+   "weighted_log_ratio": 0.3118410947537536,
+   "weighted_log_ratio_ci95": [
+    -0.02313527423016497,
+    0.6183613239532012
+   ],
+   "median_L_primary_store": -0.10197250166003305,
+   "pct_reduction_point_cell_scores": -10.735302093942888,
+   "pct_reduction_ci95": [
+    -31.074575722017215,
+    10.299920211684654
+   ]
+  },
+  "R1_g1: A1 vs R1 g1": {
+   "label": "extras|R1_g1: A1 vs R1 g1|two_stage",
+   "B": 10000,
+   "n_conditions": 40,
+   "cells_per_condition_median": 3.0,
+   "median_L": 1.535261016358372,
+   "median_L_ci95": [
+    1.294848120906449,
+    1.758812851971711
+   ],
+   "weighted_log_ratio": 1.4763363528795985,
+   "weighted_log_ratio_ci95": [
+    1.230658819892746,
+    1.7181972761689335
+   ],
+   "median_L_primary_store": 1.535261016358372,
+   "pct_reduction_point_cell_scores": 78.46005389513476,
+   "pct_reduction_ci95": [
+    72.60605331499978,
+    82.77507721749248
+   ]
+  },
+  "QA10_g1: A1 vs A10": {
+   "label": "extras|QA10_g1: A1 vs A10|two_stage",
+   "B": 10000,
+   "n_conditions": 40,
+   "cells_per_condition_median": 3.0,
+   "median_L": 0.2568266881363849,
+   "median_L_ci95": [
+    0.06548542903744217,
+    0.4564547140721506
+   ],
+   "weighted_log_ratio": 0.5713263805088541,
+   "weighted_log_ratio_ci95": [
+    0.23824224659839047,
+    0.8805786251474436
+   ],
+   "median_L_primary_store": 0.2568266881363849,
+   "pct_reduction_point_cell_scores": 22.649774073266016,
+   "pct_reduction_ci95": [
+    6.3387305991303595,
+    36.64743014570108
+   ]
+  },
+  "QA10_g1: A1 vs A10P": {
+   "label": "extras|QA10_g1: A1 vs A10P|two_stage",
+   "B": 10000,
+   "n_conditions": 40,
+   "cells_per_condition_median": 3.0,
+   "median_L": 0.35503889625937135,
+   "median_L_ci95": [
+    0.14575384464609875,
+    0.6369015595042056
+   ],
+   "weighted_log_ratio": 0.6511605268800535,
+   "weighted_log_ratio_ci95": [
+    0.30203355833510037,
+    0.968978824991952
+   ],
+   "median_L_primary_store": 0.35503889625937135,
+   "pct_reduction_point_cell_scores": 29.88538292851365,
+   "pct_reduction_ci95": [
+    13.562955358723528,
+    47.107125804943614
+   ]
+  },
+  "QA10_g4: A1 vs A10": {
+   "label": "extras|QA10_g4: A1 vs A10|two_stage",
+   "B": 10000,
+   "n_conditions": 40,
+   "cells_per_condition_median": 3.0,
+   "median_L": 0.30314006965124474,
+   "median_L_ci95": [
+    -0.035522463795374395,
+    0.6542109782745442
+   ],
+   "weighted_log_ratio": -0.020882122292421798,
+   "weighted_log_ratio_ci95": [
+    -0.37491805915609244,
+    0.42568665309244175
+   ],
+   "median_L_primary_store": 0.30314006965124474,
+   "pct_reduction_point_cell_scores": 26.150435170221886,
+   "pct_reduction_ci95": [
+    -3.616092397360293,
+    48.01479246072206
+   ]
+  },
+  "QA10_g4: A1 vs A10P": {
+   "label": "extras|QA10_g4: A1 vs A10P|two_stage",
+   "B": 10000,
+   "n_conditions": 40,
+   "cells_per_condition_median": 3.0,
+   "median_L": 0.5340059021553115,
+   "median_L_ci95": [
+    0.3155184739890001,
+    0.8827699064292135
+   ],
+   "weighted_log_ratio": 0.2001898235969969,
+   "weighted_log_ratio_ci95": [
+    -0.2021734699837674,
+    0.7087103163441799
+   ],
+   "median_L_primary_store": 0.5340059021553115,
+   "pct_reduction_point_cell_scores": 41.37482077921209,
+   "pct_reduction_ci95": [
+    27.058940420746413,
+    58.6364408453947
+   ]
+  },
+  "QH_g1: A1 vs A2": {
+   "label": "extras|QH_g1: A1 vs A2|two_stage",
+   "B": 10000,
+   "n_conditions": 40,
+   "cells_per_condition_median": 3.0,
+   "median_L": 0.2990120931093611,
+   "median_L_ci95": [
+    0.08885079731270049,
+    0.5655079107371721
+   ],
+   "weighted_log_ratio": 0.4757330296581841,
+   "weighted_log_ratio_ci95": [
+    0.2692669691329319,
+    0.6823629810266792
+   ],
+   "median_L_primary_store": 0.2990120931093611,
+   "pct_reduction_point_cell_scores": 25.844955826980176,
+   "pct_reduction_ci95": [
+    8.501791882410936,
+    43.19284561651124
+   ]
+  },
+  "QH_g4: A1 vs A2": {
+   "label": "extras|QH_g4: A1 vs A2|two_stage",
+   "B": 10000,
+   "n_conditions": 40,
+   "cells_per_condition_median": 3.0,
+   "median_L": 0.2934699132845081,
+   "median_L_ci95": [
+    0.015037928854309227,
+    0.6982737227399285
+   ],
+   "weighted_log_ratio": 0.27595046431328424,
+   "weighted_log_ratio_ci95": [
+    0.1191381499518501,
+    0.555350292024094
+   ],
+   "median_L_primary_store": 0.2934699132845081,
+   "pct_reduction_point_cell_scores": 25.432834266238658,
+   "pct_reduction_ci95": [
+    1.4925423855591702,
+    50.2556711944676
+   ]
+  },
+  "QT_g1: A1 vs A13": {
+   "label": "extras|QT_g1: A1 vs A13|two_stage",
+   "B": 10000,
+   "n_conditions": 40,
+   "cells_per_condition_median": 3.0,
+   "median_L": 0.3601828623507024,
+   "median_L_ci95": [
+    0.034851904198763405,
+    0.5974340903470443
+   ],
+   "weighted_log_ratio": 0.379605339808848,
+   "weighted_log_ratio_ci95": [
+    0.15327334556766503,
+    0.6296157808848447
+   ],
+   "median_L_primary_store": 0.3601828623507024,
+   "pct_reduction_point_cell_scores": 30.245124099802123,
+   "pct_reduction_ci95": [
+    3.42515710451059,
+    44.97783546266676
+   ]
+  },
+  "K1: A15 vs A1 g4 (per-seed)": "not computed: the K contrasts use per-seed endpoints and cell_scores files hold mean-over-seeds cell scores only",
+  "K2: A15 vs G15 g4 (per-seed)": "not computed: the K contrasts use per-seed endpoints and cell_scores files hold mean-over-seeds cell scores only"
+ }
+}

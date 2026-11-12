@@ -1,0 +1,4613 @@
+{
+ "contrasts": {
+  "A1 vs D*": {
+   "m8_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.6858684471099903
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 1.340641475036075
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 0.9179680520914373
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 0.8673398084593655
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 1.1162535854795101
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.9856142736352755,
+    "delta_S_pp": 0.01971228547270551,
+    "delta_N_pp": 0.09856142736352756,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.04928071368176378
+     },
+     "delta_N_pp": {
+      "0.05": 0.04928071368176378,
+      "0.15": 0.14784214104529134
+     }
+    },
+    "cell": [
+     8,
+     "0"
+    ]
+   },
+   "m8_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.6858684471099903
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 1.340641475036075
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 0.9179680520914373
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 0.8673398084593655
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 1.1162535854795101
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.9856142736352755,
+    "delta_S_pp": 0.01971228547270551,
+    "delta_N_pp": 0.09856142736352756,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.04928071368176378
+     },
+     "delta_N_pp": {
+      "0.05": 0.04928071368176378,
+      "0.15": 0.14784214104529134
+     }
+    },
+    "cell": [
+     8,
+     "2"
+    ]
+   },
+   "m8_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.6858684471099903
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 1.340641475036075
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 0.9179680520914373
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 0.8673398084593655
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 1.1162535854795101
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.9856142736352755,
+    "delta_S_pp": 0.01971228547270551,
+    "delta_N_pp": 0.09856142736352756,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.04928071368176378
+     },
+     "delta_N_pp": {
+      "0.05": 0.04928071368176378,
+      "0.15": 0.14784214104529134
+     }
+    },
+    "cell": [
+     8,
+     "full"
+    ]
+   },
+   "m16_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.6943396222296527
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 1.0851272829488783
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.8414562711363887
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 0.904005177494318
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 1.0084110208987827
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.906667874941604,
+    "delta_S_pp": 0.01813335749883208,
+    "delta_N_pp": 0.0906667874941604,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.0453333937470802
+     },
+     "delta_N_pp": {
+      "0.05": 0.0453333937470802,
+      "0.15": 0.13600018124124058
+     }
+    },
+    "cell": [
+     16,
+     "0"
+    ]
+   },
+   "m16_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.6943396222296527
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 1.0851272829488783
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.8414562711363887
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 0.904005177494318
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 1.0084110208987827
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.906667874941604,
+    "delta_S_pp": 0.01813335749883208,
+    "delta_N_pp": 0.0906667874941604,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.0453333937470802
+     },
+     "delta_N_pp": {
+      "0.05": 0.0453333937470802,
+      "0.15": 0.13600018124124058
+     }
+    },
+    "cell": [
+     16,
+     "2"
+    ]
+   },
+   "m16_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.6943396222296527
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 1.0851272829488783
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.8414562711363887
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 0.904005177494318
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 1.0084110208987827
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.906667874941604,
+    "delta_S_pp": 0.01813335749883208,
+    "delta_N_pp": 0.0906667874941604,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.0453333937470802
+     },
+     "delta_N_pp": {
+      "0.05": 0.0453333937470802,
+      "0.15": 0.13600018124124058
+     }
+    },
+    "cell": [
+     16,
+     "full"
+    ]
+   },
+   "m32_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 0.636282022128329
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A11",
+      "n_test_conditions": 8,
+      "E_pp": 0.5922430654609591
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A11",
+      "n_test_conditions": 8,
+      "E_pp": 0.5727276029778734
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 0.48888555365776326
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A11",
+      "n_test_conditions": 8,
+      "E_pp": 0.5884460460972418
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.5757168580644334,
+    "delta_S_pp": 0.011514337161288668,
+    "delta_N_pp": 0.05757168580644334,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.02878584290322167
+     },
+     "delta_N_pp": {
+      "0.05": 0.02878584290322167,
+      "0.15": 0.08635752870966501
+     }
+    },
+    "cell": [
+     32,
+     "0"
+    ]
+   },
+   "m32_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 0.636282022128329
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A11",
+      "n_test_conditions": 8,
+      "E_pp": 0.5922430654609591
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A11",
+      "n_test_conditions": 8,
+      "E_pp": 0.5727276029778734
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 0.48888555365776326
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A11",
+      "n_test_conditions": 8,
+      "E_pp": 0.5884460460972418
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.5757168580644334,
+    "delta_S_pp": 0.011514337161288668,
+    "delta_N_pp": 0.05757168580644334,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.02878584290322167
+     },
+     "delta_N_pp": {
+      "0.05": 0.02878584290322167,
+      "0.15": 0.08635752870966501
+     }
+    },
+    "cell": [
+     32,
+     "2"
+    ]
+   },
+   "m32_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 0.636282022128329
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A11",
+      "n_test_conditions": 8,
+      "E_pp": 0.5922430654609591
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A11",
+      "n_test_conditions": 8,
+      "E_pp": 0.5727276029778734
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 0.48888555365776326
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A11",
+      "n_test_conditions": 8,
+      "E_pp": 0.5884460460972418
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.5757168580644334,
+    "delta_S_pp": 0.011514337161288668,
+    "delta_N_pp": 0.05757168580644334,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.02878584290322167
+     },
+     "delta_N_pp": {
+      "0.05": 0.02878584290322167,
+      "0.15": 0.08635752870966501
+     }
+    },
+    "cell": [
+     32,
+     "full"
+    ]
+   }
+  },
+  "A1 vs A9": {
+   "m8_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.6858684471099903
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 2.8395070495597
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 1.3476614986260353
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 1.4305654308377018
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 1.457153556124772
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.55215119645164,
+    "delta_S_pp": 0.031043023929032798,
+    "delta_N_pp": 0.155215119645164,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.077607559822582
+     },
+     "delta_N_pp": {
+      "0.05": 0.077607559822582,
+      "0.15": 0.23282267946774599
+     }
+    },
+    "cell": [
+     8,
+     "0"
+    ]
+   },
+   "m8_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.6858684471099903
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 2.8395070495597
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 1.3476614986260353
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 1.4305654308377018
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 1.457153556124772
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.55215119645164,
+    "delta_S_pp": 0.031043023929032798,
+    "delta_N_pp": 0.155215119645164,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.077607559822582
+     },
+     "delta_N_pp": {
+      "0.05": 0.077607559822582,
+      "0.15": 0.23282267946774599
+     }
+    },
+    "cell": [
+     8,
+     "2"
+    ]
+   },
+   "m8_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.6858684471099903
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 2.8395070495597
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 1.3476614986260353
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 1.4305654308377018
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 1.457153556124772
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.55215119645164,
+    "delta_S_pp": 0.031043023929032798,
+    "delta_N_pp": 0.155215119645164,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.077607559822582
+     },
+     "delta_N_pp": {
+      "0.05": 0.077607559822582,
+      "0.15": 0.23282267946774599
+     }
+    },
+    "cell": [
+     8,
+     "full"
+    ]
+   },
+   "m16_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.6943396222296527
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 1.5731900797887655
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.8414562711363887
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 1.1877586351761122
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 1.5109857317505129
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.1615460680162866,
+    "delta_S_pp": 0.023230921360325733,
+    "delta_N_pp": 0.11615460680162866,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.05807730340081433
+     },
+     "delta_N_pp": {
+      "0.05": 0.05807730340081433,
+      "0.15": 0.17423191020244297
+     }
+    },
+    "cell": [
+     16,
+     "0"
+    ]
+   },
+   "m16_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.6943396222296527
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 1.5731900797887655
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.8414562711363887
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 1.1877586351761122
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 1.5109857317505129
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.1615460680162866,
+    "delta_S_pp": 0.023230921360325733,
+    "delta_N_pp": 0.11615460680162866,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.05807730340081433
+     },
+     "delta_N_pp": {
+      "0.05": 0.05807730340081433,
+      "0.15": 0.17423191020244297
+     }
+    },
+    "cell": [
+     16,
+     "2"
+    ]
+   },
+   "m16_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.6943396222296527
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 1.5731900797887655
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.8414562711363887
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 1.1877586351761122
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 1.5109857317505129
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.1615460680162866,
+    "delta_S_pp": 0.023230921360325733,
+    "delta_N_pp": 0.11615460680162866,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.05807730340081433
+     },
+     "delta_N_pp": {
+      "0.05": 0.05807730340081433,
+      "0.15": 0.17423191020244297
+     }
+    },
+    "cell": [
+     16,
+     "full"
+    ]
+   },
+   "m32_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.6594628533718496
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.7745550744761391
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.7943664668825079
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.5258641430679858
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.7671446601178179
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.70427863958326,
+    "delta_S_pp": 0.0140855727916652,
+    "delta_N_pp": 0.070427863958326,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.035213931979163
+     },
+     "delta_N_pp": {
+      "0.05": 0.035213931979163,
+      "0.15": 0.105641795937489
+     }
+    },
+    "cell": [
+     32,
+     "0"
+    ]
+   },
+   "m32_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.6594628533718496
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.7745550744761391
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.7943664668825079
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.5258641430679858
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.7671446601178179
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.70427863958326,
+    "delta_S_pp": 0.0140855727916652,
+    "delta_N_pp": 0.070427863958326,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.035213931979163
+     },
+     "delta_N_pp": {
+      "0.05": 0.035213931979163,
+      "0.15": 0.105641795937489
+     }
+    },
+    "cell": [
+     32,
+     "2"
+    ]
+   },
+   "m32_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.6594628533718496
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.7745550744761391
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.7943664668825079
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.5258641430679858
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.7671446601178179
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.70427863958326,
+    "delta_S_pp": 0.0140855727916652,
+    "delta_N_pp": 0.070427863958326,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.035213931979163
+     },
+     "delta_N_pp": {
+      "0.05": 0.035213931979163,
+      "0.15": 0.105641795937489
+     }
+    },
+    "cell": [
+     32,
+     "full"
+    ]
+   }
+  },
+  "A1 vs AG": {
+   "m8_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.852375828725384
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 1.688799877169625
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.9546381640101945
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.7225326229010574
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 1.0510768838523075
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.0538846753317137,
+    "delta_S_pp": 0.021077693506634274,
+    "delta_N_pp": 0.10538846753317138,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.05269423376658569
+     },
+     "delta_N_pp": {
+      "0.05": 0.05269423376658569,
+      "0.15": 0.15808270129975704
+     }
+    },
+    "cell": [
+     8,
+     "0"
+    ]
+   },
+   "m8_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.852375828725384
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 1.688799877169625
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.9546381640101945
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.7225326229010574
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 1.0510768838523075
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.0538846753317137,
+    "delta_S_pp": 0.021077693506634274,
+    "delta_N_pp": 0.10538846753317138,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.05269423376658569
+     },
+     "delta_N_pp": {
+      "0.05": 0.05269423376658569,
+      "0.15": 0.15808270129975704
+     }
+    },
+    "cell": [
+     8,
+     "2"
+    ]
+   },
+   "m8_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.852375828725384
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 1.688799877169625
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.9546381640101945
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.7225326229010574
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 1.0510768838523075
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.0538846753317137,
+    "delta_S_pp": 0.021077693506634274,
+    "delta_N_pp": 0.10538846753317138,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.05269423376658569
+     },
+     "delta_N_pp": {
+      "0.05": 0.05269423376658569,
+      "0.15": 0.15808270129975704
+     }
+    },
+    "cell": [
+     8,
+     "full"
+    ]
+   },
+   "m16_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.8346527628907042
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 1.3139017562484796
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.9032597003739153
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 1.0200556365799336
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.9121952546416707
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.9968130221469409,
+    "delta_S_pp": 0.01993626044293882,
+    "delta_N_pp": 0.0996813022146941,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.04984065110734705
+     },
+     "delta_N_pp": {
+      "0.05": 0.04984065110734705,
+      "0.15": 0.14952195332204113
+     }
+    },
+    "cell": [
+     16,
+     "0"
+    ]
+   },
+   "m16_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.8346527628907042
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 1.3139017562484796
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.9032597003739153
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 1.0200556365799336
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.9121952546416707
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.9968130221469409,
+    "delta_S_pp": 0.01993626044293882,
+    "delta_N_pp": 0.0996813022146941,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.04984065110734705
+     },
+     "delta_N_pp": {
+      "0.05": 0.04984065110734705,
+      "0.15": 0.14952195332204113
+     }
+    },
+    "cell": [
+     16,
+     "2"
+    ]
+   },
+   "m16_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.8346527628907042
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 1.3139017562484796
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.9032597003739153
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 1.0200556365799336
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.9121952546416707
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.9968130221469409,
+    "delta_S_pp": 0.01993626044293882,
+    "delta_N_pp": 0.0996813022146941,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.04984065110734705
+     },
+     "delta_N_pp": {
+      "0.05": 0.04984065110734705,
+      "0.15": 0.14952195332204113
+     }
+    },
+    "cell": [
+     16,
+     "full"
+    ]
+   },
+   "m32_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A5",
+      "n_test_conditions": 8,
+      "E_pp": 0.6552505219732245
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A5",
+      "n_test_conditions": 8,
+      "E_pp": 0.6236648363587368
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.5464435336538742
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.5073724321967636
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.6579320999466916
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.5981326848258581,
+    "delta_S_pp": 0.011962653696517164,
+    "delta_N_pp": 0.059813268482585814,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.029906634241292907
+     },
+     "delta_N_pp": {
+      "0.05": 0.029906634241292907,
+      "0.15": 0.08971990272387871
+     }
+    },
+    "cell": [
+     32,
+     "0"
+    ]
+   },
+   "m32_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A5",
+      "n_test_conditions": 8,
+      "E_pp": 0.6552505219732245
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A5",
+      "n_test_conditions": 8,
+      "E_pp": 0.6236648363587368
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.5464435336538742
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.5073724321967636
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.6579320999466916
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.5981326848258581,
+    "delta_S_pp": 0.011962653696517164,
+    "delta_N_pp": 0.059813268482585814,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.029906634241292907
+     },
+     "delta_N_pp": {
+      "0.05": 0.029906634241292907,
+      "0.15": 0.08971990272387871
+     }
+    },
+    "cell": [
+     32,
+     "2"
+    ]
+   },
+   "m32_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A5",
+      "n_test_conditions": 8,
+      "E_pp": 0.6552505219732245
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A5",
+      "n_test_conditions": 8,
+      "E_pp": 0.6236648363587368
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.5464435336538742
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.5073724321967636
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A4",
+      "n_test_conditions": 8,
+      "E_pp": 0.6579320999466916
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.5981326848258581,
+    "delta_S_pp": 0.011962653696517164,
+    "delta_N_pp": 0.059813268482585814,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.029906634241292907
+     },
+     "delta_N_pp": {
+      "0.05": 0.029906634241292907,
+      "0.15": 0.08971990272387871
+     }
+    },
+    "cell": [
+     32,
+     "full"
+    ]
+   }
+  },
+  "A1 vs A2": {
+   "m8_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.138128580058552
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 2.2159339880197217
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.4834228500252067
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.2549140625416928
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.605300264898821
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.5395399491087989,
+    "delta_S_pp": 0.030790798982175977,
+    "delta_N_pp": 0.1539539949108799,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.07697699745543995
+     },
+     "delta_N_pp": {
+      "0.05": 0.07697699745543995,
+      "0.15": 0.2309309923663198
+     }
+    },
+    "cell": [
+     8,
+     "0"
+    ]
+   },
+   "m8_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.138128580058552
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 2.2159339880197217
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.4834228500252067
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.2549140625416928
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.605300264898821
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.5395399491087989,
+    "delta_S_pp": 0.030790798982175977,
+    "delta_N_pp": 0.1539539949108799,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.07697699745543995
+     },
+     "delta_N_pp": {
+      "0.05": 0.07697699745543995,
+      "0.15": 0.2309309923663198
+     }
+    },
+    "cell": [
+     8,
+     "2"
+    ]
+   },
+   "m8_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.138128580058552
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 2.2159339880197217
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.4834228500252067
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.2549140625416928
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.605300264898821
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.5395399491087989,
+    "delta_S_pp": 0.030790798982175977,
+    "delta_N_pp": 0.1539539949108799,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.07697699745543995
+     },
+     "delta_N_pp": {
+      "0.05": 0.07697699745543995,
+      "0.15": 0.2309309923663198
+     }
+    },
+    "cell": [
+     8,
+     "full"
+    ]
+   },
+   "m16_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.9769591921500383
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.1798845408074132
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.23115970877922
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.2631142786459009
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.0768472455895792
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.1455929931944304,
+    "delta_S_pp": 0.02291185986388861,
+    "delta_N_pp": 0.11455929931944304,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.05727964965972152
+     },
+     "delta_N_pp": {
+      "0.05": 0.05727964965972152,
+      "0.15": 0.17183894897916455
+     }
+    },
+    "cell": [
+     16,
+     "0"
+    ]
+   },
+   "m16_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.9769591921500383
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.1798845408074132
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.23115970877922
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.2631142786459009
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.0768472455895792
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.1455929931944304,
+    "delta_S_pp": 0.02291185986388861,
+    "delta_N_pp": 0.11455929931944304,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.05727964965972152
+     },
+     "delta_N_pp": {
+      "0.05": 0.05727964965972152,
+      "0.15": 0.17183894897916455
+     }
+    },
+    "cell": [
+     16,
+     "2"
+    ]
+   },
+   "m16_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.9769591921500383
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.1798845408074132
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.23115970877922
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.2631142786459009
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.0768472455895792
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.1455929931944304,
+    "delta_S_pp": 0.02291185986388861,
+    "delta_N_pp": 0.11455929931944304,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.05727964965972152
+     },
+     "delta_N_pp": {
+      "0.05": 0.05727964965972152,
+      "0.15": 0.17183894897916455
+     }
+    },
+    "cell": [
+     16,
+     "full"
+    ]
+   },
+   "m32_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.8435448887017927
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.8932396063261584
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.8357587015824164
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.9038086185964831
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.9045763998604328
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.8761856430134568,
+    "delta_S_pp": 0.017523712860269137,
+    "delta_N_pp": 0.08761856430134568,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.04380928215067284
+     },
+     "delta_N_pp": {
+      "0.05": 0.04380928215067284,
+      "0.15": 0.13142784645201852
+     }
+    },
+    "cell": [
+     32,
+     "0"
+    ]
+   },
+   "m32_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.8435448887017927
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.8932396063261584
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.8357587015824164
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.9038086185964831
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.9045763998604328
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.8761856430134568,
+    "delta_S_pp": 0.017523712860269137,
+    "delta_N_pp": 0.08761856430134568,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.04380928215067284
+     },
+     "delta_N_pp": {
+      "0.05": 0.04380928215067284,
+      "0.15": 0.13142784645201852
+     }
+    },
+    "cell": [
+     32,
+     "2"
+    ]
+   },
+   "m32_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.8435448887017927
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.8932396063261584
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.8357587015824164
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.9038086185964831
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.9045763998604328
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.8761856430134568,
+    "delta_S_pp": 0.017523712860269137,
+    "delta_N_pp": 0.08761856430134568,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.04380928215067284
+     },
+     "delta_N_pp": {
+      "0.05": 0.04380928215067284,
+      "0.15": 0.13142784645201852
+     }
+    },
+    "cell": [
+     32,
+     "full"
+    ]
+   }
+  },
+  "A1 vs A10": {
+   "m8_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.8851402914624766
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 3.9314749917167306
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 8.289992673728456
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 11.359245611888518
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 1.82325871800361
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 5.257822457359959,
+    "delta_S_pp": 0.10515644914719918,
+    "delta_N_pp": 0.5257822457359959,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.26289112286799793
+     },
+     "delta_N_pp": {
+      "0.05": 0.26289112286799793,
+      "0.15": 0.7886733686039938
+     }
+    },
+    "cell": [
+     8,
+     "0"
+    ]
+   },
+   "m8_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.8851402914624766
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 3.9314749917167306
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 8.289992673728456
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 11.359245611888518
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 1.82325871800361
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 5.257822457359959,
+    "delta_S_pp": 0.10515644914719918,
+    "delta_N_pp": 0.5257822457359959,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.26289112286799793
+     },
+     "delta_N_pp": {
+      "0.05": 0.26289112286799793,
+      "0.15": 0.7886733686039938
+     }
+    },
+    "cell": [
+     8,
+     "2"
+    ]
+   },
+   "m8_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.8851402914624766
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 3.9314749917167306
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 8.289992673728456
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 11.359245611888518
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 1.82325871800361
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 5.257822457359959,
+    "delta_S_pp": 0.10515644914719918,
+    "delta_N_pp": 0.5257822457359959,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.26289112286799793
+     },
+     "delta_N_pp": {
+      "0.05": 0.26289112286799793,
+      "0.15": 0.7886733686039938
+     }
+    },
+    "cell": [
+     8,
+     "full"
+    ]
+   },
+   "m16_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 1.0927191711429376
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 1.4094290446184061
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 1.728434834217889
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 1.0829070586620793
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 1.6720991136709547
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.3971178444624532,
+    "delta_S_pp": 0.027942356889249065,
+    "delta_N_pp": 0.13971178444624532,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.06985589222312266
+     },
+     "delta_N_pp": {
+      "0.05": 0.06985589222312266,
+      "0.15": 0.20956767666936799
+     }
+    },
+    "cell": [
+     16,
+     "0"
+    ]
+   },
+   "m16_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 1.0927191711429376
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 1.4094290446184061
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 1.728434834217889
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 1.0829070586620793
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 1.6720991136709547
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.3971178444624532,
+    "delta_S_pp": 0.027942356889249065,
+    "delta_N_pp": 0.13971178444624532,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.06985589222312266
+     },
+     "delta_N_pp": {
+      "0.05": 0.06985589222312266,
+      "0.15": 0.20956767666936799
+     }
+    },
+    "cell": [
+     16,
+     "2"
+    ]
+   },
+   "m16_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 1.0927191711429376
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 1.4094290446184061
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 1.728434834217889
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 1.0829070586620793
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 1.6720991136709547
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.3971178444624532,
+    "delta_S_pp": 0.027942356889249065,
+    "delta_N_pp": 0.13971178444624532,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.06985589222312266
+     },
+     "delta_N_pp": {
+      "0.05": 0.06985589222312266,
+      "0.15": 0.20956767666936799
+     }
+    },
+    "cell": [
+     16,
+     "full"
+    ]
+   },
+   "m32_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.9025256178800733
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.8703785139348712
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.6816014090085444
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.7862109146420827
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.9408385561611805
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.8363110023253505,
+    "delta_S_pp": 0.01672622004650701,
+    "delta_N_pp": 0.08363110023253506,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.04181555011626753
+     },
+     "delta_N_pp": {
+      "0.05": 0.04181555011626753,
+      "0.15": 0.12544665034880256
+     }
+    },
+    "cell": [
+     32,
+     "0"
+    ]
+   },
+   "m32_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.9025256178800733
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.8703785139348712
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.6816014090085444
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.7862109146420827
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.9408385561611805
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.8363110023253505,
+    "delta_S_pp": 0.01672622004650701,
+    "delta_N_pp": 0.08363110023253506,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.04181555011626753
+     },
+     "delta_N_pp": {
+      "0.05": 0.04181555011626753,
+      "0.15": 0.12544665034880256
+     }
+    },
+    "cell": [
+     32,
+     "2"
+    ]
+   },
+   "m32_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.9025256178800733
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.8703785139348712
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.6816014090085444
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.7862109146420827
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.9408385561611805
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.8363110023253505,
+    "delta_S_pp": 0.01672622004650701,
+    "delta_N_pp": 0.08363110023253506,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.04181555011626753
+     },
+     "delta_N_pp": {
+      "0.05": 0.04181555011626753,
+      "0.15": 0.12544665034880256
+     }
+    },
+    "cell": [
+     32,
+     "full"
+    ]
+   }
+  },
+  "A1 vs A10P": {
+   "m8_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 2.046952574370366
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 4.300913506615168
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 49.29559088827681
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 83.95440225770382
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 2.1101164947520346
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 28.341595144343636,
+    "delta_S_pp": 0.5668319028868727,
+    "delta_N_pp": 2.8341595144343636,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 1.4170797572171818
+     },
+     "delta_N_pp": {
+      "0.05": 1.4170797572171818,
+      "0.15": 4.251239271651545
+     }
+    },
+    "cell": [
+     8,
+     "0"
+    ]
+   },
+   "m8_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 2.046952574370366
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 4.300913506615168
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 49.29559088827681
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 83.95440225770382
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 2.1101164947520346
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 28.341595144343636,
+    "delta_S_pp": 0.5668319028868727,
+    "delta_N_pp": 2.8341595144343636,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 1.4170797572171818
+     },
+     "delta_N_pp": {
+      "0.05": 1.4170797572171818,
+      "0.15": 4.251239271651545
+     }
+    },
+    "cell": [
+     8,
+     "2"
+    ]
+   },
+   "m8_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 2.046952574370366
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 4.300913506615168
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 49.29559088827681
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 83.95440225770382
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 2.1101164947520346
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 28.341595144343636,
+    "delta_S_pp": 0.5668319028868727,
+    "delta_N_pp": 2.8341595144343636,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 1.4170797572171818
+     },
+     "delta_N_pp": {
+      "0.05": 1.4170797572171818,
+      "0.15": 4.251239271651545
+     }
+    },
+    "cell": [
+     8,
+     "full"
+    ]
+   },
+   "m16_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 1.2543394904294018
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 1.547263446245807
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 2.537623921673055
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 1.3940498845156437
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 3.6352064495752203
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 2.0736966384878253,
+    "delta_S_pp": 0.04147393276975651,
+    "delta_N_pp": 0.20736966384878253,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.10368483192439126
+     },
+     "delta_N_pp": {
+      "0.05": 0.10368483192439126,
+      "0.15": 0.3110544957731738
+     }
+    },
+    "cell": [
+     16,
+     "0"
+    ]
+   },
+   "m16_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 1.2543394904294018
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 1.547263446245807
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 2.537623921673055
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 1.3940498845156437
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 3.6352064495752203
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 2.0736966384878253,
+    "delta_S_pp": 0.04147393276975651,
+    "delta_N_pp": 0.20736966384878253,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.10368483192439126
+     },
+     "delta_N_pp": {
+      "0.05": 0.10368483192439126,
+      "0.15": 0.3110544957731738
+     }
+    },
+    "cell": [
+     16,
+     "2"
+    ]
+   },
+   "m16_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 1.2543394904294018
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 1.547263446245807
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 2.537623921673055
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 1.3940498845156437
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 3.6352064495752203
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 2.0736966384878253,
+    "delta_S_pp": 0.04147393276975651,
+    "delta_N_pp": 0.20736966384878253,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.10368483192439126
+     },
+     "delta_N_pp": {
+      "0.05": 0.10368483192439126,
+      "0.15": 0.3110544957731738
+     }
+    },
+    "cell": [
+     16,
+     "full"
+    ]
+   },
+   "m32_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 1.2441139066788978
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 1.1200606852762265
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 0.8957219864802595
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 0.9799313699866254
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 1.1774132297300586
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.0834482356304136,
+    "delta_S_pp": 0.021668964712608273,
+    "delta_N_pp": 0.10834482356304137,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.054172411781520685
+     },
+     "delta_N_pp": {
+      "0.05": 0.054172411781520685,
+      "0.15": 0.16251723534456203
+     }
+    },
+    "cell": [
+     32,
+     "0"
+    ]
+   },
+   "m32_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 1.2441139066788978
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 1.1200606852762265
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 0.8957219864802595
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 0.9799313699866254
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 1.1774132297300586
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.0834482356304136,
+    "delta_S_pp": 0.021668964712608273,
+    "delta_N_pp": 0.10834482356304137,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.054172411781520685
+     },
+     "delta_N_pp": {
+      "0.05": 0.054172411781520685,
+      "0.15": 0.16251723534456203
+     }
+    },
+    "cell": [
+     32,
+     "2"
+    ]
+   },
+   "m32_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 1.2441139066788978
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 1.1200606852762265
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 0.8957219864802595
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 0.9799313699866254
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 1.1774132297300586
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.0834482356304136,
+    "delta_S_pp": 0.021668964712608273,
+    "delta_N_pp": 0.10834482356304137,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.054172411781520685
+     },
+     "delta_N_pp": {
+      "0.05": 0.054172411781520685,
+      "0.15": 0.16251723534456203
+     }
+    },
+    "cell": [
+     32,
+     "full"
+    ]
+   }
+  },
+  "A1 vs A13": {
+   "m8_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.7273616688436557
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 1.7913349421040379
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 1.3952257181410799
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.5877806264391796
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 1.2344503519353471
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.1472306614926602,
+    "delta_S_pp": 0.022944613229853205,
+    "delta_N_pp": 0.11472306614926603,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.057361533074633014
+     },
+     "delta_N_pp": {
+      "0.05": 0.057361533074633014,
+      "0.15": 0.17208459922389902
+     }
+    },
+    "cell": [
+     8,
+     "0"
+    ]
+   },
+   "m8_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.7273616688436557
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 1.7913349421040379
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 1.3952257181410799
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.5877806264391796
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 1.2344503519353471
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.1472306614926602,
+    "delta_S_pp": 0.022944613229853205,
+    "delta_N_pp": 0.11472306614926603,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.057361533074633014
+     },
+     "delta_N_pp": {
+      "0.05": 0.057361533074633014,
+      "0.15": 0.17208459922389902
+     }
+    },
+    "cell": [
+     8,
+     "2"
+    ]
+   },
+   "m8_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.7273616688436557
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 1.7913349421040379
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 1.3952257181410799
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.5877806264391796
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 1.2344503519353471
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.1472306614926602,
+    "delta_S_pp": 0.022944613229853205,
+    "delta_N_pp": 0.11472306614926603,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.057361533074633014
+     },
+     "delta_N_pp": {
+      "0.05": 0.057361533074633014,
+      "0.15": 0.17208459922389902
+     }
+    },
+    "cell": [
+     8,
+     "full"
+    ]
+   },
+   "m32_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.7123610656666377
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.7029250352455494
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.5951983432810267
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.6066896962407431
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.630624911769535
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.6495598104406983,
+    "delta_S_pp": 0.012991196208813966,
+    "delta_N_pp": 0.06495598104406984,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.03247799052203492
+     },
+     "delta_N_pp": {
+      "0.05": 0.03247799052203492,
+      "0.15": 0.09743397156610474
+     }
+    },
+    "cell": [
+     32,
+     "0"
+    ]
+   },
+   "m32_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.7123610656666377
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.7029250352455494
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.5951983432810267
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.6066896962407431
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.630624911769535
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.6495598104406983,
+    "delta_S_pp": 0.012991196208813966,
+    "delta_N_pp": 0.06495598104406984,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.03247799052203492
+     },
+     "delta_N_pp": {
+      "0.05": 0.03247799052203492,
+      "0.15": 0.09743397156610474
+     }
+    },
+    "cell": [
+     32,
+     "2"
+    ]
+   },
+   "m32_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.7123610656666377
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.7029250352455494
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.5951983432810267
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.6066896962407431
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.630624911769535
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.6495598104406983,
+    "delta_S_pp": 0.012991196208813966,
+    "delta_N_pp": 0.06495598104406984,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.03247799052203492
+     },
+     "delta_N_pp": {
+      "0.05": 0.03247799052203492,
+      "0.15": 0.09743397156610474
+     }
+    },
+    "cell": [
+     32,
+     "full"
+    ]
+   }
+  },
+  "A15 vs A1": {
+   "m8_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.6648532163775626
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 1.565889655010127
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.9576152507299415
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.6344007963712895
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.9743725331448838
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.9594262903267609,
+    "delta_S_pp": 0.01918852580653522,
+    "delta_N_pp": 0.09594262903267609,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.04797131451633804
+     },
+     "delta_N_pp": {
+      "0.05": 0.04797131451633804,
+      "0.15": 0.14391394354901413
+     }
+    },
+    "cell": [
+     8,
+     "0"
+    ]
+   },
+   "m8_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.6648532163775626
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 1.565889655010127
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.9576152507299415
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.6344007963712895
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.9743725331448838
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.9594262903267609,
+    "delta_S_pp": 0.01918852580653522,
+    "delta_N_pp": 0.09594262903267609,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.04797131451633804
+     },
+     "delta_N_pp": {
+      "0.05": 0.04797131451633804,
+      "0.15": 0.14391394354901413
+     }
+    },
+    "cell": [
+     8,
+     "2"
+    ]
+   },
+   "m8_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.6648532163775626
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 1.565889655010127
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.9576152507299415
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.6344007963712895
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.9743725331448838
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.9594262903267609,
+    "delta_S_pp": 0.01918852580653522,
+    "delta_N_pp": 0.09594262903267609,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.04797131451633804
+     },
+     "delta_N_pp": {
+      "0.05": 0.04797131451633804,
+      "0.15": 0.14391394354901413
+     }
+    },
+    "cell": [
+     8,
+     "full"
+    ]
+   },
+   "m32_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.6474483792160608
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.6301828046939479
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.5428178722318149
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.4964185706426016
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.6082093236751255
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.5850153900919101,
+    "delta_S_pp": 0.011700307801838202,
+    "delta_N_pp": 0.05850153900919101,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.029250769504595504
+     },
+     "delta_N_pp": {
+      "0.05": 0.029250769504595504,
+      "0.15": 0.0877523085137865
+     }
+    },
+    "cell": [
+     32,
+     "0"
+    ]
+   },
+   "m32_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.6474483792160608
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.6301828046939479
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.5428178722318149
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.4964185706426016
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.6082093236751255
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.5850153900919101,
+    "delta_S_pp": 0.011700307801838202,
+    "delta_N_pp": 0.05850153900919101,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.029250769504595504
+     },
+     "delta_N_pp": {
+      "0.05": 0.029250769504595504,
+      "0.15": 0.0877523085137865
+     }
+    },
+    "cell": [
+     32,
+     "2"
+    ]
+   },
+   "m32_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.6474483792160608
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.6301828046939479
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.5428178722318149
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.4964185706426016
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.6082093236751255
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.5850153900919101,
+    "delta_S_pp": 0.011700307801838202,
+    "delta_N_pp": 0.05850153900919101,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.029250769504595504
+     },
+     "delta_N_pp": {
+      "0.05": 0.029250769504595504,
+      "0.15": 0.0877523085137865
+     }
+    },
+    "cell": [
+     32,
+     "full"
+    ]
+   }
+  },
+  "A15 vs G15": {
+   "m8_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.9176367693115781
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 1.5052952591913602
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.9293985858089446
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.6755304021658403
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 1.0004732374736633
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.0056668507902773,
+    "delta_S_pp": 0.020113337015805546,
+    "delta_N_pp": 0.10056668507902773,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.050283342539513866
+     },
+     "delta_N_pp": {
+      "0.05": 0.050283342539513866,
+      "0.15": 0.15085002761854158
+     }
+    },
+    "cell": [
+     8,
+     "0"
+    ]
+   },
+   "m8_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.9176367693115781
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 1.5052952591913602
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.9293985858089446
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.6755304021658403
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 1.0004732374736633
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.0056668507902773,
+    "delta_S_pp": 0.020113337015805546,
+    "delta_N_pp": 0.10056668507902773,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.050283342539513866
+     },
+     "delta_N_pp": {
+      "0.05": 0.050283342539513866,
+      "0.15": 0.15085002761854158
+     }
+    },
+    "cell": [
+     8,
+     "2"
+    ]
+   },
+   "m8_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.9176367693115781
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 1.5052952591913602
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.9293985858089446
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.6755304021658403
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 1.0004732374736633
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.0056668507902773,
+    "delta_S_pp": 0.020113337015805546,
+    "delta_N_pp": 0.10056668507902773,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.050283342539513866
+     },
+     "delta_N_pp": {
+      "0.05": 0.050283342539513866,
+      "0.15": 0.15085002761854158
+     }
+    },
+    "cell": [
+     8,
+     "full"
+    ]
+   },
+   "m32_k0": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.6909629120029466
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.7777322088922205
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.650055864911538
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.5016562440146151
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.6290791012912065
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.6498972662225053,
+    "delta_S_pp": 0.012997945324450106,
+    "delta_N_pp": 0.06498972662225054,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.03249486331112527
+     },
+     "delta_N_pp": {
+      "0.05": 0.03249486331112527,
+      "0.15": 0.09748458993337579
+     }
+    },
+    "cell": [
+     32,
+     "0"
+    ]
+   },
+   "m32_k2": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.6909629120029466
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.7777322088922205
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.650055864911538
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.5016562440146151
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.6290791012912065
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.6498972662225053,
+    "delta_S_pp": 0.012997945324450106,
+    "delta_N_pp": 0.06498972662225054,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.03249486331112527
+     },
+     "delta_N_pp": {
+      "0.05": 0.03249486331112527,
+      "0.15": 0.09748458993337579
+     }
+    },
+    "cell": [
+     32,
+     "2"
+    ]
+   },
+   "m32_kfull": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.6909629120029466
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.7777322088922205
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.650055864911538
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.5016562440146151
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.6290791012912065
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.6498972662225053,
+    "delta_S_pp": 0.012997945324450106,
+    "delta_N_pp": 0.06498972662225054,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.03249486331112527
+     },
+     "delta_N_pp": {
+      "0.05": 0.03249486331112527,
+      "0.15": 0.09748458993337579
+     }
+    },
+    "cell": [
+     32,
+     "full"
+    ]
+   }
+  }
+ },
+ "inputs_sha256": {
+  "m8_fold0": "1288b978d4924915ddd06b8c72ea6d1a7cf64b1c9608d6684a07bdb06e566fca",
+  "m8_fold1": "86c8deeb0db4820a1c51d93525bbfcc33742350c8a19889373700a8665090733",
+  "m8_fold2": "70bff55737bc3cbbc528104ef88c4e97d75bbada21dfedadb194a660df61faf8",
+  "m8_fold3": "0540ff02e59841b5e12613e81c6fd04ce1c6544a7719478d4594bb7983c5c124",
+  "m8_fold4": "945591197ae3bb826d2e1146aed5f37e2bde70582e8d503faf1811edcaef2931",
+  "m16_fold0": "60a9fe6a06094fc31f922f41120dcbca0b5c5d0ea4e87b8e47caf287b146595f",
+  "m16_fold1": "66e0f063516809b7c60cd50433f9570c2b8c1c92b839f54f965689849623a235",
+  "m16_fold2": "b0711606b19427efae4104e53b2c8a34a7a6f81a6e467e8db1c55f8f70ceface",
+  "m16_fold3": "c7ee10767f7296d5bc937dc55f4c1127b060f62ce41a4294b4be891eea8252c8",
+  "m16_fold4": "5af39a1eb3b258357cac0a669140dc69ccbcef2ba23ef634bc6349d519f81494",
+  "m32_fold0": "3e2f7bc0d7de0f3c36ee4bd83d1df15ae0e5e8425cc08830646f399e602a0cdf",
+  "m32_fold1": "f0a7e51622a94d7b328161c474eaaf125fcf5bb61e2343619c75ed7407e4dc39",
+  "m32_fold2": "782275c03402236f8fd4dd31c35ed42bf81374c4d8d064fd4129db6668481648",
+  "m32_fold3": "66b5f44cb66bf37aa2c5dbf9d312f94caa9ba51a56a1857236541a5f0a6b8bfe",
+  "m32_fold4": "bd65be5f542e97e222c3fb963e34342cbb4cb895693783968a0e22dd89abe346"
+ },
+ "definition": "PREREG_v4 9.2: pp margins delta_S = 0.02 E and delta_N = 0.10 E from training-side inner-CV scores, pooled by test-condition count; descriptive beside every tier, never a gate",
+ "named": {
+  "P1": {
+   "target": "A1",
+   "comparator": "D*",
+   "cell": [
+    8,
+    "2"
+   ],
+   "margin": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.6858684471099903
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 1.340641475036075
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 0.9179680520914373
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 0.8673398084593655
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A12",
+      "n_test_conditions": 8,
+      "E_pp": 1.1162535854795101
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.9856142736352755,
+    "delta_S_pp": 0.01971228547270551,
+    "delta_N_pp": 0.09856142736352756,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.04928071368176378
+     },
+     "delta_N_pp": {
+      "0.05": 0.04928071368176378,
+      "0.15": 0.14784214104529134
+     }
+    },
+    "cell": [
+     8,
+     "2"
+    ]
+   }
+  },
+  "P2": {
+   "target": "A1",
+   "comparator": "A9",
+   "cell": [
+    8,
+    "2"
+   ],
+   "margin": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 0.6858684471099903
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 2.8395070495597
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 1.3476614986260353
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 1.4305654308377018
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A9",
+      "n_test_conditions": 8,
+      "E_pp": 1.457153556124772
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.55215119645164,
+    "delta_S_pp": 0.031043023929032798,
+    "delta_N_pp": 0.155215119645164,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.077607559822582
+     },
+     "delta_N_pp": {
+      "0.05": 0.077607559822582,
+      "0.15": 0.23282267946774599
+     }
+    },
+    "cell": [
+     8,
+     "2"
+    ]
+   }
+  },
+  "K1": {
+   "target": "A15",
+   "comparator": "A1",
+   "cell": [
+    32,
+    "full"
+   ],
+   "margin": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.6474483792160608
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.6301828046939479
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.5428178722318149
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.4964185706426016
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A1",
+      "n_test_conditions": 8,
+      "E_pp": 0.6082093236751255
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.5850153900919101,
+    "delta_S_pp": 0.011700307801838202,
+    "delta_N_pp": 0.05850153900919101,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.029250769504595504
+     },
+     "delta_N_pp": {
+      "0.05": 0.029250769504595504,
+      "0.15": 0.0877523085137865
+     }
+    },
+    "cell": [
+     32,
+     "full"
+    ]
+   }
+  },
+  "K2": {
+   "target": "A15",
+   "comparator": "G15",
+   "cell": [
+    32,
+    "full"
+   ],
+   "margin": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.6909629120029466
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.7777322088922205
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.650055864911538
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.5016562440146151
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "G15",
+      "n_test_conditions": 8,
+      "E_pp": 0.6290791012912065
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.6498972662225053,
+    "delta_S_pp": 0.012997945324450106,
+    "delta_N_pp": 0.06498972662225054,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.03249486331112527
+     },
+     "delta_N_pp": {
+      "0.05": 0.03249486331112527,
+      "0.15": 0.09748458993337579
+     }
+    },
+    "cell": [
+     32,
+     "full"
+    ]
+   }
+  },
+  "QA10_g1": {
+   "target": "A1",
+   "comparator": "A10",
+   "cell": [
+    8,
+    "2"
+   ],
+   "margin": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.8851402914624766
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 3.9314749917167306
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 8.289992673728456
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 11.359245611888518
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 1.82325871800361
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 5.257822457359959,
+    "delta_S_pp": 0.10515644914719918,
+    "delta_N_pp": 0.5257822457359959,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.26289112286799793
+     },
+     "delta_N_pp": {
+      "0.05": 0.26289112286799793,
+      "0.15": 0.7886733686039938
+     }
+    },
+    "cell": [
+     8,
+     "2"
+    ]
+   }
+  },
+  "QA10P_g1": {
+   "target": "A1",
+   "comparator": "A10P",
+   "cell": [
+    8,
+    "2"
+   ],
+   "margin": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 2.046952574370366
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 4.300913506615168
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 49.29559088827681
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 83.95440225770382
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 2.1101164947520346
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 28.341595144343636,
+    "delta_S_pp": 0.5668319028868727,
+    "delta_N_pp": 2.8341595144343636,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 1.4170797572171818
+     },
+     "delta_N_pp": {
+      "0.05": 1.4170797572171818,
+      "0.15": 4.251239271651545
+     }
+    },
+    "cell": [
+     8,
+     "2"
+    ]
+   }
+  },
+  "QA10_g4": {
+   "target": "A1",
+   "comparator": "A10",
+   "cell": [
+    32,
+    "full"
+   ],
+   "margin": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.9025256178800733
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.8703785139348712
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.6816014090085444
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.7862109146420827
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A10",
+      "n_test_conditions": 8,
+      "E_pp": 0.9408385561611805
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.8363110023253505,
+    "delta_S_pp": 0.01672622004650701,
+    "delta_N_pp": 0.08363110023253506,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.04181555011626753
+     },
+     "delta_N_pp": {
+      "0.05": 0.04181555011626753,
+      "0.15": 0.12544665034880256
+     }
+    },
+    "cell": [
+     32,
+     "full"
+    ]
+   }
+  },
+  "QA10P_g4": {
+   "target": "A1",
+   "comparator": "A10P",
+   "cell": [
+    32,
+    "full"
+   ],
+   "margin": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 1.2441139066788978
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 1.1200606852762265
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 0.8957219864802595
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 0.9799313699866254
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A10P",
+      "n_test_conditions": 8,
+      "E_pp": 1.1774132297300586
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.0834482356304136,
+    "delta_S_pp": 0.021668964712608273,
+    "delta_N_pp": 0.10834482356304137,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.054172411781520685
+     },
+     "delta_N_pp": {
+      "0.05": 0.054172411781520685,
+      "0.15": 0.16251723534456203
+     }
+    },
+    "cell": [
+     32,
+     "full"
+    ]
+   }
+  },
+  "QH_g1": {
+   "target": "A1",
+   "comparator": "A2",
+   "cell": [
+    8,
+    "2"
+   ],
+   "margin": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.138128580058552
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 2.2159339880197217
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.4834228500252067
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.2549140625416928
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 1.605300264898821
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.5395399491087989,
+    "delta_S_pp": 0.030790798982175977,
+    "delta_N_pp": 0.1539539949108799,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.07697699745543995
+     },
+     "delta_N_pp": {
+      "0.05": 0.07697699745543995,
+      "0.15": 0.2309309923663198
+     }
+    },
+    "cell": [
+     8,
+     "2"
+    ]
+   }
+  },
+  "QH_g4": {
+   "target": "A1",
+   "comparator": "A2",
+   "cell": [
+    32,
+    "full"
+   ],
+   "margin": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.8435448887017927
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.8932396063261584
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.8357587015824164
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.9038086185964831
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A2",
+      "n_test_conditions": 8,
+      "E_pp": 0.9045763998604328
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 0.8761856430134568,
+    "delta_S_pp": 0.017523712860269137,
+    "delta_N_pp": 0.08761856430134568,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.04380928215067284
+     },
+     "delta_N_pp": {
+      "0.05": 0.04380928215067284,
+      "0.15": 0.13142784645201852
+     }
+    },
+    "cell": [
+     32,
+     "full"
+    ]
+   }
+  },
+  "QT_g1": {
+   "target": "A1",
+   "comparator": "A13",
+   "cell": [
+    8,
+    "2"
+   ],
+   "margin": {
+    "per_fold": [
+     {
+      "fold": 0,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.7273616688436557
+     },
+     {
+      "fold": 1,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 1.7913349421040379
+     },
+     {
+      "fold": 2,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 1.3952257181410799
+     },
+     {
+      "fold": 3,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 0.5877806264391796
+     },
+     {
+      "fold": 4,
+      "comparator_arm": "A13",
+      "n_test_conditions": 8,
+      "E_pp": 1.2344503519353471
+     }
+    ],
+    "log_margin_S": 0.01980262729617973,
+    "log_margin_N": -0.09531017980432493,
+    "E_pp": 1.1472306614926602,
+    "delta_S_pp": 0.022944613229853205,
+    "delta_N_pp": 0.11472306614926603,
+    "note": null,
+    "sensitivity": {
+     "delta_S_pp": {
+      "0.0": 0.0,
+      "0.05": 0.057361533074633014
+     },
+     "delta_N_pp": {
+      "0.05": 0.057361533074633014,
+      "0.15": 0.17208459922389902
+     }
+    },
+    "cell": [
+     8,
+     "2"
+    ]
+   }
+  }
+ },
+ "sha256": "d7ceee61d4a49b55318625ca5fed45a10e31d9562d1f33c3419670aab1bd3c64"
+}

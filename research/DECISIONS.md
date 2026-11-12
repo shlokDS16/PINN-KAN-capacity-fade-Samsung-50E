@@ -814,3 +814,122 @@ Row format:
 - **Evidence:** runs/freeze_runs/logs/{queue,suite}.log; runs/fb8_timing_samsung_B_f*_m*/timings.json; runs/freeze_runs/fb8b/;
   runs/fb9_nc1_full_synth_m{8,16,32}/nc1_full.json; runs/fb10_smoke_{isu,snl}_B0; runs/freeze_runs/head_comparison.out.
 - **Proposer / judge:** lead (record-only); the gate auditor re-checks before FROZEN.
+
+### D043 FROZEN written at ce0cc0d (lead, procedural; 2026-11-07)
+- **Decision:** after the gate auditor's re-check (research/audits/GATE_freeze_recheck_ce0cc0d.md, FREEZE OK), the lead wrote
+  runs/prereg/FROZEN (untracked) with runs/freeze_runs/write_frozen.py: commit ce0cc0d, prereg runs/prereg/PREREG_v4.md rev. 24,
+  7 splits (samsung B/C/S2/A/S3, isu B, snl B), 276 config hashes (crate_ablation included), 5 item (f) config hashes, 4 pins
+  (subsets, symbolic_library, blinding_exclusions, stats_config). verify_freeze (check_git, untracked under code/) passed.
+  FROZEN sha256 8fcfb33993a9b41b9314f0cd919f48176f01855ca91ba04b30b9dbc5f0d8ed2a.
+- **Consequence:** HEAD of the main checkout stays at ce0cc0d and nothing under code/ or runs/prereg/ changes there until the
+  confirmatory statistics are done (D031). This row stays uncommitted until then. Other work goes on branch worktrees
+  (writing, exemplars). Non-blocking stale cell texts C14, C19, C20 (auditor) are recorded here instead of edited.
+- **Next:** item (f) runs, then the confirmatory runs (about 37 CPU-h), on Shlok's go-ahead with the charger in.
+- **Proposer / judge:** lead / gate auditor (FREEZE OK).
+
+### D044 Retain-every-check-up row keeps every dated check-up; code amendment after FROZEN (lead, 2026-11-09, status: proposed)
+- **Event:** 09 Nov 02:52, row_retain_B_f0_g1, _f0_g4 and _f1_g1 exited rc 1 after about 6 s, in setup (data load), before any
+  training; the driver halted on its three-failure rule. Shlok approved reading the error line (09 Nov): AssertionError in
+  data._load_samsung (data.py:335) "TP_z02_02_s2: time or cumulative EFC not monotone". No score, prediction or metric exists for
+  these runs; their folders hold setup files only (config, env, git, seeds, RUN.log).
+- **Cause:** PREREG_v4 3.3(3) says the sensitivity row "retains every check-up". Three check-ups have no start date (flag
+  no_start_date: TP_z02_02_s2 file 9 CU, TP_z12_03_s1 file 7 exCU, TP_z19_01_s2 file 31 CU), so elapsed_days is NaN; QC drops them
+  in every other run (all three are qc_pass false), but retain_all keeps them and the NaN time fails the monotone-time assertion.
+  All 10 retain configs share this path. The spec did not foresee an undated check-up; the code was never run on it.
+- **Decision (proposed):** the retain row keeps every check-up that has a start date; an undated check-up cannot be placed on the
+  time axis and is dropped (3 rows). Code: 4 lines in data._load_samsung inside the retain_all branch only (branch retainfix, worktree
+  "PINN KAN battery paper-retainfix"); test code/tests/test_d044_retain_undated.py on a scrubbed table (synthetic capacities) fails on
+  ce0cc0d and passes with the fix. Every non-retain run is unaffected (the branch is not entered and the rows already fail QC).
+- **Order deviation (applied 09 Nov 22:34):** the campaign was relaunched with SKIP_PREFIX=row_retain_ (driver outside code/) so the
+  other 219 configs run at ce0cc0d. Execution order has no effect on any result (seeds fixed per config).
+- **After the other runs:** commit the fix, re-pin FROZEN to the new commit (same PREREG_v4 hash, config hashes and pins) after a
+  gate-auditor check of the diff, move the 3 blocked folders to runs/_blocked_d044/ (kept, never read for scores), run the 10 retain
+  configs, then the statistics step. Disclosed in the paper as a post-freeze amendment with its reason.
+- **Proposer / judge:** lead / gate auditor; needs Shlok's yes before the commit and the re-pin.
+- **Approval (09 Nov):** Shlok: "Yes, approve D044". Status: accepted; the commit, re-pin and retain runs follow after the other
+  219 configs finish, with the gate auditor's check of the diff before the re-pin.
+- **Gate audit (09 Nov, research/audits/GATE_D044_retainfix.md): D044 OK WITH CONDITIONS.** C1: guard.require_item_f_record
+  (guard.py:215) compares the item (f) record's frozen_commit (ce0cc0d) with FROZEN's commit, so a re-pin would refuse every
+  Samsung run. Applied on retainfix: the guard also accepts a commit listed in FROZEN `predecessor_commits`; write_frozen.py must
+  write predecessor_commits = [ce0cc0d] at the re-pin (archive the old FROZEN first; write_frozen refuses an existing file). Two
+  tests: a listed predecessor is accepted, an unlisted commit is still refused. C2: three more QC-failed rows have no capacity
+  (step22_missing: TP_z04_01_s1 file 14 exCU, TP_z04_02_s1 file 16 CU, TP_z04_03_s1 file 14 exCU), which retain_all would keep as
+  NaN retention. Proposed widening: the retain row keeps every check-up with a start date AND a measured capacity (6 rows dropped,
+  all qc_pass false). The scrubbed test now keeps missing capacities missing and asserts finite retention. Widening needs Shlok's yes.
+- **Suite (09 Nov):** full suite in worktrees, baseline ce0cc0d vs retainfix fdb7f44: identical 22 failed + 12 errors (missing
+  data/run files in a worktree), 844 vs 851 passed; no failure only in the fix. Rerun the full suite in the main checkout at the re-pin.
+- **Approval of the C2 widening (09 Nov):** Shlok: "Yes, approve". D044 now reads: the retain row keeps every check-up with a
+  start date and a measured capacity (6 QC-failed rows dropped). Fix on retainfix fdb7f44; applied at the re-pin after the other runs.
+
+### D044a Re-pin of FROZEN for the retain row (lead, 2026-11-11, status: done; gate audit PASS WITH CONDITIONS)
+- **Count correction (gate audit P4):** D044 and GATE_D044_retainfix.md say the other 219 configs ran at ce0cc0d; the driver log
+  and runs/prereg/SCORED.jsonl show 266 (276 minus the 10 retain configs). The campaign log ends "21:43:11 campaign ALL DONE".
+- **Steps (11 Nov):** main fast-forwarded ce0cc0d -> 76ba298 -> fdb7f44 (retainfix); c6a89b6 adds `--predecessor` to
+  runs/freeze_runs/write_frozen.py (outside code/ and runs/prereg/). Old FROZEN moved unedited to
+  runs/freeze_runs/archive/FROZEN_ce0cc0d.json (sha256 8fcfb33993a9b41b9314f0cd919f48176f01855ca91ba04b30b9dbc5f0d8ed2a).
+- **Gate audit:** research/audits/GATE_D044_repin.md, PASS WITH CONDITIONS (P1-P4). Full suite in the main checkout at c6a89b6:
+  895 passed, 0 failed (P1); SCORED.jsonl unchanged (266 rows, sha256 ea82eca8...); no untracked file under code/.
+- **New FROZEN:** commit c6a89b6b2125a0ccb5b6170538fe7d43c018d2ba, predecessor_commits [ce0cc0d], sha256
+  771c0953ad065698957e5a703faf8c46f6e15b614a74e1c751d3f64450596117; verify_freeze ok; only `commit` and `predecessor_commits`
+  differ from the archived record (P2).
+- **Blocked folders:** row_retain_B_f0_g1, _f0_g4, _f1_g1 moved to runs/_blocked_d044/ (setup files only, never scored) (P3).
+  The 10 retain configs run next with SKIP_PREFIX unset.
+- **Retain runs done (12 Nov):** all 10 retain configs rc 0 (log 21:53:55 to 05:01:57); "05:01:57 campaign ALL DONE".
+
+### D045 PC-1 G0 synthetic run added late (lead, 2026-11-12, status: done; gate audit PASS WITH CONDITIONS)
+- **Finding:** the strict statistics step at FROZEN refuses to run without `h7_run` (stats_step.py, red team M-1). The G0 run of
+  PREREG_v4 section 13 (gate input PC-1) is registered but was not in the campaign list (276 configs, none in mode h7), and no
+  G0 run exists at the frozen code. It is synthetic only (no Samsung data; no score read).
+- **Config from the registered text:** runs/pc1_g0/configs/pc1_g0_shard{0,1,2}of3.json, run_id pc1_g0_synth: G0 only, 20 draws,
+  arms A1 A2 A4 (section 13), pilot tuning effort 8 trials x 2 inner folds (PREREG_v3 13 size line), steps_scale 1, design
+  40 + 19 conditions x 3 replicates (build_v1 batch config). Launched about 05:06 at HEAD c6a89b6, 3 single-thread shards.
+- **Order:** the run result is not opened before the gate auditor's verdict (research/audits/GATE_D045_pc1_g0.md). Disclosure:
+  PC-1 was computed after the Samsung runs were scored and before any score was read.
+- **Statistics command:** runs/stats_frozen/run_stats_frozen.sh (inputs checked with `--check`: all folders present).
+- **Gate audit (12 Nov):** research/audits/GATE_D045_pc1_g0.md, PASS WITH CONDITIONS. Config sha256 (C4, recorded before the
+  result is opened): *pc1_g0_shard0of3.json a4dd1135c3634c23f033cc5b43dc1ae85145a374276a3ea60afc40c0c328ba78; *pc1_g0_shard1of3.json ad502fb2d1b607aee3fb3ee1def184ce52949f2ab1a6e00e4cda7b301c5786f7; *pc1_g0_shard2of3.json 18f21be9e60580e02c1d7592608af921205827be271948ee538f0e9588b026cf; 
+  Conditions accepted: (C1) A4's median nRMSE printed beside PC-1 (section 13 names A1, A2, A4; gate_g reads A1 and A2) and
+  disclosed; (C2) PC-1 is read as the median over the 20 draws; (C3) late run disclosed (v4 line 483 order "before any real
+  fit"); (C4) no rerun with changed settings: if PC-1 fails, gate G trips and stands.
+- **G0 done (12 Nov):** 3 shards rc 0, 20 of 20 draws, summary.json written; no rerun (C4). Summary for C1:
+  runs/stats_frozen/post/pc1_summary.json (sha256 2d69e8b3...): median nRMSE A1 0.100, A2 0.047 (both <= 0.15, PC-1 passes),
+  A4 0.102 (printed, not a gate input).
+
+### Frozen statistics step run (lead, 2026-11-12 06:15:18 to 06:15:29, rc 0)
+- **Command:** runs/stats_frozen/run_stats_frozen.sh (sha256 d4f22bac...) at HEAD c6a89b6, strict, frozen; status.provisional
+  false, rows_not_run [], gate_not_evaluated []. Outputs runs/stats_frozen/analysis/ (sha256): contrasts_v4_B.json 7f606378...,
+  controls.json 636ea008..., margins.json 9830e813..., law_summary.json fbc33cbe..., physval_11a.json ae7b6725...,
+  reference.json b11d5343..., residual_map.npz aee5027f..., STATS_GAPS_ERRORS.json c707ddfb....
+- **Outcome (from the outcome table, not chosen):** gate G not tripped (NC-1 passed, PC-1 passed); state P0, K=, M1-M3 false;
+  title T5. Effective tiers: P1 none, P2 false, P3 false, R1_g1 true, K1 false, K2 none. NC-2 failed (28/40, p 0.054): its
+  Discussion sentence is removed. PC-2 and PC-3 passed (reported checks). Item (f): the training-side sign correlation
+  exceeded rho_s0 = 0.03; the fixed disclosure sentence is required.
+- **One descriptive gap:** G1_arm_table raised TypeError (np.mean over None counts). See D046.
+
+### D046 Arm table recomputed after the freeze (lead, 2026-11-12)
+- The descriptive Table 1 inputs (G1; sets no tier, state, title, count or gate input) failed in the frozen step. The frozen
+  code is not edited. runs/stats_frozen/post_arm_table.py (sha256 c852bd26...) calls the frozen stats_gaps.arm_table with a
+  copy of _pool_blocks whose only change is that a None-valued count field (n_params, n_train_used, fit seconds) gives None
+  instead of raising. Output runs/stats_frozen/post/arm_table.json (sha256 720b9fea...). Disclosed in the paper as a
+  post-freeze fix of a display item. Validation: statistician and gate auditor check it against metrics.json.
+- **Gate audit of the step (12 Nov):** research/audits/GATE_stats_frozen.md, PASS WITH CONDITIONS: (C1) the paper discloses the late
+  PC-1 run (A1, A2 medians over 20 draws; A4 0.102 printed, 2 of 20 draws above 0.15) and that the retain rows ran at c6a89b6;
+  (C2) Table 1 waits for the statistician's check of post/arm_table.json; (C3) manuscript numbers trace to analysis/ and, for
+  Table 1 only, post/arm_table.json; (C4) the paper does not claim stop rule 6 is verified by file-access logs.
+
+### D047 Writing decisions after the outcome (lead, 2026-11-12)
+- **Journal rules (Shlok, 12 Nov: "Follow the journal guidelines as I stated. only for ai use you have follow my guidelines"):** abstract
+  <= 250 words, body <= 6,000 words, at most 10 display items; AI use only in the AI declaration.
+- **Abstract:** purpose sentence, interval definition, verbatim claim sentence, merged qualifier sentences (numbers unchanged), compressed
+  mean-versus-median additions (every number kept), the Test C sentence (PREREG 9.8 rule 3), one conclusion sentence; 250 words. The Q-H
+  qualifier stays in Results because the frozen step sets q_h_required_in_abstract = false (M1 not reached). Test C was briefly moved out
+  and restored on the panel's advice (red team D-3, Codex round 2 P1: omitting the one unfavourable preregistered abstract item reads as
+  selective reporting).
+- **Acceptance-risk panel:** red team (Opus), battery-domain reviewer (Opus), Codex (session 01a1cde1-894c-7840-a8e9-8eea99cd1f9e, two
+  rounds); files in the writing worktree paper/review/; consolidated plan paper/review/FIX_PLAN_2026-11-12.md.
+- **Post-hoc descriptive and exploratory additions (never in title, abstract or highlights):** preregistered diagnostics (lam_res at the
+  lower grid edge, delta_sd/tau), error by horizon, fade size and forecast span, and an exploratory per-cell b*sqrt(t) baseline;
+  runs/stats_frozen/descriptive_post/, validated (research/audits/SIGN_statistician_descriptive_post.md). Codex round 2 P2: no
+  exploratory subgroup section.
+- **Shlok asked whether title T1 can be reached:** the lead answered no: the outcome table fixes T5 (P1 22/40 positives against 30
+  needed); any change of model, cell or test after scoring would break stop rule 7.

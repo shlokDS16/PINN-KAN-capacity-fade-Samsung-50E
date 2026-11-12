@@ -3,6 +3,42 @@
 Folder: `C:\Users\Shlok\Downloads\PINN KAN battery paper` (own git repo). Budget: weekly usage 5% at
 start, 6% at 22:00 (see the end of this file for the latest); Fable 0%. CPU only, no GPU used.
 
+## 000000000. LATEST (9 Nov, 03:00): campaign HALTED on 3 failed 'retain' runs; needs your decision
+- 51 runs ended with rc 0 (5 item (f) + 46 confirmatory): main grid g4/g1/m16, NC-2, Test C, lab-indicator and
+  random-subset rows. None of these failed.
+- 02:52: row_retain_B_f0_g1, row_retain_B_f0_g4 and row_retain_B_f1_g1 each exited with rc 1 after about 6 s, so the
+  driver's three-failure rule halted the campaign. The running job (row_randsub_B_f4_d2_g1) finishes; nothing new starts.
+- Each failed run left a folder with setup files only (config, env, git, seeds, RUN.log), so the crash happened before any
+  training and no score exists. The driver will never re-run those folders (overwrite rule).
+- All 10 retain configs set `retain_all: true` (keep QC-failed check-ups, data.py:305), so all 10 will most likely fail the
+  same way. I did not relaunch, and I did not open their error output (stop rule 6 says no run log is read).
+- **Your decisions:** (1) may I read only the error line of logs/row_retain_*.out? It comes from a 6-second setup crash,
+  before any training. (2) A code fix changes frozen code: it needs a new decision row, a gate-auditor re-check and your yes.
+  (3) The 3 blocked folders: move them to an archive folder and re-run after the fix, logged as a deviation. (4) Meanwhile the
+  rest of the plan (sensitivity, C-rate, S2, replication, A/S3) could run with the retain rows moved last: an order change
+  only, logged as a deviation.
+- The stats step needs the retain-all row (stats_step.py:796), so it must be fixed before the confirmatory statistics.
+
+## 00000000. LATEST (7 Nov, 12:21): the item (f) and confirmatory runs are running
+- Started on your go-ahead. 3 CPU lanes, no GPU. Item (f) first (5 runs), then its estimate file, then the 276 confirmatory
+  configs. Progress (counts and return codes only, no scores): `runs/confirmatory/campaign_status.json`.
+- **Keep the charger in and the lid open** until it finishes. To pause safely, create an empty file `runs/confirmatory/STOP`.
+- No score is looked at until every run has finished; then the strict statistics step runs at ce0cc0d.
+- Item (f) finished at 13:35 (5 of 5 passed). The confirmatory runs started at 13:36 on **1 worker**, because the Thenboli paper GPU queue needs 6 GB of free RAM; the number of workers is in `runs/confirmatory/LANES` (1, 2 or 3; write 3 to speed up once that queue is done). On 1 worker the 276 runs take about 37-45 h; on 3, about 13-20 h.
+
+## 0000000. LATEST (7 Nov): the preregistration is FROZEN; the confirmatory runs need your go-ahead
+- **Frozen at commit ce0cc0d** (PREREG_v4 rev. 24). The gate auditor passed it, and the freeze check passes. Every
+  freeze-commit run passed: timing (A1 31.5 s, far under the 90 s trigger, so N = 40 stands), inversion convergence 1.0,
+  NC-1 invariance at m 8/16/32, smoke runs, 888 tests, no-regression comparison identical.
+- One count in the prereg (7.3 item 6, a reason for a struck audit) was wrong and was corrected before the freeze:
+  45 C has 17 cycling conditions (14 HM, 2 mixed, 1 SIE), not "12 of 15".
+- **Your go-ahead is needed** for the item (f) runs and then the confirmatory runs (about 37 CPU-h, CPU only). Keep the charger in.
+- Writing branch: 22 passages for you in paper/draft/WRITING_REPORT_2026-11-07.md (branch `writing`), including 4 cite keys
+  not yet verified and the word budget. Exemplars branch: all 9 paywalled JES papers read; two optional exploratory rows
+  for you to decide (Najera/Olmos fixed-form comparators; a leave-one-cell-out score).
+- Every session now starts from PROJECT.md and research/PROJECT_CONTEXT.md, mirrored in Obsidian
+  (Projects/PINN KAN battery paper/knowledge/HUB.md).
+
 ## 000000. LATEST (09:10, 6 Nov): pilot P6 reported to you (freeze condition C6)
 - **P6 reading by the rule committed before the first fit (runs/pilot_P6/RULE.md, 6299c24): stop rule 10 NOT triggered.**
   At the smallest cycling set (m = 8) with a 2-week window (the ISU analogue of the headline cell), the PINN-KAN (A1) had a lower

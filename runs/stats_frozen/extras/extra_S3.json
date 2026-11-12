@@ -1,0 +1,187 @@
+{
+ "status": "computed",
+ "runs": [
+  "expl_samsung_S3_f0"
+ ],
+ "interval_rule": "plain exact sign-test order-statistic interval, 95 % (descriptive; PREREG 9.6/9.10: intervals only, no tier)",
+ "pooling": "condition scores pooled over outer folds with fold-prefixed keys; unit = (fold, condition); condition-key collisions across folds: 0",
+ "pooled": {
+  "label": "pooled over folds",
+  "cell": [
+   32,
+   "full"
+  ],
+  "arm_means_pp": {
+   "A1": {
+    "n": 7,
+    "mean": 0.21371906174474464,
+    "median": 0.1838935457796412
+   },
+   "A9": {
+    "n": 7,
+    "mean": 0.18797104685818003,
+    "median": 0.2081000352526501
+   },
+   "A10": {
+    "n": 7,
+    "mean": 0.6200940912872089,
+    "median": 0.7100912562399416
+   },
+   "A10P": {
+    "n": 7,
+    "mean": 0.678170186711984,
+    "median": 0.7323757463927025
+   }
+  },
+  "contrasts_A1_vs": {
+   "A9": {
+    "n": 7,
+    "median_L": -0.3844732746604739,
+    "median_L_ci95": [
+     -0.6937710164072822,
+     0.8027893619943478
+    ],
+    "pct_reduction": -46.884044216751434,
+    "pct_reduction_ci95": [
+     -100.12480609467774,
+     55.192263063132785
+    ],
+    "positives": 2,
+    "mean_pp_diff": -0.025748014886564603,
+    "interval_rank": 1,
+    "interval_is_range": false,
+    "interval_coverage": 0.984375
+   },
+   "A10": {
+    "n": 7,
+    "median_L": 0.877840620584809,
+    "median_L_ci95": [
+     -0.009952976431289463,
+     1.7570649893774721
+    ],
+    "pct_reduction": 58.432044689105375,
+    "pct_reduction_ci95": [
+     -1.00026720374371,
+     82.74494409266286
+    ],
+    "positives": 6,
+    "mean_pp_diff": 0.40637502954246435,
+    "interval_rank": 1,
+    "interval_is_range": false,
+    "interval_coverage": 0.984375
+   },
+   "A10P": {
+    "n": 7,
+    "median_L": 0.8220464020243777,
+    "median_L_ci95": [
+     -0.012872340716400064,
+     1.99704566555016
+    ],
+    "pct_reduction": 56.046872414082486,
+    "pct_reduction_ci95": [
+     -1.2955545926132572,
+     86.42642998823892
+    ],
+    "positives": 6,
+    "mean_pp_diff": 0.46445112496723934,
+    "interval_rank": 1,
+    "interval_is_range": false,
+    "interval_coverage": 0.984375
+   }
+  }
+ },
+ "per_fold": {
+  "fold0": {
+   "label": "fold 0",
+   "cell": [
+    32,
+    "full"
+   ],
+   "arm_means_pp": {
+    "A1": {
+     "n": 7,
+     "mean": 0.21371906174474464,
+     "median": 0.1838935457796412
+    },
+    "A9": {
+     "n": 7,
+     "mean": 0.18797104685818003,
+     "median": 0.2081000352526501
+    },
+    "A10": {
+     "n": 7,
+     "mean": 0.6200940912872089,
+     "median": 0.7100912562399416
+    },
+    "A10P": {
+     "n": 7,
+     "mean": 0.678170186711984,
+     "median": 0.7323757463927025
+    }
+   },
+   "contrasts_A1_vs": {
+    "A9": {
+     "n": 7,
+     "median_L": -0.3844732746604739,
+     "median_L_ci95": [
+      -0.6937710164072822,
+      0.8027893619943478
+     ],
+     "pct_reduction": -46.884044216751434,
+     "pct_reduction_ci95": [
+      -100.12480609467774,
+      55.192263063132785
+     ],
+     "positives": 2,
+     "mean_pp_diff": -0.025748014886564603,
+     "interval_rank": 1,
+     "interval_is_range": false,
+     "interval_coverage": 0.984375
+    },
+    "A10": {
+     "n": 7,
+     "median_L": 0.877840620584809,
+     "median_L_ci95": [
+      -0.009952976431289463,
+      1.7570649893774721
+     ],
+     "pct_reduction": 58.432044689105375,
+     "pct_reduction_ci95": [
+      -1.00026720374371,
+      82.74494409266286
+     ],
+     "positives": 6,
+     "mean_pp_diff": 0.40637502954246435,
+     "interval_rank": 1,
+     "interval_is_range": false,
+     "interval_coverage": 0.984375
+    },
+    "A10P": {
+     "n": 7,
+     "median_L": 0.8220464020243777,
+     "median_L_ci95": [
+      -0.012872340716400064,
+      1.99704566555016
+     ],
+     "pct_reduction": 56.046872414082486,
+     "pct_reduction_ci95": [
+      -1.2955545926132572,
+      86.42642998823892
+     ],
+     "positives": 6,
+     "mean_pp_diff": 0.46445112496723934,
+     "interval_rank": 1,
+     "interval_is_range": false,
+     "interval_coverage": 0.984375
+    }
+   }
+  }
+ },
+ "D_star_by_fold": {
+  "fold0": [
+   "A9",
+   false
+  ]
+ },
+ "note": "D* candidate set incomplete (arms A1 A2 A9 / A1 A9 A10 A10P only): D* is not formed; PREREG names no arms for S3, the S2 arms were assumed by the config generator"
+}

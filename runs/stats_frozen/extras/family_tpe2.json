@@ -1,0 +1,147 @@
+{
+ "family": "tpe2",
+ "registered_row": "9.9 (p)",
+ "what_changes": "second TPE search seed (100 + fold)",
+ "mode": "within",
+ "cells": [
+  "g1"
+ ],
+ "not_run": [],
+ "rows": [
+  {
+   "contrast": "A1 vs D* (g1)",
+   "tier_key": "P1",
+   "cell": [
+    8,
+    "2"
+   ],
+   "row": {
+    "n": 40,
+    "median_L": 0.043616674714233965,
+    "median_L_ci95": [
+     -0.2502988611785193,
+     0.5427965087204859
+    ],
+    "pct_reduction": 4.267914756217395,
+    "pct_reduction_ci95": [
+     -28.440921938602813,
+     41.88791316382569
+    ],
+    "positives": 20,
+    "mean_pp_diff": 0.10114950206985193,
+    "interval_rank": 11,
+    "interval_is_range": false,
+    "interval_coverage": 0.9612881609602757
+   },
+   "primary": {
+    "n": 40,
+    "median_L": -0.023260242313275472,
+    "median_L_ci95": [
+     -0.32418325204469955,
+     0.39909480143776
+    ],
+    "pct_reduction": -2.3532871452478954,
+    "pct_reduction_ci95": [
+     -38.29007032825808,
+     32.90729065146597
+    ],
+    "positives": 20,
+    "mean_pp_diff": 0.13588788802209772,
+    "interval_rank": 11,
+    "interval_is_range": false,
+    "interval_coverage": 0.9612881609602757
+   },
+   "primary_tier": "none",
+   "row_tier_would_reach": "none",
+   "changes_tier": false
+  },
+  {
+   "contrast": "A1 vs A9 (g1)",
+   "tier_key": "P2",
+   "cell": [
+    8,
+    "2"
+   ],
+   "row": {
+    "n": 40,
+    "median_L": 0.05482574211614045,
+    "median_L_ci95": [
+     -0.2724539010336925,
+     0.6696171211481085
+    ],
+    "pct_reduction": 5.334990517630034,
+    "pct_reduction_ci95": [
+     -31.318292114189706,
+     48.809546230863376
+    ],
+    "positives": 21,
+    "mean_pp_diff": 0.28001441416118056,
+    "interval_rank": 11,
+    "interval_is_range": false,
+    "interval_coverage": 0.9612881609602757
+   },
+   "primary": {
+    "n": 40,
+    "median_L": -0.10197250166003305,
+    "median_L_ci95": [
+     -0.37679415072787875,
+     0.15866246996310823
+    ],
+    "pct_reduction": -10.735302093942888,
+    "pct_reduction_ci95": [
+     -45.76042317167624,
+     14.671568054343398
+    ],
+    "positives": 18,
+    "mean_pp_diff": 0.23046020745232937,
+    "interval_rank": 11,
+    "interval_is_range": false,
+    "interval_coverage": 0.9612881609602757
+   },
+   "primary_tier": false,
+   "row_tier_would_reach": false,
+   "changes_tier": false
+  },
+  {
+   "contrast": "most-test d_c (g1)",
+   "tier_key": "most",
+   "cell": [
+    8,
+    "2"
+   ],
+   "row": {
+    "n": 40,
+    "positives": 21,
+    "median_d": 0.07315406070571803,
+    "median_L_law": 0.05482574211614045,
+    "median_L_total": 0.043616674714233965
+   },
+   "primary_tier": false,
+   "row_tier_would_reach": false,
+   "changes_tier": false
+  }
+ ],
+ "dstar_dropped_incomplete_candidates": false,
+ "folds_per_cell": {
+  "8|2": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ]
+ },
+ "scores_bit_identical_to_primary": {
+  "8|2|A1": false,
+  "8|2|A9": false,
+  "8|2|A11": false,
+  "8|2|A12": false
+ },
+ "no_op_row": null,
+ "row_tiers_all_keys_computed": {
+  "P1": "none",
+  "P2": false,
+  "most": false
+ },
+ "status": "computed"
+}

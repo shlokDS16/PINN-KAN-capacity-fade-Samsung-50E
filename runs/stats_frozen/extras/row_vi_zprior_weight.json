@@ -1,0 +1,225 @@
+{
+ "definition": "PREREG 9.9 (vi): frozen fitted models re-inverted with z-prior weight 4 and 16 (inference only), A1, A9, AG at g1 and g4, seed 0 of the final refit (files condition_scores_sens_vi{4,16}_*); P1/P2 counts and plain-rule flags computed with the same function as (v); descriptive.",
+ "weights": {
+  "vi4": {
+   "row": "vi4",
+   "description": "z-prior weight 4",
+   "cells": {
+    "8|2": {
+     "notes": [
+      "D* = A12 not inverted: base (ensemble) score"
+     ],
+     "arm_means_pp": {
+      "A1": 0.7910673877968036,
+      "A9": 0.8346329361654481,
+      "AG": 0.8912380480160144,
+      "D*": 0.8777631150180468
+     },
+     "P1: A1 vs D*": {
+      "n": 40,
+      "median_L": 0.09020942099137781,
+      "pct_reduction": 8.62601910638321,
+      "pct_reduction_ci95_plain": [
+       -29.717873014170436,
+       28.196993806162475
+      ],
+      "positives_L_gt_0": 23,
+      "plain_count_P1N": {
+       "margin": -0.09531017980432493,
+       "positives": 25,
+       "n": 40,
+       "reaches_plain_critical_count_at_primary_final_level": false,
+       "primary_final_level": 0.019500000000000003
+      },
+      "plain_count_P1S": {
+       "margin": 0.01980262729617973,
+       "positives": 21,
+       "n": 40,
+       "reaches_plain_critical_count_at_primary_final_level": false,
+       "primary_final_level": 0.0
+      }
+     },
+     "P2: A1 vs A9": {
+      "n": 40,
+      "median_L": -0.08281907243678163,
+      "pct_reduction": -8.634524096926533,
+      "pct_reduction_ci95_plain": [
+       -45.51292384568277,
+       15.73689287439336
+      ],
+      "positives_L_gt_0": 17,
+      "plain_count_P2": {
+       "margin": 0.01980262729617973,
+       "positives": 17,
+       "n": 40,
+       "reaches_plain_critical_count_at_primary_final_level": false,
+       "primary_final_level": 0.0
+      }
+     },
+     "A1 vs AG": {
+      "n": 40,
+      "median_L": -0.01815507502597568,
+      "pct_reduction": -1.8320880282963525,
+      "pct_reduction_ci95_plain": [
+       -23.999254443518314,
+       27.4916370915804
+      ],
+      "positives_L_gt_0": 18
+     }
+    },
+    "32|full": {
+     "notes": [
+      "D* = A11 not inverted: base (ensemble) score",
+      "D* = A12 not inverted: base (ensemble) score"
+     ],
+     "arm_means_pp": {
+      "A1": 0.6869261377099453,
+      "A9": 0.8197828931525765,
+      "AG": 0.675342706313125,
+      "D*": 0.7208319745513954
+     },
+     "P1: A1 vs D*": {
+      "n": 40,
+      "median_L": 0.12312328492082608,
+      "pct_reduction": 11.58453470950459,
+      "pct_reduction_ci95_plain": [
+       -32.101264233616746,
+       32.20631716061869
+      ],
+      "positives_L_gt_0": 23
+     },
+     "P2: A1 vs A9": {
+      "n": 40,
+      "median_L": 0.17907702399331138,
+      "pct_reduction": 16.39584983380501,
+      "pct_reduction_ci95_plain": [
+       -7.473659977046898,
+       31.83202226891886
+      ],
+      "positives_L_gt_0": 26
+     },
+     "A1 vs AG": {
+      "n": 40,
+      "median_L": -0.048696584826134794,
+      "pct_reduction": -4.99017462868685,
+      "pct_reduction_ci95_plain": [
+       -14.52382977146156,
+       6.155998061934853
+      ],
+      "positives_L_gt_0": 17
+     }
+    }
+   }
+  },
+  "vi16": {
+   "row": "vi16",
+   "description": "z-prior weight 16",
+   "cells": {
+    "8|2": {
+     "notes": [
+      "D* = A12 not inverted: base (ensemble) score"
+     ],
+     "arm_means_pp": {
+      "A1": 0.7553199415316143,
+      "A9": 0.8488897606374806,
+      "AG": 0.8170022027414913,
+      "D*": 0.836754262352593
+     },
+     "P1: A1 vs D*": {
+      "n": 40,
+      "median_L": 0.13912198049427563,
+      "pct_reduction": 12.987811591288922,
+      "pct_reduction_ci95_plain": [
+       -28.59551123018114,
+       33.575702134840725
+      ],
+      "positives_L_gt_0": 23,
+      "plain_count_P1N": {
+       "margin": -0.09531017980432493,
+       "positives": 25,
+       "n": 40,
+       "reaches_plain_critical_count_at_primary_final_level": false,
+       "primary_final_level": 0.019500000000000003
+      },
+      "plain_count_P1S": {
+       "margin": 0.01980262729617973,
+       "positives": 23,
+       "n": 40,
+       "reaches_plain_critical_count_at_primary_final_level": false,
+       "primary_final_level": 0.0
+      }
+     },
+     "P2: A1 vs A9": {
+      "n": 40,
+      "median_L": 0.005155781992316183,
+      "pct_reduction": 0.5142513760836742,
+      "pct_reduction_ci95_plain": [
+       -28.59551123018114,
+       19.028939004549304
+      ],
+      "positives_L_gt_0": 20,
+      "plain_count_P2": {
+       "margin": 0.01980262729617973,
+       "positives": 19,
+       "n": 40,
+       "reaches_plain_critical_count_at_primary_final_level": false,
+       "primary_final_level": 0.0
+      }
+     },
+     "A1 vs AG": {
+      "n": 40,
+      "median_L": 0.048441378497467054,
+      "pct_reduction": 4.728681285260972,
+      "pct_reduction_ci95_plain": [
+       -17.598312649545633,
+       16.732288392968975
+      ],
+      "positives_L_gt_0": 22
+     }
+    },
+    "32|full": {
+     "notes": [
+      "D* = A11 not inverted: base (ensemble) score",
+      "D* = A12 not inverted: base (ensemble) score"
+     ],
+     "arm_means_pp": {
+      "A1": 0.6823897605653452,
+      "A9": 0.8362595049708872,
+      "AG": 0.6830299676971371,
+      "D*": 0.7208319745513954
+     },
+     "P1: A1 vs D*": {
+      "n": 40,
+      "median_L": -0.010121267848035066,
+      "pct_reduction": -1.0172661121481852,
+      "pct_reduction_ci95_plain": [
+       -35.59454876169581,
+       29.379415426481625
+      ],
+      "positives_L_gt_0": 20
+     },
+     "P2: A1 vs A9": {
+      "n": 40,
+      "median_L": 0.12553974595202516,
+      "pct_reduction": 11.797929302236309,
+      "pct_reduction_ci95_plain": [
+       -5.6712225968676755,
+       30.513994278695822
+      ],
+      "positives_L_gt_0": 25
+     },
+     "A1 vs AG": {
+      "n": 40,
+      "median_L": -0.0014571965237487761,
+      "pct_reduction": -0.14582587504983202,
+      "pct_reduction_ci95_plain": [
+       -12.308621026617805,
+       9.399033071536921
+      ],
+      "positives_L_gt_0": 20
+     }
+    }
+   }
+  }
+ }
+}

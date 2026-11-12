@@ -1,0 +1,221 @@
+{
+ "family": "kfull_m1",
+ "registered_row": "9.9 (i)",
+ "what_changes": "window k_full - 1 (3 cycling check-ups)",
+ "mode": "within",
+ "cells": [
+  "g4"
+ ],
+ "not_run": [],
+ "rows": [
+  {
+   "contrast": "A1 vs D* (g4)",
+   "tier_key": null,
+   "cell": [
+    32,
+    "full"
+   ],
+   "row": {
+    "n": 40,
+    "median_L": 0.2082536600961974,
+    "median_L_ci95": [
+     -0.5933987019760212,
+     0.8118455009347725
+    ],
+    "pct_reduction": 18.799896167523567,
+    "pct_reduction_ci95": [
+     -81.01300652968746,
+     55.596216265473444
+    ],
+    "positives": 25,
+    "mean_pp_diff": 0.06120896467440011,
+    "interval_rank": 11,
+    "interval_is_range": false,
+    "interval_coverage": 0.9612881609602757
+   },
+   "primary": {
+    "n": 40,
+    "median_L": 0.022363905966994665,
+    "median_L_ci95": [
+     -0.5075088321169926,
+     0.5361569572793756
+    ],
+    "pct_reduction": 2.2115687642355497,
+    "pct_reduction_ci95": [
+     -66.11478380467769,
+     41.50079123810109
+    ],
+    "positives": 21,
+    "mean_pp_diff": 0.05181471436652707,
+    "interval_rank": 11,
+    "interval_is_range": false,
+    "interval_coverage": 0.9612881609602757
+   },
+   "primary_tier": null,
+   "tier_note": "no registered tier at this contrast (estimated cell)"
+  },
+  {
+   "contrast": "A1 vs A9 (g4)",
+   "tier_key": null,
+   "cell": [
+    32,
+    "full"
+   ],
+   "row": {
+    "n": 40,
+    "median_L": 0.1735561852313861,
+    "median_L_ci95": [
+     -0.16029376454836833,
+     0.695205769507853
+    ],
+    "pct_reduction": 15.933008339883227,
+    "pct_reduction_ci95": [
+     -17.385565752338273,
+     50.10282357534545
+    ],
+    "positives": 24,
+    "mean_pp_diff": 0.2380846629857487,
+    "interval_rank": 11,
+    "interval_is_range": false,
+    "interval_coverage": 0.9612881609602757
+   },
+   "primary": {
+    "n": 40,
+    "median_L": 0.1535466512558435,
+    "median_L_ci95": [
+     0.05078294410401596,
+     0.7089366862555694
+    ],
+    "pct_reduction": 14.233924768565032,
+    "pct_reduction_ci95": [
+     4.951504349232239,
+     50.78327524726244
+    ],
+    "positives": 30,
+    "mean_pp_diff": 0.22240014033492583,
+    "interval_rank": 11,
+    "interval_is_range": false,
+    "interval_coverage": 0.9612881609602757
+   },
+   "primary_tier": null,
+   "tier_note": "no registered tier at this contrast (estimated cell)"
+  },
+  {
+   "contrast": "A1 vs A10 (g4)",
+   "tier_key": "QA10_g4",
+   "cell": [
+    32,
+    "full"
+   ],
+   "row": {
+    "n": 40,
+    "median_L": 0.4184861133228424,
+    "median_L_ci95": [
+     -0.08126453364026952,
+     0.6104396273515215
+    ],
+    "pct_reduction": 34.19577324507435,
+    "pct_reduction_ci95": [
+     -8.465778709185589,
+     45.688795032940085
+    ],
+    "positives": 26,
+    "mean_pp_diff": 0.18007750238431725,
+    "interval_rank": 11,
+    "interval_is_range": false,
+    "interval_coverage": 0.9612881609602757
+   },
+   "primary": {
+    "n": 40,
+    "median_L": 0.30314006965124474,
+    "median_L_ci95": [
+     -0.3536637592792938,
+     1.023088625262221
+    ],
+    "pct_reduction": 26.150435170221886,
+    "pct_reduction_ci95": [
+     -42.42762062999896,
+     64.05170842711513
+    ],
+    "positives": 26,
+    "mean_pp_diff": 0.085612856636922,
+    "interval_rank": 11,
+    "interval_is_range": false,
+    "interval_coverage": 0.9612881609602757
+   },
+   "primary_tier": "none",
+   "row_tier_would_reach": "none",
+   "changes_tier": false
+  },
+  {
+   "contrast": "A1 vs A10P (g4)",
+   "tier_key": "QA10_g4",
+   "cell": [
+    32,
+    "full"
+   ],
+   "row": {
+    "n": 40,
+    "median_L": 0.4088019536761819,
+    "median_L_ci95": [
+     0.012417961437059043,
+     0.9062476084739479
+    ],
+    "pct_reduction": 33.55541896573702,
+    "pct_reduction_ci95": [
+     1.2341176719122604,
+     59.59625100716301
+    ],
+    "positives": 30,
+    "mean_pp_diff": 0.24844154386569345,
+    "interval_rank": 11,
+    "interval_is_range": false,
+    "interval_coverage": 0.9612881609602757
+   },
+   "primary": {
+    "n": 40,
+    "median_L": 0.5340059021553115,
+    "median_L_ci95": [
+     0.006951472712463438,
+     1.0010719142543119
+    ],
+    "pct_reduction": 41.37482077921209,
+    "pct_reduction_ci95": [
+     0.6927367114837435,
+     63.25146827741426
+    ],
+    "positives": 30,
+    "mean_pp_diff": 0.26747034541301634,
+    "interval_rank": 11,
+    "interval_is_range": false,
+    "interval_coverage": 0.9612881609602757
+   },
+   "primary_tier": "none",
+   "row_tier_would_reach": "none",
+   "changes_tier": false
+  }
+ ],
+ "dstar_dropped_incomplete_candidates": false,
+ "folds_per_cell": {
+  "32|full": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ]
+ },
+ "scores_bit_identical_to_primary": {
+  "32|full|A1": false,
+  "32|full|A9": false,
+  "32|full|A10": false,
+  "32|full|A10P": false,
+  "32|full|A11": false,
+  "32|full|A12": false
+ },
+ "no_op_row": null,
+ "row_tiers_all_keys_computed": {
+  "QA10_g4": "none"
+ },
+ "status": "computed"
+}

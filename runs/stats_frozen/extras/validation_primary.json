@@ -1,0 +1,49 @@
+{
+ "row_tiers_on_primary_store": {
+  "P1": "none",
+  "P2": false,
+  "most": false,
+  "R1_g1": true,
+  "P3": false,
+  "K1": false,
+  "K2": "none",
+  "QA10_g1": "none",
+  "QA10_g4": "none",
+  "QH_g1": "none",
+  "QH_g4": "none",
+  "QT_g1": "none"
+ },
+ "frozen_primary_tiers": {
+  "P1": "none",
+  "P2": false,
+  "P3": false,
+  "R1_g1": true,
+  "K1": false,
+  "K2": "none",
+  "QA10_g1": "none",
+  "QA10_g4": "none",
+  "QH_g1": "none",
+  "QH_g4": "none",
+  "QT_g1": "none",
+  "most": false
+ },
+ "match": {
+  "P1": true,
+  "P2": true,
+  "most": true,
+  "R1_g1": true,
+  "P3": true,
+  "K1": true,
+  "K2": true,
+  "QA10_g1": true,
+  "QA10_g4": true,
+  "QH_g1": true,
+  "QH_g4": true,
+  "QT_g1": true
+ },
+ "entry_A1_vs_Dstar_g1": {
+  "recomputed_median_L": -0.023260242313275472,
+  "frozen_median_L": -0.023260242313275472,
+  "equal": true
+ }
+}

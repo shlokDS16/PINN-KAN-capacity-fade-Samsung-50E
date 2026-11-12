@@ -1,0 +1,19 @@
+{
+ "run_id": "pc1_g0_synth",
+ "dataset": "synthetic",
+ "mode": "h7",
+ "design": "R2",
+ "steps_scale": 1.0,
+ "_note": "PC-1 (PREREG_v4 section 13, gate G): well-specified generator G0 only, 20 draws x structured arms A1, A2, A4, pilot tuning effort 8 trials x 2 inner folds (PREREG_v3 13 size line), real Samsung design 40 + 19 conditions x 3 replicates. Written by the lead 2026-11-12 at the FROZEN commit c6a89b6 (D045): the run was registered but missing from the campaign list. Three shards, same run_id; the shard that completes the set writes summary.json.",
+ "h7": {
+  "gens": ["G0"],
+  "n_draws": 20,
+  "arms": ["A1", "A2", "A4"],
+  "n_trials": 8,
+  "inner_k": 2,
+  "steps_scale": 1.0,
+  "shard": [0, 3],
+  "resume": true,
+  "design": {"n_cyc_cond": 40, "n_sto_cond": 19, "reps": 3}
+ }
+}

@@ -1,0 +1,5 @@
+{
+ "n_dirs_checked": 209,
+ "rule": "metrics.json present and campaign.log end line rc=0",
+ "not_ok": []
+}

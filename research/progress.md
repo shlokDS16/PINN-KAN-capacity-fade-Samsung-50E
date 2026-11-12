@@ -1,5 +1,47 @@
 # Progress
 
+## RESUME (updated 2026-11-12 06:50 by the lead; read this first, after research/PROJECT_CONTEXT.md)
+- **Confirmatory statistics DONE** (06:15, strict, frozen at c6a89b6, not provisional). Outcome from the table: gate G not
+  tripped; P0, K=; title T5. Validated: statistician (research/audits/SIGN_statistician_frozen_stats.md) and gate auditor
+  (research/audits/GATE_stats_frozen.md), both PASS WITH CONDITIONS. Details and hashes: DECISIONS D045, "Frozen statistics step
+  run", D046 (post-freeze arm table, runs/stats_frozen/post/).
+- **Running (12 Nov, 06:45):** descriptive extras into runs/stats_frozen/extras/ (statistician); real figures and tables into
+  the writing worktree paper/figures, paper/tables (figure-smith); Results, Discussion, Conclusions, abstract, highlights in the
+  writing worktree (manuscript-writer). Shared spec: writing worktree paper/draft/RESULTS_BRIEF_2026-11-12.md.
+- **Next:** fill [EXTRAS]/[FIG] placeholders, red-team the manuscript, prose QA (research-humanizer, hidden-unicode), build and
+  render-check PDF and docx. Deadline Fri 13 Nov night.
+- **HEAD:** still c6a89b6; doc edits in research/ and runs/stats_frozen/ uncommitted (commit after the extras are done).
+
+## RESUME (updated 2026-11-09 03:20 by the lead; read this first, after research/PROJECT_CONTEXT.md)
+- **Campaign HALTED 2026-11-09 03:16** (driver rule: 3 failed runs). Nothing is running; laptop hibernated for travel.
+  Done with rc 0: 5 item (f) + 47 confirmatory (main grid g4/g1/m16, NC-2, Test C, lab-indicator rows, random-subset rows).
+- **Failed:** row_retain_B_f0_g1, row_retain_B_f0_g4, row_retain_B_f1_g1: rc 1 after ~6 s (setup crash, no training,
+  folders hold setup files only, so they are blocked). All 10 retain configs set retain_all: true (data.py:305); expect all to fail.
+  The error output (logs/row_retain_*.out) has NOT been read (stop rule 6).
+- **Waiting on Shlok** (status/STATUS_MORNING.md, top entry): (1) may the lead read only the error line; (2) a code fix
+  breaks the freeze: new D row, gate-auditor re-check, Shlok's yes; (3) archive the 3 blocked folders and re-run after the fix,
+  logged as a deviation; (4) run the rest of the plan with the retain rows last (order change, logged as a deviation).
+  The stats step needs the retain-all row (stats_step.py:796).
+- **To resume after a decision:** charger in; check RAM and commit headroom (09 Nov: other sessions' node helpers held 39 GB of
+  commit); LANES = 2 unless RAM allows 3; no STOP file exists; relaunch
+  `.venv/Scripts/python.exe -P runs/confirmatory/run_campaign.py </dev/null` in the background, then the watchdog
+  (`MIN_FREE_MB=200 MIN_COMMIT_MB=1000 .venv/Scripts/python.exe -P runs/confirmatory/watchdog.py </dev/null`).
+  HEAD ce0cc0d, code/ clean (checked 03:00).
+
+## RESUME (updated 2026-11-07 by the lead; read this first, after research/PROJECT_CONTEXT.md)
+- **State:** FROZEN at ce0cc0d (PREREG_v4 rev. 24; code identical to d13a8c6). Gate auditor FREEZE OK
+  (research/audits/GATE_freeze_recheck_ce0cc0d.md); verify_freeze passes; FROZEN sha256 8fcfb339...ed2a (D042, D043).
+  Statistician and red team signed every row, including C-rate row 9.9 (u). Freeze runs at d13a8c6 all pass (D042).
+- **HEAD must not move** in the main checkout; D043 and the status/context edits stay uncommitted until the statistics are done.
+- **Branches:** writing (78e2128; blueprint gaps, 22 flagged passages), exemplars (6e8b80e; 9 paywalled papers read).
+- **Campaign STARTED 2026-11-07 12:21 (Shlok: "Yes, start runs"):** `runs/confirmatory/run_campaign.py` (untracked, outside code/),
+  3 CPU lanes: 5 item (f) inner runs -> stats_v4.build_item_f -> 276 confirmatory configs in section 15 order (g4, g1, m16,
+  NC-2, C, rows, sensitivity, crate, S2, replication, A/S3). Return codes in runs/confirmatory/campaign_state.jsonl; status in
+  campaign_status.json; pause with runs/confirmatory/STOP; a re-launch resumes. No score is read before the end (stop rule 6).
+- **Was next:** item (f) runs (5 configs, runs/item_f/configs), then the confirmatory runs
+  (276 configs, about 37 CPU-h; A1 fit time was 31.5 s under shared CPU), then the strict statistics step at ce0cc0d.
+- **Context for every session:** PROJECT.md, research/PROJECT_CONTEXT.md; Obsidian knowledge hub (tools/vault_knowledge.py).
+
 ## RESUME (updated 2026-11-06 11:00 by the lead; read this first)
 - **State:** Design R2 approved (D016/D017/D019); PREREG_v4 rev. 13 (d551e8a; section 11 byte-identical to J16). Decisions
   D026 (item (f) after FROZEN, ledger-gated), D027 review, D028 config rulings. Code: 740 tests pass (53abf0e); 276 confirmatory
